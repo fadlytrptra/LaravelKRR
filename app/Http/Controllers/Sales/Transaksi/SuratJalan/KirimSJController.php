@@ -357,7 +357,7 @@ class KirimSJController extends Controller
                     return response()->json(['error' => 'Permohonan konfirmasi penerimaan barang tidak dikirim, customer belum register']);
                 }
 
-                // proses update kolom kirim customer, proses insert into database public web
+                // proses update kolom QtyTempVerifikasi, NotePascaKeCustomer pada database public web
                 DB::connection('ConnSales')
                     ->statement(
                         'exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?, @XQtyTempVerifikasi = ?, @XNoteKeCustomer = ?',
@@ -460,7 +460,7 @@ class KirimSJController extends Controller
                     ]);
                 }
                 return response()->json([
-                    'error' => 'Gagal proses kirim SJ'
+                    'error' => 'Gagal proses kirim SJ: ' . $e->getMessage()
                 ], 500);
             } catch (Exception $ex) {
                 DB::connection('ConnSales')->rollback();

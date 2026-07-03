@@ -8,8 +8,8 @@ jQuery(function ($) {
         scrollX: true,
         autoWidth: false,
         serverSide: true,
-        order: [],
-        columnDefs: [{ targets: 5, orderable: false }],
+        orderFixed: [[12, "asc"]],
+        columnDefs: [{ targets: 11, orderable: false }],
         ajax: {
             url: "/KirimSJ/getDataSJ",
             type: "GET",
@@ -132,6 +132,7 @@ jQuery(function ($) {
                     `;
                 },
             },
+            { data: "StatusOrder", visible: false, searchable: false },
         ],
     });
     //#endregion
@@ -335,7 +336,9 @@ jQuery(function ($) {
                         QtyTritier = qtyTemp;
                         satuanTerpakai = "tritier";
                     }
-                    keteranganPasca = response.dataSuratJalanTerkirim[0].KeteranganPasca ?? "";
+                    keteranganPasca =
+                        response.dataSuratJalanTerkirim[0].KeteranganPasca ??
+                        "";
                     idDetailKirim = response.idDetailKirim[0].IDDetailKirim;
                     idHeaderKirim = response.idDetailKirim[0].IDHeaderKirim;
                 }
@@ -390,23 +393,37 @@ jQuery(function ($) {
                             );
                             return false;
                         }
-
+                        return {
+                            qtyTempVerifikasi,
+                            noteCustomer,
+                        };
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         $.ajax({
                             url: "KirimSJ",
                             type: "POST",
                             data: {
                                 jenisProses: "sendRequestPascaKirim",
                                 idPengiriman: idPengiriman,
-                                qtyTempVerifikasi: qtyTempVerifikasi,
-                                noteCustomer: noteCustomer,
+                                qtyTempVerifikasi:
+                                    result.value.qtyTempVerifikasi,
+                                noteCustomer: result.value.noteCustomer,
                                 _token: csrfToken,
                             },
                         })
                             .then((response) => {
                                 if (response.error) {
                                     throw new Error(response.error);
+                                } else {
+                                    Swal.fire(
+                                        "Berhasil!",
+                                        response.success,
+                                        "success",
+                                    ).then(() => {
+                                        table_SJ.ajax.reload();
+                                    });
                                 }
-                                return response;
                             })
                             .catch((error) => {
                                 Swal.showValidationMessage(
@@ -415,23 +432,6 @@ jQuery(function ($) {
                                         "Terjadi kesalahan",
                                 );
                             });
-
-                        return {
-                            qtyTempVerifikasi,
-                            noteCustomer,
-                        };
-                    },
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        let response = result.value;
-
-                        Swal.fire(
-                            "Berhasil!",
-                            response.success,
-                            "success",
-                        ).then(() => {
-                            table_SJ.ajax.reload();
-                        });
                     }
                 });
             }
