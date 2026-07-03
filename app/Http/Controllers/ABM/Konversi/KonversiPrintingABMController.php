@@ -143,6 +143,21 @@ class KonversiPrintingABMController extends Controller
                 ->table('Counter')->update(['IdKonvPotongABM' => $newIdKonvPotongABM]);
             $idkonversi = "ABP" . str_pad($newIdKonvPotongABM, 6, "0", STR_PAD_LEFT);
 
+            //=== UPDATE ID KONVERSI PADA BARCODE ASAL SEBAGAI PENANDA BAHWA SUDAH DIPAKAI ===
+            foreach ($dataAsalKonversi as $data) {
+                [$noIndek, $kodeBarang] = explode('-', $data[0]);
+
+                $noIndek = (int) $noIndek; // 000000091 -> 91
+
+                DB::connection('ConnInventory')
+                    ->table('Dispresiasi')
+                    ->where('Kode_barang', $kodeBarang)
+                    ->where('NoIndeks', $noIndek)
+                    ->update([
+                        'idkonversi_barcode' => $idkonversi,
+                    ]);
+            }
+
             //= INSERT PERMOHONAN INTO TMP_TRANSAKSI =
 
             //== INSERT ASAL KONVERSI ==
