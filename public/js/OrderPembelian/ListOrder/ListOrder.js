@@ -10,6 +10,7 @@ let csrfToken = $('meta[name="csrf-token"]').attr("content");
 let data;
 let divisi = document.getElementById("divisi");
 let foto = document.getElementById("foto");
+let previewFoto = document.getElementById("previewFoto");
 let kd_barang = document.getElementById("kd_barang");
 let kdBarangAslinya = "";
 let ket_barang = document.getElementById("ket_barang");
@@ -1254,6 +1255,39 @@ btnRemoveFile.addEventListener("click", function () {
             },
         });
     });
+});
+
+foto.addEventListener("click", function () {
+
+    if (!foto.src || foto.style.display === "none")
+        return;
+
+    previewFoto.src = foto.src;
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("previewFotoModal")
+    );
+
+    modal.show();
+});
+
+let scale = 1;
+
+previewFoto.addEventListener("wheel", function(e){
+    e.preventDefault();
+    scale += e.deltaY * -0.001;
+    scale = Math.min(Math.max(1, scale), 5);
+    previewFoto.style.transform = `scale(${scale})`;
+});
+
+document.getElementById("previewFotoModal").addEventListener("hidden.bs.modal", function () {
+    scale = 1;
+    previewFoto.style.transform = "scale(1)";
+
+    // karena modal utama masih terbuka
+    document.body.classList.add("modal-open");
+    document.body.style.overflow = "hidden";
+
 });
 //#endregion
 

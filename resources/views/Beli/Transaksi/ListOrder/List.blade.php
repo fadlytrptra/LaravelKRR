@@ -255,7 +255,10 @@
                                     </div>
                                     <div class="col-12 mb-2">
                                         <div class="row justify-content-center">
-                                            <img src="" style="width: 10rem; height: 10rem;" id="foto"
+                                            <img src=""
+                                                id="foto"
+                                                class="img-thumbnail"
+                                                style="width:10rem;height:10rem;cursor:pointer;object-fit:cover;"
                                                 alt="">
                                         </div>
                                     </div>
@@ -501,6 +504,26 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="previewFotoModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header border-0 justify-content-end">
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center overflow-auto">
+                    <img id="previewFoto"
+                        src=""
+                        class="img-fluid"
+                        style="transform:scale(1);transition:.2s;cursor:grab;">
+                </div>
             </div>
         </div>
     </div>
