@@ -879,10 +879,10 @@ class KirimSJController extends Controller
                 ->select('exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?', [3, $idPengiriman]);
             $idCust = $dataSuratJalanTerkirim[0]->IDCust;
             $invoiceCheck = db::connection('ConnAccounting')->select('exec SP_1486_SLS_CEK_INVOICE @Id_cust = ?, @SJ = ?', [$idCust, $idPengiriman]);
-            // if (count($invoiceCheck) > 0) {
-            //     // $invoiceCheck has a value
-            //     return response()->json(['error' => 'Invoice already exists! Id Penagihan: ' . $invoiceCheck[0]->Id_Penagihan]);
-            // }
+            if (count($invoiceCheck) > 0) {
+                // $invoiceCheck has a value
+                return response()->json(['error' => 'Invoice already exists! Id Penagihan: ' . $invoiceCheck[0]->Id_Penagihan]);
+            }
             $dataIdDetailPengiriman = DB::connection('ConnSales')
                 ->select('exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?', [6, $idPengiriman]);
 

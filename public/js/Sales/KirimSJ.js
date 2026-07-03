@@ -585,7 +585,7 @@ jQuery(function ($) {
                 } else {
                     console.log(response);
                     dataSuratJalanTerkirim = response.dataSuratJalanTerkirim;
-                    qtyTemp = numeral(dataSuratJalanTerkirim[0].QtyTemp).value(); //prettier-ignore
+                    qtyTempVerifikasi = numeral(dataSuratJalanTerkirim[0].QtyTempVerifikasi).value(); //prettier-ignore
                     satJual = dataSuratJalanTerkirim[0].satJual.trim(); //prettier-ignore
                     satPrimer = dataSuratJalanTerkirim[0].satPrimer.trim(); //prettier-ignore
                     satSekunder = dataSuratJalanTerkirim[0].satSekunder.trim(); //prettier-ignore
@@ -594,22 +594,22 @@ jQuery(function ($) {
                     QtySekunder = numeral(dataSuratJalanTerkirim[0].QtySekunder).value(); //prettier-ignore
                     QtyTritier = numeral(dataSuratJalanTerkirim[0].QtyTritier).value(); //prettier-ignore
                     if (satJual == satPrimer) {
-                        QtySekunder = qtyTemp * (QtySekunder / QtyPrimer);
-                        QtyTritier = qtyTemp * (QtyTritier / QtyPrimer);
-                        QtyPrimer = qtyTemp;
+                        QtySekunder = numeral(qtyTempVerifikasi * (QtySekunder / QtyPrimer)).format("0,0.00"); //prettier-ignore
+                        QtyTritier = numeral(qtyTempVerifikasi * (QtyTritier / QtyPrimer)).format("0,0.00"); //prettier-ignore
+                        QtyPrimer = numeral(qtyTempVerifikasi).format("0,0.00"); //prettier-ignore
                         satuanTerpakai = "primer";
                     } else if (satJual == satSekunder) {
-                        QtyPrimer = qtyTemp / (QtySekunder / QtyPrimer);
-                        QtyTritier = (QtyTritier / QtySekunder) * qtyTemp;
-                        QtySekunder = qtyTemp;
+                        QtyPrimer = numeral(qtyTempVerifikasi / (QtySekunder / QtyPrimer)).format("0,0.00"); //prettier-ignore
+                        QtyTritier = numeral((QtyTritier / QtySekunder) * qtyTempVerifikasi).format("0,0.00"); //prettier-ignore
+                        QtySekunder = numeral(qtyTempVerifikasi).format("0,0.00"); //prettier-ignore
+                        console.log(QtyPrimer, QtyTritier, QtySekunder);
                         satuanTerpakai = "sekunder";
                     } else {
-                        QtyPrimer = qtyTemp / (QtyTritier / QtyPrimer);
-                        QtySekunder = (QtySekunder / QtyTritier) * qtyTemp;
-                        QtyTritier = qtyTemp;
+                        QtyPrimer = numeral(qtyTempVerifikasi / (QtyTritier / QtyPrimer)).format("0,0.00"); //prettier-ignore
+                        QtySekunder = numeral((QtySekunder / QtyTritier) * qtyTempVerifikasi).format("0,0.00"); //prettier-ignore
+                        QtyTritier = numeral(qtyTempVerifikasi).format("0,0.00"); //prettier-ignore
                         satuanTerpakai = "tritier";
                     }
-                    qtyTempVerifikasi = numeral(dataSuratJalanTerkirim[0].QtyTempVerifikasi).value(); //prettier-ignore
                     idDetailKirim = response.idDetailKirim[0].IDDetailKirim;
                     idHeaderKirim = response.idDetailKirim[0].IDHeaderKirim;
                 }
@@ -624,15 +624,15 @@ jQuery(function ($) {
                     <div class="row g-2 text-start w-100 pb-2 pl-2 m-0" style ="place-content: center;">
                         <div class="col-4 pl-2 pr-2">
                             <label class="form-label fw-bold">Qty Primer (${satPrimer})</label>
-                            <input id="qty1" type="number" class="form-control" value="${QtyPrimer}" readonly>
+                            <input id="qty1" type="text" class="form-control" value="${QtyPrimer}" readonly>
                         </div>
                         <div class="col-4 pl-2 pr-2">
                             <label class="form-label fw-bold">Qty Sekunder (${satSekunder})</label>
-                            <input id="qty2" type="number" class="form-control" value="${QtySekunder}" readonly>
+                            <input id="qty2" type="text" class="form-control" value="${QtySekunder}" readonly>
                         </div>
                         <div class="col-4 pl-2 pr-2">
                             <label class="form-label fw-bold">Qty Tritier (${satTritier})</label>
-                            <input id="qty3" type="number" class="form-control" value="${QtyTritier}" readonly>
+                            <input id="qty3" type="text" class="form-control" value="${QtyTritier}" readonly>
                         </div>
                     </div>
                     <div class="row g-2 text-start w-100 pb-2 pl-2 m-0">
