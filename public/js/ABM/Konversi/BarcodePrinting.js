@@ -822,9 +822,9 @@ jQuery(function ($) {
             kode_barangHasil.value = "";
             nama_barangHasil.value = "";
             if (
-                selectedData.KBPrintingStarpak == null ||
-                selectedData.KBPrintingStarpakPatchAtas == null ||
-                selectedData.KBPrintingStarpakPatchBawah == null
+                selectedData.KBPrintingStarpak == null &&
+                (selectedData.KBPrintingStarpakPatchAtas == null ||
+                    selectedData.KBPrintingStarpakPatchBawah == null)
             ) {
                 Swal.fire({
                     icon: "error",
