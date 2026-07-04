@@ -9,6 +9,7 @@ use Log;
 use App\Http\Controllers\HakAksesController;
 use Exception;
 use Illuminate\Support\Facades\Date;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 // use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -744,6 +745,110 @@ class PemeriksaanBarangController extends Controller
                 'detail' => $detail
             ]);
         }
+    }
+
+    public function downloadPdf($idHeader)
+    {
+        $headerRaw = DB::connection('ConnGuard')
+            ->select(
+                'EXEC SP_4451_PemeriksaanBarang @Kode = ?, @idHeader = ?',
+                [7, $idHeader]
+            );
+
+        if (empty($headerRaw)) {
+            abort(404);
+        }
+
+        $row = $headerRaw[0];
+
+        $header = [
+            'tanggal' => Carbon::parse($row->tanggal)->format('m/d/Y'),
+            'tanggal_raw' => Carbon::parse($row->tanggal)->format('Y-m-d'),
+            'idHeader' => trim($row->idHeader),
+            'jam_muat' => Carbon::parse($row->jam_muat_awal)->format('H:i')
+                . ' - ' .
+                Carbon::parse($row->jam_muat_akhir)->format('H:i'),
+            'jam_muat_awal' => $row->jam_muat_awal,
+            'jam_muat_akhir' => $row->jam_muat_akhir,
+            'nopol' => trim($row->nopol),
+            'tujuan_kirim' => trim($row->tujuan_kirim),
+            'instansi' => trim($row->instansi),
+            'sopir' => trim($row->sopir),
+            'keterangan' => trim($row->keterangan),
+            'surat_jalanTerdaftar' => trim($row->surat_jalanTerdaftar),
+            'no_seal' => trim($row->no_seal),
+            'no_container' => trim($row->no_container),
+            'NamaUser' => trim($row->NamaUser),
+            'NamaUserK' => trim($row->NamaUserK),
+            'ttd_base64' => trim($row->ttd_base64),
+            'fotoTtdAcc' => trim($row->fotoTtd),
+            'FotoTtdK' => trim($row->FotoTtdK),
+            'foto_pengiriman' => trim($row->foto_pengiriman),
+            'customer' => trim($row->customer),
+        ];
+
+        $ttdRaw = DB::connection('ConnEDP')
+            ->select(
+                'EXEC SP_4451_EDP_MaintenanceTTDUser
+                @XKode=?,
+                @XNomorUser=?',
+                [
+                    2,
+                    $row->user_input
+                ]
+            );
+
+        $ttd = null;
+
+        if (!empty($ttdRaw)) {
+            $ttd = [
+                'NamaUser' => $ttdRaw[0]->NamaUser,
+                'FotoTtd' => trim($ttdRaw[0]->FotoTtd)
+            ];
+        }
+
+        $detailRaw = DB::connection('ConnGuard')
+            ->select(
+                'EXEC SP_4451_PemeriksaanBarang
+                @Kode=?,
+                @idHeader=?',
+                [
+                    8,
+                    $idHeader
+                ]
+            );
+
+        $detail = [];
+
+        foreach ($detailRaw as $d) {
+
+            $detail[] = [
+                'nama_typeBarang' => $d->nama_typeBarang,
+                'jam' => $d->jam,
+                'item' => $d->item,
+                'tujuan_kirim' => $d->tujuan_kirimText,
+                'Nama_satuan' => trim($d->Nama_satuan)
+            ];
+        }
+
+        $view = $header['customer'] == 1
+            ? 'Guard.Pemeriksaan.PemeriksaanBarangCustomerPDF'
+            : 'Guard.Pemeriksaan.PemeriksaanBarangPDF';
+
+        $pdf = Pdf::loadView(
+            $view,
+            compact(
+                'header',
+                'ttd',
+                'detail'
+            )
+        );
+
+        $pdf->setPaper('a3', 'portrait');
+
+        return $pdf->download(
+            'PemeriksaanBarang-' . $idHeader . '.pdf'
+        );
     }
 
     public function edit($id)

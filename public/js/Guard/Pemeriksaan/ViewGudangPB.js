@@ -607,6 +607,10 @@ jQuery(function ($) {
                     <button class="btn btn-sm btn-primary btn-view" style="width: 60px;"data-id="${row.idHeader}">
                         <i class="fa fa-edit"></i> View
                     </button>
+                    <button
+                        class="btn btn-sm btn-danger btn-download" data-id="${row.idHeader}">
+                        <i class="fa fa-file-pdf"></i> Download
+                    </button>
                     `;
                     },
                 },
@@ -671,5 +675,15 @@ jQuery(function ($) {
                 modal.show();
             }
         });
+    });
+
+    $("#table_atas").on("click", ".btn-download", function () {
+        const idHeader = $(this).data("id");
+
+        window.open(
+            `PemeriksaanBarang/download/${idHeader}`,
+            "_blank"
+        );
+
     });
 });

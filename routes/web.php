@@ -1768,6 +1768,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('PemeriksaanBarang', App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class);
     Route::resource('ACCGudangPB', App\Http\Controllers\Guard\Pemeriksaan\ACCGudangPBController::class);
     Route::resource('ViewPemeriksaanBarang', App\Http\Controllers\Guard\Pemeriksaan\ViewPemeriksaanBarangController::class);
+    Route::get('PemeriksaanBarang/download/{id}', [App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class,'downloadPdf']);
 
     #region COA
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
