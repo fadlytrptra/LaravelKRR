@@ -615,11 +615,11 @@ class MaintenanceBKMPenagihanController extends Controller
                     return response()->json(['error' => "Buat BKM utk Id.Pelunasan yg lebih kecil dulu."]);
                 }
 
-                $bankCode = trim($singleItem[2]);
-                if ($bankCode === "KRR1" || $bankCode === "KRR2") {
-                    if ($bankCode === "KRR2") {
+                $bankCodeMurni = trim($singleItem[2]);
+                if ($bankCodeMurni === "KRR1" || $bankCodeMurni === "KRR2") {
+                    if ($bankCodeMurni === "KRR2") {
                         $bankCode = "KI";
-                    } elseif ($bankCode === "KRR1") {
+                    } elseif ($bankCodeMurni === "KRR1") {
                         $bankCode = "KKM";
                     }
                 } else {
@@ -672,7 +672,7 @@ class MaintenanceBKMPenagihanController extends Controller
                 // $idBKM = $noUrutFormatted . $bank . $periode;
                 $idBKM = str_pad($noUrut, 5, '0', STR_PAD_LEFT);
                 $idBKM = $bankCode . '-R' . substr($periode, -2) . substr($idBKM, -5);
-
+                // dd($idBKM, $bankCodeMurni); 
                 // dd($idBKM);
 
                 // Insert to T_Pelunasan
@@ -682,14 +682,14 @@ class MaintenanceBKMPenagihanController extends Controller
                     trim(Auth::user()->NomorUser),
                     $konversi,
                     $total,
-                    $bankCode
+                    $bankCodeMurni
                 ]);
 
                 // Update T_Pelunasan_Tagihan
                 DB::connection('ConnAccounting')->statement('exec SP_5298_ACC_UPDATE_IDBKM_1 @idpelunasan = ?, @idBKM = ?, @idBank = ?', [
                     $pelunasanId,
                     $idBKM,
-                    $bankCode
+                    $bankCodeMurni
                 ]);
 
                 // Process remaining piutang
