@@ -343,31 +343,35 @@ function imageSrc($img)
             </table>
 
 
-            @if(count($foto))
-                <table width="100%" style="border:none">
+            @if(!empty($fotoFiles))
+                <table width="100%" style="border:none; border-collapse:collapse;">
 
-                <tr>
+                    @foreach(array_chunk($fotoFiles, 2) as $row)
+                        <tr>
 
-                @foreach($foto as $i => $img)
+                            @foreach($row as $img)
+                                <td width="50%"
+                                    style="border:none; padding:8px; vertical-align:top; text-align:center;">
 
-                    <td width="50%" style="border:none;padding:6px;vertical-align:top;">
+                                    <img
+                                        src="file://{{ str_replace('\\', '/', $img) }}"
+                                        style="width:95%; height:auto;">
 
-                        <img src="{{ $img }}"
-                            style="width:100%;height:auto;">
+                                </td>
+                            @endforeach
 
-                    </td>
+                            {{-- Jika jumlah gambar ganjil, tambahkan kolom kosong --}}
+                            @if(count($row) < 2)
+                                <td width="50%" style="border:none;"></td>
+                            @endif
 
-                    @if($i % 2 == 1)
-                        </tr><tr>
-                    @endif
-
-                @endforeach
-
-                </tr>
+                        </tr>
+                    @endforeach
 
                 </table>
 
-                @endif
+            @endif
+
         </div>
     </div>
 </body>

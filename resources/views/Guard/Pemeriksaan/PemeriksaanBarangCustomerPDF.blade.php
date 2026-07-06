@@ -238,19 +238,33 @@ if(!empty($header['foto_pengiriman'])){
         </tr>
     </table>
 
-    @if(count($foto))
-        <table style="border:none">
-            <tr>
-            @foreach($foto as $i=>$img)
-            <td style="border:none;padding:6px;width:50%">
-            <img src="{{ $img }}" style="width:100%;height:auto;">
-            </td>
-            @if($i%2==1)
-            </tr><tr>
-            @endif
+    @if(!empty($fotoFiles))
+        <table width="100%" style="border:none; border-collapse:collapse;">
+
+            @foreach(array_chunk($fotoFiles, 2) as $row)
+                <tr>
+
+                    @foreach($row as $img)
+                        <td width="50%"
+                            style="border:none; padding:8px; vertical-align:top; text-align:center;">
+
+                            <img
+                                src="file://{{ str_replace('\\', '/', $img) }}"
+                                style="width:95%; height:auto;">
+
+                        </td>
+                    @endforeach
+
+                    {{-- Jika jumlah gambar ganjil, tambahkan kolom kosong --}}
+                    @if(count($row) < 2)
+                        <td width="50%" style="border:none;"></td>
+                    @endif
+
+                </tr>
             @endforeach
-            </tr>
+
         </table>
+
     @endif
 
     </div>

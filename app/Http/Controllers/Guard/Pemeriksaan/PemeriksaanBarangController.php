@@ -835,20 +835,73 @@ class PemeriksaanBarangController extends Controller
             ? 'Guard.Pemeriksaan.PemeriksaanBarangCustomerPDF'
             : 'Guard.Pemeriksaan.PemeriksaanBarangPDF';
 
+        Log::info([
+            'memory_before' => memory_get_usage(true),
+            'memory_peak_before' => memory_get_peak_usage(true),
+        ]);
+
+        $fotoFiles = [];
+
+        if (!empty($header['foto_pengiriman'])) {
+
+            $foto = preg_split(
+                '/(?=data:image\/[^;]+;base64,)/i',
+                $header['foto_pengiriman'],
+                -1,
+                PREG_SPLIT_NO_EMPTY
+            );
+
+            $foto = array_map('trim', $foto);
+
+            $dir = storage_path('app/dompdf-temp-images');
+
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            foreach ($foto as $i => $img) {
+
+                $base64 = preg_replace(
+                    '/^data:image\/[^;]+;base64,/i',
+                    '',
+                    $img
+                );
+
+                $binary = base64_decode($base64);
+
+                $path = $dir . DIRECTORY_SEPARATOR . "img_$i.jpg";
+
+                file_put_contents($path, $binary);
+
+                $fotoFiles[] = $path;
+            }
+        }
+
         $pdf = Pdf::loadView(
             $view,
             compact(
                 'header',
                 'ttd',
-                'detail'
+                'detail',
+                'fotoFiles'
             )
         );
 
+        Log::info([
+            'memory_limit' => ini_get('memory_limit'),
+            'peak' => memory_get_peak_usage(true),
+        ]);
+
+
         $pdf->setPaper('a4', 'portrait');
-        return $pdf->stream('PemeriksaanBarang-' . $idHeader . '.pdf');
-        return $pdf->download(
-            'PemeriksaanBarang-' . $idHeader . '.pdf'
-        );
+            $output = $pdf->output();
+
+            return response($output)
+                ->header('Content-Type', 'application/pdf')
+                ->header(
+                    'Content-Disposition',
+                    'attachment; filename="PemeriksaanBarang-' . $idHeader . '.pdf"'
+                );
     }
 
     public function edit($id)
