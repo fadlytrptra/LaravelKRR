@@ -400,6 +400,8 @@ class LaporanProduksiExtruderController extends Controller
         $total = $request->input('total');
         $user = trim(Auth::user()->NomorUser);
         $kodeProses = $request->input('kodeProses');
+        $id_lokasi = $request->input('id_lokasi');
+        // dd($id_lokasi);
         // dd($total);
         if ($kodeProses == "1") {
             $check = DB::connection('ConnExtruder')
@@ -778,7 +780,9 @@ class LaporanProduksiExtruderController extends Controller
                         @prongLL =?,
                         @silLL =?,
                         @total =?,
-                        @userInput =?', [
+                        @userInput =?,
+                        @lokasi =?
+                        ', [
                             1,
                             $referensi,
                             $tanggal,
@@ -1140,7 +1144,8 @@ class LaporanProduksiExtruderController extends Controller
                             $prongLL,
                             $silLL,
                             $total,
-                            $user
+                            $user,
+                            $id_lokasi
                         ]);
                     return response()->json(['message' => 'Data sudah tersimpan']);
 

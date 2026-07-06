@@ -2043,6 +2043,7 @@ $(document).ready(function () {
                     timeEnd: timeEndConvert,
                     spek_mesin: spek_mesin.textContent,
                     spek_benang: spek_benang.textContent,
+                    id_lokasi: $("#" + slcLokasi.id).val(),
                     colorB: colorB,
                     colorC: colorC,
                     colorD: colorD,
