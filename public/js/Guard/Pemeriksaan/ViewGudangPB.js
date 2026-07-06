@@ -679,18 +679,11 @@ jQuery(function ($) {
 
     $("#table_atas").on("click", ".btn-download", function () {
         const idHeader = $(this).data("id");
-        $("#modalLaporan").data("idheader", idHeader);
-        $.ajax({
-            url: "PemeriksaanBarang/getPrint",
-            type: "GET",
-            data: {
-                idHeaderLink: idHeader
-            },
-            success: function(data){
-                initPrint(data, data.header.customer == 1);
-                btn_print.click();
-            }
-        });
+
+        window.open(
+            `PemeriksaanBarang/download/${idHeader}`,
+            "_blank"
+        );
 
     });
 });
