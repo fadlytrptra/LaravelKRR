@@ -844,8 +844,8 @@ class PemeriksaanBarangController extends Controller
             )
         );
 
-        $pdf->setPaper('a3', 'portrait');
-
+        $pdf->setPaper('a4', 'portrait');
+        return $pdf->stream('PemeriksaanBarang-' . $idHeader . '.pdf');
         return $pdf->download(
             'PemeriksaanBarang-' . $idHeader . '.pdf'
         );

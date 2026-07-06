@@ -211,33 +211,67 @@ function imageSrc($img)
                         <td class="center bold" style="width:15%;">Total</td>
                     </tr>
                 </thead>
+                @php
+                    // Total berdasarkan Tipe Barang + Satuan
+                    $totalGroup = [];
+
+                    foreach ($detail as $row) {
+                        $key = $row['nama_typeBarang'] . '|' . $row['Nama_satuan'];
+
+                        if (!isset($totalGroup[$key])) {
+                            $totalGroup[$key] = 0;
+                        }
+
+                        $totalGroup[$key] += $row['item'];
+                    }
+                @endphp
+
                 <tbody>
-                    @foreach($detail as $i => $d)
+                @foreach($detail as $index => $d)
+
+                    @php
+                        $key = $d['nama_typeBarang'] . '|' . $d['Nama_satuan'];
+
+                        // Cek apakah ini baris terakhir untuk Tipe Barang + Satuan
+                        $isLast = true;
+
+                        for ($i = $index + 1; $i < count($detail); $i++) {
+
+                            if (
+                                $detail[$i]['nama_typeBarang'] == $d['nama_typeBarang'] &&
+                                $detail[$i]['Nama_satuan'] == $d['Nama_satuan']
+                            ) {
+                                $isLast = false;
+                                break;
+                            }
+                        }
+                    @endphp
+
                     <tr>
+                        <td class="center">{{ $loop->iteration }}</td>
 
-                    <td class="center">
-                    {{ $loop->iteration }}
-                    </td>
+                        <td class="center">{{ $d['nama_typeBarang'] }}</td>
 
-                    <td>
-                    {{ $d['nama_typeBarang'] }}
-                    </td>
+                        <td class="center">
+                            {{ \Carbon\Carbon::parse($d['jam'])->format('H:i') }}
+                        </td>
 
-                    <td class="center">
-                    {{ \Carbon\Carbon::parse($d['jam'])->format('H:i') }}
-                    </td>
+                        <td class="center">
+                            {{ number_format($d['item'],0,',','.') }}
+                            {{ $d['Nama_satuan'] }}
+                        </td>
 
-                    <td class="center">
-                        {{ number_format($d['item'],0,',','.') }}
-                        {{ $d['Nama_satuan'] }}
-                    </td>
-
-                    <td class="center">
-                        {{ number_format($d['item'],0,',','.') }}
-                        {{ $d['Nama_satuan'] }}
-                    </td>
+                        <td class="center">
+                            @if($isLast)
+                                <strong>
+                                    {{ number_format($totalGroup[$key],0,',','.') }}
+                                    {{ $d['Nama_satuan'] }}
+                                </strong>
+                            @endif
+                        </td>
                     </tr>
-                    @endforeach
+
+                @endforeach
                 </tbody>
                 <tfoot>
                     <tr>

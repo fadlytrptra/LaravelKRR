@@ -74,7 +74,7 @@ if(!empty($header['foto_pengiriman'])){
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Pemeriksaan Barang Customer</title>
+        <title>Pemeriksaan Barang</title>
     </head>
 
     <body>
@@ -121,54 +121,74 @@ if(!empty($header['foto_pengiriman'])){
 
         <tbody>
             @php
-                $grandTotal = 0;
-                $satuan = '';
+                // Hitung total per Tipe Barang + Satuan
+                $totalGroup = [];
+
+                foreach ($detail as $row) {
+                    $key = $row['nama_typeBarang'] . '|' . $row['Nama_satuan'];
+
+                    if (!isset($totalGroup[$key])) {
+                        $totalGroup[$key] = 0;
+                    }
+
+                    $totalGroup[$key] += $row['item'];
+                }
             @endphp
 
-            @foreach($detail as $d)
+            @foreach($detail as $index => $d)
 
                 @php
-                    $grandTotal += $d['item'];
-                    $satuan = $d['Nama_satuan'];
+                    $key = $d['nama_typeBarang'] . '|' . $d['Nama_satuan'];
+
+                    // Cek apakah ini baris terakhir untuk Tipe Barang + Satuan
+                    $isLast = true;
+
+                    for ($i = $index + 1; $i < count($detail); $i++) {
+
+                        if (
+                            $detail[$i]['nama_typeBarang'] == $d['nama_typeBarang'] &&
+                            $detail[$i]['Nama_satuan'] == $d['Nama_satuan']
+                        ) {
+                            $isLast = false;
+                            break;
+                        }
+                    }
                 @endphp
 
                 <tr>
                     <td class="center">{{ $loop->iteration }}</td>
-                    <td>{{ $d['nama_typeBarang'] }}</td>
+                    <td class="center">{{ $d['nama_typeBarang'] }}</td>
                     <td class="center">
                         {{ \Carbon\Carbon::parse($d['jam'])->format('H:i') }}
                     </td>
+
                     <td>{{ $d['tujuan_kirim'] }}</td>
 
-                    {{-- Unit --}}
                     <td class="center">
                         {{ number_format($d['item'],0,',','.') }}
                         {{ $d['Nama_satuan'] }}
                     </td>
 
-                    {{-- Total dikosongkan --}}
-                    <td></td>
+                    <td class="center">
+                        @if($isLast)
+                            <strong>
+                                {{ number_format($totalGroup[$key],0,',','.') }}
+                                {{ $d['Nama_satuan'] }}
+                            </strong>
+                        @endif
+                    </td>
                 </tr>
 
             @endforeach
 
-            {{-- Total Keseluruhan --}}
             <tr>
-                <td colspan="5"></td>
-                <td class="center bold">
-                    {{ number_format($grandTotal,0,',','.') }}
-                    {{ $satuan }}
-                </td>
-            </tr>
-
-            {{-- Keterangan --}}
-            <tr>
-                <td colspan="6" style="border-left:none;
-                    border-right:none;
-                    border-top:none;
-                    border-bottom:1px solid #000;
-                    padding:4px;">
-                    <b>Keterangan :</b> {{ $header['keterangan'] }}
+                <td colspan="6"
+                    style="border-left:none;
+                        border-right:none;
+                        border-top:none;
+                        border-bottom:1px solid #000;
+                        padding:4px;">
+                    Keterangan : {{ $header['keterangan'] }}
                 </td>
             </tr>
         </tbody>
@@ -176,6 +196,18 @@ if(!empty($header['foto_pengiriman'])){
 
 
     <table>
+        <tr>
+            <td class="center bold"
+                style="width:120px; border:none !important; border-top: 1px solid black !important">
+                Tanda Tangan & Nama Jelas</td>
+            <td class="center bold"
+                style="width:120px; border:none !important; border-top: 1px solid black !important"
+                id="ttnGudang">
+                Tanda Tangan & Nama Jelas</td>
+            <td class="center bold"
+                style="width:120px; border:none !important; border-top: 1px solid black !important">
+                Tanda Tangan & Nama Jelas</td>
+        </tr>
         <tr>
             <td class="center bold">Satpam</td>
             <td class="center bold">Mengetahui</td>
