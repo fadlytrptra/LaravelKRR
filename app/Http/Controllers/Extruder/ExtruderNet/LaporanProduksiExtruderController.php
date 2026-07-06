@@ -22,7 +22,11 @@ class LaporanProduksiExtruderController extends Controller
             'formName' => 'LaporanProduksiExtruder',
             // 'formData' => $form_data,
         ];
-        return view('Extruder.Extruder.LaporanProduksiExtruder', compact('access'), $view_data);
+        $listLokasi = DB::connection('ConnTestQC')
+            ->table('Lokasi')
+            ->select('idLokasi', 'nama_lokasi')
+            ->get();
+        return view('Extruder.Extruder.LaporanProduksiExtruder', compact('access', 'listLokasi'), $view_data);
 
     }
 
@@ -2001,9 +2005,10 @@ class LaporanProduksiExtruderController extends Controller
         } else if ($id == 'getDataLaporanRedisplay') {
             $tgl_awal = $request->input('tgl_awal');
             $tgl_akhir = $request->input('tgl_akhir');
+            $id_lokasi = $request->input('id_lokasi');
             // dd($tgl_awal . ' - ' . $tgl_akhir);
             $results = DB::connection('ConnExtruder')
-                ->select('EXEC SP_4451_GetDataLaporanProduksiExtruder @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?', [4, $tgl_awal, $tgl_akhir]);
+            ->select('EXEC SP_4451_GetDataLaporanProduksiExtruder @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @lokasi = ?', [4, $tgl_awal, $tgl_akhir, $id_lokasi]);
             $response = [];
             foreach ($results as $row) {
                 $response[] = [
@@ -2018,7 +2023,7 @@ class LaporanProduksiExtruderController extends Controller
 
                 ];
             }
-            // dd($response);
+            // dd($response); 
             return datatables($response)->make(true);
 
         }

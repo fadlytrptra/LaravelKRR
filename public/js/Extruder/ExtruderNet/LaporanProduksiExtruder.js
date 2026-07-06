@@ -367,6 +367,7 @@ $(document).ready(function () {
     let silLL = document.getElementById("silLL");
     let total = document.getElementById("total");
     //#endregion
+    const slcLokasi = document.getElementById("lokasi");
 
     tanggal.valueAsDate = new Date();
     const now = new Date();
@@ -442,64 +443,64 @@ $(document).ready(function () {
     }
 
     let table_laporan = $("#table_laporan").DataTable({
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        destroy: true,
-        ajax: {
-            url: "LaporanProduksiExtruder/getDataLaporan",
-            dataType: "json",
-            type: "GET",
-            data: function (d) {
-                return $.extend({}, d, {
-                    _token: csrfToken,
-                });
-            },
-        },
-        columns: [
-            { data: "idLaporan" },
-            { data: "shiftValue" },
-            {
-                data: 'tanggal_raw', // Data asli untuk sorting
-                render: function (data, type, row) {
-                    // type === 'display' digunakan saat menampilkan di tabel
-                    if (type === 'display') {
-                        return row.tanggal; // tampilkan versi m/d/Y
-                    }
-                    return data; // untuk sorting & filtering (yyyy-mm-dd)
-                }
-            },
-            // { data: "tanggal" },
-            { data: "spek_mesin" },
-            { data: "spek_benang" },
-            { data: "userInput" },
-            {
-                data: null,
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    return `
-                    <button class="btn btn-sm btn-warning btn-koreksi" data-id="${row.idLaporan}">
-                        <i class="fa fa-edit"></i> Koreksi
-                    </button>
-                    <button class="btn btn-sm btn-danger btn-delete" data-id="${row.idLaporan}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                    <button class="btn btn-sm btn-success btn-print" data-id="${row.idLaporan}">
-                        <i class="fa fa-trash"></i> Print
-                    </button>
-                `;
-                },
-            },
-        ],
-        createdRow: function (row, data, dataIndex) {
-            $(row).css("font-family", "Arial");
-            $(row).css("font-size", "14px");
-        },
-        headerCallback: function (thead, data, start, end, display) {
-            $(thead).find("th").css("font-family", "Arial");
-            $(thead).find("th").css("font-size", "14px");
-        },
+        // responsive: true,
+        // processing: true,
+        // serverSide: true,
+        // destroy: true,
+        // ajax: {
+        //     url: "LaporanProduksiExtruder/getDataLaporan",
+        //     dataType: "json",
+        //     type: "GET",
+        //     data: function (d) {
+        //         return $.extend({}, d, {
+        //             _token: csrfToken,
+        //         });
+        //     },
+        // },
+        // columns: [
+        //     { data: "idLaporan" },
+        //     { data: "shiftValue" },
+        //     {
+        //         data: 'tanggal_raw', // Data asli untuk sorting
+        //         render: function (data, type, row) {
+        //             // type === 'display' digunakan saat menampilkan di tabel
+        //             if (type === 'display') {
+        //                 return row.tanggal; // tampilkan versi m/d/Y
+        //             }
+        //             return data; // untuk sorting & filtering (yyyy-mm-dd)
+        //         }
+        //     },
+        //     // { data: "tanggal" },
+        //     { data: "spek_mesin" },
+        //     { data: "spek_benang" },
+        //     { data: "userInput" },
+        //     {
+        //         data: null,
+        //         orderable: false,
+        //         searchable: false,
+        //         render: function (data, type, row) {
+        //             return `
+        //             <button class="btn btn-sm btn-warning btn-koreksi" data-id="${row.idLaporan}">
+        //                 <i class="fa fa-edit"></i> Koreksi
+        //             </button>
+        //             <button class="btn btn-sm btn-danger btn-delete" data-id="${row.idLaporan}">
+        //                 <i class="fa fa-trash"></i> Delete
+        //             </button>
+        //             <button class="btn btn-sm btn-success btn-print" data-id="${row.idLaporan}">
+        //                 <i class="fa fa-trash"></i> Print
+        //             </button>
+        //         `;
+        //         },
+        //     },
+        // ],
+        // createdRow: function (row, data, dataIndex) {
+        //     $(row).css("font-family", "Arial");
+        //     $(row).css("font-size", "14px");
+        // },
+        // headerCallback: function (thead, data, start, end, display) {
+        //     $(thead).find("th").css("font-family", "Arial");
+        //     $(thead).find("th").css("font-size", "14px");
+        // },
         // order: [[1, "asc"]],
         paging: false,
         scrollY: "550px",
@@ -580,6 +581,7 @@ $(document).ready(function () {
                         _token: csrfToken,
                         tgl_awal: tgl_awal.value,
                         tgl_akhir: tgl_akhir.value,
+                        id_lokasi: $("#" + slcLokasi.id).val(),
                     });
                 },
             },
@@ -633,6 +635,47 @@ $(document).ready(function () {
             scrollCollapse: true,
         });
     });
+
+    $("#" + slcLokasi.id).select2({
+        placeholder: "-- Pilih Lokasi --"
+    });
+
+    $("#" + slcLokasi.id).on("change", function () {
+
+        const val = $(this).val();
+        let allowedType = [];
+        switch (val) {
+            case "1":
+                // Lokasi 1 boleh semua
+                btn_redisplay.click();
+                allowedType = ["1", "2"];
+                // btn_batal.click();
+                // $("#labelProses").text("Input Data");
+                // $("#btn_proses").text("PROSES");
+                break;
+
+            case "2":
+                // Lokasi 2 hanya type tertentu
+                btn_redisplay.click();
+                allowedType = ["3"];
+                // btn_batal.click();
+                // $("#labelProses").text("Input Data");
+                // $("#btn_proses").text("PROSES");
+                break;
+
+            case "3":
+                // Lokasi 3 hanya type tertentu
+                btn_redisplay.click();
+                allowedType = ["4", "5", "6"];
+                // btn_batal.click();
+                // $("#labelProses").text("Input Data");
+                // $("#btn_proses").text("PROSES");
+                break;
+        }
+    });
+
+    // default lokasi = 1
+    $("#" + slcLokasi.id).val("1").trigger("change");
 
     //#region Koreksi
     let idLapKoreksi = null;

@@ -87,7 +87,21 @@
                     <div class="acs-add-icon"></div>
                     <div class="acs-btn-txt">Tambah Laporan</div>
                 </button>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="lokasi" class="form-label">Lokasi</label>
+                        <select id="lokasi" class="form-select form-select-sm" style="width: 100%">
+                            <option></option>
+                            @foreach ($listLokasi as $d)
+                                <option value="{{ $d->idLokasi }}">
+                                    {{ $d->idLokasi . ' | ' . $d->nama_lokasi }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="row align-items-end">
+                    <label for="tgl_awal" class="form-label">Tanggal</label>
                     <div class="col-auto">
                         <input type="date" class="form-control font-weight-bold" id="tgl_awal" name="tgl_awal">
                     </div>
