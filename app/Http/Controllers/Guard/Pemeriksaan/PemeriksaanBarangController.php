@@ -9,6 +9,8 @@ use Log;
 use App\Http\Controllers\HakAksesController;
 use Exception;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -841,9 +843,9 @@ class PemeriksaanBarangController extends Controller
         ]);
 
         $fotoFiles = [];
+        $tempFolder = null;
 
         if (!empty($header['foto_pengiriman'])) {
-
             $foto = preg_split(
                 '/(?=data:image\/[^;]+;base64,)/i',
                 $header['foto_pengiriman'],
@@ -853,11 +855,10 @@ class PemeriksaanBarangController extends Controller
 
             $foto = array_map('trim', $foto);
 
-            $dir = storage_path('app/dompdf-temp-images');
+            // Folder unik setiap request
+            $tempFolder = storage_path('app/dompdf-temp-images/' . Str::uuid());
 
-            if (!is_dir($dir)) {
-                mkdir($dir, 0777, true);
-            }
+            File::makeDirectory($tempFolder, 0777, true, true);
 
             foreach ($foto as $i => $img) {
 
@@ -869,7 +870,7 @@ class PemeriksaanBarangController extends Controller
 
                 $binary = base64_decode($base64);
 
-                $path = $dir . DIRECTORY_SEPARATOR . "img_$i.jpg";
+                $path = $tempFolder . DIRECTORY_SEPARATOR . "img_$i.jpg";
 
                 file_put_contents($path, $binary);
 
