@@ -2025,7 +2025,7 @@ class LaporanProduksiExtruderController extends Controller
                     'spek_mesin' => trim($row->spek_mesin),
                     'spek_benang' => trim($row->spek_benang),
                     'userInput' => trim($row->userInput),
-
+                    'userVerified' => trim($row->userVerified),
                 ];
             }
             // dd($response); 

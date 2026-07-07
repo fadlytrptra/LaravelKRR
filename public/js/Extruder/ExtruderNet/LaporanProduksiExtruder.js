@@ -607,6 +607,21 @@ $(document).ready(function () {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
+                        // jika sudah ada user acc → sembunyikan tombol
+                        if (
+                            row.userVerified !== null &&
+                            row.userVerified !== ""
+                        ) {
+                            return `
+                        <span style="color: green; font-weight: bold;">
+                            Sudah diverifikasi ${row.userVerified}
+                        </span>
+                        <button class="btn btn-sm btn-success btn-print" data-id="${row.idLaporan}">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                    `;
+                        }
+
                         return `
                     <button class="btn btn-sm btn-warning btn-koreksi" data-id="${row.idLaporan}">
                         <i class="fa fa-edit"></i> Koreksi
@@ -1866,7 +1881,7 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
                 alert(err.Message);
-            }, 
+            },
         });
     });
 
@@ -2409,7 +2424,8 @@ $(document).ready(function () {
                         }).then((result) => {
                             console.log(result);
                             btn_simpanLaporan.disabled = false;
-                            $("#table_laporan").DataTable().ajax.reload();
+                            btn_redisplay.click();
+                            // $("#table_laporan").DataTable().ajax.reload();
                             $("#modalLaporan")
                                 .find("input, select, textarea, td[contenteditable], div[contenteditable]")
                                 .each(function () {
