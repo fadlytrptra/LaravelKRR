@@ -143,7 +143,13 @@ Route::post('/PurchaseOrder/SendEmailSupplier', [App\Http\Controllers\Beli\Trans
 Route::get('/purchase-order/download-pdf/{no_po}', [App\Http\Controllers\Beli\TransaksiBeli\PurchaseOrderController::class, 'downloadPdf'])->name('purchase.download.pdf');
 Route::get('/cetak-sj/download-pdf/{no_sj}', [App\Http\Controllers\Sales\Cetak\CetakSJController::class, 'downloadPdf'])->name('cetaksj.download.pdf');
 
+Route::fallback(function () {
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
 
+    abort(404);
+});
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
     Route::post('/pengumuman/store', [HomeController::class, 'store'])->name('pengumuman.store');
@@ -1798,7 +1804,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('LaporanPotongJahitABM', App\Http\Controllers\ABM\Report\LaporanPotongJahitABMController::class);
     Route::resource('KonversiPotongJahitABM', App\Http\Controllers\ABM\Konversi\KonversiPotongJahitABMController::class);
     Route::resource('KonversiPrintingABM', App\Http\Controllers\ABM\Konversi\KonversiPrintingABMController::class);
-    Route::resource('KonversiGussetTwistBalik', App\Http\Controllers\ABM\Konversi\KonversiGussetTwistBalikController::class);
+    Route::resource('KonversiBalikLami', App\Http\Controllers\ABM\Konversi\KonversiBalikLamiController::class);
     #endregion
 
     #region PDAM
