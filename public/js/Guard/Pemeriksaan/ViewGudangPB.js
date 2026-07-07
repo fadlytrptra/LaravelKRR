@@ -681,9 +681,9 @@ jQuery(function ($) {
         const idHeader = $(this).data("id");
 
         window.open(
-            `PemeriksaanBarang/download/${idHeader}`,
+            `https://internal.mykrr.co.id/PemeriksaanBarang/download/${idHeader}`,
             "_blank"
         );
-
     });
+
 });
