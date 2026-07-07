@@ -219,7 +219,7 @@ document
         $.get("/check-pdf-server", function (res) {
             if (res.alive) {
                 $.ajax({
-                    url: "http://192.168.99.94:8081/PurchaseOrder/SendEmailSupplier",
+                    url: "https://internal.mykrr.co.id/PurchaseOrder/SendEmailSupplier",
                     type: "POST",
                     data: {
                         _token: $('meta[name="csrf-token"]').attr("content"),
@@ -265,7 +265,7 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
     $.get("/check-pdf-server", function (res) {
         if (res.alive) {
             window.open(
-                `http://192.168.99.94:8081/purchase-order/download-pdf/${no_po}`,
+                `https://internal.mykrr.co.id/purchase-order/download-pdf/${no_po}`,
                 "_blank",
             );
         } else {
