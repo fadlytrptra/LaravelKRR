@@ -88,8 +88,11 @@ function getPdf(kodebarang) {
             // console.log(response);
             if (response.length > 0) {
                 // console.log("masuk");
+                // var newTabUrl =
+                //     window.location.origin + "/selectpdf/" + kodebarang;
+                // window.open(newTabUrl, "_blank");
                 var newTabUrl =
-                    window.location.origin + "/selectpdf/" + kodebarang;
+                    "https://internal.mykrr.co.id/selectpdf/" + kodebarang;
                 window.open(newTabUrl, "_blank");
             } else {
                 alert(
