@@ -107,19 +107,27 @@
                                     class="from-control form-check-label ml-3">Woven</label>
                             </div>
                         </div> --}}
-                        <div class="mb-2"style="flex: 0.12">
-                            <div class="input-group">
+                        <div class="mb-2"style="flex: 0.15;">
+                            <div class="input-group mb-2">
                                 <input type="text" class="form-control" name="kodeBarangPrintingWoven"
                                     id="kodeBarangPrintingWoven" placeholder="KB Printing Woven" readonly>
                             </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="kodeBarangBalikLamiWoven"
+                                    id="kodeBarangBalikLamiWoven" placeholder="KB Balik Lami Woven" readonly>
+                            </div>
                         </div>
                         <div class="mb-2"style="flex: 0.3">
-                            <div class="input-group">
+                            <div class="input-group mb-2">
                                 <input type="text" class="form-control" name="namaBarangPrintingWoven"
                                     id="namaBarangPrintingWoven" placeholder="Nama Barang Printing Woven" readonly>
                             </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="namaBarangBalikLamiWoven"
+                                    id="namaBarangBalikLamiWoven" placeholder="Nama Barang Balik Lami Woven" readonly>
+                            </div>
                         </div>
-                        <div class="mb-2"style="flex: 0.09">
+                        <div class="mb-2"style="flex: 0.05">
                             <div class="input-group">
                                 <input type="number" class="form-control"
                                     name="input_jumlahKodeBarangSetengahJadiWoven"
