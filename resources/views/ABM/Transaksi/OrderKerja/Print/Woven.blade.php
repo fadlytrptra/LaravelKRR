@@ -308,7 +308,7 @@
                     <div id="imagePreview" style="padding: 10px;text-align: center;">
                         <h5 for="imagePreview">Contoh Packing</h5>
                         <img id="previewImg" src="data:image/png;base64,{{ $dataDetailOrderKerja[0]->ContohPacking }}"
-                            alt="Image Contoh Packing" style="height: 130px; width: 300px;;display: block; border: 1px solid black;">
+                            alt="Image Contoh Packing" style="height: 130px; width: 250px;;display: block; border: 1px solid black;">
                     </div>
                 @endif
             </div>
