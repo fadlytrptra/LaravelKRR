@@ -1159,8 +1159,8 @@ function SaveData() {
                     primer2.value = 0;
                     sekunder2.value = 0;
                     tritier2.value = 0;
-                    primer2.focus();
-                    primer2.select();
+                    // primer2.focus();
+                    // primer2.select();
                     if (Pilih === 0) {
                         TampilAllData();
                     } else {
