@@ -515,6 +515,8 @@
                     <div class="d-flex" style="width: 100%; gap: 0.5%;">
                         <div class="form-group"style="flex: 0.3; display: none;" id="div_gambar_contohPacking">
                             <label for="gambar_contohPacking">Upload Gambar Contoh Packing</label>
+                            <br>
+                            <span class="text-danger" style="font-size: 12px">*Ukuran gambar 130px x 300px</span>
                             <div class="input-group">
                                 <input type="file" class="form-control-file" id="gambar_contohPacking"
                                     name="gambar_contohPacking" accept="image/*" readonly>
