@@ -47,6 +47,7 @@ class VerifikasiSMController extends Controller
         $proses = $request->input('proses'); // 1 = insert, 2 = update, 3 = delete
         $user_input = trim(Auth::user()->NomorUser);
         $idLaporan = $request->input('idLaporan');
+        $keterangan = $request->input('keterangan');
         try {
             switch ($proses) {
                 case 1:
@@ -64,11 +65,24 @@ class VerifikasiSMController extends Controller
                             ]
                         );
 
-                    return response()->json(['message' => 'Data berhasil disimpan!']);
+                    return response()->json(['message' => 'Data berhasil diverifikasi!']);
 
                 case 2:
+                    // dd($request->all());
+                    DB::connection('ConnExtruder')
+                        ->statement(
+                            'EXEC SP_4451_GetDataLaporanProduksiExtruder 
+                        @kode = ?,
+                        @idLaporan = ?,
+                        @keterangan = ?',
+                            [
+                                6,
+                                $idLaporan,
+                                $keterangan,
+                            ]
+                        );
 
-                // return response()->json(['message' => 'Data berhasil dikoreksi!']);
+                    return response()->json(['message' => 'Keterangan berhasil diupdate!']);
 
                 case 3:
 

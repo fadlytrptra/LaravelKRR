@@ -384,6 +384,9 @@
                 <button type="button" id="btn_print" class="btn btn-success mb-2">
                     Print
                 </button>
+                <button type="button" id="btn_simpanKet" class="btn btn-info mb-2">
+                    Simpan Keterangan
+                </button>
                 <div class="laporan-extruder">
                     <div class="mt-2" style="font-size: 13px; text-align: center;  display: none !important;">
                         <div class="d-flex justify-content-center" style="white-space: nowrap;">
@@ -1340,6 +1343,10 @@
                                 <td id="total" style="width: 50px" contenteditable="true">
                                 </td>
                             </tr>
+                            <tr class="left small-text">
+                                <td colspan="16" id="keterangan" style="width: 40px" contenteditable="true">
+                                    &nbsp;</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -1411,13 +1418,13 @@
 
                     body {
                         font-family: "Times New Roman", serif;
-                        font-size: 12px;
+                        font-size: 10px;
                         color: #000;
                     }
 
                     .textBener {
                         font-family: "Times New Roman", serif;
-                        font-size: 12px;
+                        font-size: 10px;
                         color: #000;
                     }
 

@@ -7,6 +7,7 @@ jQuery(function ($) {
     let tgl_awal = document.getElementById("tgl_awal");
     let tgl_akhir = document.getElementById("tgl_akhir");
     let btn_redisplay = document.getElementById("btn_redisplay");
+    let btn_simpanKet = document.getElementById("btn_simpanKet");
     //#region Inisialisasi ID Laporan
     let referensi = document.getElementById("referensi");
     let halaman = document.getElementById("halaman");
@@ -363,6 +364,7 @@ jQuery(function ($) {
     let prongLL = document.getElementById("prongLL");
     let silLL = document.getElementById("silLL");
     let total = document.getElementById("total");
+    let keterangan = document.getElementById("keterangan");
     let table_atas = $("#table_atas").DataTable({
         // columnDefs: [{ targets: [5, 6], visible: false }],
         // headerCallback: function (thead, data, start, end, display) {
@@ -489,6 +491,46 @@ jQuery(function ($) {
 
     // default lokasi = 1
     $("#" + slcLokasi.id).val("1").trigger("change");
+
+    btn_simpanKet.addEventListener("click", async function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: "VerifikasiSM",
+            dataType: "json",
+            type: "POST",
+            data: {
+                _token: csrfToken,
+                proses: 2,
+                idLaporan: idLapKoreksi,
+                keterangan: keterangan.innerHTML,
+            },
+            success: function (response) {
+                console.log(response.message);
+                if (response.message) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: response.message,
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        $("#table_atas").DataTable().ajax.reload();
+                        $("#modalLaporan").modal("hide");
+                    });
+                } else if (response.error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: response.error,
+                        showConfirmButton: false,
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            },
+        });
+    });
 
     btn_redisplay.addEventListener("click", async function (event) {
         event.preventDefault();
@@ -675,8 +717,15 @@ jQuery(function ($) {
             data: {
                 _token: csrfToken,
                 idLaporan: id,
+                keterangan: keterangan.value
             },
             success: function (data) {
+                if (data.data[0].userVerified !== null) {
+                    btn_simpanKet.disabled = true;
+                } else {
+                    btn_simpanKet.disabled = false;
+                }
+
                 if (data.ttd && data.ttd !== "") {
 
                     let ttd = data.ttd.FotoTtd;
@@ -1348,7 +1397,7 @@ jQuery(function ($) {
                 prongLL.textContent = data.data[0].prongLL;
                 silLL.textContent = data.data[0].silLL;
                 total.textContent = data.data[0].total;
-
+                keterangan.innerHTML = data.data[0].keterangan ? data.data[0].keterangan.replace(/\n/g, "<br>") : "";
                 $("#modalLaporan").modal("show");
             },
             error: function (xhr, status, error) {
