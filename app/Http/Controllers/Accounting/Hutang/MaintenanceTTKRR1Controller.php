@@ -137,12 +137,13 @@ class MaintenanceTTKRR1Controller extends Controller
         }
         $cekHrg_tot_bttb = number_format($cekHrg_tot_bttb, 2, '.', '');
         $cekHrg_tot_bttb = round($cekHrg_tot_bttb, 2);
-
+        // $cekHrg_tot_bttb = round($cekHrg_tot_bttb, 2);
+        // $TNilaiBayar = round($TNilaiBayar, 2);
         if (!$simpan) {
             return response()->json(['error' => 'TIDAK ADA Data yang diPROSES !!..']);
         } else {
             // dd($cekHrg_tot_bttb, $TNilaiBayar);
-            if ($cekHrg_tot_bttb != $TNilaiBayar) {
+            if (abs($cekHrg_tot_bttb - $TNilaiBayar) < 0.01) {
                 return response()->json(['error' => 'Data Hrg_tot_bttb dan Nilai Bayar tidak sesuai!']);
             }
 
