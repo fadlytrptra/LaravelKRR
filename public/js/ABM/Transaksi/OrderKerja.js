@@ -1126,7 +1126,7 @@ jQuery(function ($) {
                     method: "GET",
                     data: {
                         kodeBarang: this.value,
-                        namaSubKategori: "PRINTING STARPAK BODY",
+                        namaSubKategori: "PRINTING STARSACK BODY",
                         _token: csrfToken,
                     },
                     dataType: "json",
@@ -1138,7 +1138,7 @@ jQuery(function ($) {
                                 Swal.fire({
                                     icon: "error",
                                     title: "Error",
-                                    text: "Barang tidak masuk sub kategori PRINTING STARPAK BODY.",
+                                    text: "Barang tidak masuk sub kategori PRINTING STARSACK BODY.",
                                 });
                             } else {
                                 namaBarangPrintingStarpak.value = data.dataBarang[0].NAMA_BRG; //prettier-ignore
@@ -1187,7 +1187,7 @@ jQuery(function ($) {
                         method: "GET",
                         data: {
                             kodeBarang: this.value,
-                            namaSubKategori: "PRINTING STARPAK PATCH",
+                            namaSubKategori: "PRINTING STARSACK PATCH",
                             _token: csrfToken,
                         },
                         dataType: "json",
@@ -1199,7 +1199,7 @@ jQuery(function ($) {
                                     Swal.fire({
                                         icon: "error",
                                         title: "Error",
-                                        text: "Barang tidak masuk sub kategori PRINTING STARPAK PATCH.",
+                                        text: "Barang tidak masuk sub kategori PRINTING STARSACK PATCH.",
                                     });
                                 } else {
                                     namaBarangPrintingStarpakPatchAtas.value = data.dataBarang[0].NAMA_BRG; //prettier-ignore
@@ -1249,7 +1249,7 @@ jQuery(function ($) {
                         method: "GET",
                         data: {
                             kodeBarang: this.value,
-                            namaSubKategori: "PRINTING STARPAK PATCH",
+                            namaSubKategori: "PRINTING STARSACK PATCH",
                             _token: csrfToken,
                         },
                         dataType: "json",
@@ -1261,7 +1261,7 @@ jQuery(function ($) {
                                     Swal.fire({
                                         icon: "error",
                                         title: "Error",
-                                        text: "Barang tidak masuk sub kategori PRINTING STARPAK PATCH.",
+                                        text: "Barang tidak masuk sub kategori PRINTING STARSACK PATCH.",
                                     });
                                 } else {
                                     namaBarangPrintingStarpakPatchBawah.value = data.dataBarang[0].NAMA_BRG; //prettier-ignore

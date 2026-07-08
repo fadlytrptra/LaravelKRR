@@ -17,7 +17,7 @@
                                 <select name="select_jenisOrderKerja" id="select_jenisOrderKerja" class="form-control">
                                     <option disabled selected>-- Pilih Jenis Order Kerja --</option>
                                     <option value="1">Woven</option>
-                                    <option value="2">Starpak</option>
+                                    <option value="2">Starsack</option>
                                 </select>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                         <div class="mb-2"style="flex: 0.15">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="kodeBarangPrintingStarpak"
-                                    id="kodeBarangPrintingStarpak" placeholder="KB Printing Starpak" readonly>
+                                    id="kodeBarangPrintingStarpak" placeholder="KB Printing Starsack" readonly>
                             </div>
                         </div>
                         <div class="mb-2"style="flex: 0.325">
@@ -166,24 +166,24 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" name="kodeBarangPrintingStarpakPatchAtas"
                                     id="kodeBarangPrintingStarpakPatchAtas"
-                                    placeholder="KB Printing Starpak Patch Atas" readonly>
+                                    placeholder="KB Printing Starsack Patch Atas" readonly>
                             </div>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="kodeBarangPrintingStarpakPatchBawah"
                                     id="kodeBarangPrintingStarpakPatchBawah"
-                                    placeholder="KB Printing Starpak Patch Bawah" readonly>
+                                    placeholder="KB Printing Starsack Patch Bawah" readonly>
                             </div>
                         </div>
                         <div class="mb-2"style="flex: 0.325">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="namaBarangPrintingStarpakPatchAtas"
                                     id="namaBarangPrintingStarpakPatchAtas"
-                                    placeholder="Nama Barang Printing Starpak Patch Atas" readonly>
+                                    placeholder="Nama Barang Printing Starsack Patch Atas" readonly>
                             </div>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="namaBarangPrintingStarpakPatchBawah"
                                     id="namaBarangPrintingStarpakPatchBawah"
-                                    placeholder="Nama Barang Printing Starpak Patch Bawah" readonly>
+                                    placeholder="Nama Barang Printing Starsack Patch Bawah" readonly>
                             </div>
                         </div>
                     </div>
