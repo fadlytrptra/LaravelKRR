@@ -83,6 +83,7 @@ jQuery(function ($) {
     let kodeBarangPrintingStarpakPatchAtas = document.getElementById("kodeBarangPrintingStarpakPatchAtas"); // prettier-ignore
     let kodeBarangPrintingStarpakPatchBawah = document.getElementById("kodeBarangPrintingStarpakPatchBawah"); // prettier-ignore
     let kodeBarangPrintingWoven = document.getElementById('kodeBarangPrintingWoven'); // prettier-ignore
+    let kodeBarangBalikLamiWoven = document.getElementById("kodeBarangBalikLamiWoven"); //prettier-ignore
     let labelCorakPrinting = document.querySelector('label[for="corakPrinting"]'); // prettier-ignore
     let labelInput_jumlahWarna = document.querySelector('label[for="input_jumlahWarna"]'); // prettier-ignore
     let label_kodeBarang = document.getElementById('label_kodeBarang'); // prettier-ignore
@@ -91,6 +92,7 @@ jQuery(function ($) {
     let namaBarangPrintingStarpakPatchAtas = document.getElementById("namaBarangPrintingStarpakPatchAtas"); // prettier-ignore
     let namaBarangPrintingStarpakPatchBawah = document.getElementById("namaBarangPrintingStarpakPatchBawah"); // prettier-ignore
     let namaBarangPrintingWoven = document.getElementById('namaBarangPrintingWoven'); // prettier-ignore
+    let namaBarangBalikLamiWoven = document.getElementById("namaBarangBalikLamiWoven"); //prettier-ignore
     let NomorOrderKerja = document.getElementById("NomorOrderKerja"); // prettier-ignore
     let packingSuratPesanan = document.getElementById("packingSuratPesanan"); // prettier-ignore
     let sisaSaldo = document.getElementById("sisaSaldo"); // prettier-ignore
@@ -206,6 +208,8 @@ jQuery(function ($) {
         namaBarang.innerHTML = "";
         kodeBarangPrintingWoven.value = "";
         namaBarangPrintingWoven.value = "";
+        kodeBarangBalikLamiWoven.value = "";
+        namaBarangBalikLamiWoven.value = "";
         input_jumlahKodeBarangSetengahJadiWoven.value = "";
         input_jumlahKodeBarangSetengahJadiWoven.dispatchEvent(
             new Event("input"),
@@ -334,6 +338,14 @@ jQuery(function ($) {
         },
         "Only digits are allowed",
     );
+
+    setInputFilter(
+        kodeBarangBalikLamiWoven,
+        function (value) {
+            return /^\d*$/.test(value); // Allow only digits
+        },
+        "Only digits are allowed",
+    );
     //#endregion
 
     //#region Event Listener
@@ -446,6 +458,7 @@ jQuery(function ($) {
             // Enable these
             [
                 kodeBarangPrintingWoven,
+                kodeBarangBalikLamiWoven,
                 input_jumlahKodeBarangSetengahJadiWoven,
             ].forEach((el) => (el.readOnly = false));
 
@@ -520,6 +533,7 @@ jQuery(function ($) {
             // Disable & clear these
             [
                 kodeBarangPrintingWoven,
+                kodeBarangBalikLamiWoven,
                 input_jumlahKodeBarangSetengahJadiWoven,
             ].forEach((el) => {
                 el.readOnly = true;
@@ -687,7 +701,8 @@ jQuery(function ($) {
                 if (
                     customerSuratPesanan.value.includes("JUSTUS") ||
                     customerSuratPesanan.value.includes("UNIPACK") ||
-                    customerSuratPesanan.value.includes("YANAPRIMA")
+                    customerSuratPesanan.value.includes("YANAPRIMA")||
+                    customerSuratPesanan.value.includes("TEREOS")
                 ) {
                     packingSuratPesanan.value = selectedItem.Ket?.split(" | ")[3]; // prettier-ignore
                 } else {
@@ -699,7 +714,8 @@ jQuery(function ($) {
         if (
             customerSuratPesanan.value.includes("JUSTUS") ||
             customerSuratPesanan.value.includes("UNIPACK") ||
-            customerSuratPesanan.value.includes("YANAPRIMA")
+            customerSuratPesanan.value.includes("YANAPRIMA") ||
+            customerSuratPesanan.value.includes("TEREOS")
         ) {
             div_gambar_contohPacking.style.display = "block";
             div_previewGambar_contohPacking.style.display = "block";
@@ -2215,6 +2231,7 @@ jQuery(function ($) {
         }
         formData.append("JenisOK", jenisOrderKerja); // prettier-ignore
         formData.append("KBPrintingWoven", kodeBarangPrintingWoven.value); // prettier-ignore
+        formData.append("KBBalikLamiWoven", kodeBarangBalikLamiWoven.value); // prettier-ignore
         formData.append("JumlahKBStghJadi", input_jumlahKodeBarangSetengahJadiWoven.value); // prettier-ignore
         formData.append(
             "KBSetengahJadiWovenArray",
@@ -2404,7 +2421,9 @@ jQuery(function ($) {
 
                     if (jenisOrderKerja == 1) {
                         kodeBarangPrintingWoven.readOnly = true;
+                        kodeBarangBalikLamiWoven.readOnly = true;
                         kodeBarangPrintingWoven.value = response.dataDetailOrderKerja[0].KBPrintingWoven; //prettier-ignore
+                        kodeBarangBalikLamiWoven.value = response.dataDetailOrderKerja[0].KBBalikLamiWoven; //prettier-ignore
                         namaBarangPrintingWoven.value = response.dataDetailOrderKerja[0].NamaBarangWovenPrinting; //prettier-ignore
                         let jumlahKBSetJadi = response.dataDetailOrderKerja[0].JumlahKBStghJadi || 0; //prettier-ignore
                         input_jumlahKodeBarangSetengahJadiWoven.readOnly = true;
@@ -2586,7 +2605,9 @@ jQuery(function ($) {
 
                     if (jenisOrderKerja == 1) {
                         kodeBarangPrintingWoven.readOnly = true;
+                        kodeBarangBalikLamiWoven.readOnly = true;
                         kodeBarangPrintingWoven.value = response.dataDetailOrderKerja[0].KBPrintingWoven; //prettier-ignore
+                        kodeBarangBalikLamiWoven.value = response.dataDetailOrderKerja[0].KBBalikLamiWoven; //prettier-ignore
                         namaBarangPrintingWoven.value = response.dataDetailOrderKerja[0].NamaBarangWovenPrinting; //prettier-ignore
                         let jumlahKBSetJadi = response.dataDetailOrderKerja[0].JumlahKBStghJadi || 0; //prettier-ignore
                         input_jumlahKodeBarangSetengahJadiWoven.readOnly = true;
