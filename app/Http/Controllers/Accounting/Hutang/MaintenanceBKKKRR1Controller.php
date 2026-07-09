@@ -374,56 +374,56 @@ class MaintenanceBKKKRR1Controller extends Controller
             $idbkk = null;
             $totalBayar = 0;
             foreach ($listPengajuan as $index => $item) {
-                // dd($listPengajuan);
-                // dd($index);
+
                 if ($index == 0) {
-                    // Call the stored procedure to create the initial BKK entry
-                    $createBKKResult = DB::connection('ConnAccounting')
-                        ->statement('exec SP_5409_ACC_INS_BKK1_IDBKK @UserId = ?, @IdPembayaran = ?, @StatusPenagihan = ?, @TglNow = ?', [
+
+                    // Jalankan SP dan ambil IdBKK yang dihasilkan
+                    $result = DB::connection('ConnAccounting')->select(
+                        'EXEC SP_5409_ACC_INS_BKK1_IDBKK
+                @UserId = ?,
+                @IdPembayaran = ?,
+                @StatusPenagihan = ?,
+                @TglNow = ?',
+                        [
                             $user_id,
                             $item['Id_Pembayaran'],
                             substr($item['Id_Penagihan'], 0, 1) !== 'Y' ? 'Y' : 'N',
                             $tanggal,
-                        ]);
+                        ]
+                    );
 
-                    if (!empty($createBKKResult)) {
-                        // Extract the year from the current date
-                        $periode = \Carbon\Carbon::parse($tanggal)->year;
+                    if (!empty($result)) {
 
-                        // Retrieve the current value of Id_BKK_E_Rp
-                        $idBKK_E_Rp = DB::connection('ConnAccounting')
-                            ->table('T_COUNTER_BKK')
-                            ->where('Periode', $periode)
-                            ->value('Id_BKK_E_Rp');
+                        $idbkk = $result[0]->IdBKK;
 
-                        if ($idBKK_E_Rp !== null) {
-                            // Subtract 1 from the retrieved Id_BKK_E_Rp
-                            // $idBKK_E_RpMinusOne = $idBKK_E_Rp - 1;
-                            $idBKK_E_RpMinusOne = $idBKK_E_Rp;
-                            // Format the idBKK as 'KKK-PYYxxxxx'
-                            $formattedIdBKK = 'KKK-P' . substr($periode, -2) . str_pad($idBKK_E_RpMinusOne, 5, '0', STR_PAD_LEFT);
-
-                            // Retrieve the IdBKK from the T_Pembayaran table
-                            $tPembayaranRecord = DB::connection('ConnAccounting')
-                                ->table('T_Pembayaran')
-                                ->where('Id_BKK', $formattedIdBKK)
-                                ->first();
-                            // dd($tPembayaranRecord);
-                        }
+                        $tPembayaranRecord = DB::connection('ConnAccounting')
+                            ->table('T_Pembayaran')
+                            ->where('Id_BKK', $idbkk)
+                            ->first();
                     }
-                } else {
-                    DB::connection('ConnAccounting')->statement('exec SP_1273_ACC_INS_BKK1_RINCBKK @IdBKK = ?, @IdPembayaran = ?, @TglNow = ?', [
-                        $idbkk,
-                        $item['Id_Pembayaran'],
-                        $tanggal,
-                    ]);
-                }
-                if ($tPembayaranRecord) {
-                    $idbkk = $tPembayaranRecord->Id_BKK;
 
-                    $tNilaiBKK = DB::connection('ConnAccounting')->select('exec SP_1273_ACC_LIST_BKK1_NILAIBKK @BKK = ?', [$idbkk]);
-                    // if ($index !== 0) {
-                    // }
+                } else {
+
+                    DB::connection('ConnAccounting')->statement(
+                        'EXEC SP_1273_ACC_INS_BKK1_RINCBKK
+                @IdBKK = ?,
+                @IdPembayaran = ?,
+                @TglNow = ?',
+                        [
+                            $idbkk,
+                            $item['Id_Pembayaran'],
+                            $tanggal,
+                        ]
+                    );
+                }
+
+                if (!empty($tPembayaranRecord)) {
+
+                    $tNilaiBKK = DB::connection('ConnAccounting')->select(
+                        'EXEC SP_1273_ACC_LIST_BKK1_NILAIBKK @BKK = ?',
+                        [$idbkk]
+                    );
+
                     if ($jmlData == 1) {
                         $totalBayar = (float) $tNilaiBKK[0]->NilaiBayar;
                     } else {
