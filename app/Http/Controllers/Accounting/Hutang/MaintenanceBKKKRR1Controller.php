@@ -398,8 +398,8 @@ class MaintenanceBKKKRR1Controller extends Controller
 
                         if ($idBKK_E_Rp !== null) {
                             // Subtract 1 from the retrieved Id_BKK_E_Rp
-                            $idBKK_E_RpMinusOne = $idBKK_E_Rp - 1;
-
+                            // $idBKK_E_RpMinusOne = $idBKK_E_Rp - 1;
+                            $idBKK_E_RpMinusOne = $idBKK_E_Rp;
                             // Format the idBKK as 'KKK-PYYxxxxx'
                             $formattedIdBKK = 'KKK-P' . substr($periode, -2) . str_pad($idBKK_E_RpMinusOne, 5, '0', STR_PAD_LEFT);
 
