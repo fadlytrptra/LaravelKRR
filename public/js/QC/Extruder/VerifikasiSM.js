@@ -726,10 +726,10 @@ jQuery(function ($) {
                     btn_simpanKet.disabled = false;
                 }
 
-                if (data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
+                if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
                     let ttd = data.ttd.FotoTtd;
-                    
+
                     // pastikan ada prefix base64
                     if (!ttd.startsWith("data:image")) {
                         ttd = "data:image/png;base64," + ttd;
