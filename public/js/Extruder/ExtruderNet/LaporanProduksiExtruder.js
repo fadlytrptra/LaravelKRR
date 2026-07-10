@@ -801,55 +801,55 @@ $(document).ready(function () {
                 let colorB = data.data[0].colorB === "red" ? "red" : "black";
                 applyColorGroup(fieldsB, colorB);
                 // set radio
-                let rB = document.querySelector(`input[name="colorB"][value="${colorB}"]`);
-                if (rB) {
-                    rB.checked = true;
-                    rB.dispatchEvent(new Event("change"));
+                let rowB = document.querySelector(`input[name="colorB"][value="${colorB}"]`);
+                if (rowB) {
+                    rowB.checked = true;
+                    rowB.dispatchEvent(new Event("change"));
                 }
 
                 // ======== Kolom C ========
                 let colorC = data.data[0].colorC === "red" ? "red" : "black";
                 applyColorGroup(fieldsC, colorC);
-                let rC = document.querySelector(`input[name="colorC"][value="${colorC}"]`);
-                if (rC) {
-                    rC.checked = true;
-                    rC.dispatchEvent(new Event("change"));
+                let rowC = document.querySelector(`input[name="colorC"][value="${colorC}"]`);
+                if (rowC) {
+                    rowC.checked = true;
+                    rowC.dispatchEvent(new Event("change"));
                 }
 
                 // ======== Kolom D ========
                 let colorD = data.data[0].colorD === "red" ? "red" : "black";
                 applyColorGroup(fieldsD, colorD);
-                let rD = document.querySelector(`input[name="colorD"][value="${colorD}"]`);
-                if (rD) {
-                    rD.checked = true;
-                    rD.dispatchEvent(new Event("change"));
+                let rowD = document.querySelector(`input[name="colorD"][value="${colorD}"]`);
+                if (rowD) {
+                    rowD.checked = true;
+                    rowD.dispatchEvent(new Event("change"));
                 }
 
                 // ======== Kolom E ========
                 let colorE = data.data[0].colorE === "red" ? "red" : "black";
                 applyColorGroup(fieldsE, colorE);
-                let rE = document.querySelector(`input[name="colorE"][value="${colorE}"]`);
-                if (rE) {
-                    rE.checked = true;
-                    rE.dispatchEvent(new Event("change"));
+                let rowE = document.querySelector(`input[name="colorE"][value="${colorE}"]`);
+                if (rowE) {
+                    rowE.checked = true;
+                    rowE.dispatchEvent(new Event("change"));
                 }
 
                 // ======== Kolom F ========
                 let colorF = data.data[0].colorF === "red" ? "red" : "black";
                 applyColorGroup(fieldsF, colorF);
-                let rF = document.querySelector(`input[name="colorF"][value="${colorF}"]`);
-                if (rF) {
-                    rF.checked = true;
-                    rF.dispatchEvent(new Event("change"));
+                let rowF = document.querySelector(`input[name="colorF"][value="${colorF}"]`);
+                if (rowF) {
+                    rowF.checked = true;
+                    rowF.dispatchEvent(new Event("change"));
                 }
 
                 // ======== Kolom G ========
                 let colorG = data.data[0].colorG === "red" ? "red" : "black";
                 applyColorGroup(fieldsG, colorG);
-                let rG = document.querySelector(`input[name="colorG"][value="${colorG}"]`);
-                if (rG) {
-                    rG.checked = true;
-                    rG.dispatchEvent(new Event("change"));
+                let rowG = document.querySelector(`input[name="colorG"][value="${colorG}"]`);
+                if (rowG) {
+                    rowG.checked = true;
+                    rowG.dispatchEvent(new Event("change"));
                 }
 
                 referensi.textContent = data.data[0].referensi;
@@ -1402,8 +1402,10 @@ $(document).ready(function () {
                 prongLL.textContent = data.data[0].prongLL;
                 silLL.textContent = data.data[0].silLL;
                 total.textContent = data.data[0].total;
-
+                console.log(rB.textContent);
                 $("#modalLaporan").modal("show");
+                console.log(rB.textContent);
+
             },
             error: function (xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
