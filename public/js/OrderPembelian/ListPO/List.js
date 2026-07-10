@@ -228,14 +228,22 @@ document
                     },
                     success: function (res) {
                         if (res.success) {
-                            Swal.fire("Berhasil", res.message, "success");
-                            $("#modalEmailSupplier").modal("hide");
+                            Swal.fire({
+                                icon: "success",
+                                title: "Berhasil",
+                                text: res.message,
+                                confirmButtonText: "OK"
+                            }).then(() => {
+                                $("#modalEmailSupplier").modal("hide");
+                            });
                         } else {
-                            Swal.fire("Gagal", res.message, "error");
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Email Sudah Dikirim",
+                                text: res.message,
+                                confirmButtonText: "OK"
+                            });
                         }
-                    },
-                    error: function () {
-                        Swal.fire("Error", "Gagal mengirim email", "error");
                     },
                 });
             } else {

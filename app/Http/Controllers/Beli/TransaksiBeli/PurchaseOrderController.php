@@ -1286,6 +1286,26 @@ class PurchaseOrderController extends Controller
             'no_po' => 'required',
         ]);
 
+        $trans = DB::connection('ConnPurchase')
+            ->table('YTRANSBL')
+            ->where('NO_PO', $request->no_po)
+            ->select('SudahKirimEmail')
+            ->first();
+
+        if (!$trans) {
+            return response()->json([
+                'success' => false,
+                'message' => 'PO tidak ditemukan.'
+            ]);
+        }
+
+        if ($trans->SudahKirimEmail) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email untuk PO ini sudah pernah dikirim.'
+            ]);
+        }
+
         /* ===============================
          * HEADER PO
          * =============================== */
@@ -1468,6 +1488,14 @@ class PurchaseOrderController extends Controller
                     ['mime' => 'application/pdf']
                 );
         });
+
+        DB::connection('ConnPurchase')
+            ->table('YTRANSBL')
+            ->where('NO_PO', $request->no_po)
+            ->update([
+                'SudahKirimEmail' => 1,
+                'TimeKirimEmail'  => now(),
+            ]);
 
         return response()->json([
             'success' => true,
