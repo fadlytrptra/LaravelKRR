@@ -2044,6 +2044,7 @@ $(document).ready(function () {
                     showConfirmButton: true,
                     // timer: 2000 
                 });
+                btn_simpanLaporan.disabled = false;
                 return; // jangan lanjut eksekusi
             }
             $.ajax({
