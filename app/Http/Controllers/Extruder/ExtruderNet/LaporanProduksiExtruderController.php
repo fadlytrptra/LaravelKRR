@@ -406,8 +406,8 @@ class LaporanProduksiExtruderController extends Controller
         if ($kodeProses == "1") {
             $check = DB::connection('ConnExtruder')
                 ->select(
-                    'EXEC SP_4451_Count_LaporanProduksiExtruder @Tanggal = ?, @ShiftValue = ?',
-                    [$tanggal, $shiftValue]
+                    'EXEC SP_4451_Count_LaporanProduksiExtruder @Tanggal = ?, @ShiftValue = ?, @lokasi = ?',
+                    [$tanggal, $shiftValue, $id_lokasi]
                 );
             // dd($check);
             $Ada = 0;
