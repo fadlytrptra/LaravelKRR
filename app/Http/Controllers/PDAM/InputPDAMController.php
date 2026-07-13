@@ -167,6 +167,11 @@ class InputPDAMController extends Controller
             $idDataPDAM = $request->idDataPDAM;
             $detailDataPDAM = DB::connection('ConnUtility')->select('EXEC SP_4384_PDAM_Maintenance_Data_PDAM @XKode = ?, @XIdPdam = ?', [2, $idDataPDAM]);
             return datatables($detailDataPDAM)->make(true);
+        } else if ($id == 'getDetailDataPDAMCounterSebelumnya') {
+            $idSumberAir = $request->idSumberAir;
+            $idDataPDAM = $request->idDataPDAM ?? NULL;
+            $dataCounterTerakhir = DB::connection('ConnUtility')->select('EXEC SP_4384_PDAM_Maintenance_Data_PDAM @XKode = ?, @XIdSumberAir = ?, @XIdPdam = ?', [8, $idSumberAir, $idDataPDAM]);
+            return datatables($dataCounterTerakhir)->make(true);
         } else if ($id == 'getDataSumberAir') {
             $idLokasi = $request->idLokasi;
             $dataSumberAir = DB::connection('ConnUtility')->select('EXEC SP_4384_PDAM_Maintenance_Sumber_Air @XKode = ?, @XLokasi = ?', [6, $idLokasi]);

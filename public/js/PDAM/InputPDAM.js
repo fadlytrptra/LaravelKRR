@@ -49,7 +49,7 @@ jQuery(function ($) {
                     return (
                         moment(data).format("YYYY-MM-DD") +
                         " " +
-                        moment(full.TanggalInput).format("hh:mm:ss")
+                        moment(full.TanggalInput).format("HH:mm:ss")
                     );
                 },
             },
@@ -151,24 +151,39 @@ jQuery(function ($) {
     }
 
     function getDataCounterSebelumnya(sumberAir, idDataPDAM, modal) {
-        $.ajax({
-            url: "/InputPDAM/getDataCounterSebelumnya",
-            type: "GET",
-            data: {
-                idSumberAir: sumberAir,
-                idDataPDAM: idDataPDAM,
-                _token: csrfToken,
-            },
-            success: function (response) {
-                console.log(numeral(response.data[0]?.Counter ?? 0).value());
-                let getCounterSebelumnya = numeral(
-                    response.data[0]?.Counter ?? 0,
-                ).value();
-                if (modal == "detail") {
-                    counterSebelumnyaDetail.value = numeral(
-                        getCounterSebelumnya / 1000,
-                    ).format("0,0.000");
-                } else {
+        if (modal == "detail") {
+            $.ajax({
+                url: "/InputPDAM/getDetailDataPDAMCounterSebelumnya",
+                type: "GET",
+                data: {
+                    idSumberAir: sumberAir,
+                    idDataPDAM: idDataPDAM,
+                    _token: csrfToken,
+                },
+                success: function (response) {
+                    counterSebelumnyaDetail.value = response.data[0]?.Counter || 0;
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching data: ", error);
+                },
+            });
+        } else {
+            $.ajax({
+                url: "/InputPDAM/getDataCounterSebelumnya",
+                type: "GET",
+                data: {
+                    idSumberAir: sumberAir,
+                    idDataPDAM: idDataPDAM,
+                    _token: csrfToken,
+                },
+                success: function (response) {
+                    console.log(
+                        numeral(response.data[0]?.Counter ?? 0).value(),
+                    );
+                    let getCounterSebelumnya = numeral(
+                        response.data[0]?.Counter ?? 0,
+                    ).value();
+
                     counterSebelumnya.value = getCounterSebelumnya;
                     minimalCounterSaatIni = getCounterSebelumnya;
                     console.log(
@@ -193,12 +208,12 @@ jQuery(function ($) {
                             counterPemakaian.value = 0;
                         }
                     }
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching data: ", error);
-            },
-        });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching data: ", error);
+                },
+            });
+        }
     }
 
     function renderPreview() {
@@ -755,8 +770,8 @@ jQuery(function ($) {
                 numeral.locale("id");
                 tanggalDataPDAMDetail.value = moment(response.data[0].Tanggal).format('YYYY-MM-DD'); //prettier-ignore
                 sumberAirDetail.value = response.data[0].NamaSumberAir ?? "Data sumber air tidak ditemukan"; //prettier-ignore
-                counterSaatIniDetail.value = numeral(response.data[0].Counter / 1000).format("0,0.000"); //prettier-ignore
-                counterPemakaianDetail.value = numeral(response.data[0].Pemakaian / 1000).format("0,0.000"); //prettier-ignore
+                counterSaatIniDetail.value = response.data[0].Counter; //prettier-ignore
+                counterPemakaianDetail.value = response.data[0].Pemakaian; //prettier-ignore
                 keteranganDetail.value = response.data[0].Keterangan;
                 userInputDetail.value = response.data[0].UserInput;
                 timestampInput.value = response.data[0].TanggalInput;
