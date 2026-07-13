@@ -143,8 +143,12 @@ class MaintenanceTTKRR1Controller extends Controller
             return response()->json(['error' => 'TIDAK ADA Data yang diPROSES !!..']);
         } else {
             // dd($cekHrg_tot_bttb, $TNilaiBayar);
-            if (abs($cekHrg_tot_bttb - $TNilaiBayar) < 0.01) {
-                return response()->json(['error' => 'Data Hrg_tot_bttb dan Nilai Bayar tidak sesuai!']);
+            $tolerance = 0.1;
+
+            if (abs($cekHrg_tot_bttb - $TNilaiBayar) > $tolerance) {
+                return response()->json([
+                    'error' => 'Data Hrg_tot_bttb dan Nilai Bayar tidak sesuai!'
+                ]);
             }
 
             DB::connection('ConnAccounting')
