@@ -17,21 +17,33 @@
                                     readonly>
                             </div>
                         </div>
-                        <button class="btn btn-info" id="final_btnShowDetail">
-                            Show Kategori Barang
-                        </button>
+                        <div style="display:flex;align-items:flex-start;gap:15px;">
+                            <!-- BAGIAN TOMBOL -->
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <button class="btn btn-info" id="final_btnShowDetail">
+                                    Show Kategori Barang
+                                </button>
 
-                        <div style="display:flex;align-items:flex-start;gap:15px;margin-top:8px;">
-                            <button type="button" class="btn btn-warning" id="btnDownloadAttachment">
-                                Download Attachment
-                            </button>
+                                <button type="button" class="btn btn-warning" id="btnDownloadAttachment">
+                                    Download Attachment
+                                </button>
+                            </div>
 
+                            <!-- FOTO BARANG -->
                             <div id="final_fotoBarangContainer" style="display:none;">
                                 <div style="width:185px;height:140px;border:3px solid #ccc;border-radius:6px;padding:3px;background:#fff;display:flex;align-items:center;justify-content:center;">
                                     <img id="final_fotoBarang" src="" alt="Foto Barang"
                                         style="max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;">
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- DETAIL KATEGORI -->
+                        <div id="final_detailBarang" class="mt-2"
+                            style="display:none;border:1px solid black;padding-left:10px;">
+                            <p class="RDZCard2" id="final_kategoriUtama"></p>
+                            <p class="RDZCard2" id="final_kategori"></p>
+                            <p class="RDZCard2" id="final_subKategori"></p>
                         </div>
 
                         <!-- Modal Preview Dokumentasi -->
@@ -58,13 +70,6 @@
                             </div>
                         </div>
 
-
-                        <div id="final_detailBarang" class="mt-2"
-                            style="display:none;border: 1px solid black;padding-left: 10px">
-                            <p class="RDZCard2" id="final_kategoriUtama"></p>
-                            <p class="RDZCard2" id="final_kategori"></p>
-                            <p class="RDZCard2" id="final_subKategori"></p>
-                        </div>
                         <div class="form-group mt-4">
                             <label for="final_pembelianTerakhir">Pembelian Terakhir</label>
                             <div class="input-group">
