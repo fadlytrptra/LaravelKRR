@@ -69,6 +69,8 @@ class FotoBarangController extends Controller
         ]);
 
         $kdBarang = trim($request->Kd_Barang);
+        $userInput = Auth::user()->NomorUser;
+        $inputAt = now()->format('Y-m-d H:i:s');
 
         $conn = DB::connection('ConnPurchase');
         $conn->beginTransaction();
@@ -85,7 +87,7 @@ class FotoBarangController extends Controller
             $hex = '0x' . bin2hex($binary);
             $base64 = base64_encode($binary);
 
-            // Row ada DAN sudah memiliki foto
+            // Row ada dan sudah memiliki foto
             if ($existing && !is_null($existing->FOTO)) {
                 $conn->rollBack();
 
@@ -101,22 +103,32 @@ class FotoBarangController extends Controller
                     UPDATE Y_FOTO
                     SET
                         FOTO = $hex,
-                        URL = ?
+                        URL = ?,
+                        [UserInput] = ?,
+                        [InputAt] = ?
                     WHERE KD_BARANG = ?
                 ", [
                     $base64,
+                    $userInput,
+                    $inputAt,
                     $kdBarang
                 ]);
-            }
-
-            // Row belum ada sama sekali
-            else {
+            } else {
+                // Row belum ada
                 $conn->statement("
-                    INSERT INTO Y_FOTO (KD_BARANG, FOTO, URL)
-                    VALUES (?, $hex, ?)
+                    INSERT INTO Y_FOTO (
+                        KD_BARANG,
+                        FOTO,
+                        URL,
+                        [UserInput],
+                        [InputAt]
+                    )
+                    VALUES (?, $hex, ?, ?, ?)
                 ", [
                     $kdBarang,
-                    $base64
+                    $base64,
+                    $userInput,
+                    $inputAt
                 ]);
             }
 
@@ -132,12 +144,17 @@ class FotoBarangController extends Controller
 
             Log::error('Upload Foto Error', [
                 'message' => $e->getMessage(),
+                'userInput' => $userInput,
+                'inputAt' => $inputAt,
+                'kdBarang' => $kdBarang,
                 'trace' => $e->getTraceAsString()
             ]);
 
+            // SEMENTARA untuk debugging
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal menyimpan foto'
+                'message' => 'Gagal menyimpan foto',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
