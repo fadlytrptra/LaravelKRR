@@ -27,6 +27,7 @@ $(document).ready(function () {
             { data: "IsOnline" },
             { data: "IsAdmin" },
             { data: "IsAdminPDAM" },
+            { data: "IsAdminFotoBarang" },
             { data: "IsActive" },
             { data: "NoTelp" },
             // { data: "IdUserMaster" },
@@ -109,6 +110,10 @@ $(document).ready(function () {
                             "checked",
                             data.data[0].IsAdminPDAM == "1",
                         );
+                        $("#isAdminFotoBarang").prop(
+                            "checked",
+                            data.data[0].IsAdminFotoBarang == "1"
+                        );
                         $("#isActive").prop(
                             "checked",
                             data.data[0].IsActive == "1",
@@ -153,7 +158,7 @@ $(document).ready(function () {
                                 // 1️⃣ Uncheck semua checkbox dulu
                                 $('input.form-check-input[type="checkbox"]')
                                     .not(
-                                        "#isOnline, #isAdmin, #isActive, #isAdminPDAM",
+                                        "#isOnline, #isAdmin, #isActive, #isAdminPDAM, #isAdminFotoBarang",
                                     )
                                     .prop("checked", false);
 
@@ -211,6 +216,7 @@ $(document).ready(function () {
                 isAdmin: $("#isAdmin").is(":checked") ? "1" : "0",
                 isAdminPDAM: $("#isAdminPDAM").is(":checked") ? "1" : "0",
                 isActive: $("#isActive").is(":checked") ? "1" : "0",
+                isAdminFotoBarang: $("#isAdminFotoBarang").is(":checked") ? "1" : "0",
                 nomor: $("#kodeNegara").val() + $("#nomor").val(),
             },
             success: function (response) {

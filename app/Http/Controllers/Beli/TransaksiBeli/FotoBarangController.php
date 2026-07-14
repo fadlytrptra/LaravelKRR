@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class FotoBarangController extends Controller
@@ -13,7 +14,13 @@ class FotoBarangController extends Controller
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('Beli');
-        return view('Beli.TransaksiBeli.FotoBarang', compact('access'));
+        $isAdminFotoBarang = DB::connection('ConnEDP')
+            ->table('UserMaster')
+            ->where('NomorUser', Auth::user()->NomorUser)
+            ->where('IsAdminFotoBarang', 1)
+            ->exists();
+
+        return view('Beli.TransaksiBeli.FotoBarang', compact('access', 'isAdminFotoBarang'));
     }
 
     public function show($id)
@@ -58,7 +65,7 @@ class FotoBarangController extends Controller
     {
         $request->validate([
             'Kd_Barang' => 'required|max:9',
-            'Foto' => 'required|image|mimes:jpg,jpeg,png, webp|max:5120'
+            'Foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120'
         ]);
 
         $kdBarang = trim($request->Kd_Barang);
@@ -78,8 +85,8 @@ class FotoBarangController extends Controller
             $hex = '0x' . bin2hex($binary);
             $base64 = base64_encode($binary);
 
-            // jika sudah ada gambar (maka update dengan gambar baru)
-           if ($existing) {
+            // Row ada DAN sudah memiliki foto
+            if ($existing && !is_null($existing->FOTO)) {
                 $conn->rollBack();
 
                 return response()->json([
@@ -88,12 +95,26 @@ class FotoBarangController extends Controller
                 ], 400);
             }
 
-            // masukkan gambar baru
+            // Row sudah ada, tetapi FOTO masih NULL
+            if ($existing) {
+                $conn->statement("
+                    UPDATE Y_FOTO
+                    SET
+                        FOTO = $hex,
+                        URL = ?
+                    WHERE KD_BARANG = ?
+                ", [
+                    $base64,
+                    $kdBarang
+                ]);
+            }
+
+            // Row belum ada sama sekali
             else {
                 $conn->statement("
-                    INSERT INTO Y_FOTO(KD_BARANG, FOTO, URL)
-                    VALUES(?, $hex, ?)",
-                    [
+                    INSERT INTO Y_FOTO (KD_BARANG, FOTO, URL)
+                    VALUES (?, $hex, ?)
+                ", [
                     $kdBarang,
                     $base64
                 ]);

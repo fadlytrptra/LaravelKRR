@@ -37,6 +37,7 @@
                                     <th scope="col">Is Online</th>
                                     <th scope="col">Is Admin</th>
                                     <th scope="col">Is Admin PDAM</th>
+                                    <th scope="col">Is Admin Foto Barang</th>
                                     <th scope="col">Is Active</th>
                                     <th scope="col">No Telp</th>
                                     <th scope="col">Aksi</th>
@@ -177,6 +178,18 @@
                                 <input class="form-check-input" type="checkbox" id="isAdminPDAM" value="1">
                                 <label class="form-check-label" for="isAdminPDAM">
                                     Is Admin PDAM
+                                </label>
+                            </div>
+                        </div>
+                        <br>
+                         <div class="col-lg-12 d-flex">
+                            <label for="isAdminFotoBarang" style="font-weight: bold;">Is Admin Foto Barang</label>
+                        </div>
+                        <div class="col-lg-12 d-flex flex-column">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isAdminFotoBarang" value="1">
+                                <label class="form-check-label" for="isAdminFotoBarang">
+                                    Is Admin Foto Barang
                                 </label>
                             </div>
                         </div>

@@ -17,6 +17,8 @@ let btnTakePhoto = document.getElementById("btnTakePhoto");
 let btnCloseCamera = document.getElementById("btnCloseCamera");
 let stream = null;
 
+let isAdminFotoBarang = window.isAdminFotoBarang === true;
+
 const csrfToken = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute('content');
@@ -36,6 +38,18 @@ function closeCameraModal() {
 
     cameraVideo.srcObject = null;
     cameraModal.style.display = "none";
+}
+
+function setActionButtons({
+    browse = false,
+    foto = false,
+    simpan = false,
+    hapus = false
+    } = {}) {
+    btnBrowse.disabled = !isAdminFotoBarang || !browse;
+    btnFoto.disabled = !isAdminFotoBarang || !foto;
+    btnSimpan.disabled = !isAdminFotoBarang || !simpan;
+    btnHapus.disabled = !isAdminFotoBarang || !hapus;
 }
 
 // endregion
@@ -92,8 +106,12 @@ fotoInput.addEventListener("change", function (e) {
         reader.onload = function (ev) {
             previewImage.src = ev.target.result;
             gambarDariDB = false;
-            btnBrowse.disabled = true;
-            btnFoto.disabled = true;
+            setActionButtons({
+                browse: false,
+                foto: false,
+                simpan: true,
+                hapus: true
+            });
         };
         reader.readAsDataURL(file);
     }
@@ -128,31 +146,40 @@ btnCari.addEventListener("click", function () {
                 namaBarang.value = "";
                 ketBarang.value = "";
                 previewImage.src = "";
-                btnBrowse.disabled = false;
-                btnFoto.disabled = false;
-                btnSimpan.disabled = true;
-                btnHapus.disabled = true;
+                setActionButtons({
+                    browse: true,
+                    foto: true,
+                    simpan: false,
+                    hapus: false
+                });
 
                 return;
             }
 
             namaBarang.value = res.data.nama_brg ?? "";
             ketBarang.value = res.data.ket ?? "";
-            btnSimpan.disabled = false;
-            btnHapus.disabled = false;
 
-            // tampilkan gambar
             if (res.data.foto) {
                 previewImage.src = `data:image/jpeg;base64,${res.data.foto}`;
                 gambarDariDB = true;
-                btnBrowse.disabled = true;
-                btnFoto.disabled = true;
+
+                setActionButtons({
+                    browse: false,
+                    foto: false,
+                    simpan: false,
+                    hapus: true
+                });
 
             } else {
                 previewImage.src = "/images/tanyaken_apa.jpg";
                 gambarDariDB = false;
-                btnBrowse.disabled = false;
-                btnFoto.disabled = false;
+
+                setActionButtons({
+                    browse: true,
+                    foto: true,
+                    simpan: false,
+                    hapus: false
+                });
             }
         })
         .catch(error => {
@@ -273,8 +300,12 @@ cameraInput.addEventListener("change", function (e) {
         reader.onload = function (ev) {
             previewImage.src = ev.target.result;
             gambarDariDB = false;
-            btnBrowse.disabled = true;
-            btnFoto.disabled = true;
+            setActionButtons({
+                browse: false,
+                foto: false,
+                simpan: true,
+                hapus: true
+            });
         };
         reader.readAsDataURL(file);
     }
@@ -305,10 +336,13 @@ btnTakePhoto.addEventListener("click", function () {
                 );
 
             previewImage.src = URL.createObjectURL(blob);
-
             gambarDariDB = false;
-            btnBrowse.disabled = true;
-            btnFoto.disabled = true;
+            setActionButtons({
+                browse: false,
+                foto: false,
+                simpan: true,
+                hapus: true
+            });
         },
         "image/jpeg",
         0.9
@@ -597,9 +631,11 @@ btnHapus.addEventListener("click", function () {
 });
 
 previewImage.src = "";
-btnBrowse.disabled = true;
-btnFoto.disabled = true;
-btnSimpan.disabled = true;
-btnHapus.disabled = true;
+setActionButtons({
+    browse: false,
+    foto: false,
+    simpan: false,
+    hapus: false
+});;
 
 // #endregion

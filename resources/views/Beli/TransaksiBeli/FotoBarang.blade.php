@@ -108,5 +108,8 @@
 
 <canvas id="cameraCanvas" hidden></canvas>
 
+<script>
+    window.isAdminFotoBarang = @json($isAdminFotoBarang);
+</script>
 <script src="{{ asset('js/OrderPembelian/FotoBarang.js') }}"></script>
 @endsection

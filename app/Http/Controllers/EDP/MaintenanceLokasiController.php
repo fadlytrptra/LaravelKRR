@@ -42,13 +42,14 @@ class MaintenanceLokasiController extends Controller
             $isAdmin = $request->input('isAdmin');
             $isAdminPDAM = $request->input('isAdminPDAM');
             $isActive = $request->input('isActive');
+            $isAdminFotoBarang = $request->input('isAdminFotoBarang');
             $nomor = $request->input('nomor');
             // dd($idUser, $lokasi);
             DB::connection('ConnEDP')
                 ->statement('EXEC SP_4451_EDP_MaintenanceLokasi @kode = ?, @idUser = ?, @idLokasi = ?', [1, $idUser, $lokasi]);
 
             DB::connection('ConnEDP')
-                ->statement('EXEC SP_4451_EDP_MaintenanceLokasi @kode = ?, @idUser = ?, @is_online = ?, @is_admin = ?, @is_adminPDAM = ?, @is_active = ?, @no_telp = ?', [7, $idUser, $isOnline, $isAdmin, $isAdminPDAM, $isActive, $nomor]);
+                ->statement('EXEC SP_4451_EDP_MaintenanceLokasi @kode = ?, @idUser = ?, @is_online = ?, @is_admin = ?, @is_adminPDAM = ?, @is_adminFotoBarang = ?, @is_active = ?, @no_telp = ?', [7, $idUser, $isOnline, $isAdmin, $isAdminPDAM, $isAdminFotoBarang, $isActive, $nomor]);
 
             return response()->json(['message' => 'Data berhasil diupdate!']);
         } catch (Exception $e) {
@@ -78,6 +79,7 @@ class MaintenanceLokasiController extends Controller
                     'IsAdmin' => trim($row->IsAdmin) == '1' ? 'True' : 'False',
                     'IsAdminPDAM' => trim($row->IsAdminPDAM) == 1 ? 'True' : 'False',
                     'IsActive' => trim($row->IsActive) == '1' ? 'True' : 'False',
+                    'IsAdminFotoBarang' => trim($row->IsAdminFotoBarang) == '1' ? 'True' : 'False',
                     'NoTelp' => trim($row->NoTelp) ?? '',
                 ];
             }
@@ -123,6 +125,7 @@ class MaintenanceLokasiController extends Controller
                     'NoTelp' => trim($row->NoTelp),
                     'IsAdmin' => trim($row->IsAdmin),
                     'IsAdminPDAM' => trim($row->IsAdminPDAM),
+                    'IsAdminFotoBarang' => trim($row->IsAdminFotoBarang),
                     'IsActive' => trim($row->IsActive),
                 ];
             }
