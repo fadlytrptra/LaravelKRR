@@ -22,7 +22,7 @@ class ApproveController extends Controller
         $access = (new HakAksesController)->HakAksesFiturMaster('Beli');
         $result = (new HakAksesController)->HakAksesFitur('Approve');
         if ($result > 0) {
-            $data = DB::connection('ConnPurchase')->select('exec SP_5409_LIST_ORDER @kd = ?, @Operator=?',[$kd,$operator]);
+            $data = DB::connection('ConnPurchase')->select('exec SP_5409_LIST_ORDER @kd = ?, @Operator=?', [$kd, $operator]);
             // dd($data);
             return view('Beli.Transaksi.Approve.List', compact('data', 'access'));
         } else {
@@ -59,7 +59,22 @@ class ApproveController extends Controller
         $data = TransBL::select('Y_KATEGORI_UTAMA.nama as KatUtama', 'Y_KATEGORY.nama_kategori as kategori', 'Y_KATEGORI_SUB.nama_sub_kategori as SubKat', 'Y_BARANG.NAMA_BRG as NamaBarang', 'Qty', 'Nama_satuan', 'Pemesan', 'YUSER.Nama as User', 'StatusBeli', 'Tgl_Dibutuhkan', 'Ket_Internal', 'keterangan', 'Kd_div')->leftjoin('Y_BARANG', 'Y_BARANG.KD_BRG', 'YTRANSBL.Kd_brg')->leftjoin('YUSER', 'YUSER.kd_user', 'YTRANSBL.Operator')->leftjoin('YSATUAN', 'YSATUAN.No_satuan', 'YTRANSBL.NoSatuan')->leftjoin('STATUS_ORDER', 'STATUS_ORDER.KdStatus', 'YTRANSBL.StatusOrder')->leftjoin('Y_KATEGORI_SUB', 'Y_KATEGORI_SUB.no_sub_kategori', 'Y_BARANG.NO_SUB_KATEGORI')->leftjoin('Y_KATEGORY', 'Y_KATEGORY.no_kategori', 'Y_KATEGORI_SUB.no_kategori')->leftjoin('Y_KATEGORI_UTAMA', 'Y_KATEGORI_UTAMA.no_kat_utama', 'Y_KATEGORY.no_kat_utama')->where('No_trans', $id)->first();
 
         $getKD_Barang = TransBL::select('Kd_brg')->where('No_trans', $id)->first();
-        $dataBeliTerakhir = TransBL::select()->leftjoin('YSUPPLIER', 'YSUPPLIER.NO_SUP', 'YTRANSBL.supplier')->where('Kd_brg', $getKD_Barang->Kd_brg)->wherein('StatusOrder', [4, 5, 8, 10, 11])->orderBy('No_trans', 'desc')->offset(0)->limit(1)->get();
+
+        $dataBeliTerakhir = TransBL::select()
+            ->leftJoin('YSUPPLIER', 'YSUPPLIER.NO_SUP', '=', 'YTRANSBL.supplier')
+            ->where('Kd_brg', $getKD_Barang->Kd_brg)
+            ->whereIn('StatusOrder', [4, 5, 8, 10, 11])
+            ->orderBy('No_trans', 'desc')
+            ->limit(1)
+            ->get();
+
+        $dataBeliTerakhir->transform(function ($item) {
+            if (!empty($item->DokumentasiFile)) {
+                $item->DokumentasiFile = base64_encode($item->DokumentasiFile);
+            }
+
+            return $item;
+        });
 
         return compact('data', 'dataBeliTerakhir', 'getKD_Barang');
     }
