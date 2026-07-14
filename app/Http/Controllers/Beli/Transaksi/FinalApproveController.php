@@ -464,7 +464,7 @@ class FinalApproveController extends Controller
             $data = DB::connection('ConnPurchase')
                 ->select('SELECT	YBR.NAMA_BRG, YTB.Qty, YSU.NM_SUP, YDI.NM_DIV,
             YTB.Operator, YTB.StatusBeli, YTB.keterangan, YTB.Ket_Internal, YTB.PriceUnit, TMT.Id_MataUang_BC,
-            YKU.nama, YKK.nama_kategori, YKS.nama_sub_kategori, YUS.Nama AS NamaUser, YTB.PriceExt, YTB.PPN, YTB.harga_disc, YTB.Dokumentasi
+            YKU.nama, YKK.nama_kategori, YKS.nama_sub_kategori, YUS.Nama AS NamaUser, YTB.PriceExt, YTB.PPN, YTB.harga_disc, YTB.Dokumentasi, YTB.Kd_brg
             FROM	YTRANSBL YTB INNER JOIN
                     Y_BARANG YBR ON YTB.Kd_brg = YBR.KD_BRG INNER JOIN
                     YSUPPLIER YSU ON YTB.Supplier = YSU.NO_SUP INNER JOIN
@@ -793,6 +793,93 @@ class FinalApproveController extends Controller
         }
 
         return response('', 204);
+    }
+
+    public function getFotoBarang($kdBarang)
+    {
+        $kdBarang = trim(urldecode($kdBarang));
+        $data = DB::connection('ConnPurchase')
+            ->table('Y_FOTO')
+            ->select('FOTO', 'URL')
+            ->whereRaw('LTRIM(RTRIM(KD_BARANG)) = ?', [$kdBarang])
+            ->first();
+
+        if (!$data) {
+            return response('', 404);
+        }
+
+        if (!is_null($data->FOTO) && $data->FOTO !== '') {
+            $foto = $data->FOTO;
+
+            if (is_resource($foto)) {
+                $foto = stream_get_contents($foto);
+            }
+            if (
+                is_string($foto) &&
+                preg_match(
+                    '/^data:image\/([a-zA-Z0-9.+-]+);base64,(.*)$/s',
+                    $foto,
+                    $matches
+                )
+            ) {
+                $binary = base64_decode($matches[2], true);
+
+                if ($binary !== false) {
+                    return response($binary)
+                        ->header(
+                            'Content-Type',
+                            'image/' . strtolower($matches[1])
+                        )
+                        ->header('Cache-Control', 'private, max-age=3600');
+                }
+            }
+
+            if (is_string($foto)) {
+                $cleanBase64 = preg_replace('/\s+/', '', $foto);
+                $decoded = base64_decode($cleanBase64, true);
+
+                if ($decoded !== false && strlen($decoded) > 0) {
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->buffer($decoded);
+
+                    if (
+                        $mimeType &&
+                        str_starts_with($mimeType, 'image/')
+                    ) {
+                        return response($decoded)
+                            ->header('Content-Type', $mimeType)
+                            ->header('Cache-Control', 'private, max-age=3600');
+                    }
+                }
+            }
+
+            if (is_string($foto) && strlen($foto) > 0) {
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->buffer($foto);
+
+                if (
+                    $mimeType &&
+                    str_starts_with($mimeType, 'image/')
+                ) {
+                    return response($foto)
+                        ->header('Content-Type', $mimeType)
+                        ->header('Cache-Control', 'private, max-age=3600');
+                }
+            }
+        }
+
+        if (!empty(trim($data->URL ?? ''))) {
+            $url = trim($data->URL);
+
+            if (
+                filter_var($url, FILTER_VALIDATE_URL) ||
+                str_starts_with($url, '/')
+            ) {
+                return redirect($url);
+            }
+        }
+
+        return response('', 404);
     }
 
 }

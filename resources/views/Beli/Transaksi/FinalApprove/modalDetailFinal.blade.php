@@ -17,11 +17,22 @@
                                     readonly>
                             </div>
                         </div>
-                        <button class="btn btn-info" id="final_btnShowDetail">Show Kategori Barang</button>
-                        <!-- Tombol di halaman utama -->
-                        <button type="button" class="btn btn-warning" id="btnDownloadAttachment">
-                            Download Attachment
+                        <button class="btn btn-info" id="final_btnShowDetail">
+                            Show Kategori Barang
                         </button>
+
+                        <div style="display:flex;align-items:flex-start;gap:15px;margin-top:8px;">
+                            <button type="button" class="btn btn-warning" id="btnDownloadAttachment">
+                                Download Attachment
+                            </button>
+
+                            <div id="final_fotoBarangContainer" style="display:none;">
+                                <div style="width:185px;height:140px;border:3px solid #ccc;border-radius:6px;padding:3px;background:#fff;display:flex;align-items:center;justify-content:center;">
+                                    <img id="final_fotoBarang" src="" alt="Foto Barang"
+                                        style="max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;">
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Modal Preview Dokumentasi -->
                         <div class="modal fade" id="modalDokumentasi" tabindex="-1" style="padding-top: 10px;">
@@ -144,6 +155,28 @@
     </div>
 </div>
 
+<!-- MODAL FOTO BARANG -->
+<div class="modal fade" id="modalFotoBarang" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:850px;width:90%;">
+        <div class="modal-content">
+            <div class="modal-header" style="position:relative;justify-content:center;">
+                <h3 class="modal-title" style="font-weight:bold;margin:0;">Foto Barang</h3>
+                <button type="button" class="close" data-bs-dismiss="modal"
+                    style="position:absolute;right:20px;top:12px;font-size:32px;border:0;background:transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" style="padding:25px;">
+                <div id="fotoBarangZoomArea"
+                    style="width:100%;height:450px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:grab;">
+                    <img id="fotoBarangPreview" src="" alt="Foto Barang"
+                        style="max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;user-select:none;-webkit-user-drag:none;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     window.dokumentasiBase64 = @json($dokumentasi ?? null);
     window.dokumentasiExt = @json($ext ?? null);

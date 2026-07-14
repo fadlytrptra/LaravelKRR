@@ -292,6 +292,17 @@ jQuery(function ($) {
     let final_diskon = document.getElementById("final_diskon");
     let final_ppn = document.getElementById("final_ppn");
     let final_total = document.getElementById("final_total");
+    let final_fotoBarang = document.getElementById("final_fotoBarang");
+    let final_fotoBarangContainer = document.getElementById("final_fotoBarangContainer");
+    let fotoBarangPreview = document.getElementById("fotoBarangPreview");
+    let fotoBarangZoomArea = document.getElementById("fotoBarangZoomArea");
+    let fotoBarangScale = 1;
+    let fotoBarangX = 0;
+    let fotoBarangY = 0;
+    let fotoBarangDragging = false;
+    let fotoBarangStartX = 0;
+    let fotoBarangStartY = 0;
+    let fotoBarangLastTouchDistance = 0;
     const filterFinalApprove = $("#filterFinalApprove");
     const btnDownloadAttachment = document.getElementById(
         "btnDownloadAttachment",
@@ -615,6 +626,19 @@ jQuery(function ($) {
             .catch(() => {
                 updateAttachmentButton(false);
             });
+    }
+
+    function updateFotoBarangTransform() {
+        fotoBarangPreview.style.transform = `translate(${fotoBarangX}px, ${fotoBarangY}px) scale(${fotoBarangScale})`;
+    }
+
+    function resetFotoBarangZoom() {
+        fotoBarangScale = 1;
+        fotoBarangX = 0;
+        fotoBarangY = 0;
+        fotoBarangDragging = false;
+        fotoBarangLastTouchDistance = 0;
+        updateFotoBarangTransform();
     }
 
     //#endregion
@@ -994,12 +1018,17 @@ jQuery(function ($) {
     $(document).on("click", ".link_detail", function (e) {
         selectedNoTrans = $(this).data("id");
         let noTrans = selectedNoTrans;
+        final_fotoBarangContainer.style.display = "none";
+        final_fotoBarang.removeAttribute("src");
+        final_fotoBarang.onload = null;
+        final_fotoBarang.onerror = null;
         $.ajax({
             url: "/FinalApprove/getDetailNoTrans",
             type: "GET",
             data: { noTrans: noTrans },
             success: function (res) {
                 console.log("FULL RESPONSE:", res);
+                console.log("KD BARANG:", res[0].Kd_brg);
                 console.log("Gambar Dokumentasi:", window.dokumentasiBase64);
                 console.log("Dokumentasi: ", res[0].Dokumentasi);
 
@@ -1033,6 +1062,31 @@ jQuery(function ($) {
                 final_ppn.value = numeral(res[0].PPN).format("0,0.0000");
                 final_total.value = numeral(res[0].PriceExt).format("0,0.0000");
                 window.dokumentasiBase64 = res[0].Dokumentasi;
+
+                final_fotoBarangContainer.style.display = "none";
+                final_fotoBarang.removeAttribute("src");
+                final_fotoBarang.onload = null;
+                final_fotoBarang.onerror = null;
+
+                if (res[0].Kd_brg != null && res[0].Kd_brg != undefined && String(res[0].Kd_brg).trim() != "") {
+                    let kdBarang = String(res[0].Kd_brg).trim();
+                    let fotoUrl = "/FinalApprove/foto-barang/" + encodeURIComponent(kdBarang) + "?t=" + new Date().getTime();
+
+                    console.log("KD BARANG:", kdBarang);
+                    console.log("FOTO URL:", fotoUrl);
+
+                    final_fotoBarang.onload = function () {
+                        final_fotoBarangContainer.style.display = "block";
+                    };
+
+                    final_fotoBarang.onerror = function () {
+                        console.log("Foto barang tidak ditemukan:", fotoUrl);
+                        final_fotoBarang.removeAttribute("src");
+                        final_fotoBarangContainer.style.display = "none";
+                    };
+
+                    final_fotoBarang.src = fotoUrl;
+                }
 
                 checkDokumentasiAvailability(noTrans);
             },
@@ -1293,5 +1347,116 @@ jQuery(function ($) {
                 });
         });
     }
+
+    final_fotoBarang.addEventListener("click", function () {
+        if (!this.src) return;
+
+        fotoBarangPreview.src = this.src;
+        resetFotoBarangZoom();
+
+        let modalFotoBarang = bootstrap.Modal.getOrCreateInstance(
+            document.getElementById("modalFotoBarang")
+        );
+
+        modalFotoBarang.show();
+    });
+
+    fotoBarangZoomArea.addEventListener("wheel", function (e) {
+        e.preventDefault();
+
+        let oldScale = fotoBarangScale;
+        fotoBarangScale += e.deltaY < 0 ? 0.2 : -0.2;
+        fotoBarangScale = Math.min(Math.max(fotoBarangScale, 1), 5);
+
+        if (fotoBarangScale === 1) {
+            fotoBarangX = 0;
+            fotoBarangY = 0;
+        }
+
+        if (oldScale !== fotoBarangScale) {
+            updateFotoBarangTransform();
+        }
+    }, { passive: false });
+
+    fotoBarangZoomArea.addEventListener("mousedown", function (e) {
+        if (fotoBarangScale <= 1) return;
+
+        fotoBarangDragging = true;
+        fotoBarangStartX = e.clientX - fotoBarangX;
+        fotoBarangStartY = e.clientY - fotoBarangY;
+        fotoBarangZoomArea.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mousemove", function (e) {
+        if (!fotoBarangDragging) return;
+
+        fotoBarangX = e.clientX - fotoBarangStartX;
+        fotoBarangY = e.clientY - fotoBarangStartY;
+        updateFotoBarangTransform();
+    });
+
+    document.addEventListener("mouseup", function () {
+        fotoBarangDragging = false;
+
+        if (fotoBarangZoomArea) {
+            fotoBarangZoomArea.style.cursor =
+                fotoBarangScale > 1 ? "grab" : "default";
+        }
+    });
+
+    fotoBarangZoomArea.addEventListener("touchstart", function (e) {
+        if (e.touches.length === 1 && fotoBarangScale > 1) {
+            fotoBarangDragging = true;
+            fotoBarangStartX = e.touches[0].clientX - fotoBarangX;
+            fotoBarangStartY = e.touches[0].clientY - fotoBarangY;
+        }
+
+        if (e.touches.length === 2) {
+            let dx = e.touches[0].clientX - e.touches[1].clientX;
+            let dy = e.touches[0].clientY - e.touches[1].clientY;
+            fotoBarangLastTouchDistance = Math.sqrt(dx * dx + dy * dy);
+        }
+    });
+
+    fotoBarangZoomArea.addEventListener("touchmove", function (e) {
+        if (e.touches.length === 1 && fotoBarangDragging && fotoBarangScale > 1) {
+            e.preventDefault();
+            fotoBarangX = e.touches[0].clientX - fotoBarangStartX;
+            fotoBarangY = e.touches[0].clientY - fotoBarangStartY;
+            updateFotoBarangTransform();
+        }
+
+        if (e.touches.length === 2) {
+            e.preventDefault();
+
+            let dx = e.touches[0].clientX - e.touches[1].clientX;
+            let dy = e.touches[0].clientY - e.touches[1].clientY;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (fotoBarangLastTouchDistance > 0) {
+                fotoBarangScale *= distance / fotoBarangLastTouchDistance;
+                fotoBarangScale = Math.min(Math.max(fotoBarangScale, 1), 5);
+
+                if (fotoBarangScale === 1) {
+                    fotoBarangX = 0;
+                    fotoBarangY = 0;
+                }
+
+                updateFotoBarangTransform();
+            }
+
+            fotoBarangLastTouchDistance = distance;
+        }
+    }, { passive: false });
+
+    fotoBarangZoomArea.addEventListener("touchend", function () {
+        fotoBarangDragging = false;
+        fotoBarangLastTouchDistance = 0;
+    });
+
+    document.getElementById("modalFotoBarang").addEventListener("hidden.bs.modal", function () {
+        fotoBarangPreview.src = "";
+        resetFotoBarangZoom();
+    });
     //#endregion
 });
