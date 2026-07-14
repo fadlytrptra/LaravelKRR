@@ -1100,15 +1100,19 @@ jQuery(function ($) {
         });
     });
 
-    final_btnShowDetail.addEventListener("click", function (e) {
-        if (this.innerHTML == "Show Kategori Barang") {
-            this.innerHTML = "Hide Kategori Barang";
-            final_detailBarang.style.display = "block";
-        } else if (this.innerHTML == "Hide Kategori Barang") {
-            this.innerHTML = "Show Kategori Barang";
-            final_detailBarang.style.display = "none";
-        }
-    });
+    if (final_btnShowDetail && final_detailBarang) {
+        final_btnShowDetail.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            if (final_detailBarang.style.display === "none" || final_detailBarang.style.display === "") {
+                final_detailBarang.style.display = "block";
+                this.textContent = "Hide Kategori Barang";
+            } else {
+                final_detailBarang.style.display = "none";
+                this.textContent = "Show Kategori Barang";
+            }
+        });
+    }
 
     $("#btnExportExcel").on("click", function () {
         let requestData = {
