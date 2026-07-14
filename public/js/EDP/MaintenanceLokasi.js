@@ -200,7 +200,7 @@ $(document).ready(function () {
 
         // ambil semua checkbox yang dicentang
         $("#editmodal input.form-check-input:checked")
-            .not("#isOnline, #isAdmin, #isActive, #isAdminPDAM")
+            .not("#isOnline, #isAdmin, #isActive, #isAdminPDAM, #isAdminFotoBarang")
             .each(function () {
                 lokasiDipilih.push($(this).val());
             });
