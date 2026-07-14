@@ -6,6 +6,62 @@
         width: auto;
         display: inline-block;
     }
+
+    .foto-barang-container {
+        display: none;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .foto-barang:hover {
+        border-color: #007bff;
+        transform: scale(1.03);
+    }
+
+    .foto-barang-kosong {
+        padding: 15px;
+        border: 1px dashed #ccc;
+        border-radius: 6px;
+        color: #777;
+        text-align: center;
+    }
+
+    .attachment-foto-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-top: 10px;
+        margin-bottom: 12px;
+    }
+
+    #FotoBarangContainer {
+        flex: 1;
+    }
+
+    .foto-barang {
+        display: block;
+        max-width: 200px;
+        max-height: 150px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 3px;
+        background: #fff;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .swal-preview-foto {
+        max-width: 85vw ;
+        max-height: 80vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        margin: 20px auto;
+    }
 </style>
 
 
@@ -42,12 +98,27 @@
                         <p class="RDZCard" id="KetInternal"></p>
                         <p class="RDZCard" id="PembelianTerakhir"></p>
 
-                        <div class="text-start mt-2">
-                            <button type="button"
-                                class="btn RDZButtonCard btn-download" id="btnDownloadAttachment" name="action">
-                                Download Attachment
-                            </button>
+                       <div class="attachment-foto-row">
+                            {{-- KIRI: DOWNLOAD ATTACHMENT --}}
+                            <div>
+                                <button type="button"
+                                    class="btn RDZButtonCard btn-download"
+                                    id="btnDownloadAttachment"
+                                    name="action">
+                                    Download Attachment
+                                </button>
+                            </div>
+
+                            {{-- KANAN: FOTO BARANG --}}
+                            <div id="FotoBarangContainer" style="display: none;">
+                                <img id="FotoBarang"
+                                    src=""
+                                    alt="Foto Barang"
+                                    class="foto-barang">
+                            </div>
                         </div>
+
+
 
                         <button type="submit" class="btn btn-sm btn-default RDZButtonCard"
                             style="background-color:#007bff;color: white;" name="action"

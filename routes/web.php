@@ -166,6 +166,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/heartbeat', function () {
         return response()->json(['status' => 'ok']);
     });
+    Route::resource('bon-kas', App\Http\Controllers\BonKasController::class);
+    Route::get('/bon-kas-putih', [App\Http\Controllers\BonKasController::class, 'bonKasPutih'])->name('bonKasPutih');
+    Route::get('/bon-kas-merah', [App\Http\Controllers\BonKasController::class, 'bonKasMerah'])->name('bonKasMerah');
+    Route::get('/list-bon-kas-putih', [App\Http\Controllers\BonKasController::class, 'listPutih'])->name('listBonKasPutih');
+    Route::get('/list-bon-kas-merah', [App\Http\Controllers\BonKasController::class, 'listMerah'])->name('listBonKasMerah');
+
 
     #region Beli
     Route::get('Beli', 'App\Http\Controllers\HomeController@Beli');
@@ -284,6 +290,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Approve/{id}/show', 'App\Http\Controllers\Beli\Transaksi\ApproveController@show')->name('approve.show');
     Route::post('/Approve/{id}/up', 'App\Http\Controllers\Beli\Transaksi\ApproveController@update')->name('approve.update');
     Route::get('/FinalApprove/getDokumentasi/{noTrans}', [FinalApproveController::class, 'getDokumentasi']);
+    Route::get('/FinalApprove/foto-barang/{kdBarang}', [App\Http\Controllers\Beli\Transaksi\FinalApproveController::class, 'getFotoBarang'])->name('FinalApprove.fotoBarang');
     Route::get('/FinalApprove/downloadDokumentasi/{noTrans}', [FinalApproveController::class, 'downloadDokumentasi']);
     Route::get('/FinalApprove/{id}/show', 'App\Http\Controllers\Beli\Transaksi\FinalApproveController@show')->name('finalapprove.show');
     Route::post('/FinalApprove/{id}/up', 'App\Http\Controllers\Beli\Transaksi\FinalApproveController@update')->name('finalapprove.update');
