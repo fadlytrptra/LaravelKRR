@@ -518,6 +518,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Extruder/Extruder/Benang/{formName?}/{namaGedung?}', [BenangController::class, 'index']);
     Route::get('/Extruder/Extruder/Catat/{formName?}', [PencatatanController::class, 'index']);
     Route::resource('LaporanProduksiExtruder', App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class);
+    Route::resource('ACCPengecekanMB', App\Http\Controllers\Extruder\ExtruderNet\ACCPengecekanMBController::class);
     Route::get('/print-laporan-produksi-extruder', function () {
         return view('Extruder.Extruder.printLaporanProduksiExtruder');
     })->name('print.laporan.produksi.extruder');
@@ -1775,6 +1776,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('PemberhentianMesinCL', App\Http\Controllers\QC\Circular\PemberhentianMesinCLController::class);
     Route::resource('ACCCekGantiUkuranCL', App\Http\Controllers\QC\Circular\ACCCekGantiUkuranCLController::class);
     Route::resource('VerifikasiSM', App\Http\Controllers\QC\Extruder\VerifikasiSMController::class);
+    Route::resource('PengecekanMB', App\Http\Controllers\QC\Extruder\PengecekanMBController::class);
 
     Route::get('getMesinSelect/{idTypeMesin}', 'App\Http\Controllers\QC\Circular\CekKainCircularController@getMesinSelect');
 
