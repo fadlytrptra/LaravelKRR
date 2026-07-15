@@ -11,6 +11,8 @@ const btnKoreksi = document.getElementById("btn_koreksi");
 const btnBatal = document.getElementById("btn_batal");
 const btnProses = document.getElementById("btn_proses");
 const btnKeluar = document.getElementById("btn_keluar");
+
+let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content"); // prettier-ignore
 //#endregion
 
 //#region Events
@@ -35,12 +37,12 @@ txtKodeBarang.addEventListener("keypress", function (event) {
 btnProses.addEventListener("click", function () {
     if (parseFloat(numBawah.value) > 0) {
         alert(
-            "Persen bawah harus negatif. Tambahkan tanda minus (-) di depannya."
+            "Persen bawah harus negatif. Tambahkan tanda minus (-) di depannya.",
         );
         numBawah.select();
     } else if (parseFloat(numAtas.value) < 0) {
         alert(
-            "Persen atas harus positif. Hilangkan tanda minus (-) di depannya."
+            "Persen atas harus positif. Hilangkan tanda minus (-) di depannya.",
         );
         numAtas.select();
     } else if (
@@ -52,22 +54,41 @@ btnProses.addEventListener("click", function () {
         numBawah.value = "-5";
         numAtas.value = "5";
     } else {
-        fetchStmt(
-            "/beratStandar/SP_1273_PRG_BERAT_STANDART~2/" +
-                txtKodeBarang.value +
-                "~" +
-                txtAlasan.value.replace(/ /g, "_") +
-                "~" +
-                numAtas.value +
-                "~" +
-                numBawah.value +
-                "~" +
-                getCurrentDate(),
-            () => {
+        $.ajax({
+            url: "/beratStandar/SP_1273_PRG_BERAT_STANDART~2/fundata",
+            type: "GET",
+            data: {
+                txtKodeBarang: txtKodeBarang.value,
+                txtAlasan: txtAlasan.value,
+                numAtas: numAtas.value,
+                numBawah: numBawah.value,
+                date: getCurrentDate(),
+                _token: csrfToken,
+            },
+            success: function (response) {
                 enableForm(false);
                 alert("Data berhasil tersimpan.");
-            }
-        );
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: ", error);
+            },
+        });
+        // fetchStmt(
+        //     "/beratStandar/SP_1273_PRG_BERAT_STANDART~2/" +
+        //         txtKodeBarang.value +
+        //         "~" +
+        //         txtAlasan.value.replace(/ /g, "_") +
+        //         "~" +
+        //         numAtas.value +
+        //         "~" +
+        //         numBawah.value +
+        //         "~" +
+        //         getCurrentDate(),
+        //     () => {
+        //         enableForm(false);
+        //         alert("Data berhasil tersimpan.");
+        //     }
+        // );
     }
 });
 
@@ -106,7 +127,7 @@ function loadDataFetch(s_kode_brg) {
                 txtAlasan.value = data[0].Alasan;
                 btnProses.focus();
             } else alert("Kode barang tidak ditemukan.");
-        }
+        },
     );
 }
 //#endregion

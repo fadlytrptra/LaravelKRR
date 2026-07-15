@@ -20,7 +20,7 @@ class BeratController extends Controller
         return view($view_name, $view_data);
     }
 
-    public function beratStandar($fun_str, $fun_data)
+    public function beratStandar($fun_str, $fun_data, Request $request)
     {
         $param_data = explode('~', $fun_data);
 
@@ -90,9 +90,14 @@ class BeratController extends Controller
 
             case 'SP_1273_PRG_BERAT_STANDART~2':
                 $fun_str = explode('~', $fun_str)[0];
-                $param_data[1] = str_replace('_', ' ', $param_data[1]); // @alasan
-                $param_data[2] = intval($param_data[2]); // @pa
-                $param_data[3] = intval($param_data[3]); // @pb
+                // $param_data[1] = str_replace('_', ' ', $param_data[1]); // @alasan
+                // $param_data[2] = intval($param_data[2]); // @pa
+                // $param_data[3] = intval($param_data[3]); // @pb
+                $param_data[0] = $request->input('txtKodeBarang'); //@KodeBarang
+                $param_data[1] = $request->input('txtAlasan'); // @alasan
+                $param_data[2] = intval($request->input('numAtas')); // @pa
+                $param_data[3] = intval($request->input('numBawah')); // @pb
+                $param_data[4] = $request->input('date'); // @tanggal
                 $param_str = '@kd = 2, @KodeBarang = ?, @alasan = ?, @pa = ?, @pb = ?, @userApp = ' . Auth::user()->NomorUser . ', @tanggal = ?';
                 return $this->executeSP('statement', $fun_str, $param_str, $param_data);
 
