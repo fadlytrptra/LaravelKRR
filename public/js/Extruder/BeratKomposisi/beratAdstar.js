@@ -154,7 +154,7 @@ function loadDataFetch(s_kode_brg) {
         (data) => {
             if (data.length > 0) {
                 txtKode.value = s_kode_brg;
-                txtType.value = numeral(data[0].NAMA_BRG).value();
+                txtType.value = data[0].NAMA_BRG;
                 numKarung.value = numeral(data[0].BERAT_KARUNG).value();
                 numLami.value = numeral(data[0].BERAT_LAMI).value();
                 numOPP.value = numeral(data[0].BERAT_OPP).value();
