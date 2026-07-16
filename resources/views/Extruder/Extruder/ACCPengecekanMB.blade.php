@@ -71,7 +71,7 @@
         </div>
     </div>
 </div>
-@include('QC.Extruder.ModalPengecekanMB')
+@include('Extruder.Extruder.ModalACCPengecekanMB')
 {{-- @include('Guard.Pemeriksaan.ModalPemeriksaanBarangCustomer') --}}
 <script type="text/javascript" src="{{ asset('js/Extruder/ExtruderNet/ACCPengecekanMB.js') }}"></script>
 @endsection

@@ -134,6 +134,8 @@
                 <h1><a>Pencatatan Daya Produksi</a></h1>
             @elseif($formName == 'LaporanProduksiExtruder')
                 <h1><a>Laporan Produksi Extruder</a></h1>
+            @elseif($formName == 'ACCPengecekanMB')
+                <h1><a>ACC Pengecekan Mutu Benang</a></h1>
             @elseif($formName == 'formCatatEffisiensi')
                 <h1><a>Pencatatan Effisiensi</a></h1>
             @elseif($formName == 'formCatatPerawatan')
@@ -409,7 +411,7 @@
     <script src="{{ asset('js/Extruder/extruder_main.js') }}"></script>
 
     <main id="main">
-        <div class="container">
+        <div class="container-fluid px-2">
             @yield('content')
         </div>
     </main><!-- End #main -->
