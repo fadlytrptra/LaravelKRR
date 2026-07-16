@@ -258,6 +258,15 @@ $(document).ready(function () {
                         text: response.error,
                         showConfirmButton: false,
                     });
+                    id_penagihan.value = "";
+                    id_inv.value = "";
+                    nilai_penagihan.value = numeral(0).format("0,0.00");
+                    nofaktur_pajak.value = "";
+                    nilai_pajak.value = "";
+                    pajak.value = "";
+                    totalHargaTerbayar = 0;
+                    $("#table_atas").DataTable().ajax.reload();
+                    btn_supplier.focus();
                 }
             },
             error: function (xhr) {
