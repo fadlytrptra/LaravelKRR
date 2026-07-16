@@ -56,6 +56,17 @@
         </div>
 
         <div class="row mt-3">
+            <div class="form-group col-md-2 d-flex justify-content-end">
+                <span class="aligned-text">Last Input Information:</span>
+            </div>
+            <div class="form-group col-md-6 mt-3 mt-md-0">
+                <div class="input-group">
+                    <input type="text" id="last_input" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
             <div class="col-9 row justify-content-md-center">
                 <div class="text-center col-md-auto"><button type="button" id="btn_koreksi"
                         class="btn btn-outline-warning">Koreksi</button></div>

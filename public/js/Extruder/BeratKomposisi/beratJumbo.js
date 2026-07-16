@@ -7,6 +7,7 @@ const numLami = document.getElementById("berat_lami");
 const numOPP = document.getElementById("berat_opp");
 const numConductive = document.getElementById("berat_conductive");
 const numTotal = document.getElementById("berat_total");
+const last_input = document.getElementById("last_input");
 
 const btnKoreksi = document.getElementById("btn_koreksi");
 const btnBatal = document.getElementById("btn_batal");
@@ -175,6 +176,8 @@ function loadDataFetch(s_kode_brg) {
                 numOPP.value = numeral(data[0].BERAT_OPP).value();
                 numConductive.value = numeral(data[0].BERAT_LAIN).value();
                 numTotal.value = numeral(data[0].BERAT_TOTAL).value();
+                last_input.value = `${data[0].NamaUser ?? "Data User Kosong"} - ${data[0].Date_Modified ?? "Data Date Modified Kosong"}`;
+
                 enableForm(true);
                 numKarung.select();
             } else {

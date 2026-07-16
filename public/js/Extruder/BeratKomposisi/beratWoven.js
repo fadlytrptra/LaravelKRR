@@ -8,6 +8,7 @@ const numOPP = document.getElementById("berat_opp");
 const numKertas = document.getElementById("berat_kertas");
 const numLain = document.getElementById("berat_lain");
 const numTotal = document.getElementById("berat_total");
+const last_input = document.getElementById("last_input");
 
 const btnKoreksi = document.getElementById("btn_koreksi");
 const btnBatal = document.getElementById("btn_batal");
@@ -143,7 +144,7 @@ btnProses.addEventListener("click", function () {
                         btnProses.disabled = true;
                         btnKoreksi.disabled = false;
                         btnKoreksi.focus();
-                    }
+                    },
                 );
             };
 
@@ -152,11 +153,11 @@ btnProses.addEventListener("click", function () {
                     formWait(false);
                     enableForm(false);
                     alert(
-                        "Berat Standard tidak bisa dikoreksi, \nkarena sudah memiliki Komposisi Konversi."
+                        "Berat Standard tidak bisa dikoreksi, \nkarena sudah memiliki Komposisi Konversi.",
                     );
                 } else koreksiBerat();
             } else koreksiBerat();
-        }
+        },
     );
 });
 
@@ -188,6 +189,7 @@ function loadDataFetch(s_kode_brg) {
                 numKertas.value = numeral(data[0].BERAT_CONDUCTIVE).value();
                 numLain.value = numeral(data[0].BERAT_LAIN).value();
                 numTotal.value = numeral(data[0].BERAT_TOTAL).value();
+                last_input.value = `${data[0].NamaUser ?? "Data User Kosong"} - ${data[0].Date_Modified ?? "Data Date Modified Kosong"}`;
                 enableForm(true);
                 numKarung.select();
             } else {
@@ -196,7 +198,7 @@ function loadDataFetch(s_kode_brg) {
             }
 
             formWait(false);
-        }
+        },
     );
 }
 

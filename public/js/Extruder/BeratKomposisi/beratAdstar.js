@@ -6,6 +6,7 @@ const numLami = document.getElementById("berat_lami");
 const numKertas = document.getElementById("berat_kertas");
 const numOPP = document.getElementById("berat_opp");
 const numTotal = document.getElementById("berat_total");
+const last_input = document.getElementById("last_input");
 
 const btnKoreksi = document.getElementById("btn_koreksi");
 const btnBatal = document.getElementById("btn_batal");
@@ -41,7 +42,7 @@ txtKode.addEventListener("keypress", function (event) {
 numKarung.addEventListener("keypress", function (event) {
     if (event.key == "Enter") {
         if (this.value == "") this.value = "0";
-        numInner.select();
+        numLami.select();
     }
 });
 
@@ -160,6 +161,8 @@ function loadDataFetch(s_kode_brg) {
                 numOPP.value = numeral(data[0].BERAT_OPP).value();
                 numKertas.value = numeral(data[0].BERAT_CONDUCTIVE).value();
                 numTotal.value = numeral(data[0].BERAT_TOTAL).value();
+                last_input.value = `${data[0].NamaUser ?? "Data User Kosong"} - ${data[0].Date_Modified ?? "Data Date Modified Kosong"}`;
+
                 enableForm(true);
                 numKarung.select();
             } else {

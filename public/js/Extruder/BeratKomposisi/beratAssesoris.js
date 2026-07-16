@@ -4,6 +4,7 @@ const txtType = document.getElementById("txt_type");
 const numConductive = document.getElementById("berat_conductive");
 const numLain = document.getElementById("berat_lain");
 const numTotal = document.getElementById("berat_total");
+const last_input = document.getElementById("last_input");
 
 const btnKoreksi = document.getElementById("btn_koreksi");
 const btnBatal = document.getElementById("btn_batal");
@@ -74,8 +75,6 @@ btnProses.addEventListener("click", function () {
                         "~" +
                         ket +
                         "~" +
-                        numKarung.value +
-                        "~" +
                         numConductive.value +
                         "~" +
                         numLain.value +
@@ -89,7 +88,7 @@ btnProses.addEventListener("click", function () {
                         btnProses.disabled = true;
                         btnKoreksi.disabled = false;
                         btnKoreksi.focus();
-                    }
+                    },
                 );
             };
 
@@ -98,11 +97,11 @@ btnProses.addEventListener("click", function () {
                     formWait(false);
                     enableForm(false);
                     alert(
-                        "Berat Standard tidak bisa dikoreksi, \nkarena sudah memiliki Komposisi Konversi."
+                        "Berat Standard tidak bisa dikoreksi, \nkarena sudah memiliki Komposisi Konversi.",
                     );
                 } else koreksiBerat();
             } else koreksiBerat();
-        }
+        },
     );
 });
 
@@ -131,15 +130,16 @@ function loadDataFetch(s_kode_brg) {
                 numConductive.value = data[0].BERAT_CONDUCTIVE;
                 numLain.value = data[0].BERAT_LAIN;
                 numTotal.value = data[0].BERAT_TOTAL;
+                last_input.value = `${data[0].NamaUser ?? "Data User Kosong"} - ${data[0].Date_Modified ?? "Data Date Modified Kosong"}`;
                 enableForm(true);
-                numKarung.select();
+                numConductive.select();
             } else {
                 listOfTxt.forEach((ele) => (ele.value = ""));
                 alert("Kode barang tidak ditemukan.");
             }
 
             formWait(false);
-        }
+        },
     );
 }
 
