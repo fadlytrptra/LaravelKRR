@@ -58,6 +58,7 @@
                                         <th>ID Laporan</th>
                                         <th>Shift</th>
                                         <th>Tanggal</th>
+                                        <th>Mesin</th>
                                         <th>Spek</th>
                                         <th>User Input</th>
                                         <th>Aksi</th>

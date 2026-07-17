@@ -80,6 +80,11 @@
         height: auto;
     }
 
+    span {
+        text-align: left;
+        display: block;
+    }
+
     /* =========================
    PRINT ONLY
 ========================= */
@@ -206,19 +211,42 @@
                                 </td>
                                 <td
                                     style="width: 30px; border-left:none !important; border-right:none !important; text-align:center;">
-                                    s/d
+
                                 </td>
                                 <td colspan="4" style="width: 110px; border-left:none !important; text-align:left;">
                                     <input type="time" id="timeEnd"
-                                        style="width:100px; border:none; outline:none; text-align:center;">
+                                        style="width:100px; border:none; outline:none; text-align:center; visibility:hidden">
                                 </td>
                             </tr>
-                            <tr class="textBener">
+                            {{-- <tr class="textBener">
                                 <td style="border-right:none !important">Bahan PP</td>
                                 <td style="border-left:none !important; border-right:none !important">
                                     :</td>
                                 <td colspan="8" style="border-left:none !important" id="bahan_pp"
                                     contenteditable="true"></td>
+                            </tr> --}}
+                            <tr class="textBener">
+                                <td style="border-right:none !important">Bahan PP</td>
+                                <td style="border-left:none !important; border-right:none !important">
+                                    :</td>
+                                <td style="border-left:none !important; border-right:none !important" id="bahan_pp"
+                                    contenteditable="true"></td>
+                                <td style="border-right:none !important; text-align:left; border-left:none !important">
+                                    Mesin</td>
+                                <td style="border-left:none !important; border-right:none !important">
+                                    :</td>
+                                <td colspan="3" style="border-left:none !important">
+                                    <select id="mesin" class="form-select form-select-sm w-100">
+                                        <option></option>
+                                        @foreach ($listMesin as $d)
+                                            <option value="{{ $d->IdMesin }}">
+                                                {{ $d->TypeMesin }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                {{-- <td colspan="3" style="border-left:none !important" id="mesin"
+                                    contenteditable="true"></td> --}}
                             </tr>
                             <tr class="textBener">
                                 <td style="border-right:none !important">CaCO3</td>
@@ -702,6 +730,29 @@
                 option.selected = option.value === select.value;
             });
         });
+        
+        const cloneMesin = clone.querySelector("#mesin");
+
+        if (cloneMesin) {
+
+            const textMesin = cloneMesin.options[cloneMesin.selectedIndex] ?
+                cloneMesin.options[cloneMesin.selectedIndex].text :
+                "";
+
+            // hapus tampilan Select2 hasil clone
+            const select2Container = cloneMesin.nextElementSibling;
+
+            if (select2Container && select2Container.classList.contains("select2")) {
+                select2Container.remove();
+            }
+
+            const span = document.createElement("span");
+            span.textContent = textMesin;
+            span.style.display = "block";
+            span.style.textAlign = "left";
+
+            cloneMesin.parentNode.replaceChild(span, cloneMesin);
+        }
 
         let printContent = clone.innerHTML;
 

@@ -193,6 +193,7 @@ jQuery(function ($) {
 
     tanggal_laporan.valueAsDate = new Date();
     const slcLokasi = document.getElementById("lokasi");
+    const slcMesin  = document.getElementById("mesin");
 
     tgl_awal.valueAsDate = new Date();
     tgl_akhir.valueAsDate = new Date();
@@ -337,9 +338,38 @@ jQuery(function ($) {
     // default lokasi = 1
     $("#" + slcLokasi.id).val("1").trigger("change");
 
-    // btn_grd.addEventListener("click", function (event) {
-    //     event.preventDefault();
-    // });
+    $("#" + slcMesin.id).select2({
+        placeholder: "-- Pilih Mesin --",
+        width: '90%',
+        dropdownParent: $("#modalLaporan")
+    });
+
+    $("#" + slcMesin.id).on("change", function () {
+        const val = $(this).val();
+    });
+
+    btn_grd.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const prefix = [
+            "r12", "r11", "r10", "r9", "r8", "r7", "r6", "r5", "r4", "r3", "r2", "r1",
+            "l12", "l11", "l10", "l9", "l8", "l7", "l6", "l5", "l4", "l3", "l2", "l1"
+        ];
+
+        prefix.forEach(function (id) {
+
+            let nilaiK = parseFloat(document.getElementById(id + "K").innerText.trim());
+            let nilaiD = parseFloat(document.getElementById(id + "D").innerText.trim());
+
+            let hasil = "";
+
+            if (!isNaN(nilaiK) && !isNaN(nilaiD) && nilaiD !== 0) {
+                hasil = ((nilaiK / nilaiD) * 1000).toFixed(2);
+            }
+
+            document.getElementById(id + "G").innerText = hasil;
+        });
+    });
 
     //#region Rata-rata
     btn_rata2.addEventListener("click", function (event) {
@@ -446,6 +476,7 @@ jQuery(function ($) {
                         return data; // untuk sorting & filtering (yyyy-mm-dd)
                     },
                 },
+                { data: "TypeMesin" },
                 { data: "spek" },
                 { data: "NamaUser" },
                 {
@@ -522,6 +553,7 @@ jQuery(function ($) {
         $("#modalLaporan #shiftValue").val("");
         btn_simpan.style.display = "none";
         btn_rata2.style.display = "none";
+        btn_grd.style.display = "none";
         btn_print.style.display = "block";
         $.ajax({
             url: "PengecekanMB/getDataPrint",
@@ -606,7 +638,7 @@ jQuery(function ($) {
                         if (match) document.getElementById("timeEnd").value = `${match[1]}:${match[2]}`;
                     }
                 }
-
+                $("#" + slcMesin.id).val(data.data[0].mesin).trigger("change");
                 bahan_pp.textContent = data.data[0].bahan_pp;
                 ca_co3.textContent = data.data[0].ca_co3;
                 uv.textContent = data.data[0].uv;
@@ -795,6 +827,7 @@ jQuery(function ($) {
         $("#modalLaporan #shiftValue").val("");
         btn_simpan.style.display = "block";
         btn_rata2.style.display = "block";
+        btn_grd.style.display = "block";
         btn_print.style.display = "none";
         $.ajax({
             url: "PengecekanMB/getDataPrint",
@@ -879,7 +912,7 @@ jQuery(function ($) {
                         if (match) document.getElementById("timeEnd").value = `${match[1]}:${match[2]}`;
                     }
                 }
-
+                $("#" + slcMesin.id).val(data.data[0].mesin).trigger("change");
                 bahan_pp.textContent = data.data[0].bahan_pp;
                 ca_co3.textContent = data.data[0].ca_co3;
                 uv.textContent = data.data[0].uv;
@@ -1120,6 +1153,7 @@ jQuery(function ($) {
         $("#modalLaporan #shiftValue").val("");
         btn_simpan.style.display = "block";
         btn_rata2.style.display = "block";
+        btn_grd.style.display = "block";
         btn_print.style.display = "none";
         tanggal_laporan.valueAsDate = new Date();
         $("#ttd_qc")
@@ -1130,6 +1164,7 @@ jQuery(function ($) {
             .attr("src", "")
             .show();
         document.getElementById("nama_ext").textContent = "";
+        $("#" + slcMesin.id).val(null).trigger("change");
     });
 
     //#region Simpan
@@ -1164,6 +1199,7 @@ jQuery(function ($) {
                 _token: csrfToken,
                 proses: (modalLabel.textContent == "Koreksi Laporan Pengecekan Mutu Benang Extruder") ? 2 : 1,
                 lokasi: $("#" + slcLokasi.id).val(),
+                mesin: $("#" + slcMesin.id).val(),
                 id_laporan: id_laporan,
                 referensi: referensi.textContent,
                 tanggal_laporan: tanggal_laporan.value,

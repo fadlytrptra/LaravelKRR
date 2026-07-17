@@ -26,7 +26,12 @@ class ACCPengecekanMBController extends Controller
             ->table('Lokasi')
             ->select('idLokasi', 'nama_lokasi')
             ->get();
-        return view('Extruder.Extruder.ACCPengecekanMB', compact('access', 'listLokasi'), $view_data);
+        $listMesin = DB::connection('ConnExtruder')
+            ->table('MasterMesin')
+            ->select('IdMesin', 'TypeMesin')
+            ->where('Aktif', 'Y')
+            ->get();
+        return view('Extruder.Extruder.ACCPengecekanMB', compact('access', 'listLokasi', 'listMesin'), $view_data);
 
     }
 
@@ -241,6 +246,7 @@ class ACCPengecekanMBController extends Controller
                     'tanggal_raw' => Carbon::parse($row->tanggal_laporan)->format('Y-m-d'),
                     'id_laporan' => trim($row->id_laporan),
                     'shiftValue' => trim($row->shiftValue),
+                    'TypeMesin' => $row->TypeMesin,
                     'spek' => trim($row->spek),
                     'NamaUser' => trim($row->NamaUser),
                     'user_acc' => trim($row->user_acc),
@@ -253,9 +259,10 @@ class ACCPengecekanMBController extends Controller
             $id_laporan = $request->input('id_laporan');
             // dd($id_laporan);
             $results = DB::connection('ConnTestQC')
-                ->table('LaporanMutuBenangEXT')
-                ->where('id_laporan', $id_laporan)
-                ->select('*')
+                ->table('LaporanMutuBenangEXT as l')
+                ->leftJoin('EXTRUDER.DBO.MasterMesin as m', 'l.mesin', '=', 'm.IdMesin')
+                ->where('l.id_laporan', $id_laporan)
+                ->select('l.*', 'm.TypeMesin')
                 ->get();
             if ($results) {
                 $user_input = trim($results[0]->user_input);

@@ -23,6 +23,11 @@ class PengecekanMBController extends Controller
             ->table('Lokasi')
             ->select('idLokasi', 'nama_lokasi')
             ->get();
+        $listMesin = DB::connection('ConnExtruder')
+            ->table('MasterMesin')
+            ->select('IdMesin', 'TypeMesin')
+            ->where('Aktif', 'Y')
+            ->get();
         // $filtered = array_values(array_filter($listTypeMesin, function ($item) {
         //     return in_array($item->IdType_Mesin, ['13', '17']);
         // }));
@@ -33,7 +38,7 @@ class PengecekanMBController extends Controller
         // $listLokasi = collect($listLokasi)
         //     ->whereIn('idLokasi', [1])
         //     ->values();
-        return view('QC.Extruder.PengecekanMB', compact('access', 'listLokasi'));
+        return view('QC.Extruder.PengecekanMB', compact('access', 'listLokasi', 'listMesin'));
     }
 
     public function create()
@@ -46,6 +51,7 @@ class PengecekanMBController extends Controller
         $proses = $request->input('proses');
         $id_laporan = $request->input('id_laporan');
         $lokasi = $request->input('lokasi');
+        $mesin = $request->input('mesin');
         $referensi = $request->input('referensi');
         $tanggal_laporan = $request->input('tanggal_laporan');
         $shiftValue = $request->input('shiftValue');
@@ -207,6 +213,7 @@ class PengecekanMBController extends Controller
         $user = trim(Auth::user()->NomorUser);
         // dd($request->all());
         try {
+            // dd($request->all());
             switch ($proses) {
                 case 1:
                     // Simpan
@@ -216,6 +223,7 @@ class PengecekanMBController extends Controller
                         @kode = ?,
                         @user_input = ?,
                         @lokasi = ?,
+                        @mesin = ?,
                         @referensi = ?,
                         @tanggal_laporan = ?,
                         @shiftValue = ?,
@@ -378,6 +386,7 @@ class PengecekanMBController extends Controller
                                 1,
                                 $user,
                                 $lokasi,
+                                $mesin,
                                 $referensi,
                                 $tanggal_laporan,
                                 $shiftValue,
@@ -552,6 +561,7 @@ class PengecekanMBController extends Controller
                         @user_koreksi = ?,
                         @referensi = ?,
                         @tanggal_laporan = ?,
+                        @mesin = ?,
                         @shiftValue = ?,
                         @timeStart = ?,
                         @timeEnd = ?,
@@ -714,6 +724,7 @@ class PengecekanMBController extends Controller
                                 $user,
                                 $referensi,
                                 $tanggal_laporan,
+                                $mesin,
                                 $shiftValue,
                                 $timeStart,
                                 $timeEnd,
@@ -914,6 +925,7 @@ class PengecekanMBController extends Controller
                     'tanggal_raw' => Carbon::parse($row->tanggal_laporan)->format('Y-m-d'),
                     'id_laporan' => trim($row->id_laporan),
                     'shiftValue' => trim($row->shiftValue),
+                    'TypeMesin' => $row->TypeMesin,
                     'spek' => trim($row->spek),
                     'NamaUser' => trim($row->NamaUser),
                     'user_acc' => trim($row->user_acc),
@@ -926,9 +938,10 @@ class PengecekanMBController extends Controller
             $id_laporan = $request->input('id_laporan');
             // dd($id_laporan);
             $results = DB::connection('ConnTestQC')
-                ->table('LaporanMutuBenangEXT')
-                ->where('id_laporan', $id_laporan)
-                ->select('*')
+                ->table('LaporanMutuBenangEXT as l')
+                ->leftJoin('EXTRUDER.DBO.MasterMesin as m', 'l.mesin', '=', 'm.IdMesin')
+                ->where('l.id_laporan', $id_laporan)
+                ->select('l.*', 'm.TypeMesin')
                 ->get();
             if ($results) {
                 $user_input = trim($results[0]->user_input);
