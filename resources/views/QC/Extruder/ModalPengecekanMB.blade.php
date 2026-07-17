@@ -96,7 +96,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Tambah Laporan Pengecekan Mutu Benang Extruder</h5>
-                <button type="button" class="btn-close" data-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <button type="button" id="btn_simpan" class="btn btn-primary mb-2">
@@ -208,8 +208,7 @@
                                     style="width: 30px; border-left:none !important; border-right:none !important; text-align:center;">
                                     s/d
                                 </td>
-                                <td colspan="4"
-                                    style="width: 110px; border-left:none !important; text-align:left;">
+                                <td colspan="4" style="width: 110px; border-left:none !important; text-align:left;">
                                     <input type="time" id="timeEnd"
                                         style="width:100px; border:none; outline:none; text-align:center;">
                                 </td>
@@ -276,210 +275,346 @@
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R12</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r12D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r12G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r12K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r12E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r12L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r12Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r12D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r12G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r12K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r12E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r12L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r12Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R11</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r11D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r11G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r11K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r11E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r11L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r11Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r11D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r11G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r11K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r11E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r11L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r11Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R10</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r10D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r10G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r10K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r10E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r10L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r10Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r10D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r10G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r10K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r10E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r10L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r10Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R9</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r9D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r9G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r9K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r9E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r9L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r9Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r9D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r9G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r9K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r9E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r9L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r9Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R8</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r8D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r8G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r8K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r8E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r8L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r8Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r8D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r8G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r8K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r8E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r8L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r8Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R7</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r7D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r7G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r7K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r7E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r7L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r7Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r7D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r7G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r7K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r7E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r7L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r7Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R6</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r6D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r6G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r6K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r6E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r6L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r6Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r6D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r6G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r6K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r6E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r6L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r6Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R5</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r5D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r5G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r5K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r5E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r5L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r5Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r5D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r5G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r5K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r5E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r5L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r5Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R4</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r4D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r4G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r4K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r4E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r4L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r4Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r4D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r4G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r4K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r4E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r4L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r4Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R3</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r3D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r3G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r3K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r3E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r3L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r3Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r3D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r3G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r3K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r3E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r3L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r3Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R2</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r2D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r2G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r2K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r2E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r2L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r2Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r2D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r2G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r2K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r2E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r2L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r2Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">R1</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r1D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r1G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r1K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r1E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="r1L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r1Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r1D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r1G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r1K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r1E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="r1L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r1Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L1</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l1D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l1G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l1K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l1E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l1L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l1Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l1D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l1G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l1K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l1E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l1L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l1Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L2</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l2D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l2G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l2K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l2E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l2L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l2Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l2D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l2G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l2K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l2E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l2L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l2Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L3</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l3D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l3G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l3K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l3E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l3L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l3Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l3D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l3G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l3K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l3E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l3L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l3Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L4</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l4D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l4G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l4K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l4E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l4L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l4Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l4D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l4G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l4K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l4E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l4L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l4Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L5</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l5D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l5G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l5K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l5E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l5L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l5Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l5D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l5G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l5K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l5E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l5L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l5Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L6</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l6D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l6G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l6K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l6E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l6L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l6Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l6D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l6G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l6K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l6E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l6L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l6Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L7</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l7D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l7G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l7K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l7E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l7L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l7Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l7D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l7G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l7K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l7E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l7L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l7Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L8</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l8D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l8G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l8K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l8E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l8L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l8Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l8D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l8G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l8K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l8E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l8L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l8Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L9</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l9D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l9G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l9K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l9E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l9L"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l9Ket"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l9D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l9G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l9K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l9E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l9L"></td>
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l9Ket">
+                                </td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L10</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l10D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l10G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l10K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l10E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l10L"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l10D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l10G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l10K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l10E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l10L"></td>
                                 <td style="text-align:center; width: 100px;">QC</td>
                                 <td style="text-align:center; width: 100px;">EXT</td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L11</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l11D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l11G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l11K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l11E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l11L"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l11D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l11G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l11K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l11E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l11L"></td>
                                 <td rowspan="2">
                                     <img id="ttd_qc" style="display:none; max-width:70px;">
                                 </td>
@@ -489,11 +624,16 @@
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L12</td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l12D"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l12G"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l12K"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l12E"></td>
-                                <td style="text-align:center" contenteditable="true" class="only-number" id="l12L"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l12D"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l12G"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l12K"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l12E"></td>
+                                <td style="text-align:center" contenteditable="true" class="only-number"
+                                    id="l12L"></td>
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">Rata2</td>
@@ -508,9 +648,15 @@
                         </table>
                     </div>
                 </div>
-                <button type="button" id="btn_rata2" class="btn btn-secondary mb-2">
-                    Hitung Rata-rata
-                </button>
+                <div class="d-flex gap-2">
+                    {{-- <button type="button" id="btn_grd" class="btn btn-secondary">
+                        Hitung gr/d
+                    </button> --}}
+
+                    <button type="button" id="btn_rata2" class="btn btn-secondary">
+                        Hitung Rata-rata
+                    </button>
+                </div>
             </div>
         </div>
     </div>

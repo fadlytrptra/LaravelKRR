@@ -11,7 +11,7 @@
                     <div class="form-container col-md-12">
                         @csrf
                         <button class="acs-icon-btn acs-add-btn acs-float" id="btn_tambah" type="button"
-                            data-toggle="modal" data-target="#modalLaporan">
+                            data-bs-toggle="modal" data-bs-target="#modalLaporan">
                             <div class="acs-add-icon"></div>
                             <div class="acs-btn-txt">Tambah Data</div>
                         </button>
