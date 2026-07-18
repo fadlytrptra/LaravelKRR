@@ -400,14 +400,23 @@ class BKMDPPelunasanController extends Controller
                 ->count();
 
             if ($ada === 1) {
-                $noUrut = DB::connection('ConnAccounting')
-                    ->table('T_COUNTER_BKK')
-                    ->where('Periode', $tahun)
-                    ->increment('Id_BKK_E_Rp');
-                $noUrut = DB::connection('ConnAccounting')
-                    ->table('T_COUNTER_BKK')
-                    ->where('Periode', $tahun)
-                    ->value('Id_BKK_E_Rp');
+                DB::connection('ConnAccounting')->transaction(function () use ($tahun, &$noUrut) {
+
+                    $row = DB::connection('ConnAccounting')
+                        ->table('T_COUNTER_BKK')
+                        ->where('Periode', $tahun)
+                        ->lockForUpdate()
+                        ->first();
+
+                    $noUrut = $row->Id_BKK_E_Rp + 1;
+
+                    DB::connection('ConnAccounting')
+                        ->table('T_COUNTER_BKK')
+                        ->where('Periode', $tahun)
+                        ->update([
+                            'Id_BKK_E_Rp' => $noUrut
+                        ]);
+                });
 
             } else if ($ada === 0) {
                 $noUrut = 1;
