@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 use Exception;
 use DB;
+use Auth;
 
 class MaintenanceMesinJBBController extends Controller
 {
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('Jumbo Bag');
-        $lokasi = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?', [5]);
+        $user = trim(Auth::user()->NomorUser);
+        $lokasi = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?, @XNomorUser = ?', [5, $user]);
         return view('JumboBag.Master.MaintenanceMesinJBB.MaintenanceMesinJBB', compact('access', 'lokasi'));
     }
 
@@ -93,11 +95,13 @@ class MaintenanceMesinJBBController extends Controller
     public function show($id, Request $request)
     {
         if ($id == 'getDataMesin') {
-            $listMesin = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?', [0]);
+            $user = trim(Auth::user()->NomorUser);
+            $listMesin = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?, @XNomorUser = ?', [0, $user]);
             return datatables($listMesin)->make(true);
         } else if ($id == 'getDetailMesin') {
             $idMesin = $request->input('idMesin');
-            $detailMesin = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?, @XIdMesin = ?', [1, $idMesin]);
+            $user = trim(Auth::user()->NomorUser);
+            $detailMesin = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?, @XIdMesin = ?, @XNomorUser = ?', [1, $idMesin, $user]);
             return response()->json($detailMesin);
         } else if ($id == 'getTypeMesin') {
             $typeMesin = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Mesin @XKode = ?', [6]);

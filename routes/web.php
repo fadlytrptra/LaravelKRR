@@ -1154,6 +1154,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/delete-customer/{idCustomer}', [App\Http\Controllers\JumboBag\MaintenanceCustomerJBB::class, 'deleteCustomer']);
     Route::put('/update-customer/{id}', [App\Http\Controllers\JumboBag\MaintenanceCustomerJBB::class, 'updateCustomer']);
     Route::resource('MaintenanceMesinJBB', App\Http\Controllers\JumboBag\MaintenanceMesinJBBController::class);
+    //Transaksi
+    Route::resource('MaintKegiatanMesinPotongJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPotongJBBController::class);
     //Tabel Hitungan
     Route::resource('CopyKodeBarang', App\Http\Controllers\JumboBag\CopyKodeBarang::class);
     Route::resource('KebutuhanKomponenJBB', App\Http\Controllers\JumboBag\KebutuhanKomponenJBBController::class);
