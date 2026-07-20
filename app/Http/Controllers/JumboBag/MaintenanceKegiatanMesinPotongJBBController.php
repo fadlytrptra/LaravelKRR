@@ -16,7 +16,8 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('Jumbo Bag');
         $listMesin = DB::connection('ConnJumboBag')->select('EXEC SP_4384_JBB_Maintenance_Log_Mesin_Potong_JBB @XKode = ?', [0]);
-        return view('JumboBag.Transaksi.KegiatanMesinPotong.MaintenanceKegiatanMesinPotong', compact('access', 'listMesin'));
+        $user = trim(Auth::user()->NomorUser);
+        return view('JumboBag.Transaksi.KegiatanMesinPotong.MaintenanceKegiatanMesinPotong', compact('access', 'listMesin', 'user'));
     }
 
     public function create()
@@ -245,10 +246,10 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
         $date = date('Y-m-d H:i:s');
         $deleted = (string) 'Deleted by: ' . $user . ' | On: ' . $date . ' | Reason: ' . $alasan;
         try {
-            DB::connection('ConnABM')->statement('EXEC SP_4384_JBB_Maintenance_Log_Mesin_Potong_JBB
+            DB::connection('ConnJumboBag')->statement('EXEC SP_4384_JBB_Maintenance_Log_Mesin_Potong_JBB
                     @XKode = ?,
                     @XDelete_Information = ?,
-                    @XId_Log = ?',
+                    @XIdLog = ?',
                 [
                     8,
                     $deleted,

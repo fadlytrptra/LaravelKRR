@@ -1,6 +1,7 @@
 jQuery(function ($) {
     //#region Variables
     let csrfToken = $('meta[name="csrf-token"]').attr("content");
+    let nomorUser = document.getElementById("nomorUser").value;
     let tambahKegiatanMesinPotongModal = document.getElementById("tambahKegiatanMesinPotongModal"); //prettier-ignore
     let tambahKegiatanMesinPotongLabel = document.getElementById("tambahKegiatanMesinPotongLabel"); //prettier-ignore
     let closeTambahKegiatanMesinPotongModal = document.getElementById("closeTambahKegiatanMesinPotongModal"); //prettier-ignore
@@ -43,6 +44,60 @@ jQuery(function ($) {
     let div_alasanEditPotong = document.getElementById("div_alasanEditPotong");
     let alasanEdit = document.getElementById("alasanEdit");
     let button_modalProsesPotong = document.getElementById("button_modalProsesPotong"); //prettier-ignore
+    let columns = [
+        {
+            data: "Tgl_Log",
+            render: function (data) {
+                return moment(data).format("YYYY-MM-DD");
+            },
+            width: "10%",
+        },
+        {
+            data: "Jenis_Potongan",
+            width: "26%",
+        },
+        {
+            data: "Nama_Mesin",
+            width: "8%",
+        },
+        {
+            data: "Shift",
+            width: "5%",
+        },
+        {
+            data: "KB_TabelHit",
+            width: "13%",
+        },
+        {
+            data: "Jumlah_Hasil_Potong",
+            width: "9%",
+            render: function (data) {
+                return numeral(data).format("0,0.00");
+            },
+        },
+        {
+            data: "Berat_Hasil_Potong",
+            width: "9%",
+            render: function (data) {
+                return numeral(data).format("0,0.00");
+            },
+        },
+    ];
+
+    // Only add the action column
+    if (nomorUser == "4384" || nomorUser == "4405" || nomorUser == "4451" || $user == '4221' || $user == '4259' || $user == '8982') {
+        columns.push({
+            data: "Id_Log",
+            render: function (data) {
+                return `
+                <button class="btn btn-primary btn-edit" data-id="${data}">Edit</button>
+                <button class="btn btn-danger btn-delete" data-id="${data}">Hapus</button>
+            `;
+            },
+            width: "12.5%",
+        });
+    }
+
     let table_logMesin = $("#table_logMesin").DataTable({
         processing: true,
         serverSide: true,
@@ -57,55 +112,7 @@ jQuery(function ($) {
             url: "/MaintKegiatanMesinPotongJBB/getLogMesin",
             type: "GET",
         },
-        columns: [
-            {
-                data: "Tgl_Log",
-                render: function (data, type, full, meta) {
-                    return moment(data).format("YYYY-MM-DD");
-                },
-                width: "10%",
-            },
-            {
-                data: "Jenis_Potongan",
-                width: "26%",
-            },
-            {
-                data: "Nama_Mesin",
-                width: "8%",
-            },
-            {
-                data: "Shift",
-                width: "5%",
-            },
-            {
-                data: "KB_TabelHit",
-                width: "13%",
-            },
-            {
-                data: "Jumlah_Hasil_Potong",
-                width: "9%",
-                render: function (data, type, full, meta) {
-                    return numeral(data).format("0,0.00");
-                },
-            },
-            {
-                data: "Berat_Hasil_Potong",
-                width: "9%",
-                render: function (data, type, full, meta) {
-                    return numeral(data).format("0,0.00");
-                },
-            },
-            {
-                data: "Id_Log",
-                render: function (data, type, full) {
-                    return `
-                        <button class="btn btn-primary btn-edit" data-id="${data}">Edit</button>
-                        <button class="btn btn-danger btn-delete" data-id="${data}">Hapus</button>
-                        `;
-                },
-                width: "12.5%",
-            },
-        ],
+        columns: columns,
     });
     let shiftAllowedCharacters = ["P", "S", "M"];
     let statusLamiAllowedCharacters = ["L", "N"];
@@ -441,7 +448,7 @@ jQuery(function ($) {
                 const reason = result.value;
 
                 $.ajax({
-                    url: "/KegiatanMesinMPJPerHariABM/" + rowID,
+                    url: "/MaintKegiatanMesinPotongJBB/" + rowID,
                     type: "DELETE",
                     data: {
                         _token: csrfToken,

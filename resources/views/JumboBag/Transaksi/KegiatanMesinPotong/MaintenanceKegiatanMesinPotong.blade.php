@@ -1,4 +1,4 @@
-@extends('layouts.appABM')
+@extends('layouts.appJumboBag')
 @section('content')
 @section('title', 'Maintenance Kegiatan Mesin ABM')
 
@@ -20,7 +20,7 @@
         display: block !important;
     }
 
-    .flatpickr-form-control{
+    .flatpickr-form-control {
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
         padding: 0.375rem 0.75rem;
@@ -43,6 +43,7 @@
                 <div class="acs-add-icon"></div>
                 <div class="acs-btn-txt">Tambah Log Mesin</div>
             </button>
+            <input type="hidden" name="nomorUser" id="nomorUser" value="{{ $user }}">
             <div class="card">
                 <div class="card-header">Log Mesin Potong JBB</div>
                 <div class="card-body RDZMobilePaddingLR0" style="overflow-x: auto;">
@@ -56,17 +57,11 @@
                                 <th>KB Tabel Hit.</th>
                                 <th>Hasil LBR</th>
                                 <th>Hasil KG</th>
-                                <th>Action</th>
+                                @if ($user == '4405' || $user == '4221' || $user == '4259' || $user == '8982' || $user == '4451' || $user == '4384')
+                                    <th>Action</th>
+                                @endif
                             </tr>
                         </thead>
-                        {{-- <tfoot>
-                            <tr>
-                                <th colspan="5" style="text-align:right">Grand Total:</th>
-                                <th id="totalLembar"></th>
-                                <th id="totalKg"></th>
-                                <th></th>
-                            </tr>
-                        </tfoot> --}}
                     </table>
                 </div>
             </div>

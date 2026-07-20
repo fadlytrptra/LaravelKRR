@@ -155,57 +155,61 @@
                                                 @endphp
 
                                                 <li>
-                                                    <a class="dropdown-item" tabindex="-1"
-                                                        @if (isset($combinedArrayFiturMenus['Route'])) href="{{ url($combinedArrayFiturMenus['Route']) }}"
-                                                            style="color: black;font-size: 15px;display: block"
-                                                        @else
-                                                            style="color: black;font-size: 15px;display: block; cursor: default;" @endif>
+
+                                                    @if (isset($combinedArrayFiturMenus['Route']))
+                                                        <a class="dropdown-item" tabindex="-1"
+                                                            href="{{ url($combinedArrayFiturMenus['Route']) }}"
+                                                        style="color: black;font-size: 15px;display: block" @else <a
+                                                            class="dropdown-item dropdown-toggle-submenu" tabindex="-1"
+                                                            style="color: black;font-size: 15px;display: block; cursor: default;"
+                                                            @endif>
+                                                            @if (!isset($combinedArrayFiturMenus['Route']))
+                                                                {{ $combinedArrayFiturMenus['Nama'] }}<span
+                                                                    style="float: right;">»</span>
+                                                            @else
+                                                                {{ $combinedArrayFiturMenus['Nama'] }}
+                                                            @endif
+                                                        </a>
                                                         @if (!isset($combinedArrayFiturMenus['Route']))
-                                                            {{ $combinedArrayFiturMenus['Nama'] }}<span
-                                                                style="float: right;">»</span>
-                                                        @else
-                                                            {{ $combinedArrayFiturMenus['Nama'] }}
-                                                        @endif
-                                                    </a>
-                                                    @if (!isset($combinedArrayFiturMenus['Route']))
-                                                        <ul class="dropdown-menu dropdown-submenu">
-                                                            @php
-                                                                $filteredItemsSubFitur = $access['AccessFitur']->filter(
-                                                                    function ($item) use ($combinedArrayFiturMenus) {
+                                                            <ul class="dropdown-menu dropdown-submenu">
+                                                                @php
+                                                                    $filteredItemsSubFitur = $access[
+                                                                        'AccessFitur'
+                                                                    ]->filter(function ($item) use (
+                                                                        $combinedArrayFiturMenus,
+                                                                    ) {
                                                                         return $item->Id_Menu ==
                                                                             $combinedArrayFiturMenus['IdMenu'];
-                                                                    },
-                                                                );
-                                                                $filteredArraySubFitur = $filteredItemsSubFitur->all();
-                                                                $arraySubFitur = [];
-                                                                foreach ($filteredArraySubFitur as $subFitur) {
-                                                                    $arraySubFitur[] = [
-                                                                        'Nama' => $subFitur->NamaFitur,
-                                                                        'Route' => $subFitur->Route,
-                                                                        'IdMenu' => $subFitur->Id_Menu,
-                                                                        'IdFitur' => $subFitur->IdFitur,
-                                                                        'NomorUrutDisplay' =>
-                                                                            $subFitur->NomorUrutDisplay,
-                                                                    ];
-                                                                }
+                                                                    });
+                                                                    $filteredArraySubFitur = $filteredItemsSubFitur->all();
+                                                                    $arraySubFitur = [];
+                                                                    foreach ($filteredArraySubFitur as $subFitur) {
+                                                                        $arraySubFitur[] = [
+                                                                            'Nama' => $subFitur->NamaFitur,
+                                                                            'Route' => $subFitur->Route,
+                                                                            'IdMenu' => $subFitur->Id_Menu,
+                                                                            'IdFitur' => $subFitur->IdFitur,
+                                                                            'NomorUrutDisplay' =>
+                                                                                $subFitur->NomorUrutDisplay,
+                                                                        ];
+                                                                    }
 
-                                                                usort($arraySubFitur, function ($a, $b) {
-                                                                    return $a['NomorUrutDisplay'] <=>
-                                                                        $b['NomorUrutDisplay'];
-                                                                });
-                                                            @endphp
-                                                            @foreach ($arraySubFitur as $fiturSubMenu)
-                                                                <li>
-                                                                    <a style="color: black;font-size: 15px;display: block"
-                                                                        class="dropdown-item" tabindex="-1"
-                                                                        href="{{ url($fiturSubMenu['Route']) }}">{{ $fiturSubMenu['Nama'] }}
-                                                                    </a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endif
+                                                                    usort($arraySubFitur, function ($a, $b) {
+                                                                        return $a['NomorUrutDisplay'] <=>
+                                                                            $b['NomorUrutDisplay'];
+                                                                    });
+                                                                @endphp
+                                                                @foreach ($arraySubFitur as $fiturSubMenu)
+                                                                    <li>
+                                                                        <a style="color: black;font-size: 15px;display: block"
+                                                                            class="dropdown-item" tabindex="-1"
+                                                                            href="{{ url($fiturSubMenu['Route']) }}">{{ $fiturSubMenu['Nama'] }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endif
                                                 </li>
-
                                                 @if ($menuItem->IdMenu == 36 && $itemCount == 10)
                                                     <li>
                                                         <hr style="margin: 0; border: 0,8px solid black;">
@@ -288,6 +292,31 @@
                 $(this).next('ul').toggle();
                 e.stopPropagation();
                 e.preventDefault();
+            });
+
+            document.querySelectorAll(".dropdown-toggle-submenu").forEach(function(item) {
+                item.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let submenu = this.nextElementSibling;
+
+                    // close other submenus
+                    document.querySelectorAll(".dropdown-submenu").forEach(function(el) {
+                        if (el !== submenu) {
+                            el.classList.remove("show");
+                        }
+                    });
+
+                    submenu.classList.toggle("show");
+                });
+            });
+
+            // optional: click outside to close all submenu
+            document.addEventListener("click", function() {
+                document.querySelectorAll(".dropdown-submenu").forEach(function(el) {
+                    el.classList.remove("show");
+                });
             });
         });
     </script>
