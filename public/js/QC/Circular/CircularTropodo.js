@@ -157,6 +157,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 Lebar = response[0].Lebar.trim();
                 D_TEK9 = response[0].D_TEK9.trim();
                 JenisKrg = response[0].JenisKrg.trim();
+                updateBeratReinforced();
+                await ambilBeratStandart();
+
+                if (beratStandart.value == 0) {
+                    updateBeratStandart();
+                }
             } else {
                 console.error("No data found for the specified IdLog:", IdLog);
             }
