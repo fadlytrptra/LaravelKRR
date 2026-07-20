@@ -115,7 +115,7 @@
                                         <div class="col-sm-2">
                                             <label for="panjangPotongan">Panjang Potongan</label>
                                             <input type="text" id="panjangPotongan" name="panjangPotongan"
-                                                class="form-control mb-1">
+                                                class="form-control mb-1" enterkeyhint="enter">
                                         </div>
                                         <div class="col-sm-2">
                                             <label for="beratBarang">Berat Barang</label>
