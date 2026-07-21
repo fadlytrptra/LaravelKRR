@@ -472,11 +472,11 @@ jQuery(function ($) {
                 tableHitungan_LW1.innerHTML = numeral((S1 * S2 * lami * 0.92) / 10000).format("0,0.00"); //prettier-ignore
                 tableHitungan_OPP1.innerHTML = numeral(((S1 - 3.5) * S2 * OPPValue * 0.92) / 10000).format("0,0.00"); //prettier-ignore
             } else {
-                tableHitungan_LW1.innerHTML = numeral(((S1 + 1) * S2 * lami * 0.184) / 1000).format("0,0.00"); //prettier-ignore
+                tableHitungan_LW1.innerHTML = numeral(((S1 + 1) * S2 * lami * 0.184) / 10000).format("0,0.00"); //prettier-ignore
                 if (productType2.value.includes("O-")) {
-                    tableHitungan_OPP1.innerHTML = numeral((S1 + 1) * S2 * 0.92 * 2 / 1000).format("0,0.00");
+                    tableHitungan_OPP1.innerHTML = numeral((S1 + 1) * S2 * OPPValue * 0.92 * 2 / 10000).format("0,0.00");
                 } else {
-                    tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 1000).format("0,0.00"); //prettier-ignore
+                    tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 10000).format("0,0.00"); //prettier-ignore
                 }
             }
 
@@ -593,11 +593,11 @@ jQuery(function ($) {
             tableHitungan_LW1.innerHTML = numeral((S1 * S2 * lami * 0.92) / 10000).format("0,0.00"); //prettier-ignore
             tableHitungan_OPP1.innerHTML = numeral(((S1 - 3.5) * S2 * OPPValue * 0.92) / 10000).format("0,0.00"); //prettier-ignore
         } else {
-            tableHitungan_LW1.innerHTML = numeral(((S1 + 1) * S2 * lami * 0.184) / 1000).format("0,0.00"); //prettier-ignore
+            tableHitungan_LW1.innerHTML = numeral(((S1 + 1) * S2 * lami * 0.184) / 10000).format("0,0.00"); //prettier-ignore
             if (productType2.value.includes("O-")) {
-                tableHitungan_OPP1.innerHTML = numeral((S1 + 1) * S2 * 0.92 * 2 / 1000).format("0,0.00");
+                tableHitungan_OPP1.innerHTML = numeral((S1 + 1) * S2 * OPPValue * 0.92 * 2 / 10000).format("0,0.00");
             } else {
-                tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 1000).format("0,0.00"); //prettier-ignore
+                tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 10000).format("0,0.00"); //prettier-ignore
             }
         }
 
