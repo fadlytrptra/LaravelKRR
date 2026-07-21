@@ -1344,7 +1344,9 @@
                                 </td>
                             </tr>
                             <tr class="left small-text">
-                                <td colspan="16" id="keterangan" style="width: 40px" contenteditable="true">
+                                <td style="width: 40px" id="ketHead">
+                                    Keterangan</td>
+                                <td colspan="15" id="keterangan" style="width: 40px" contenteditable="true">
                                     &nbsp;</td>
                             </tr>
                         </table>

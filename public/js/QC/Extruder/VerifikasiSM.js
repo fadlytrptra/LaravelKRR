@@ -1397,7 +1397,10 @@ jQuery(function ($) {
                 prongLL.textContent = data.data[0].prongLL;
                 silLL.textContent = data.data[0].silLL;
                 total.textContent = data.data[0].total;
-                keterangan.innerHTML = data.data[0].keterangan ? data.data[0].keterangan.replace(/\n/g, "<br>") : "";
+                document.getElementById("ketHead").textContent = "Keterangan"
+                keterangan.innerHTML = data.data[0].keterangan
+                    ? data.data[0].keterangan.replace(/\n/g, "<br>")
+                    : "<br><br><br><br><br>";
                 $("#modalLaporan").modal("show");
             },
             error: function (xhr, status, error) {

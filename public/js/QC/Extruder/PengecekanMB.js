@@ -193,7 +193,7 @@ jQuery(function ($) {
 
     tanggal_laporan.valueAsDate = new Date();
     const slcLokasi = document.getElementById("lokasi");
-    const slcMesin  = document.getElementById("mesin");
+    const slcMesin = document.getElementById("mesin");
 
     tgl_awal.valueAsDate = new Date();
     tgl_akhir.valueAsDate = new Date();
@@ -276,25 +276,33 @@ jQuery(function ($) {
         return datetimeSQL;
     }
 
+    // function formatPrint(val) {
+    //     if (val === '' || val === null || isNaN(val)) return '';
+
+    //     let num = parseFloat(val);
+
+    //     // 10.00 → 10
+    //     if (Number.isInteger(num)) return numeral(num).format('0');
+
+    //     // **Jika angka punya lebih dari 1 decimal yang bukan .x0 atau .75 → tampilkan apa adanya**
+    //     let decimal = (num.toString().split('.')[1] || '');
+    //     if (decimal.length > 1 && decimal !== '75' && decimal !== '70') {
+    //         return numeral(num).format('0.00');  // contoh: 10.23 → 10.23
+    //     }
+
+    //     // 10.75 → 10.75
+    //     if (decimal === '75') return numeral(num).format('0.00');
+
+    //     // 10.70 → 10.7
+    //     return numeral(num).format('0.[0]');
+    // }
+
     function formatPrint(val) {
         if (val === '' || val === null || isNaN(val)) return '';
 
         let num = parseFloat(val);
 
-        // 10.00 → 10
-        if (Number.isInteger(num)) return numeral(num).format('0');
-
-        // **Jika angka punya lebih dari 1 decimal yang bukan .x0 atau .75 → tampilkan apa adanya**
-        let decimal = (num.toString().split('.')[1] || '');
-        if (decimal.length > 1 && decimal !== '75' && decimal !== '70') {
-            return numeral(num).format('0.00');  // contoh: 10.23 → 10.23
-        }
-
-        // 10.75 → 10.75
-        if (decimal === '75') return numeral(num).format('0.00');
-
-        // 10.70 → 10.7
-        return numeral(num).format('0.[0]');
+        return numeral(num).format('0.00');
     }
 
     $("#" + slcLokasi.id).select2({
@@ -341,7 +349,7 @@ jQuery(function ($) {
     $("#" + slcMesin.id).select2({
         placeholder: "-- Pilih Mesin --",
         width: '90%',
-        dropdownParent: $("#modalLaporan")
+        dropdownParent: $("#parentMesin")
     });
 
     $("#" + slcMesin.id).on("change", function () {
@@ -368,6 +376,60 @@ jQuery(function ($) {
             }
 
             document.getElementById(id + "G").innerText = hasil;
+        });
+    });
+
+    // Kolom yang mengikuti Enter
+    const urutanKolom = {
+        D: [
+            "r12D", "r11D", "r10D", "r9D", "r8D", "r7D", "r6D", "r5D", "r4D", "r3D", "r2D", "r1D",
+            "l1D", "l2D", "l3D", "l4D", "l5D", "l6D", "l7D", "l8D", "l9D", "l10D", "l11D", "l12D"
+        ],
+        G: [
+            "r12G", "r11G", "r10G", "r9G", "r8G", "r7G", "r6G", "r5G", "r4G", "r3G", "r2G", "r1G",
+            "l1G", "l2G", "l3G", "l4G", "l5G", "l6G", "l7G", "l8G", "l9G", "l10G", "l11G", "l12G"
+        ],
+        K: [
+            "r12K", "r11K", "r10K", "r9K", "r8K", "r7K", "r6K", "r5K", "r4K", "r3K", "r2K", "r1K",
+            "l1K", "l2K", "l3K", "l4K", "l5K", "l6K", "l7K", "l8K", "l9K", "l10K", "l11K", "l12K"
+        ],
+        E: [
+            "r12E", "r11E", "r10E", "r9E", "r8E", "r7E", "r6E", "r5E", "r4E", "r3E", "r2E", "r1E",
+            "l1E", "l2E", "l3E", "l4E", "l5E", "l6E", "l7E", "l8E", "l9E", "l10E", "l11E", "l12E"
+        ],
+        L: [
+            "r12L", "r11L", "r10L", "r9L", "r8L", "r7L", "r6L", "r5L", "r4L", "r3L", "r2L", "r1L",
+            "l1L", "l2L", "l3L", "l4L", "l5L", "l6L", "l7L", "l8L", "l9L", "l10L", "l11L", "l12L"
+        ],
+        Ket: [
+            "r12Ket", "r11Ket", "r10Ket", "r9Ket", "r8Ket", "r7Ket", "r6Ket", "r5Ket", "r4Ket", "r3Ket", "r2Ket", "r1Ket",
+            "l1Ket", "l2Ket", "l3Ket", "l4Ket", "l5Ket", "l6Ket", "l7Ket", "l8Ket", "l9Ket", "l10Ket", "l11Ket", "l12Ket"
+        ]
+    };
+
+    // Pasang event Enter
+    Object.values(urutanKolom).forEach(function (list) {
+        list.forEach(function (id, index) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    // Fokus ke field berikutnya
+                    if (index < list.length - 1) {
+                        const next = document.getElementById(list[index + 1]);
+                        next.focus();
+                        // Letakkan kursor di akhir isi
+                        const range = document.createRange();
+                        range.selectNodeContents(next);
+                        range.collapse(false);
+
+                        const sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            });
         });
     });
 
