@@ -473,7 +473,11 @@ jQuery(function ($) {
                 tableHitungan_OPP1.innerHTML = numeral(((S1 - 3.5) * S2 * OPPValue * 0.92) / 10000).format("0,0.00"); //prettier-ignore
             } else {
                 tableHitungan_LW1.innerHTML = numeral(((S1 + 1) * S2 * lami * 0.184) / 1000).format("0,0.00"); //prettier-ignore
-                tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 1000).format("0,0.00"); //prettier-ignore
+                if (productType2.value.includes("O-")) {
+                    tableHitungan_OPP1.innerHTML = numeral((S1 + 1) * S2 * 0.92 * 2 / 1000).format("0,0.00");
+                } else {
+                    tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 1000).format("0,0.00"); //prettier-ignore
+                }
             }
 
             let S3 = numeral(tableHitungan_S3.value).value();
@@ -485,7 +489,7 @@ jQuery(function ($) {
 
             tableHitungan_CW2.innerHTML = numeral((((S3 * S4 / 2) * (WA2 + WE2)) * ((D3 + D4) / 2)) / 1143000).format("0,0.00"); //prettier-ignore
             tableHitungan_LW2.innerHTML = numeral(((S3 * S4 * lami * 0.092) / 1000) * 2).format("0,0.00"); //prettier-ignore
-            tableHitungan_OPP2.innerHTML = numeral((S3  * S4 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
+            tableHitungan_OPP2.innerHTML = numeral((S3 * S4 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
 
             let S5 = numeral(tableHitungan_S5.value).value();
             let S6 = numeral(tableHitungan_S6.value).value();
@@ -496,7 +500,7 @@ jQuery(function ($) {
 
             tableHitungan_CW3.innerHTML = numeral((((S5 * S6 / 2) * (WA3 + WE3)) * ((D5 + D6) / 2)) / 1143000).format("0,0.00"); //prettier-ignore
             tableHitungan_LW3.innerHTML = numeral(((S5 * S6 * lami * 0.092) / 1000) * 2).format("0,0.00"); //prettier-ignore
-            tableHitungan_OPP3.innerHTML = numeral((S5  * S6 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
+            tableHitungan_OPP3.innerHTML = numeral((S5 * S6 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
 
             let S7 = numeral(tableHitungan_S7.value).value();
             let S8 = numeral(tableHitungan_S8.value).value();
@@ -590,7 +594,11 @@ jQuery(function ($) {
             tableHitungan_OPP1.innerHTML = numeral(((S1 - 3.5) * S2 * OPPValue * 0.92) / 10000).format("0,0.00"); //prettier-ignore
         } else {
             tableHitungan_LW1.innerHTML = numeral(((S1 + 1) * S2 * lami * 0.184) / 1000).format("0,0.00"); //prettier-ignore
-            tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 1000).format("0,0.00"); //prettier-ignore
+            if (productType2.value.includes("O-")) {
+                tableHitungan_OPP1.innerHTML = numeral((S1 + 1) * S2 * 0.92 * 2 / 1000).format("0,0.00");
+            } else {
+                tableHitungan_OPP1.innerHTML = numeral((S1 - 3.5) * S2 * OPPValue * 0.184 / 1000).format("0,0.00"); //prettier-ignore
+            }
         }
 
         let CW1 = numeral(tableHitungan_CW1.innerHTML).value();
@@ -653,7 +661,7 @@ jQuery(function ($) {
 
         tableHitungan_CW2.innerHTML = numeral((((S3 * S4 / 2) * (WA2 + WE2)) * ((D3 + D4) / 2)) / 1143000).format("0,0.00"); //prettier-ignore
         tableHitungan_LW2.innerHTML = numeral(((S3 * S4 * lami * 0.092) / 1000) * 2).format("0,0.00"); //prettier-ignore
-        tableHitungan_OPP2.innerHTML = numeral((S3  * S4 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
+        tableHitungan_OPP2.innerHTML = numeral((S3 * S4 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
         let CW1 = numeral(tableHitungan_CW1.innerHTML).value();
         let CW2 = numeral(tableHitungan_CW2.innerHTML).value();
         let CW3 = numeral(tableHitungan_CW3.innerHTML).value();
@@ -714,7 +722,7 @@ jQuery(function ($) {
 
         tableHitungan_CW3.innerHTML = numeral((((S5 * S6 / 2) * (WA3 + WE3)) * ((D5 + D6) / 2)) / 1143000).format("0,0.00"); //prettier-ignore
         tableHitungan_LW3.innerHTML = numeral(((S5 * S6 * lami * 0.092) / 1000) * 2).format("0,0.00"); //prettier-ignore
-        tableHitungan_OPP3.innerHTML = numeral((S5  * S6 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
+        tableHitungan_OPP3.innerHTML = numeral((S5 * S6 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
         let CW1 = numeral(tableHitungan_CW1.innerHTML).value();
         let CW2 = numeral(tableHitungan_CW2.innerHTML).value();
         let CW3 = numeral(tableHitungan_CW3.innerHTML).value();
@@ -775,7 +783,7 @@ jQuery(function ($) {
 
         tableHitungan_CW4.innerHTML = numeral((((S7 * S8 / 2) * (WA4 + WE4)) * ((D7 + D8) / 2)) / 1143000).format("0,0.00"); //prettier-ignore
         tableHitungan_LW4.innerHTML = numeral(((S7 * S8 * lami * 0.092) / 1000) * 2).format("0,0.00"); //prettier-ignore
-        tableHitungan_OPP4.innerHTML = numeral((S7  * S8 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
+        tableHitungan_OPP4.innerHTML = numeral((S7 * S8 * OPPValue * 0.092) / 1000).format("0,0.00"); //prettier-ignore
         let CW1 = numeral(tableHitungan_CW1.innerHTML).value();
         let CW2 = numeral(tableHitungan_CW2.innerHTML).value();
         let CW3 = numeral(tableHitungan_CW3.innerHTML).value();
