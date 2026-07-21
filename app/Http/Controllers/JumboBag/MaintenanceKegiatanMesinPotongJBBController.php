@@ -49,10 +49,14 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
         $ukuranlebar_tableHit = $request->input('ukuranlebar_tableHit');
         $hasil_potongJumlah = $request->input('hasil_potongJumlah');
         $hasil_potongBerat = $request->input('hasil_potongBerat');
-        $afalan_wa = $request->input('afalan_wa');
-        $afalan_we = $request->input('afalan_we');
-        $afalan_lami = $request->input('afalan_lami');
-        $afalan_tepi = $request->input('afalan_tepi');
+        $afalan_waKG = $request->input('afalan_waKG');
+        $afalan_weKG = $request->input('afalan_weKG');
+        $afalan_lamiKG = $request->input('afalan_lamiKG');
+        $afalan_tepiKG = $request->input('afalan_tepiKG');
+        $afalan_waLBR = $request->input('afalan_waLBR');
+        $afalan_weLBR = $request->input('afalan_weLBR');
+        $afalan_lamiLBR = $request->input('afalan_lamiLBR');
+        $afalan_tepiLBR = $request->input('afalan_tepiLBR');
         $user = trim(Auth::user()->NomorUser);
         $alasan = $request->input('alasanEdit');
         date_default_timezone_set('Asia/Jakarta');
@@ -88,6 +92,10 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                     @XBerat_Afalan_WE = ?,
                     @XBerat_Afalan_Lami = ?,
                     @XBerat_Afalan_Tepi = ?,
+                    @XLembar_Afalan_WA = ?,
+                    @XLembar_Afalan_WE = ?,
+                    @XLembar_Afalan_Lami = ?,
+                    @XLembar_Afalan_Tepi = ?,
                     @XInput_Information = ?',
                     [
                         6,
@@ -111,10 +119,14 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $ukuranlebar_tableHit,
                         $hasil_potongJumlah,
                         $hasil_potongBerat,
-                        $afalan_wa,
-                        $afalan_we,
-                        $afalan_lami,
-                        $afalan_tepi,
+                        $afalan_waKG,
+                        $afalan_weKG,
+                        $afalan_lamiKG,
+                        $afalan_tepiKG,
+                        $afalan_waLBR,
+                        $afalan_weLBR,
+                        $afalan_lamiLBR,
+                        $afalan_tepiLBR,
                         $inputed
                     ]
                 );
@@ -151,6 +163,10 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                     @XBerat_Afalan_WE = ?,
                     @XBerat_Afalan_Lami = ?,
                     @XBerat_Afalan_Tepi = ?,
+                    @XLembar_Afalan_WA = ?,
+                    @XLembar_Afalan_WE = ?,
+                    @XLembar_Afalan_Lami = ?,
+                    @XLembar_Afalan_Tepi = ?,
                     @XEdit_Information = ?,
                     @XIdLog = ?',
                     [
@@ -175,10 +191,14 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $ukuranlebar_tableHit,
                         $hasil_potongJumlah,
                         $hasil_potongBerat,
-                        $afalan_wa,
-                        $afalan_we,
-                        $afalan_lami,
-                        $afalan_tepi,
+                        $afalan_waKG,
+                        $afalan_weKG,
+                        $afalan_lamiKG,
+                        $afalan_tepiKG,
+                        $afalan_waLBR,
+                        $afalan_weLBR,
+                        $afalan_lamiLBR,
+                        $afalan_tepiLBR,
                         $edited,
                         $idLog
                     ]

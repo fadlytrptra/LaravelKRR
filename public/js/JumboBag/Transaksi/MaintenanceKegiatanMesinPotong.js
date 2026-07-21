@@ -33,13 +33,17 @@ jQuery(function ($) {
     let hasil_potongJumlah = document.getElementById("hasil_potongJumlah");
     let hasil_potongBerat = document.getElementById("hasil_potongBerat");
     let btn_timbangHasil = document.getElementById("btn_timbangHasil");
-    let afalan_wa = document.getElementById("afalan_wa");
+    let afalan_waKG = document.getElementById("afalan_waKG");
+    let afalan_waLBR = document.getElementById("afalan_waLBR");
     let btn_timbangAfalanWA = document.getElementById("btn_timbangAfalanWA");
-    let afalan_we = document.getElementById("afalan_we");
+    let afalan_weKG = document.getElementById("afalan_weKG");
+    let afalan_weLBR = document.getElementById("afalan_weLBR");
     let btn_timbangAfalanWE = document.getElementById("btn_timbangAfalanWE");
-    let afalan_lami = document.getElementById("afalan_lami");
+    let afalan_lamiKG = document.getElementById("afalan_lamiKG");
+    let afalan_lamiLBR = document.getElementById("afalan_lamiLBR");
     let btn_timbangAfalanLami = document.getElementById("btn_timbangAfalanLami"); //prettier-ignore
-    let afalan_tepi = document.getElementById("afalan_tepi");
+    let afalan_tepiKG = document.getElementById("afalan_tepiKG");
+    let afalan_tepiLBR = document.getElementById("afalan_tepiLBR");
     let btn_timbangAfalanTepi = document.getElementById("btn_timbangAfalanTepi"); //prettier-ignore
     let div_alasanEditPotong = document.getElementById("div_alasanEditPotong");
     let alasanEdit = document.getElementById("alasanEdit");
@@ -269,10 +273,14 @@ jQuery(function ($) {
         ukuranlebar_tableHit.value = "";
         hasil_potongJumlah.value = "";
         hasil_potongBerat.value = "";
-        afalan_wa.value = "";
-        afalan_we.value = "";
-        afalan_lami.value = "";
-        afalan_tepi.value = "";
+        afalan_waKG.value = "";
+        afalan_weKG.value = "";
+        afalan_lamiKG.value = "";
+        afalan_tepiKG.value = "";
+        afalan_waLBR.value = "";
+        afalan_weLBR.value = "";
+        afalan_lamiLBR.value = "";
+        afalan_tepiLBR.value = "";
         alasanEdit.value = "";
         showTabelHitunganSelect(true);
     }
@@ -418,10 +426,22 @@ jQuery(function ($) {
                 ukuranlebar_tableHit.value = numeral(response[0].Lebar_Potongan).value(); // prettier-ignore
                 hasil_potongJumlah.value = numeral(response[0].Jumlah_Hasil_Potong).value(); // prettier-ignore
                 hasil_potongBerat.value = numeral(response[0].Berat_Hasil_Potong).value(); // prettier-ignore
-                afalan_wa.value = numeral(response[0].Berat_Afalan_WA).value();
-                afalan_we.value = numeral(response[0].Berat_Afalan_WE).value();
-                afalan_lami.value = numeral(response[0].Berat_Afalan_Lami).value(); // prettier-ignore
-                afalan_tepi.value = numeral(response[0].Berat_Afalan_Tepi).value(); // prettier-ignore
+                afalan_waKG.value = numeral(
+                    response[0].Berat_Afalan_WA,
+                ).value();
+                afalan_weKG.value = numeral(
+                    response[0].Berat_Afalan_WE,
+                ).value();
+                afalan_lamiKG.value = numeral(response[0].Berat_Afalan_Lami).value(); // prettier-ignore
+                afalan_tepiKG.value = numeral(response[0].Berat_Afalan_Tepi).value(); // prettier-ignore
+                afalan_waLBR.value = numeral(
+                    response[0].Lembar_Afalan_WA,
+                ).value();
+                afalan_weLBR.value = numeral(
+                    response[0].Lembar_Afalan_WE,
+                ).value();
+                afalan_lamiLBR.value = numeral(response[0].Lembar_Afalan_Lami).value(); // prettier-ignore
+                afalan_tepiLBR.value = numeral(response[0].Lembar_Afalan_Tepi).value(); // prettier-ignore
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching data: ", error);
@@ -994,7 +1014,7 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
-            afalan_wa.focus();
+            afalan_waKG.focus();
         }
     });
 
@@ -1031,13 +1051,23 @@ jQuery(function ($) {
         });
     });
 
-    afalan_wa.addEventListener("keypress", function (e) {
+    afalan_waLBR.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
             if (this.value == "") {
                 this.value = 0;
             }
-            afalan_we.focus();
+            btn_timbangAfalanWA.focus();
+        }
+    });
+
+    afalan_waKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            afalan_weLBR.focus();
         }
     });
 
@@ -1058,7 +1088,7 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_wa.value = weight;
+                afalan_waKG.value = weight;
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1074,13 +1104,23 @@ jQuery(function ($) {
         });
     });
 
-    afalan_we.addEventListener("keypress", function (e) {
+    afalan_weLBR.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
             if (this.value == "") {
                 this.value = 0;
             }
-            afalan_lami.focus();
+            btn_timbangAfalanWE.focus();
+        }
+    });
+
+    afalan_weKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            afalan_lamiLBR.focus();
         }
     });
 
@@ -1101,7 +1141,7 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_we.value = weight;
+                afalan_weKG.value = weight;
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1117,13 +1157,23 @@ jQuery(function ($) {
         });
     });
 
-    afalan_lami.addEventListener("keypress", function (e) {
+    afalan_lamiLBR.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
             if (this.value == "") {
                 this.value = 0;
             }
-            afalan_tepi.focus();
+            btn_timbangAfalanLami.focus();
+        }
+    });
+
+    afalan_lamiKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            afalan_tepiLBR.focus();
         }
     });
 
@@ -1144,7 +1194,7 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_lami.value = weight;
+                afalan_lamiKG.value = weight;
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1160,7 +1210,17 @@ jQuery(function ($) {
         });
     });
 
-    afalan_tepi.addEventListener("keypress", function (e) {
+    afalan_tepiLBR.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            btn_timbangAfalanTepi.focus();
+        }
+    });
+
+    afalan_tepiKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
             if (this.value == "") {
@@ -1187,7 +1247,7 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_tepi.value = weight;
+                afalan_tepiKG.value = weight;
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1217,16 +1277,20 @@ jQuery(function ($) {
         const ukuranlebar_tableHitValue = getValue(ukuranlebar_tableHit);
         const hasil_potongJumlahValue = getValue(hasil_potongJumlah);
         const hasil_potongBeratValue = getValue(hasil_potongBerat);
-        const afalan_waValue = getValue(afalan_wa);
-        const afalan_weValue = getValue(afalan_we);
-        const afalan_lamiValue = getValue(afalan_lami);
-        const afalan_tepiValue = getValue(afalan_tepi);
+        const afalan_waKGValue = getValue(afalan_waKG);
+        const afalan_weKGValue = getValue(afalan_weKG);
+        const afalan_lamiKGValue = getValue(afalan_lamiKG);
+        const afalan_tepiKGValue = getValue(afalan_tepiKG);
+        const afalan_waLBRValue = getValue(afalan_waLBR);
+        const afalan_weLBRValue = getValue(afalan_weLBR);
+        const afalan_lamiLBRValue = getValue(afalan_lamiLBR);
+        const afalan_tepiLBRValue = getValue(afalan_tepiLBR);
         const cekTotalPemakaian =
             hasil_potongBeratValue +
-            afalan_waValue +
-            afalan_weValue +
-            afalan_lamiValue +
-            afalan_tepiValue;
+            afalan_waKGValue +
+            afalan_weKGValue +
+            afalan_lamiKGValue +
+            afalan_tepiKGValue;
 
         // Disable the button
         button_modalProsesPotong.disabled = true;
@@ -1247,6 +1311,27 @@ jQuery(function ($) {
                 returnFocus: false,
             }).then(() => {
                 tanggalLogMesinPotong.select();
+            });
+            return;
+        }
+
+        if (
+            afalan_waKG.value == "" ||
+            afalan_weKG.value == "" ||
+            afalan_lamiKG.value == "" ||
+            afalan_tepiKG.value == "" ||
+            afalan_waLBR.value == "" ||
+            afalan_weLBR.value == "" ||
+            afalan_lamiLBR.value == "" ||
+            afalan_tepiLBR.value == ""
+        ) {
+            Swal.fire({
+                icon: "warning",
+                title: "Peringatan",
+                text: "Afalan tidak boleh kosong",
+                returnFocus: false,
+            }).then(() => {
+                afalan_waLBR.focus();
             });
             return;
         }
@@ -1350,10 +1435,14 @@ jQuery(function ($) {
                 ukuranlebar_tableHit: ukuranlebar_tableHitValue,
                 hasil_potongJumlah: hasil_potongJumlahValue,
                 hasil_potongBerat: hasil_potongBeratValue,
-                afalan_wa: afalan_waValue,
-                afalan_we: afalan_weValue,
-                afalan_lami: afalan_lamiValue,
-                afalan_tepi: afalan_tepiValue,
+                afalan_waKG: afalan_waKGValue,
+                afalan_weKG: afalan_weKGValue,
+                afalan_lamiKG: afalan_lamiKGValue,
+                afalan_tepiKG: afalan_tepiKGValue,
+                afalan_waLBR: afalan_waLBRValue,
+                afalan_weLBR: afalan_weLBRValue,
+                afalan_lamiLBR: afalan_lamiLBRValue,
+                afalan_tepiLBR: afalan_tepiLBRValue,
                 alasanEdit: alasanEdit.value,
                 _token: csrfToken,
             },

@@ -1,6 +1,6 @@
 <!-- Modal untuk Tambah Permohonan Order Kerja -->
 <div class="modal fade" id="tambahKegiatanMesinPotongModal" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog" style="max-width: 90%">
+    <div class="modal-dialog" style="max-width: 95%">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
                 <h5 class="modal-title" id="tambahKegiatanMesinPotongLabel">Tambah Kegiatan Mesin</h5>
@@ -138,7 +138,8 @@
                             </div>
                         </div>
                         <div class="form-group" style="width: 15%;align-content: end">
-                            <button class="btn btn-primary w-100" id="btn_isiJenisPotongan">Isi Jenis Potongan</button>
+                            <button class="btn btn-primary w-100" id="btn_isiJenisPotongan">Isi Jenis
+                                Potongan</button>
                         </div>
                         <div class="form-group"style="flex: 0.14">
                             <label for="ukuranpanjang_tableHit">Uk. Panjang</label>
@@ -156,14 +157,14 @@
                         </div>
                     </div>
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
-                        <div class="form-group"style="flex: 0.22">
+                        <div class="form-group"style="flex: 0.2">
                             <label for="hasil_potongJumlah">Jml. Hasil Potong</label>
                             <div class="input-group">
                                 <input type="number" name="hasil_potongJumlah" id="hasil_potongJumlah"
                                     class="form-control" min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.22">
+                        <div class="form-group"style="flex: 0.2">
                             <label for="hasil_potongBerat">Brt. Hasil Potong</label>
                             <div class="input-group">
                                 <input type="number" name="hasil_potongBerat" id="hasil_potongBerat"
@@ -173,30 +174,53 @@
                         <div class="form-group" style="width: 8%;align-content: end">
                             <button class="btn btn-warning w-100" id="btn_timbangHasil">Timbang</button>
                         </div>
-                        <div class="form-group"style="flex: 0.13">
-                            <label for="afalan_wa">Afalan WA</label>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_waLBR">Afalan WA (LBR)</label>
                             <div class="input-group">
-                                <input type="number" name="afalan_wa" id="afalan_wa" class="form-control"
+                                <input type="number" name="afalan_waLBR" id="afalan_waLBR" class="form-control"
+                                    min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_waKG">Afalan WA (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_waKG" id="afalan_waKG" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
                         <div class="form-group" style="width: 8%;align-content: end">
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanWA">Timbang</button>
                         </div>
-                        <div class="form-group"style="flex: 0.13">
-                            <label for="afalan_we">Afalan WE</label>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_weLBR">Afalan WE (LBR)</label>
                             <div class="input-group">
-                                <input type="number" name="afalan_we" id="afalan_we" class="form-control"
+                                <input type="number" name="afalan_weLBR" id="afalan_weLBR" class="form-control"
+                                    min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_weKG">Afalan WE (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_weKG" id="afalan_weKG" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
                         <div class="form-group" style="width: 8%;align-content: end">
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanWE">Timbang</button>
                         </div>
+                    </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
                         <div class="form-group"style="flex: 0.16">
-                            <label for="afalan_lami">Afalan Lami</label>
+                            <label for="afalan_lamiLBR">Afalan Lami (LBR)</label>
                             <div class="input-group">
-                                <input type="number" name="afalan_lami" id="afalan_lami" class="form-control"
+                                <input type="number" name="afalan_lamiLBR" id="afalan_lamiLBR" class="form-control"
+                                    min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.16">
+                            <label for="afalan_lamiKG">Afalan Lami (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiKG" id="afalan_lamiKG" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
@@ -204,9 +228,16 @@
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanLami">Timbang</button>
                         </div>
                         <div class="form-group"style="flex: 0.14">
-                            <label for="afalan_tepi">Afalan Tepi</label>
+                            <label for="afalan_tepiLBR">Afalan Tepi (LBR)</label>
                             <div class="input-group">
-                                <input type="number" name="afalan_tepi" id="afalan_tepi" class="form-control"
+                                <input type="number" name="afalan_tepiLBR" id="afalan_tepiLBR" class="form-control"
+                                    min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.14">
+                            <label for="afalan_tepiKG">Afalan Tepi (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_tepiKG" id="afalan_tepiKG" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
@@ -214,6 +245,7 @@
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanTepi">Timbang</button>
                         </div>
                     </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%"></div>
                 </div>
                 <div class="py-2" id="div_alasanEditPotong" style="display: none">
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
