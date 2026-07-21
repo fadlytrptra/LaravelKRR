@@ -85,7 +85,15 @@ jQuery(function ($) {
     ];
 
     // Only add the action column
-    if (nomorUser == "4384" || nomorUser == "4405" || nomorUser == "4451" || $user == '4221' || $user == '4259' || $user == '8982') {
+    if (
+        nomorUser == "4384" ||
+        nomorUser == "4405" ||
+        nomorUser == "4451" ||
+        nomorUser == "4221" ||
+        nomorUser == "4259" ||
+        nomorUser == "8982" ||
+        nomorUser == "4199"
+    ) {
         columns.push({
             data: "Id_Log",
             render: function (data) {

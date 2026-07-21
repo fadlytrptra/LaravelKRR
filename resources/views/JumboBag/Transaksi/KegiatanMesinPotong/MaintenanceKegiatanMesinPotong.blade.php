@@ -57,7 +57,14 @@
                                 <th>KB Tabel Hit.</th>
                                 <th>Hasil LBR</th>
                                 <th>Hasil KG</th>
-                                @if ($user == '4405' || $user == '4221' || $user == '4259' || $user == '8982' || $user == '4451' || $user == '4384')
+                                @if (
+                                    $user == '4405' ||
+                                        $user == '4221' ||
+                                        $user == '4259' ||
+                                        $user == '8982' ||
+                                        $user == '4451' ||
+                                        $user == '4384' ||
+                                        $user == '4199')
                                     <th>Action</th>
                                 @endif
                             </tr>
