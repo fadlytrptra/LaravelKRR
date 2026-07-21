@@ -122,13 +122,16 @@
                                     </div>
                                     <div class="form-group" id="imagePreviewContainer" style="display: none;">
                                         <label>Preview Foto</label>
-                                        <div id="imagePreview" style="padding: 10px; max-width: 200px;">
+                                        <div id="imagePreview"
+                                            style="padding:10px; width:200px; height:200px; border:1px solid #ddd; display:flex; justify-content:center; align-items:center;">
                                             <img id="previewImg" src="#" alt="Preview Image"
-                                                style="width: 200%; display: none;">
+                                                style="max-width:100%; max-height:100%; width:auto; height:auto; display:none;">
                                         </div>
                                         <br>
                                         <button type="button" class="btn btn-secondary" id="clearImage"
-                                            style="width:100px">Clear</button>
+                                            style="width:100px">
+                                            Clear
+                                        </button>
                                     </div>
                                     <button id="btn_print" class="btn btn-success" style="width:100px">Print</button>
                                 </div>
@@ -607,10 +610,22 @@
                                     style="text-align: center !important; border-top:none !important; border-left:none !important;">
                                 </td>
                                 <td id="gambar_jb"
-                                    style="text-align: center !important; border-top:none !important; border-left:none !important; width: 100px; height: 510px; overflow: hidden;"
+                                    style="text-align:center !important;
+                                    border-top:none !important;
+                                    border-left:none !important;
+                                    width:100px;
+                                    height:510px;
+                                    overflow:hidden;"
                                     colspan="4" rowspan="12">
+
                                     <img id="gambar_print" src="#" alt="Preview Image"
-                                        style="width: 100%; height: 100%; object-fit: fill; display: block;">
+                                        style="max-width:100%;
+                                            max-height:100%;
+                                            width:auto;
+                                            height:auto;
+                                            object-fit:contain;
+                                            display:block;
+                                            margin:auto;">
                                 </td>
                                 {{-- <td id="qty_st"
                                 style="text-align: center !important; border-top:none !important; border-left:none !important;">
