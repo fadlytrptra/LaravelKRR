@@ -579,9 +579,9 @@ jQuery(function ($) {
                 afalan_totalKG.value = numeral(response[0].Berat_Afalan_Total).value(); // prettier-ignore
                 panjangPemakaian.value = numeral(response[0].Panjang_Pemakaian).value(); // prettier-ignore
                 beratPemakaian.value = numeral(response[0].Berat_Pemakaian).value(); // prettier-ignore
-                selisihPanjang.value = numeral(response[0].Panjang_Selisih).value();// prettier-ignore
-                selisihBerat.value = numeral(response[0].Berat_Selisih).value();// prettier-ignore
-                afalan_persentaseKG.value = numeral(response[0].Persentase_Afalan).value();// prettier-ignore
+                selisihPanjang.value = numeral(response[0].Panjang_Selisih).value(); // prettier-ignore
+                selisihBerat.value = numeral(response[0].Berat_Selisih).value(); // prettier-ignore
+                afalan_persentaseKG.value = numeral(response[0].Persentase_Afalan).value(); // prettier-ignore
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching data: ", error);
@@ -2035,6 +2035,7 @@ jQuery(function ($) {
                             ? "Data berhasil diupdate"
                             : "Data berhasil ditambahkan",
                     }).then(() => {
+                        $("#tambahKegiatanMesinPotongModal").modal("hide");
                         table_logMesin.ajax.reload();
                     });
                 } else if (response.error) {
