@@ -744,8 +744,11 @@ document.addEventListener("DOMContentLoaded", function () {
         dropdownParent: $("#modalAsalKonversi"),
         placeholder: "Pilih Objek",
     });
-    objekSelect.on("change", function () {
+
+    objekSelect.on("select2:select", function () {
         const selectedObjek = $(this).val();
+        // console.log(selectedObjek);
+
         if (selectedObjek) {
             if (
                 StKonversi === 1 ||
@@ -2210,20 +2213,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 sekunderKonversiAsal.value = 0;
                 triterKonversiAsal.value = 0;
                 $("#modalAsalKonversi").modal("show");
-                $("#modalAsalKonversi").on("shown.bs.modal", function () {
-                    console.log("shown.bs.modal1");
+                $("#modalAsalKonversi")
+                    .off("shown.bs.modal")
+                    .on("shown.bs.modal", function () {
+                        console.log("shown.bs.modal1");
 
-                    btn_objek.focus();
-                    asalAtauTujuan.innerHTML = "Asal Konversi";
-                    $(".kodeTujuan").hide();
-                    $(".kodeAsal").show();
-                    fetchDataObjek("/getObjekSelect/" + divisiId.value);
-                    // fetchDataObjek("/getObjekSelect/" + divisiId.value).done(function () {
-                    //     if (StKonversi === 1 || StKonversi === 4) {
-                    //         objekSelect.select2("open");
-                    //     }
-                    // });
-                });
+                        btn_objek.focus();
+                        asalAtauTujuan.innerHTML = "Asal Konversi";
+                        $(".kodeTujuan").hide();
+                        $(".kodeAsal").show();
+                        fetchDataObjek("/getObjekSelect/" + divisiId.value);
+                        // fetchDataObjek("/getObjekSelect/" + divisiId.value).done(function () {
+                        //     if (StKonversi === 1 || StKonversi === 4) {
+                        //         objekSelect.select2("open");
+                        //     }
+                        // });
+                    });
             } else if (result.dismiss === Swal.DismissReason.backdrop) {
                 return;
             } else {
@@ -2271,8 +2276,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 fetchDataObjek(
                                     "/getObjekSelect/" + divisiId.value,
                                 );
-                            },
-                        );
+                            });
                     });
                 }
             }
@@ -2344,7 +2348,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                 $("#modalAsalKonversi").modal("show");
-                $("#modalAsalKonversi").on("shown.bs.modal", function () {
+                $("#modalAsalKonversi").off("shown.bs.modal").on("shown.bs.modal", function () {
                     console.log("shown.bs.modal3");
 
                     btn_objek.focus();
@@ -2480,14 +2484,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             $("#modalAsalKonversi").modal("show");
 
-            $("#modalAsalKonversi").off("shown.bs.modal").on("shown.bs.modal", function () {
-                console.log("shown.bs.modal4");
+            $("#modalAsalKonversi")
+                .off("shown.bs.modal")
+                .on("shown.bs.modal", function () {
+                    console.log("shown.bs.modal4");
 
-                asalAtauTujuan.innerHTML = "Asal Konversi";
-                $(".kodeTujuan").hide();
-                $(".kodeAsal").show();
-                $("#primerKonversiAsal").focus();
-            });
+                    asalAtauTujuan.innerHTML = "Asal Konversi";
+                    $(".kodeTujuan").hide();
+                    $(".kodeAsal").show();
+                    $("#primerKonversiAsal").focus();
+                });
 
             $("#modalAsalKonversi").on("hidden.bs.modal", function () {
                 if (fetchController) {
@@ -2613,12 +2619,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             $("#modalAsalKonversi").modal("show");
 
-            $("#modalAsalKonversi").off("shown.bs.modal").on("shown.bs.modal", function () {
-                asalAtauTujuan.innerHTML = "Tujuan Konversi";
-                $(".kodeAsal").hide();
-                $(".kodeTujuan").show();
-                $("#primerKonversiAsal").focus();
-            });
+            $("#modalAsalKonversi")
+                .off("shown.bs.modal")
+                .on("shown.bs.modal", function () {
+                    asalAtauTujuan.innerHTML = "Tujuan Konversi";
+                    $(".kodeAsal").hide();
+                    $(".kodeTujuan").show();
+                    $("#primerKonversiAsal").focus();
+                });
 
             $("#modalAsalKonversi").on("hidden.bs.modal", function () {
                 $(this).find("input").val("");
