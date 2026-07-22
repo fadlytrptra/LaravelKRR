@@ -268,7 +268,7 @@ btn_divisi.addEventListener("click", function (e) {
                 divisiNama.value = decodeHtmlEntities(
                     result.value.NamaDivisi.trim()
                 );
-                btn_objek.focus();
+                btn_objek.click();
             }
         });
     } catch (error) {
@@ -359,7 +359,7 @@ btn_objek.addEventListener("click", function (e) {
                 objekNama.value = decodeHtmlEntities(
                     result.value.NamaObjek.trim()
                 );
-                btn_kelut.focus();
+                btn_kelut.click();
             }
         });
     } catch (error) {
@@ -453,7 +453,7 @@ btn_kelut.addEventListener("click", function (e) {
                 kelutNama.value = decodeHtmlEntities(
                     result.value.NamaKelompokUtama.trim()
                 );
-                btn_kelompok.focus();
+                btn_kelompok.click();
             }
         });
     } catch (error) {
@@ -547,7 +547,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 kelompokNama.value = decodeHtmlEntities(
                     result.value.namakelompok.trim()
                 );
-                btn_subkel.focus();
+                btn_subkel.click();
             }
         });
     } catch (error) {
