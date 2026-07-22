@@ -71,8 +71,8 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
         $afalan_totalKG = $request->input('afalan_totalKG');
         $panjangPemakaian = $request->input('panjangPemakaian');
         $beratPemakaian = $request->input('beratPemakaian');
-        $selisihBerat = $request->input('selisihBerat');
         $selisihPanjang = $request->input('selisihPanjang');
+        $selisihBerat = $request->input('selisihBerat');
         $afalan_persentaseKG = $request->input('afalan_persentaseKG');
         $user = trim(Auth::user()->NomorUser);
         $alasan = $request->input('alasanEdit');
@@ -130,7 +130,6 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                     @XPanjang_Selisih = ?,
                     @XBerat_Selisih = ?,
                     @XPersentase_Afalan = ?,
-                    @XBerat_Pemakaian = ?,
                     @XInput_Information = ?',
                     [
                         6,
@@ -176,8 +175,8 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $afalan_totalKG,
                         $panjangPemakaian,
                         $beratPemakaian,
-                        $selisihBerat,
                         $selisihPanjang,
+                        $selisihBerat,
                         $afalan_persentaseKG,
                         $inputed
                     ]
@@ -282,8 +281,8 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $afalan_totalKG,
                         $panjangPemakaian,
                         $beratPemakaian,
-                        $selisihBerat,
                         $selisihPanjang,
+                        $selisihBerat,
                         $afalan_persentaseKG,
                         $edited,
                         $idLog

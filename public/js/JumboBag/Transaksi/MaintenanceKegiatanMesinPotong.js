@@ -441,7 +441,7 @@ jQuery(function ($) {
                 afalan_lamiEkorKGValue +
                 afalan_lamiLubangKGValue +
                 afalan_kotorKGValue,
-        ).value();
+        ).format("0.00");
     }
 
     function hitungLembarTotalAfalan() {
@@ -465,7 +465,7 @@ jQuery(function ($) {
                 afalan_lamiEkorLBRValue +
                 afalan_lamiLubangLBRValue +
                 afalan_kotorLBRValue,
-        ).value();
+        ).format("0.00");
     }
 
     function hitungPanjangPemakaian() {
@@ -473,7 +473,7 @@ jQuery(function ($) {
         const hasil_potongJumlahValue = getValue(hasil_potongJumlah);
         panjangPemakaian.value = numeral(
             (ukuranpanjang_tableHitValue * hasil_potongJumlahValue) / 100,
-        ).value();
+        ).format("0.00");
     }
 
     function hitungBeratPemakaian() {
@@ -481,7 +481,7 @@ jQuery(function ($) {
         const afalan_totalKGValue = getValue(afalan_totalKG);
         beratPemakaian.value = numeral(
             hasil_potongBeratValue + afalan_totalKGValue,
-        ).value();
+        ).format("0.00");
     }
 
     function hitungSelisihPanjangPemakaian() {
@@ -489,7 +489,7 @@ jQuery(function ($) {
         const panjangPemakaianValue = getValue(panjangPemakaian);
         selisihPanjang.value = numeral(
             panjangRollValue - panjangPemakaianValue,
-        ).value();
+        ).format("0.00");
     }
 
     function hitungSelisihBeratPemakaian() {
@@ -497,7 +497,7 @@ jQuery(function ($) {
         const beratPemakaianValue = getValue(beratPemakaian);
         selisihBerat.value = numeral(
             beratRollValue - beratPemakaianValue,
-        ).value();
+        ).format("0.00");
     }
 
     function hitungPersentaseAfalan() {
@@ -505,7 +505,7 @@ jQuery(function ($) {
         const afalan_totalKGValue = getValue(afalan_totalKG);
         afalan_persentaseKG.value = numeral(
             (afalan_totalKGValue / beratPemakaianValue) * 100,
-        ).value();
+        ).format("0.00");
     }
     //#endregion
 
@@ -538,7 +538,7 @@ jQuery(function ($) {
                 warnaRoll.value = response[0].Warna;
                 statusReinforced.value = response[0].Status_Reinforced == 1 ? "R" : "N"; //prettier-ignore
                 beratRoll.value = numeral(response[0].Berat_Roll).value();
-                beratPemakaian.value = numeral(response[0].Berat_Pemakaian).value(); // prettier-ignore
+                panjangRoll.value = numeral(response[0].Panjang_Roll).value();
                 nomor_mesinCL.value = response[0].Nomor_Mesin_CL;
                 if (response[0].KB_TabelHit == null) {
                     showTabelHitunganSelect(false);
@@ -557,22 +557,31 @@ jQuery(function ($) {
                 ukuranlebar_tableHit.value = numeral(response[0].Lebar_Potongan).value(); // prettier-ignore
                 hasil_potongJumlah.value = numeral(response[0].Jumlah_Hasil_Potong).value(); // prettier-ignore
                 hasil_potongBerat.value = numeral(response[0].Berat_Hasil_Potong).value(); // prettier-ignore
-                afalan_waKG.value = numeral(
-                    response[0].Berat_Afalan_WA,
-                ).value();
-                afalan_weKG.value = numeral(
-                    response[0].Berat_Afalan_WE,
-                ).value();
-                afalan_lamiKG.value = numeral(response[0].Berat_Afalan_Lami).value(); // prettier-ignore
-                afalan_tepiKG.value = numeral(response[0].Berat_Afalan_Tepi).value(); // prettier-ignore
-                afalan_waLBR.value = numeral(
-                    response[0].Lembar_Afalan_WA,
-                ).value();
-                afalan_weLBR.value = numeral(
-                    response[0].Lembar_Afalan_WE,
-                ).value();
+                afalan_waLBR.value = numeral(response[0].Lembar_Afalan_WA).value(); // prettier-ignore
+                afalan_waKG.value = numeral(response[0].Berat_Afalan_WA).value(); // prettier-ignore
+                afalan_weLBR.value = numeral(response[0].Lembar_Afalan_WE).value(); // prettier-ignore
+                afalan_weKG.value = numeral(response[0].Berat_Afalan_WE).value(); // prettier-ignore
                 afalan_lamiLBR.value = numeral(response[0].Lembar_Afalan_Lami).value(); // prettier-ignore
+                afalan_lamiKG.value = numeral(response[0].Berat_Afalan_Lami).value(); // prettier-ignore
                 afalan_tepiLBR.value = numeral(response[0].Lembar_Afalan_Tepi).value(); // prettier-ignore
+                afalan_tepiKG.value = numeral(response[0].Berat_Afalan_Tepi).value(); // prettier-ignore
+                afalan_settingLBR.value = numeral(response[0].Lembar_Afalan_Setting).value(); // prettier-ignore
+                afalan_settingKG.value = numeral(response[0].Berat_Afalan_Setting).value(); // prettier-ignore
+                afalan_lamiSambunganLBR.value = numeral(response[0].Lembar_Afalan_LamiSambungan).value(); // prettier-ignore
+                afalan_lamiSambunganKG.value = numeral(response[0].Berat_Afalan_LamiSambungan).value(); // prettier-ignore
+                afalan_lamiEkorLBR.value = numeral(response[0].Lembar_Afalan_LamiEkor).value(); // prettier-ignore
+                afalan_lamiEkorKG.value = numeral(response[0].Berat_Afalan_LamiEkor).value(); // prettier-ignore
+                afalan_lamiLubangLBR.value = numeral(response[0].Lembar_Afalan_LamiLubang).value(); // prettier-ignore
+                afalan_lamiLubangKG.value = numeral(response[0].Berat_Afalan_LamiLubang).value(); // prettier-ignore
+                afalan_kotorLBR.value = numeral(response[0].Lembar_Afalan_Kotor).value(); // prettier-ignore
+                afalan_kotorKG.value = numeral(response[0].Berat_Afalan_Kotor).value(); // prettier-ignore
+                afalan_totalLBR.value = numeral(response[0].Lembar_Afalan_Total).value(); // prettier-ignore
+                afalan_totalKG.value = numeral(response[0].Berat_Afalan_Total).value(); // prettier-ignore
+                panjangPemakaian.value = numeral(response[0].Panjang_Pemakaian).value(); // prettier-ignore
+                beratPemakaian.value = numeral(response[0].Berat_Pemakaian).value(); // prettier-ignore
+                selisihPanjang.value = numeral(response[0].Panjang_Selisih).value();// prettier-ignore
+                selisihBerat.value = numeral(response[0].Berat_Selisih).value();// prettier-ignore
+                afalan_persentaseKG.value = numeral(response[0].Persentase_Afalan).value();// prettier-ignore
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching data: ", error);
@@ -1108,6 +1117,17 @@ jQuery(function ($) {
                                 text: "Format harus: <Nama> Uk. <Panjang> X <Lebar>",
                             });
                             return;
+                        }
+
+                        const parts = newKomponen.split(/\s+Uk\.\s+/i);
+
+                        if (parts.length === 2) {
+                            const namaKomponen = parts[0].toUpperCase();
+                            // Normalize "x" or "X" to uppercase " X "
+                            // const ukuran = parts[1].replace(/\s*x\s*/i, " X ");
+                            const ukuran = parts[1].replace(/\sx\s/i, " X ");
+
+                            newKomponen = `${namaKomponen} Uk. ${ukuran}`;
                         }
 
                         komponen_tableHit.append(
