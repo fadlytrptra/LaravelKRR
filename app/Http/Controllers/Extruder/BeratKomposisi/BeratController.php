@@ -95,8 +95,8 @@ class BeratController extends Controller
                 // $param_data[3] = intval($param_data[3]); // @pb
                 $param_data[0] = $request->input('txtKodeBarang'); //@KodeBarang
                 $param_data[1] = $request->input('txtAlasan'); // @alasan
-                $param_data[2] = intval($request->input('numAtas')); // @pa
-                $param_data[3] = intval($request->input('numBawah')); // @pb
+                $param_data[2] = floatval($request->input('numAtas')); // @pa
+                $param_data[3] = floatval($request->input('numBawah')); // @pb
                 $param_data[4] = $request->input('date'); // @tanggal
                 $param_str = '@kd = 2, @KodeBarang = ?, @alasan = ?, @pa = ?, @pb = ?, @userApp = ' . Auth::user()->NomorUser . ', @tanggal = ?';
                 return $this->executeSP('statement', $fun_str, $param_str, $param_data);
