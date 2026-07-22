@@ -275,6 +275,7 @@ jQuery(function ($) {
     }
 
     function clearAll() {
+        namaMesinPotong.val(null).trigger("change");
         shiftPotong.value = "";
         searchDataByBarcode.value = "";
         ukuranRoll.value = "";
