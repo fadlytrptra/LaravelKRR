@@ -18,7 +18,7 @@ jQuery(function ($) {
     let warnaRoll = document.getElementById("warnaRoll");
     let statusReinforced = document.getElementById("statusReinforced");
     let beratRoll = document.getElementById("beratRoll");
-    let beratPemakaian = document.getElementById("beratPemakaian");
+    let panjangRoll = document.getElementById("panjangRoll");
     let nomor_mesinCL = document.getElementById("nomor_mesinCL");
     let div_parentSelectCustomerTableHit = document.getElementById("div_parentSelectCustomerTableHit"); //prettier-ignore
     const customer_tableHit = $("#customer_tableHit");
@@ -45,6 +45,28 @@ jQuery(function ($) {
     let afalan_tepiKG = document.getElementById("afalan_tepiKG");
     let afalan_tepiLBR = document.getElementById("afalan_tepiLBR");
     let btn_timbangAfalanTepi = document.getElementById("btn_timbangAfalanTepi"); //prettier-ignore
+    let afalan_settingLBR = document.getElementById("afalan_settingLBR");
+    let afalan_settingKG = document.getElementById("afalan_settingKG");
+    let btn_timbangAfalanSetting = document.getElementById("btn_timbangAfalanSetting"); //prettier-ignore
+    let afalan_lamiSambunganLBR = document.getElementById("afalan_lamiSambunganLBR"); //prettier-ignore
+    let afalan_lamiSambunganKG = document.getElementById("afalan_lamiSambunganKG"); //prettier-ignore
+    let btn_timbangAfalanLamiSambungan = document.getElementById("btn_timbangAfalanLamiSambungan"); //prettier-ignore
+    let afalan_lamiEkorLBR = document.getElementById("afalan_lamiEkorLBR");
+    let afalan_lamiEkorKG = document.getElementById("afalan_lamiEkorKG");
+    let btn_timbangAfalanLamiEkor = document.getElementById("btn_timbangAfalanLamiEkor"); //prettier-ignore
+    let afalan_lamiLubangLBR = document.getElementById("afalan_lamiLubangLBR");
+    let afalan_lamiLubangKG = document.getElementById("afalan_lamiLubangKG");
+    let btn_timbangAfalanLamiLubang = document.getElementById("btn_timbangAfalanLamiLubang"); //prettier-ignore
+    let afalan_kotorLBR = document.getElementById("afalan_kotorLBR");
+    let afalan_kotorKG = document.getElementById("afalan_kotorKG");
+    let btn_timbangAfalanKotor = document.getElementById("btn_timbangAfalanKotor"); //prettier-ignore
+    let afalan_totalLBR = document.getElementById("afalan_totalLBR");
+    let afalan_totalKG = document.getElementById("afalan_totalKG");
+    let panjangPemakaian = document.getElementById("panjangPemakaian");
+    let beratPemakaian = document.getElementById("beratPemakaian");
+    let selisihBerat = document.getElementById("selisihBerat");
+    let selisihPanjang = document.getElementById("selisihPanjang");
+    let afalan_persentaseKG = document.getElementById("afalan_persentaseKG");
     let div_alasanEditPotong = document.getElementById("div_alasanEditPotong");
     let alasanEdit = document.getElementById("alasanEdit");
     let button_modalProsesPotong = document.getElementById("button_modalProsesPotong"); //prettier-ignore
@@ -131,6 +153,7 @@ jQuery(function ($) {
     let statusReinforcedAllowedCharacters = ["R", "N"];
     let kodebarang_tableHitEdit;
     let komponen_tableHitEdit;
+    const getValue = (el) => parseFloat(el?.value || 0);
     //#endregion
 
     //#region Load Form
@@ -262,7 +285,7 @@ jQuery(function ($) {
         warnaRoll.value = "";
         statusReinforced.value = "";
         beratRoll.value = "";
-        beratPemakaian.value = "";
+        panjangRoll.value = "";
         nomor_mesinCL.value = "";
         kodebarang_tableHit.empty();
         kodebarang_tableHit.val(null).trigger("change");
@@ -273,14 +296,31 @@ jQuery(function ($) {
         ukuranlebar_tableHit.value = "";
         hasil_potongJumlah.value = "";
         hasil_potongBerat.value = "";
-        afalan_waKG.value = "";
-        afalan_weKG.value = "";
-        afalan_lamiKG.value = "";
-        afalan_tepiKG.value = "";
         afalan_waLBR.value = "";
+        afalan_waKG.value = "";
         afalan_weLBR.value = "";
+        afalan_weKG.value = "";
         afalan_lamiLBR.value = "";
+        afalan_lamiKG.value = "";
         afalan_tepiLBR.value = "";
+        afalan_tepiKG.value = "";
+        afalan_settingLBR.value = "";
+        afalan_settingKG.value = "";
+        afalan_lamiSambunganLBR.value = "";
+        afalan_lamiSambunganKG.value = "";
+        afalan_lamiEkorLBR.value = "";
+        afalan_lamiEkorKG.value = "";
+        afalan_lamiLubangLBR.value = "";
+        afalan_lamiLubangKG.value = "";
+        afalan_kotorLBR.value = "";
+        afalan_kotorKG.value = "";
+        afalan_totalLBR.value = "";
+        afalan_totalKG.value = "";
+        panjangPemakaian.value = "";
+        beratPemakaian.value = "";
+        selisihBerat.value = "";
+        selisihPanjang.value = "";
+        afalan_persentaseKG.value = "";
         alasanEdit.value = "";
         showTabelHitunganSelect(true);
     }
@@ -327,6 +367,9 @@ jQuery(function ($) {
                     }
                     warnaRoll.value = data[0].Warna?.trim();
                     beratRoll.value = numeral(data[0].Qty?.trim() ?? 0).value();
+                    panjangRoll.value = numeral(
+                        data[0].Qty_sekunder?.trim() ?? 0,
+                    ).value();
                     if (
                         data[0].IdDivisi?.trim() == "CIR" ||
                         data[0].IdDivisi?.trim() == "CLM" ||
@@ -375,6 +418,94 @@ jQuery(function ($) {
             btn_isiJenisPotongan.classList.add("btn-info");
         }
         return Promise.resolve();
+    }
+
+    function hitungBeratTotalAfalan() {
+        const afalan_waKGValue = getValue(afalan_waKG);
+        const afalan_weKGValue = getValue(afalan_weKG);
+        const afalan_lamiKGValue = getValue(afalan_lamiKG);
+        const afalan_tepiKGValue = getValue(afalan_tepiKG);
+        const afalan_settingKGValue = getValue(afalan_settingKG);
+        const afalan_lamiSambunganKGValue = getValue(afalan_lamiSambunganKG);
+        const afalan_lamiEkorKGValue = getValue(afalan_lamiEkorKG);
+        const afalan_lamiLubangKGValue = getValue(afalan_lamiLubangKG);
+        const afalan_kotorKGValue = getValue(afalan_kotorKG);
+
+        afalan_totalKG.value = numeral(
+            afalan_waKGValue +
+                afalan_weKGValue +
+                afalan_lamiKGValue +
+                afalan_tepiKGValue +
+                afalan_settingKGValue +
+                afalan_lamiSambunganKGValue +
+                afalan_lamiEkorKGValue +
+                afalan_lamiLubangKGValue +
+                afalan_kotorKGValue,
+        ).value();
+    }
+
+    function hitungLembarTotalAfalan() {
+        const afalan_waLBRValue = getValue(afalan_waLBR);
+        const afalan_weLBRValue = getValue(afalan_weLBR);
+        const afalan_lamiLBRValue = getValue(afalan_lamiLBR);
+        const afalan_tepiLBRValue = getValue(afalan_tepiLBR);
+        const afalan_settingLBRValue = getValue(afalan_settingLBR);
+        const afalan_lamiSambunganLBRValue = getValue(afalan_lamiSambunganLBR);
+        const afalan_lamiEkorLBRValue = getValue(afalan_lamiEkorLBR);
+        const afalan_lamiLubangLBRValue = getValue(afalan_lamiLubangLBR);
+        const afalan_kotorLBRValue = getValue(afalan_kotorLBR);
+
+        afalan_totalLBR.value = numeral(
+            afalan_waLBRValue +
+                afalan_weLBRValue +
+                afalan_lamiLBRValue +
+                afalan_tepiLBRValue +
+                afalan_settingLBRValue +
+                afalan_lamiSambunganLBRValue +
+                afalan_lamiEkorLBRValue +
+                afalan_lamiLubangLBRValue +
+                afalan_kotorLBRValue,
+        ).value();
+    }
+
+    function hitungPanjangPemakaian() {
+        const ukuranpanjang_tableHitValue = getValue(ukuranpanjang_tableHit);
+        const hasil_potongJumlahValue = getValue(hasil_potongJumlah);
+        panjangPemakaian.value = numeral(
+            (ukuranpanjang_tableHitValue * hasil_potongJumlahValue) / 100,
+        ).value();
+    }
+
+    function hitungBeratPemakaian() {
+        const hasil_potongBeratValue = getValue(hasil_potongBerat);
+        const afalan_totalKGValue = getValue(afalan_totalKG);
+        beratPemakaian.value = numeral(
+            hasil_potongBeratValue + afalan_totalKGValue,
+        ).value();
+    }
+
+    function hitungSelisihPanjangPemakaian() {
+        const panjangRollValue = getValue(panjangRoll);
+        const panjangPemakaianValue = getValue(panjangPemakaian);
+        selisihPanjang.value = numeral(
+            panjangRollValue - panjangPemakaianValue,
+        ).value();
+    }
+
+    function hitungSelisihBeratPemakaian() {
+        const beratRollValue = getValue(beratRoll);
+        const beratPemakaianValue = getValue(beratPemakaian);
+        selisihBerat.value = numeral(
+            beratRollValue - beratPemakaianValue,
+        ).value();
+    }
+
+    function hitungPersentaseAfalan() {
+        const beratPemakaianValue = getValue(beratPemakaian);
+        const afalan_totalKGValue = getValue(afalan_totalKG);
+        afalan_persentaseKG.value = numeral(
+            (afalan_totalKGValue / beratPemakaianValue) * 100,
+        ).value();
     }
     //#endregion
 
@@ -831,16 +962,21 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
-            beratPemakaian.focus();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            panjangRoll.focus();
         }
     });
 
-    beratPemakaian.addEventListener("keypress", function (e) {
+    panjangRoll.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungPanjangPemakaian();
+            hitungSelisihPanjangPemakaian();
             nomor_mesinCL.focus();
         }
     });
@@ -946,7 +1082,45 @@ jQuery(function ($) {
         jenisPotongan.value = komponenName;
         ukuranpanjang_tableHit.value = komponenLength;
         ukuranlebar_tableHit.value = komponenWidth;
+        const event = new KeyboardEvent("keypress", { key: "Enter" });
+        ukuranpanjang_tableHit.dispatchEvent(event);
         hasil_potongJumlah.focus();
+    });
+
+    komponen_tableHit.on("select2:open", function () {
+        let searchField = document.querySelector(
+            ".select2-container--open .select2-search__field",
+        );
+
+        $(searchField)
+            .off("keydown.komponen_tableHit")
+            .on("keydown.komponen_tableHit", function (e) {
+                if (e.key === "Enter") {
+                    let newKomponen = $(this).val().trim();
+                    if (newKomponen !== "") {
+                        e.preventDefault();
+                        const regex =
+                            /^.+\sUk\.\s\d+(?:\.\d+)?\sX\s\d+(?:\.\d+)?$/i;
+                        if (!regex.test(newKomponen)) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Format nama komponen tidak valid",
+                                text: "Format harus: <Nama> Uk. <Panjang> X <Lebar>",
+                            });
+                            return;
+                        }
+
+                        komponen_tableHit.append(
+                            new Option(newKomponen, newKomponen, true, true),
+                        );
+                        komponen_tableHit
+                            .trigger("change")
+                            .trigger("select2:select");
+                        komponen_tableHit.select2("close");
+                        hasil_potongJumlah.focus();
+                    }
+                }
+            });
     });
 
     jenisPotongan.addEventListener("keypress", function (e) {
@@ -984,6 +1158,8 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungPanjangPemakaian();
+            hitungSelisihPanjangPemakaian();
             ukuranlebar_tableHit.focus();
         }
     });
@@ -1004,6 +1180,8 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungPanjangPemakaian();
+            hitungSelisihPanjangPemakaian();
             hasil_potongBerat.focus();
         }
     });
@@ -1014,7 +1192,10 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
-            afalan_waKG.focus();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_waLBR.focus();
         }
     });
 
@@ -1047,6 +1228,9 @@ jQuery(function ($) {
                 });
             },
         }).then(() => {
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             btn_timbangAfalanWA.focus();
         });
     });
@@ -1057,6 +1241,7 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungLembarTotalAfalan();
             btn_timbangAfalanWA.focus();
         }
     });
@@ -1067,6 +1252,10 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             afalan_weLBR.focus();
         }
     });
@@ -1100,6 +1289,10 @@ jQuery(function ($) {
                 });
             },
         }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             btn_timbangAfalanWE.focus();
         });
     });
@@ -1110,6 +1303,7 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungLembarTotalAfalan();
             btn_timbangAfalanWE.focus();
         }
     });
@@ -1120,6 +1314,10 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             afalan_lamiLBR.focus();
         }
     });
@@ -1153,6 +1351,10 @@ jQuery(function ($) {
                 });
             },
         }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             btn_timbangAfalanLami.focus();
         });
     });
@@ -1163,6 +1365,7 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungLembarTotalAfalan();
             btn_timbangAfalanLami.focus();
         }
     });
@@ -1173,6 +1376,10 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             afalan_tepiLBR.focus();
         }
     });
@@ -1206,6 +1413,10 @@ jQuery(function ($) {
                 });
             },
         }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             btn_timbangAfalanTepi.focus();
         });
     });
@@ -1216,6 +1427,7 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            hitungLembarTotalAfalan();
             btn_timbangAfalanTepi.focus();
         }
     });
@@ -1226,7 +1438,11 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
-            button_modalProsesPotong.focus();
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_settingLBR.focus();
         }
     });
 
@@ -1259,38 +1475,362 @@ jQuery(function ($) {
                 });
             },
         }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_settingLBR.focus();
+        });
+    });
+
+    afalan_settingLBR.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungLembarTotalAfalan();
+            btn_timbangAfalanSetting.focus();
+        }
+    });
+
+    afalan_settingKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_lamiSambunganLBR.focus();
+        }
+    });
+
+    btn_timbangAfalanSetting.addEventListener("click", function () {
+        $.ajax({
+            url: "http://192.168.100.80:8080/",
+            method: "GET",
+            dataType: "text",
+            success: function (weight) {
+                console.log("Data dari timbangan: ".weight);
+                if (weight < 0) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Nilai Timbangan Minus",
+                        text: "Data timbangan tidak boleh bernilai negatif. Silakan periksa kembali timbangan Anda",
+                        timer: 3000,
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+                afalan_settingKG.value = weight;
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Timbangan tidak ditemukan!",
+                    text: error,
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            },
+        }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_lamiSambunganLBR.focus();
+        });
+    });
+
+    afalan_lamiSambunganLBR.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungLembarTotalAfalan();
+            btn_timbangAfalanLamiSambungan.focus();
+        }
+    });
+
+    afalan_lamiSambunganKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_lamiEkorLBR.focus();
+        }
+    });
+
+    btn_timbangAfalanLamiSambungan.addEventListener("click", function () {
+        $.ajax({
+            url: "http://192.168.100.80:8080/",
+            method: "GET",
+            dataType: "text",
+            success: function (weight) {
+                console.log("Data dari timbangan: ".weight);
+                if (weight < 0) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Nilai Timbangan Minus",
+                        text: "Data timbangan tidak boleh bernilai negatif. Silakan periksa kembali timbangan Anda",
+                        timer: 3000,
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+                afalan_lamiSambunganKG.value = weight;
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Timbangan tidak ditemukan!",
+                    text: error,
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            },
+        }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_lamiEkorLBR.focus();
+        });
+    });
+
+    afalan_lamiEkorLBR.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungLembarTotalAfalan();
+            btn_timbangAfalanLamiEkor.focus();
+        }
+    });
+
+    afalan_lamiEkorKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_lamiLubangLBR.focus();
+        }
+    });
+
+    btn_timbangAfalanLamiEkor.addEventListener("click", function () {
+        $.ajax({
+            url: "http://192.168.100.80:8080/",
+            method: "GET",
+            dataType: "text",
+            success: function (weight) {
+                console.log("Data dari timbangan: ".weight);
+                if (weight < 0) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Nilai Timbangan Minus",
+                        text: "Data timbangan tidak boleh bernilai negatif. Silakan periksa kembali timbangan Anda",
+                        timer: 3000,
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+                afalan_lamiEkorKG.value = weight;
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Timbangan tidak ditemukan!",
+                    text: error,
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            },
+        }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_lamiLubangLBR.focus();
+        });
+    });
+
+    afalan_lamiLubangLBR.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungLembarTotalAfalan();
+            btn_timbangAfalanLamiLubang.focus();
+        }
+    });
+
+    afalan_lamiLubangKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_kotorLBR.focus();
+        }
+    });
+
+    btn_timbangAfalanLamiLubang.addEventListener("click", function () {
+        $.ajax({
+            url: "http://192.168.100.80:8080/",
+            method: "GET",
+            dataType: "text",
+            success: function (weight) {
+                console.log("Data dari timbangan: ".weight);
+                if (weight < 0) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Nilai Timbangan Minus",
+                        text: "Data timbangan tidak boleh bernilai negatif. Silakan periksa kembali timbangan Anda",
+                        timer: 3000,
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+                afalan_lamiLubangKG.value = weight;
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Timbangan tidak ditemukan!",
+                    text: error,
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            },
+        }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            afalan_kotorLBR.focus();
+        });
+    });
+
+    afalan_kotorLBR.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungLembarTotalAfalan();
+            btn_timbangAfalanKotor.focus();
+        }
+    });
+
+    afalan_kotorKG.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            if (this.value == "") {
+                this.value = 0;
+            }
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
+            button_modalProsesPotong.focus();
+        }
+    });
+
+    btn_timbangAfalanKotor.addEventListener("click", function () {
+        $.ajax({
+            url: "http://192.168.100.80:8080/",
+            method: "GET",
+            dataType: "text",
+            success: function (weight) {
+                console.log("Data dari timbangan: ".weight);
+                if (weight < 0) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Nilai Timbangan Minus",
+                        text: "Data timbangan tidak boleh bernilai negatif. Silakan periksa kembali timbangan Anda",
+                        timer: 3000,
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+                afalan_kotorKG.value = weight;
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Timbangan tidak ditemukan!",
+                    text: error,
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            },
+        }).then(() => {
+            hitungBeratTotalAfalan();
+            hitungBeratPemakaian();
+            hitungSelisihBeratPemakaian();
+            hitungPersentaseAfalan();
             button_modalProsesPotong.focus();
         });
     });
 
     button_modalProsesPotong.addEventListener("click", function () {
         let idLog = $(this).data("id");
-        const getValue = (el) => parseFloat(el?.value || 0);
 
         const ukuranRollValue = getValue(ukuranRoll);
         const rajutanWAValue = getValue(rajutanWA);
         const rajutanWEValue = getValue(rajutanWE);
         const denierKainValue = getValue(denierKain);
         const beratRollValue = getValue(beratRoll);
-        const beratPemakaianValue = getValue(beratPemakaian);
+        const panjangRollValue = getValue(panjangRoll);
         const ukuranpanjang_tableHitValue = getValue(ukuranpanjang_tableHit);
         const ukuranlebar_tableHitValue = getValue(ukuranlebar_tableHit);
         const hasil_potongJumlahValue = getValue(hasil_potongJumlah);
         const hasil_potongBeratValue = getValue(hasil_potongBerat);
-        const afalan_waKGValue = getValue(afalan_waKG);
-        const afalan_weKGValue = getValue(afalan_weKG);
-        const afalan_lamiKGValue = getValue(afalan_lamiKG);
-        const afalan_tepiKGValue = getValue(afalan_tepiKG);
         const afalan_waLBRValue = getValue(afalan_waLBR);
+        const afalan_waKGValue = getValue(afalan_waKG);
         const afalan_weLBRValue = getValue(afalan_weLBR);
+        const afalan_weKGValue = getValue(afalan_weKG);
         const afalan_lamiLBRValue = getValue(afalan_lamiLBR);
+        const afalan_lamiKGValue = getValue(afalan_lamiKG);
         const afalan_tepiLBRValue = getValue(afalan_tepiLBR);
-        const cekTotalPemakaian =
-            hasil_potongBeratValue +
-            afalan_waKGValue +
-            afalan_weKGValue +
-            afalan_lamiKGValue +
-            afalan_tepiKGValue;
+        const afalan_tepiKGValue = getValue(afalan_tepiKG);
+        const afalan_settingLBRValue = getValue(afalan_settingLBR);
+        const afalan_settingKGValue = getValue(afalan_settingKG);
+        const afalan_lamiSambunganLBRValue = getValue(afalan_lamiSambunganLBR);
+        const afalan_lamiSambunganKGValue = getValue(afalan_lamiSambunganKG);
+        const afalan_lamiEkorLBRValue = getValue(afalan_lamiEkorLBR);
+        const afalan_lamiEkorKGValue = getValue(afalan_lamiEkorKG);
+        const afalan_lamiLubangLBRValue = getValue(afalan_lamiLubangLBR);
+        const afalan_lamiLubangKGValue = getValue(afalan_lamiLubangKG);
+        const afalan_kotorLBRValue = getValue(afalan_kotorLBR);
+        const afalan_kotorKGValue = getValue(afalan_kotorKG);
+        const afalan_totalLBRValue = getValue(afalan_totalLBR);
+        const afalan_totalKGValue = getValue(afalan_totalKG);
+        const panjangPemakaianValue = getValue(panjangPemakaian);
+        const beratPemakaianValue = getValue(beratPemakaian);
+        const selisihBeratValue = getValue(selisihBerat);
+        const selisihPanjangValue = getValue(selisihPanjang);
+        const afalan_persentaseKGValue = getValue(afalan_persentaseKG);
 
         // Disable the button
         button_modalProsesPotong.disabled = true;
@@ -1315,26 +1855,32 @@ jQuery(function ($) {
             return;
         }
 
-        if (
-            afalan_waKG.value == "" ||
-            afalan_weKG.value == "" ||
-            afalan_lamiKG.value == "" ||
-            afalan_tepiKG.value == "" ||
-            afalan_waLBR.value == "" ||
-            afalan_weLBR.value == "" ||
-            afalan_lamiLBR.value == "" ||
-            afalan_tepiLBR.value == ""
-        ) {
-            Swal.fire({
-                icon: "warning",
-                title: "Peringatan",
-                text: "Afalan tidak boleh kosong",
-                returnFocus: false,
-            }).then(() => {
-                afalan_waLBR.focus();
-            });
-            return;
-        }
+        const afalanInputs = [
+            afalan_waLBR,
+            afalan_waKG,
+            afalan_weLBR,
+            afalan_weKG,
+            afalan_lamiLBR,
+            afalan_lamiKG,
+            afalan_tepiLBR,
+            afalan_tepiKG,
+            afalan_settingLBR,
+            afalan_settingKG,
+            afalan_lamiSambunganLBR,
+            afalan_lamiSambunganKG,
+            afalan_lamiEkorLBR,
+            afalan_lamiEkorKG,
+            afalan_lamiLubangLBR,
+            afalan_lamiLubangKG,
+            afalan_kotorLBR,
+            afalan_kotorKG,
+        ];
+
+        afalanInputs.forEach((input) => {
+            if (input.value.trim() === "") {
+                input.value = 0;
+            }
+        });
 
         if (shiftPotong.value == "" || shiftPotong.value == null) {
             Swal.fire({
@@ -1383,18 +1929,6 @@ jQuery(function ($) {
             return;
         }
 
-        if (cekTotalPemakaian !== beratPemakaianValue) {
-            Swal.fire({
-                icon: "warning",
-                title: "Peringatan",
-                text: "Berat pemakaian tidak sesuai",
-                returnFocus: false,
-            }).then(() => {
-                beratPemakaian.focus();
-            });
-            return;
-        }
-
         if (idLog) {
             if (alasanEdit.value == "" || alasanEdit.value == null) {
                 Swal.fire({
@@ -1408,6 +1942,14 @@ jQuery(function ($) {
                 return;
             }
         }
+
+        hitungBeratTotalAfalan();
+        hitungLembarTotalAfalan();
+        hitungPanjangPemakaian();
+        hitungBeratPemakaian();
+        hitungSelisihPanjangPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
 
         $.ajax({
             url: "/MaintKegiatanMesinPotongJBB",
@@ -1426,7 +1968,7 @@ jQuery(function ($) {
                 warnaRoll: warnaRoll.value,
                 statusReinforced: statusReinforced.value,
                 beratRoll: beratRollValue,
-                beratPemakaian: beratPemakaianValue,
+                panjangRoll: panjangRollValue,
                 nomor_mesinCL: nomor_mesinCL.value,
                 kodebarang_tableHit: kodebarang_tableHit.val(),
                 komponen_tableHit: komponen_tableHit.val(),
@@ -1435,14 +1977,31 @@ jQuery(function ($) {
                 ukuranlebar_tableHit: ukuranlebar_tableHitValue,
                 hasil_potongJumlah: hasil_potongJumlahValue,
                 hasil_potongBerat: hasil_potongBeratValue,
-                afalan_waKG: afalan_waKGValue,
-                afalan_weKG: afalan_weKGValue,
-                afalan_lamiKG: afalan_lamiKGValue,
-                afalan_tepiKG: afalan_tepiKGValue,
                 afalan_waLBR: afalan_waLBRValue,
+                afalan_waKG: afalan_waKGValue,
                 afalan_weLBR: afalan_weLBRValue,
+                afalan_weKG: afalan_weKGValue,
                 afalan_lamiLBR: afalan_lamiLBRValue,
+                afalan_lamiKG: afalan_lamiKGValue,
                 afalan_tepiLBR: afalan_tepiLBRValue,
+                afalan_tepiKG: afalan_tepiKGValue,
+                afalan_settingLBR: afalan_settingLBRValue,
+                afalan_settingKG: afalan_settingKGValue,
+                afalan_lamiSambunganLBR: afalan_lamiSambunganLBRValue,
+                afalan_lamiSambunganKG: afalan_lamiSambunganKGValue,
+                afalan_lamiEkorLBR: afalan_lamiEkorLBRValue,
+                afalan_lamiEkorKG: afalan_lamiEkorKGValue,
+                afalan_lamiLubangLBR: afalan_lamiLubangLBRValue,
+                afalan_lamiLubangKG: afalan_lamiLubangKGValue,
+                afalan_kotorLBR: afalan_kotorLBRValue,
+                afalan_kotorKG: afalan_kotorKGValue,
+                afalan_totalLBR: afalan_totalLBRValue,
+                afalan_totalKG: afalan_totalKGValue,
+                panjangPemakaian: panjangPemakaianValue,
+                beratPemakaian: beratPemakaianValue,
+                selisihBerat: selisihBeratValue,
+                selisihPanjang: selisihPanjangValue,
+                afalan_persentaseKG: afalan_persentaseKGValue,
                 alasanEdit: alasanEdit.value,
                 _token: csrfToken,
             },

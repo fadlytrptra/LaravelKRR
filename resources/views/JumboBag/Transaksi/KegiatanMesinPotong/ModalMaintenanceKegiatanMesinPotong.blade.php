@@ -89,17 +89,17 @@
                                     class="form-control" placeholder="[R] / [N]" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.08">
-                            <label for="beratRoll">Berat Roll</label>
+                        <div class="form-group"style="flex: 0.1">
+                            <label for="beratRoll">Berat Roll (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="beratRoll" id="beratRoll" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.15">
-                            <label for="beratPemakaian">Berat Pemakaian</label>
+                        <div class="form-group"style="flex: 0.14">
+                            <label for="panjangRoll">Panjang Roll (MTR)</label>
                             <div class="input-group">
-                                <input type="number" name="beratPemakaian" id="beratPemakaian" class="form-control"
+                                <input type="number" name="panjangRoll" id="panjangRoll" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
@@ -137,19 +137,19 @@
                                     enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group" style="width: 15%;align-content: end">
+                        <div class="form-group" style="width: 15%;align-content: end;display: none">
                             <button class="btn btn-primary w-100" id="btn_isiJenisPotongan">Isi Jenis
                                 Potongan</button>
                         </div>
                         <div class="form-group"style="flex: 0.14">
-                            <label for="ukuranpanjang_tableHit">Uk. Panjang</label>
+                            <label for="ukuranpanjang_tableHit">Uk. Panjang (CM)</label>
                             <div class="input-group">
                                 <input type="number" name="ukuranpanjang_tableHit" id="ukuranpanjang_tableHit"
                                     class="form-control" min="0" enterkeyhint="enter">
                             </div>
                         </div>
                         <div class="form-group"style="flex: 0.14">
-                            <label for="ukuranlebar_tableHit">Uk. Lebar</label>
+                            <label for="ukuranlebar_tableHit">Uk. Lebar (CM)</label>
                             <div class="input-group">
                                 <input type="number" name="ukuranlebar_tableHit" id="ukuranlebar_tableHit"
                                     class="form-control" min="0" enterkeyhint="enter">
@@ -210,14 +210,14 @@
                         </div>
                     </div>
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
-                        <div class="form-group"style="flex: 0.16">
+                        <div class="form-group"style="flex: 0.17">
                             <label for="afalan_lamiLBR">Afalan Lami (LBR)</label>
                             <div class="input-group">
                                 <input type="number" name="afalan_lamiLBR" id="afalan_lamiLBR" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.16">
+                        <div class="form-group"style="flex: 0.155">
                             <label for="afalan_lamiKG">Afalan Lami (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="afalan_lamiKG" id="afalan_lamiKG" class="form-control"
@@ -227,14 +227,14 @@
                         <div class="form-group" style="width: 8%;align-content: end">
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanLami">Timbang</button>
                         </div>
-                        <div class="form-group"style="flex: 0.14">
+                        <div class="form-group"style="flex: 0.16">
                             <label for="afalan_tepiLBR">Afalan Tepi (LBR)</label>
                             <div class="input-group">
                                 <input type="number" name="afalan_tepiLBR" id="afalan_tepiLBR" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.14">
+                        <div class="form-group"style="flex: 0.15">
                             <label for="afalan_tepiKG">Afalan Tepi (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="afalan_tepiKG" id="afalan_tepiKG" class="form-control"
@@ -244,21 +244,175 @@
                         <div class="form-group" style="width: 8%;align-content: end">
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanTepi">Timbang</button>
                         </div>
-                    </div>
-                    <div class="d-flex" style="gap: 0.5%;width: 100%"></div>
-                </div>
-                <div class="py-2" id="div_alasanEditPotong" style="display: none">
-                    <div class="d-flex" style="gap: 0.5%;width: 100%">
-                        <div class="form-group"style="flex: 1">
-                            <label for="alasanEdit">Alasan Edit</label>
+                        <div class="form-group"style="flex: 0.185">
+                            <label for="afalan_settingLBR">Afalan Setting (LBR)</label>
                             <div class="input-group">
-                                <input type="text" name="alasanEdit" id="alasanEdit" class="form-control">
+                                <input type="number" name="afalan_settingLBR" id="afalan_settingLBR"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.18">
+                            <label for="afalan_settingKG">Afalan Setting (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_settingKG" id="afalan_settingKG"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 8%;align-content: end">
+                            <button class="btn btn-warning w-100" id="btn_timbangAfalanSetting">Timbang</button>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        <div class="form-group"style="flex: 0.25">
+                            <label for="afalan_lamiSambunganLBR">Afalan Lami Sambungan(LBR)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiSambunganLBR" id="afalan_lamiSambunganLBR"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.25">
+                            <label for="afalan_lamiSambunganKG">Afalan Lami Sambungan(KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiSambunganKG" id="afalan_lamiSambunganKG"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 8%;align-content: end">
+                            <button class="btn btn-warning w-100" id="btn_timbangAfalanLamiSambungan">Timbang</button>
+                        </div>
+                        <div class="form-group"style="flex: 0.25">
+                            <label for="afalan_lamiEkorLBR">Afalan Lami Ekor(LBR)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiEkorLBR" id="afalan_lamiEkorLBR"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.25">
+                            <label for="afalan_lamiEkorKG">Afalan Lami Ekor(KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiEkorKG" id="afalan_lamiEkorKG"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 8%;align-content: end">
+                            <button class="btn btn-warning w-100" id="btn_timbangAfalanLamiEkor">Timbang</button>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        <div class="form-group"style="flex: 0.5">
+                            <label for="afalan_lamiLubangLBR">Afalan Lami Lubang / Tebal Tipis / Tidak Lengket
+                                (LBR)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiLubangLBR" id="afalan_lamiLubangLBR"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.5">
+                            <label for="afalan_lamiLubangKG">Afalan Lami Lubang / Tebal Tipis / Tidak Lengket
+                                (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_lamiLubangKG" id="afalan_lamiLubangKG"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 8%;align-content: end">
+                            <button class="btn btn-warning w-100" id="btn_timbangAfalanLamiLubang">Timbang</button>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_kotorLBR">Afalan Kotor (LBR)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_kotorLBR" id="afalan_kotorLBR"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_kotorKG">Afalan Kotor (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_kotorKG" id="afalan_kotorKG" class="form-control"
+                                    min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 8%;align-content: end">
+                            <button class="btn btn-warning w-100" id="btn_timbangAfalanKotor">Timbang</button>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_totalLBR">Afalan Total (LBR)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_totalLBR" id="afalan_totalLBR"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="afalan_totalKG">Afalan Total (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="afalan_totalKG" id="afalan_totalKG" class="form-control"
+                                    min="0" enterkeyhint="enter" readonly>
                             </div>
                         </div>
                     </div>
+                    @if (
+                        $user == '4405' ||
+                            $user == '4221' ||
+                            $user == '4259' ||
+                            $user == '8982' ||
+                            $user == '4384' ||
+                            $user == '4451' ||
+                            $user == '4199')
+                        <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        @else
+                            <div style="display:none">
+                    @endif
+                    <div class="form-group"style="flex: 0.15">
+                        <label for="panjangPemakaian">Panjang Pemakaian</label>
+                        <div class="input-group">
+                            <input type="number" name="panjangPemakaian" id="panjangPemakaian" class="form-control"
+                                min="0" enterkeyhint="enter" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group"style="flex: 0.12">
+                        <label for="beratPemakaian">Berat Pemakaian</label>
+                        <div class="input-group">
+                            <input type="number" name="beratPemakaian" id="beratPemakaian" class="form-control"
+                                min="0" enterkeyhint="enter" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group"style="flex: 0.18">
+                        <label for="selisihPanjang">Selisih Panjang Pemakaian</label>
+                        <div class="input-group">
+                            <input type="number" name="selisihPanjang" id="selisihPanjang" class="form-control"
+                                min="0" enterkeyhint="enter" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group"style="flex: 0.16">
+                        <label for="selisihBerat">Selisih Berat Pemakaian</label>
+                        <div class="input-group">
+                            <input type="number" name="selisihBerat" id="selisihBerat" class="form-control"
+                                min="0" enterkeyhint="enter" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group"style="flex: 0.17">
+                        <label for="afalan_persentaseKG">Afalan Persentase (KG)</label>
+                        <div class="input-group">
+                            <input type="number" name="afalan_persentaseKG" id="afalan_persentaseKG"
+                                class="form-control" min="0" enterkeyhint="enter" readonly>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-success" id="button_modalProsesPotong">Proses</button>
             </div>
+            <div class="py-2" id="div_alasanEditPotong" style="display: none">
+                <div class="d-flex" style="gap: 0.5%;width: 100%">
+                    <div class="form-group"style="flex: 1">
+                        <label for="alasanEdit">Alasan Edit</label>
+                        <div class="input-group">
+                            <input type="text" name="alasanEdit" id="alasanEdit" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" id="button_modalProsesPotong">Proses</button>
         </div>
     </div>
+</div>
 </div>
