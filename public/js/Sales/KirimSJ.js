@@ -8,6 +8,7 @@ jQuery(function ($) {
         scrollX: true,
         autoWidth: false,
         serverSide: true,
+        order: [0, "desc"],
         orderFixed: [[12, "asc"]],
         columnDefs: [{ targets: 11, orderable: false }],
         ajax: {
