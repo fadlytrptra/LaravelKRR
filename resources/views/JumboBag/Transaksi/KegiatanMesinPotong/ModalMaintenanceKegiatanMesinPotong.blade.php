@@ -364,39 +364,41 @@
                         @else
                             <div style="display:none">
                     @endif
-                    <div class="form-group"style="flex: 0.15">
-                        <label for="panjangPemakaian">Panjang Pemakaian</label>
+                    <div class="form-group"style="flex: 0.2">
+                        <label for="panjangPemakaian">Panjang Pemakaian (MTR)</label>
                         <div class="input-group">
                             <input type="number" name="panjangPemakaian" id="panjangPemakaian" class="form-control"
                                 min="0" enterkeyhint="enter" readonly>
                         </div>
                     </div>
-                    <div class="form-group"style="flex: 0.12">
-                        <label for="beratPemakaian">Berat Pemakaian</label>
+                    <div class="form-group"style="flex: 0.16">
+                        <label for="beratPemakaian">Berat Pemakaian (KG)</label>
                         <div class="input-group">
                             <input type="number" name="beratPemakaian" id="beratPemakaian" class="form-control"
                                 min="0" enterkeyhint="enter" readonly>
                         </div>
                     </div>
-                    <div class="form-group"style="flex: 0.18">
-                        <label for="selisihPanjang">Selisih Panjang Pemakaian</label>
+                    <div class="form-group"style="flex: 0.24">
+                        <label for="selisihPanjang">Selisih Panjang Pemakaian (MTR)</label>
                         <div class="input-group">
                             <input type="number" name="selisihPanjang" id="selisihPanjang" class="form-control"
                                 min="0" enterkeyhint="enter" readonly>
                         </div>
                     </div>
-                    <div class="form-group"style="flex: 0.16">
-                        <label for="selisihBerat">Selisih Berat Pemakaian</label>
+                    <div class="form-group"style="flex: 0.2">
+                        <label for="selisihBerat">Selisih Berat Pemakaian (KG)</label>
                         <div class="input-group">
                             <input type="number" name="selisihBerat" id="selisihBerat" class="form-control"
                                 min="0" enterkeyhint="enter" readonly>
                         </div>
                     </div>
                     <div class="form-group"style="flex: 0.17">
-                        <label for="afalan_persentaseKG">Afalan Persentase (KG)</label>
+                        <label for="afalan_persentaseKG">Persentase Afalan (KG)</label>
                         <div class="input-group">
                             <input type="number" name="afalan_persentaseKG" id="afalan_persentaseKG"
                                 class="form-control" min="0" enterkeyhint="enter" readonly>
+                            &nbsp;
+                            <span style="font-size: large; align-self: center;">%</span>
                         </div>
                     </div>
                 </div>

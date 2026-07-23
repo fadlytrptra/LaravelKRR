@@ -250,7 +250,7 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $warnaRoll,
                         $statusReinforced,
                         $beratRoll,
-                        $beratPemakaian,
+                        $panjangRoll,
                         $nomor_mesinCL,
                         $kodebarang_tableHit,
                         $komponen_tableHit,
