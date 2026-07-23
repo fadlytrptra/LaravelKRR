@@ -1264,7 +1264,7 @@ jQuery(function ($) {
 
     btn_timbangHasil.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1342,7 +1342,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanWA.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1421,7 +1421,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanWE.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1500,7 +1500,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanLami.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1579,7 +1579,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanTepi.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1658,7 +1658,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanSetting.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1737,7 +1737,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanLamiSambungan.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1816,7 +1816,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanLamiEkor.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1895,7 +1895,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanLamiLubang.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
@@ -1974,7 +1974,7 @@ jQuery(function ($) {
 
     btn_timbangAfalanKotor.addEventListener("click", function () {
         $.ajax({
-            url: "http://192.168.100.80:8080/",
+            url: "http://192.168.100.86:8080/",
             method: "GET",
             dataType: "text",
             success: function (weight) {
