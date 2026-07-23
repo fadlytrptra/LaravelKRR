@@ -979,6 +979,15 @@ jQuery(function ($) {
         }
     });
 
+    beratRoll.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
+    });
+
     panjangRoll.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -989,6 +998,14 @@ jQuery(function ($) {
             hitungSelisihPanjangPemakaian();
             nomor_mesinCL.focus();
         }
+    });
+
+    panjangRoll.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungPanjangPemakaian();
+        hitungSelisihPanjangPemakaian();
     });
 
     nomor_mesinCL.addEventListener("keypress", function (e) {
@@ -1185,6 +1202,14 @@ jQuery(function ($) {
         }
     });
 
+    ukuranpanjang_tableHit.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungPanjangPemakaian();
+        hitungSelisihPanjangPemakaian();
+    });
+
     ukuranlebar_tableHit.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1207,6 +1232,14 @@ jQuery(function ($) {
         }
     });
 
+    hasil_potongJumlah.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungPanjangPemakaian();
+        hitungSelisihPanjangPemakaian();
+    });
+
     hasil_potongBerat.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1218,6 +1251,15 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_waLBR.focus();
         }
+    });
+
+    hasil_potongBerat.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangHasil.addEventListener("click", function () {
@@ -1267,6 +1309,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_waLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_waKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1279,6 +1328,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_weLBR.focus();
         }
+    });
+
+    afalan_waKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanWA.addEventListener("click", function () {
@@ -1329,6 +1388,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_weLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_weKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1341,6 +1407,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_lamiLBR.focus();
         }
+    });
+
+    afalan_weKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanWE.addEventListener("click", function () {
@@ -1391,6 +1467,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_lamiLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_lamiKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1403,6 +1486,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_tepiLBR.focus();
         }
+    });
+
+    afalan_lamiKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanLami.addEventListener("click", function () {
@@ -1453,6 +1546,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_tepiLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_tepiKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1465,6 +1565,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_settingLBR.focus();
         }
+    });
+
+    afalan_tepiKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanTepi.addEventListener("click", function () {
@@ -1515,6 +1625,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_settingLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_settingKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1527,6 +1644,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_lamiSambunganLBR.focus();
         }
+    });
+
+    afalan_settingKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanSetting.addEventListener("click", function () {
@@ -1577,6 +1704,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_lamiSambunganLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_lamiSambunganKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1589,6 +1723,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_lamiEkorLBR.focus();
         }
+    });
+
+    afalan_lamiSambunganKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanLamiSambungan.addEventListener("click", function () {
@@ -1639,6 +1783,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_lamiEkorLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_lamiEkorKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1651,6 +1802,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_lamiLubangLBR.focus();
         }
+    });
+
+    afalan_lamiEkorKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanLamiEkor.addEventListener("click", function () {
@@ -1701,6 +1862,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_lamiLubangLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_lamiLubangKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1713,6 +1881,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             afalan_kotorLBR.focus();
         }
+    });
+
+    afalan_lamiLubangKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanLamiLubang.addEventListener("click", function () {
@@ -1763,6 +1941,13 @@ jQuery(function ($) {
         }
     });
 
+    afalan_kotorLBR.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungLembarTotalAfalan();
+    });
+
     afalan_kotorKG.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -1775,6 +1960,16 @@ jQuery(function ($) {
             hitungPersentaseAfalan();
             button_modalProsesPotong.focus();
         }
+    });
+
+    afalan_kotorKG.addEventListener("input", function (e) {
+        if (this.value == "") {
+            this.value = 0;
+        }
+        hitungBeratTotalAfalan();
+        hitungBeratPemakaian();
+        hitungSelisihBeratPemakaian();
+        hitungPersentaseAfalan();
     });
 
     btn_timbangAfalanKotor.addEventListener("click", function () {
