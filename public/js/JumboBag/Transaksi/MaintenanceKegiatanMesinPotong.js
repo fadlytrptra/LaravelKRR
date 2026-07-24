@@ -60,6 +60,7 @@ jQuery(function ($) {
     let afalan_kotorLBR = document.getElementById("afalan_kotorLBR");
     let afalan_kotorKG = document.getElementById("afalan_kotorKG");
     let btn_timbangAfalanKotor = document.getElementById("btn_timbangAfalanKotor"); //prettier-ignore
+    let keterangan_kegiatan = document.getElementById("keterangan_kegiatan");
     let afalan_totalLBR = document.getElementById("afalan_totalLBR");
     let afalan_totalKG = document.getElementById("afalan_totalKG");
     let panjangPemakaian = document.getElementById("panjangPemakaian");
@@ -315,6 +316,7 @@ jQuery(function ($) {
         afalan_lamiLubangKG.value = "";
         afalan_kotorLBR.value = "";
         afalan_kotorKG.value = "";
+        keterangan_kegiatan.value = "";
         afalan_totalLBR.value = "";
         afalan_totalKG.value = "";
         panjangPemakaian.value = "";
@@ -576,6 +578,7 @@ jQuery(function ($) {
                 afalan_lamiLubangKG.value = numeral(response[0].Berat_Afalan_LamiLubang).value(); // prettier-ignore
                 afalan_kotorLBR.value = numeral(response[0].Lembar_Afalan_Kotor).value(); // prettier-ignore
                 afalan_kotorKG.value = numeral(response[0].Berat_Afalan_Kotor).value(); // prettier-ignore
+                keterangan_kegiatan.value = response[0].Keterangan_Kegiatan;
                 afalan_totalLBR.value = numeral(response[0].Lembar_Afalan_Total).value(); // prettier-ignore
                 afalan_totalKG.value = numeral(response[0].Berat_Afalan_Total).value(); // prettier-ignore
                 panjangPemakaian.value = numeral(response[0].Panjang_Pemakaian).value(); // prettier-ignore
@@ -1967,7 +1970,7 @@ jQuery(function ($) {
             hitungBeratPemakaian();
             hitungSelisihBeratPemakaian();
             hitungPersentaseAfalan();
-            button_modalProsesPotong.focus();
+            keterangan_kegiatan.focus();
         }
     });
 
@@ -2015,8 +2018,15 @@ jQuery(function ($) {
             hitungBeratPemakaian();
             hitungSelisihBeratPemakaian();
             hitungPersentaseAfalan();
-            button_modalProsesPotong.focus();
+            keterangan_kegiatan.focus();
         });
+    });
+
+    keterangan_kegiatan.addEventListener("input", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            button_modalProsesPotong.focus();
+        }
     });
 
     button_modalProsesPotong.addEventListener("click", function () {
@@ -2221,6 +2231,7 @@ jQuery(function ($) {
                 afalan_lamiLubangKG: afalan_lamiLubangKGValue,
                 afalan_kotorLBR: afalan_kotorLBRValue,
                 afalan_kotorKG: afalan_kotorKGValue,
+                keterangan_kegiatan: keterangan_kegiatan.value,
                 afalan_totalLBR: afalan_totalLBRValue,
                 afalan_totalKG: afalan_totalKGValue,
                 panjangPemakaian: panjangPemakaianValue,

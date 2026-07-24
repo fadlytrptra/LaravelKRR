@@ -337,6 +337,13 @@
                         <div class="form-group" style="width: 8%;align-content: end">
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanKotor">Timbang</button>
                         </div>
+                        <div class="form-group"style="flex: 0.4">
+                            <label for="keterangan_kegiatan">Keterangan</label>
+                            <div class="input-group">
+                                <input type="text" name="keterangan_kegiatan" id="keterangan_kegiatan" class="form-control"
+                                    min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
                         <div class="form-group"style="flex: 0.15">
                             <label for="afalan_totalLBR">Afalan Total (LBR)</label>
                             <div class="input-group">

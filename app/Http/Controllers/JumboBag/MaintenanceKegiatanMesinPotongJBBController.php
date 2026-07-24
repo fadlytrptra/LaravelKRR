@@ -67,6 +67,7 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
         $afalan_lamiLubangKG = $request->input('afalan_lamiLubangKG');
         $afalan_kotorLBR = $request->input('afalan_kotorLBR');
         $afalan_kotorKG = $request->input('afalan_kotorKG');
+        $keterangan_kegiatan = $request->input('keterangan_kegiatan');
         $afalan_totalLBR = $request->input('afalan_totalLBR');
         $afalan_totalKG = $request->input('afalan_totalKG');
         $panjangPemakaian = $request->input('panjangPemakaian');
@@ -123,6 +124,7 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                     @XBerat_Afalan_LamiLubang = ?,
                     @XLembar_Afalan_Kotor = ?,
                     @XBerat_Afalan_Kotor = ?,
+                    @XKeterangan_Kegiatan = ?,
                     @XLembar_Afalan_Total = ?,
                     @XBerat_Afalan_Total = ?,
                     @XPanjang_Pemakaian = ?,
@@ -171,6 +173,7 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $afalan_lamiLubangKG,
                         $afalan_kotorLBR,
                         $afalan_kotorKG,
+                        $keterangan_kegiatan,
                         $afalan_totalLBR,
                         $afalan_totalKG,
                         $panjangPemakaian,
@@ -228,6 +231,7 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                     @XBerat_Afalan_LamiLubang = ?,
                     @XLembar_Afalan_Kotor = ?,
                     @XBerat_Afalan_Kotor = ?,
+                    @XKeterangan_Kegiatan = ?,
                     @XLembar_Afalan_Total = ?,
                     @XBerat_Afalan_Total = ?,
                     @XPanjang_Pemakaian = ?,
@@ -277,6 +281,7 @@ class MaintenanceKegiatanMesinPotongJBBController extends Controller
                         $afalan_lamiLubangKG,
                         $afalan_kotorLBR,
                         $afalan_kotorKG,
+                        $keterangan_kegiatan,
                         $afalan_totalLBR,
                         $afalan_totalKG,
                         $panjangPemakaian,
