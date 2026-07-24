@@ -1279,7 +1279,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                hasil_potongBerat.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                hasil_potongBerat.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1357,7 +1358,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_waKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_waKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1436,7 +1438,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_weKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_weKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1515,7 +1518,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_lamiKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_lamiKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1594,7 +1598,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_tepiKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_tepiKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1673,7 +1678,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_settingKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_settingKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1752,7 +1758,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_lamiSambunganKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_lamiSambunganKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1831,7 +1838,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_lamiEkorKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_lamiEkorKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1910,7 +1918,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_lamiLubangKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_lamiLubangKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({
@@ -1989,7 +1998,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                afalan_kotorKG.value = weight;
+                weight = parseFloat(weight.replace(",", "."));
+                afalan_kotorKG.value = numeral(weight).value();
             },
             error: function (xhr, status, error) {
                 Swal.fire({

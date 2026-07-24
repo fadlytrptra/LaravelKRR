@@ -1779,6 +1779,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('ACCCekGantiUkuranCL', App\Http\Controllers\QC\Circular\ACCCekGantiUkuranCLController::class);
     Route::resource('VerifikasiSM', App\Http\Controllers\QC\Extruder\VerifikasiSMController::class);
     Route::resource('PengecekanMB', App\Http\Controllers\QC\Extruder\PengecekanMBController::class);
+    Route::resource('BenangNG', App\Http\Controllers\QC\Extruder\BenangNGController::class);
 
     Route::get('getMesinSelect/{idTypeMesin}', 'App\Http\Controllers\QC\Circular\CekKainCircularController@getMesinSelect');
 
