@@ -358,7 +358,7 @@ jQuery(function ($) {
                         </div>
                         <div class="col-4 pl-2 pr-2">
                             <label class="form-label fw-bold">Qty Jual (${satJual})</label>
-                            <input id="qtyTempVerifikasi" type="number" class="form-control" value="${qtyTemp}">
+                            <input id="qtyTempVerifikasi" type="text" class="form-control" value="${Number(qtyTemp).toLocaleString('en-US')}">
                         </div>
                     </div>
                     <div class="row g-2 text-start w-100 pb-2 pl-2 m-0">
@@ -372,12 +372,26 @@ jQuery(function ($) {
                     confirmButtonText: "Submit",
                     allowOutsideClick: false,
                     allowEscapeKey: false,
+                    didOpen: () => {
+                        const input = document.getElementById("qtyTempVerifikasi");
+
+                        input.addEventListener("input", function () {
+                            const angka = this.value.replace(/,/g, "");
+
+                            if (angka === "" || isNaN(angka)) {
+                                this.value = "";
+                                return;
+                            }
+
+                            this.value = Number(angka).toLocaleString("en-US");
+                        });
+                    },
                     preConfirm: () => {
                         const qtyTempVerifikasi =
-                            numeral(
+                            Number(
                                 document.getElementById("qtyTempVerifikasi")
-                                    .value,
-                            ).value() || 0;
+                                    .value.replace(/,/g, "")
+                            ) || 0;
                         let noteCustomer = document
                             .getElementById("noteCustomer")
                             .value.trim();
