@@ -33,6 +33,33 @@ jQuery(function ($) {
     let hasil_potongJumlah = document.getElementById("hasil_potongJumlah");
     let hasil_potongBerat = document.getElementById("hasil_potongBerat");
     let btn_timbangHasil = document.getElementById("btn_timbangHasil");
+    let div_afalanWALBR = document.getElementById("div_afalanWALBR");
+    let div_afalanWAKG = document.getElementById("div_afalanWAKG");
+    let div_btnafalanWAKG = document.getElementById("div_btnafalanWAKG");
+    let div_afalanWELBR = document.getElementById("div_afalanWELBR");
+    let div_afalanWEKG = document.getElementById("div_afalanWEKG");
+    let div_btnafalanWEKG = document.getElementById("div_btnafalanWEKG");
+    let div_afalanWLamiBR = document.getElementById("div_afalanWLamiBR");
+    let div_afalanLamiKG = document.getElementById("div_afalanLamiKG");
+    let div_btnafalanLamiKG = document.getElementById("div_btnafalanLamiKG");
+    let div_afalanWTepiBR = document.getElementById("div_afalanWTepiBR");
+    let div_afalanTepiKG = document.getElementById("div_afalanTepiKG");
+    let div_btnafalanTepiKG = document.getElementById("div_btnafalanTepiKG");
+    let div_afalanWSettingBR = document.getElementById("div_afalanWSettingBR");
+    let div_afalanSettingKG = document.getElementById("div_afalanSettingKG");
+    let div_btnafalanSettingKG = document.getElementById("div_btnafalanSettingKG"); //prettier-ignore
+    let div_afalanLamiSambunganLBR = document.getElementById("div_afalanLamiSambunganLBR"); //prettier-ignore
+    let div_afalanLamiSambunganKG = document.getElementById("div_afalanLamiSambunganKG"); //prettier-ignore
+    let div_btnafalanLamiSambunganKG = document.getElementById("div_btnafalanLamiSambunganKG"); //prettier-ignore
+    let div_afalanWLamiEkorBR = document.getElementById("div_afalanWLamiEkorBR"); //prettier-ignore
+    let div_afalanLamiEkorKG = document.getElementById("div_afalanLamiEkorKG");
+    let div_btnafalanLamiEkorKG = document.getElementById("div_btnafalanLamiEkorKG"); //prettier-ignore
+    let div_afalanWLamiLubangBR = document.getElementById("div_afalanWLamiLubangBR"); //prettier-ignore
+    let div_afalanLamiLubangKG = document.getElementById("div_afalanLamiLubangKG"); //prettier-ignore
+    let div_btnafalanLamiLubangKG = document.getElementById("div_btnafalanLamiLubangKG"); //prettier-ignore
+    let div_afalanWKotorBR = document.getElementById("div_afalanWKotorBR");
+    let div_afalanKotorKG = document.getElementById("div_afalanKotorKG");
+    let div_btnafalanKotorKG = document.getElementById("div_btnafalanKotorKG");
     let afalan_waKG = document.getElementById("afalan_waKG");
     let afalan_waLBR = document.getElementById("afalan_waLBR");
     let btn_timbangAfalanWA = document.getElementById("btn_timbangAfalanWA");
@@ -423,6 +450,66 @@ jQuery(function ($) {
         return Promise.resolve();
     }
 
+    function showKolomAfalan(idMesin) {
+        if (idMesin == 3) {
+            div_afalanWALBR.style.display = "block";
+            div_afalanWAKG.style.display = "block";
+            div_btnafalanWAKG.style.display = "block";
+            div_afalanWELBR.style.display = "block";
+            div_afalanWEKG.style.display = "block";
+            div_btnafalanWEKG.style.display = "block";
+            div_afalanWLamiBR.style.display = "block";
+            div_afalanLamiKG.style.display = "block";
+            div_btnafalanLamiKG.style.display = "block";
+            div_afalanWTepiBR.style.display = "block";
+            div_afalanTepiKG.style.display = "block";
+            div_btnafalanTepiKG.style.display = "block";
+            div_afalanWSettingBR.style.display = "block";
+            div_afalanSettingKG.style.display = "block";
+            div_btnafalanSettingKG.style.display = "block";
+            div_afalanLamiSambunganLBR.style.display = "block";
+            div_afalanLamiSambunganKG.style.display = "block";
+            div_btnafalanLamiSambunganKG.style.display = "block";
+            div_afalanWLamiEkorBR.style.display = "block";
+            div_afalanLamiEkorKG.style.display = "block";
+            div_btnafalanLamiEkorKG.style.display = "block";
+            div_afalanWLamiLubangBR.style.display = "block";
+            div_afalanLamiLubangKG.style.display = "block";
+            div_btnafalanLamiLubangKG.style.display = "block";
+            div_afalanWKotorBR.style.display = "block";
+            div_afalanKotorKG.style.display = "block";
+            div_btnafalanKotorKG.style.display = "block";
+        } else if (idMesin == 5 || idMesin == 6) {
+            div_afalanWALBR.style.display = "block";
+            div_afalanWAKG.style.display = "block";
+            div_btnafalanWAKG.style.display = "block";
+            div_afalanWELBR.style.display = "block";
+            div_afalanWEKG.style.display = "block";
+            div_btnafalanWEKG.style.display = "block";
+            div_afalanWLamiBR.style.display = "block";
+            div_afalanLamiKG.style.display = "block";
+            div_btnafalanLamiKG.style.display = "block";
+            div_afalanWTepiBR.style.display = "block";
+            div_afalanTepiKG.style.display = "block";
+            div_btnafalanTepiKG.style.display = "block";
+            div_afalanWSettingBR.style.display = "none";
+            div_afalanSettingKG.style.display = "none";
+            div_btnafalanSettingKG.style.display = "none";
+            div_afalanLamiSambunganLBR.style.display = "none";
+            div_afalanLamiSambunganKG.style.display = "none";
+            div_btnafalanLamiSambunganKG.style.display = "none";
+            div_afalanWLamiEkorBR.style.display = "none";
+            div_afalanLamiEkorKG.style.display = "none";
+            div_btnafalanLamiEkorKG.style.display = "none";
+            div_afalanWLamiLubangBR.style.display = "none";
+            div_afalanLamiLubangKG.style.display = "none";
+            div_btnafalanLamiLubangKG.style.display = "none";
+            div_afalanWKotorBR.style.display = "none";
+            div_afalanKotorKG.style.display = "none";
+            div_btnafalanKotorKG.style.display = "none";
+        }
+    }
+
     function hitungBeratTotalAfalan() {
         const afalan_waKGValue = getValue(afalan_waKG);
         const afalan_weKGValue = getValue(afalan_weKG);
@@ -697,6 +784,8 @@ jQuery(function ($) {
     });
 
     namaMesinPotong.on("select2:select", function () {
+        const selectedMesin = $(this).val(); // Get selected Customer
+        showKolomAfalan(selectedMesin);
         shiftPotong.focus();
     });
 
