@@ -519,6 +519,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Extruder/Extruder/Catat/{formName?}', [PencatatanController::class, 'index']);
     Route::resource('LaporanProduksiExtruder', App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class);
     Route::resource('ACCPengecekanMB', App\Http\Controllers\Extruder\ExtruderNet\ACCPengecekanMBController::class);
+    Route::resource('ACCBenangNG', App\Http\Controllers\Extruder\ExtruderNet\ACCBenangNGController::class);
     Route::get('/print-laporan-produksi-extruder', function () {
         return view('Extruder.Extruder.printLaporanProduksiExtruder');
     })->name('print.laporan.produksi.extruder');

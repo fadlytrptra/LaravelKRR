@@ -136,6 +136,8 @@
                 <h1><a>Laporan Produksi Extruder</a></h1>
             @elseif($formName == 'ACCPengecekanMB')
                 <h1><a>ACC Pengecekan Mutu Benang</a></h1>
+            @elseif($formName == 'ACCBenangNG')
+                <h1><a>ACC Benang NG</a></h1>
             @elseif($formName == 'formCatatEffisiensi')
                 <h1><a>Pencatatan Effisiensi</a></h1>
             @elseif($formName == 'formCatatPerawatan')
