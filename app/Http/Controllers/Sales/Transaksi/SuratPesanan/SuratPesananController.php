@@ -252,6 +252,7 @@ class SuratPesananController extends Controller
         $syarat_bayar = $request->syarat_bayar ?? 0;
         $faktur_pjk = $request->faktur_pjk ?? null;
         $keterangan = $request->keterangan ?? null;
+        $keteranganSKBDN = $request->keteranganSKBDN ?? null;
         $barang0 = $request->barang0; //nama barang
         $KodeBarang = $request->barang1; //kode barang
         $IdJnsBarang = $request->barang33; //jenis barang
@@ -303,8 +304,9 @@ class SuratPesananController extends Controller
         @SyaratBayar = ?,
         @User_id = ?,
         @Ket = ?,
+        @KetSKBDN = ?,
         @JnsFakturPjk = ?',
-            [$kode, $jenis_sp, $tgl_pesan, $IdCust, $no_po, $tgl_po, $no_pi, $jenis_bayar, $list_sales, $mata_uang, $syarat_bayar, $user, $keterangan, $faktur_pjk],
+            [$kode, $jenis_sp, $tgl_pesan, $IdCust, $no_po, $tgl_po, $no_pi, $jenis_bayar, $list_sales, $mata_uang, $syarat_bayar, $user, $keterangan, $keteranganSKBDN, $faktur_pjk],
         );
 
         //kita cari nomor SP yang baru saja dibuat..
@@ -320,6 +322,7 @@ class SuratPesananController extends Controller
             ->where('Tgl_PO', '=', $tgl_po)
             ->where('IDSales', '=', $list_sales)
             ->where('Ket', '=', $keterangan)
+            ->where('KetSKBDN', '=', $keteranganSKBDN)
             ->latest('IDSuratPesanan')
             ->first();
         // dd($no_sp->IDSuratPesanan);

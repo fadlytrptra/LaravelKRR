@@ -273,6 +273,7 @@ class SuratPesananManagerController extends Controller
         $syarat_bayar = $request->syarat_bayar;
         $faktur_pjk = $request->faktur_pjk ?? null;
         $keterangan = $request->keterangan ?? null;
+        $keteranganSKBDN = $request->keteranganSKBDN ?? null;
         $barang0 = $request->barang0; //nama barang
         $KodeBarang = $request->barang1; //kode barang
         $IdJnsBarang = $request->barang33; //jenis barang
@@ -353,8 +354,9 @@ class SuratPesananManagerController extends Controller
         @SyaratBayar = ?,
         @User_id = ?,
         @Ket = ?,
+        @KetSKBDN = ?,
         @JnsFakturPjk = ?',
-            [$kode, $no_sp, $jenis_sp, $tgl_pesan, $IdCust, $no_po, $tgl_po, $no_pi, $jenis_bayar, $list_sales, $mata_uang, $syarat_bayar, $user, $keterangan, $faktur_pjk],
+            [$kode, $no_sp, $jenis_sp, $tgl_pesan, $IdCust, $no_po, $tgl_po, $no_pi, $jenis_bayar, $list_sales, $mata_uang, $syarat_bayar, $user, $keterangan, $keteranganSKBDN, $faktur_pjk],
         );
         // dd($inv, $adaDo, $terkirim, $id_pesanan, $adaDo == 0, $terkirim < 1, $inv->isEmpty(), $inv[0]->IdPenagihan);
         for ($i = 0; $i < count($id_pesanan); $i++) {

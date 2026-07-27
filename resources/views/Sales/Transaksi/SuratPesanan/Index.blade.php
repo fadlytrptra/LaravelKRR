@@ -170,10 +170,11 @@
                                     class="permohonan-s-p-textinput06 input" id="no_pi" name="no_pi" /> </div>
                         </div>
                         <div class="permohonan-s-p-container10"> <span class="permohonan-s-p-text06">Sales</span>
-                            <span class="permohonan-s-p-text07">Mata Uang</span> <span
-                                class="permohonan-s-p-text08">Jns
-                                Bayar</span> <span class="permohonan-s-p-text09">Syarat Bayar</span> <span
-                                class="permohonan-s-p-text10">Keterangan</span>
+                            <span class="permohonan-s-p-text07">Mata Uang</span>
+                            <span class="permohonan-s-p-text08">Jns Bayar</span>
+                            <span class="permohonan-s-p-text09">Syarat Bayar</span>
+                            <span class="permohonan-s-p-text10">Keterangan</span>
+                            <span class="permohonan-s-p-text13">Keterangan SKBDN</span>
                         </div>
                         <div class="permohonan-s-p-container11">
                             <div class="permohonan-s-p-container12"> <select name="list_sales" id="list_sales"
@@ -210,6 +211,9 @@
                             </div>
                             <div class="permohonan-s-p-container16">
                                 <textarea class="input" name="keterangan" id="keterangan" cols="60" rows="3" placeholder="Keterangan"></textarea>
+                            </div>
+                            <div class="permohonan-s-p-container16">
+                                <textarea class="input" name="keteranganSKBDN" id="keteranganSKBDN" cols="60" rows="3" placeholder="Keterangan SKBDN"></textarea>
                             </div>
                         </div>
                     </div>
