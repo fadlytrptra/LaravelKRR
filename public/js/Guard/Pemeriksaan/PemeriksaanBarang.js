@@ -789,6 +789,7 @@ jQuery(function ($) {
 
     let selectedFiles = [];
     foto_pengiriman.addEventListener("change", function () {
+        $("#loading-screen").css("display", "flex");
         let currentTotalSize = selectedFiles.reduce(
             (sum, file) => sum + file.size,
             0,
@@ -814,54 +815,61 @@ jQuery(function ($) {
             selectedFiles.push(file);
         }
 
-        renderPreview();
+        renderPreview().then(() => {
+            $("#loading-screen").css("display", "none");
+        });
     });
 
     function renderPreview() {
-        preview_fotoPengiriman.innerHTML = "";
+        return new Promise((resolve) => {
+            preview_fotoPengiriman.innerHTML = "";
 
-        selectedFiles.forEach((file, index) => {
-            const imageContainer = document.createElement("div");
-            imageContainer.className = "image-container";
+            selectedFiles.forEach((file, index) => {
+                const imageContainer = document.createElement("div");
+                imageContainer.className = "image-container";
 
-            const img = document.createElement("img");
-            const imageUrl = URL.createObjectURL(file);
-            img.src = imageUrl;
+                const img = document.createElement("img");
+                const imageUrl = URL.createObjectURL(file);
+                img.src = imageUrl;
 
-            // open modal
-            img.addEventListener("click", function () {
-                const imageModal = new bootstrap.Modal(
-                    document.getElementById("imageModal"),
-                );
-                imageModal.show();
+                // open modal
+                img.addEventListener("click", function () {
+                    const imageModal = new bootstrap.Modal(
+                        document.getElementById("imageModal"),
+                    );
+                    imageModal.show();
 
-                modalImagePreview.src = imageUrl;
-                modalImagePreview.style.width = "100%";
+                    modalImagePreview.src = imageUrl;
+                    modalImagePreview.style.width = "100%";
+                });
+
+                // delete button
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-btn";
+                deleteBtn.innerHTML = "✕";
+
+                deleteBtn.addEventListener("click", function () {
+                    selectedFiles.splice(index, 1);
+
+                    renderPreview();
+                });
+
+                imageContainer.appendChild(img);
+                imageContainer.appendChild(deleteBtn);
+
+                preview_fotoPengiriman.appendChild(imageContainer);
             });
 
-            // delete button
-            const deleteBtn = document.createElement("button");
-            deleteBtn.className = "delete-btn";
-            deleteBtn.innerHTML = "✕";
-
-            deleteBtn.addEventListener("click", function () {
-                selectedFiles.splice(index, 1);
-
-                renderPreview();
+            // update input file
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach((file) => {
+                dataTransfer.items.add(file);
             });
-
-            imageContainer.appendChild(img);
-            imageContainer.appendChild(deleteBtn);
-
-            preview_fotoPengiriman.appendChild(imageContainer);
+            foto_pengiriman.files = dataTransfer.files;
+            requestAnimationFrame(() => {
+                resolve();
+            });
         });
-
-        // update input file
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach((file) => {
-            dataTransfer.items.add(file);
-        });
-        foto_pengiriman.files = dataTransfer.files;
     }
 
     btn_clearPhotos.addEventListener("click", function () {
@@ -1130,10 +1138,10 @@ jQuery(function ($) {
             return;
         }
 
-        const promises = [];
+        const images = [];
         if (foto_pengiriman.files.length > 0) {
             for (let file of foto_pengiriman.files) {
-                promises.push(
+                images.push(
                     new Promise((resolve) => {
                         const reader = new FileReader();
 
@@ -1147,11 +1155,23 @@ jQuery(function ($) {
             }
         } else {
             for (let img of preview_fotoPengiriman.querySelectorAll("img")) {
-                promises.push(Promise.resolve(img.src));
+                images.push(Promise.resolve(img.src));
             }
         }
 
-        Promise.all(promises).then((fileArray) => {
+        if (images.length === 0) {
+            Swal.fire({
+                icon: "info",
+                title: "Info!",
+                text: "Foto tally sheet tidak boleh kosong!",
+                showConfirmButton: true,
+                // timer: 2000
+            });
+            btn_proses.disabled = false;
+            return;
+        }
+
+        Promise.all(images).then((fileArray) => {
             $.ajax({
                 url: "PemeriksaanBarang",
                 dataType: "json",
@@ -1175,9 +1195,9 @@ jQuery(function ($) {
                     noSeal: noSeal.value,
                     noContainer: noContainer.value,
                     tanggal_keluar: checkbox_customer.checked
-                        ? (tanggal_keluar.value?.trim()
-                            ? tanggal_keluar.value.replace('T', ' ') + ':00'
-                            : null)
+                        ? tanggal_keluar.value?.trim()
+                            ? tanggal_keluar.value.replace("T", " ") + ":00"
+                            : null
                         : null,
                     fotoPengiriman: fileArray,
                 },
