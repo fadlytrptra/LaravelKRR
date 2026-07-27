@@ -597,25 +597,25 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
-            escapeHtml(item.IdTransaksi.trim()),
-            escapeHtml(item.NamaType.trim()),
-            escapeHtml(item.UraianDetailTransaksi.trim()),
-            escapeHtml(item.IdPenerima.trim()),
-            escapeHtml(item.SaatAwalTransaksi.trim()),
-            escapeHtml(item.NamaDivisi.trim()),
-            escapeHtml(item.NamaObjek.trim()),
-            escapeHtml(item.NamaKelompokUtama.trim()),
-            escapeHtml(item.NamaKelompok.trim()),
-            escapeHtml(item.NamaSubKelompok.trim()),
-            escapeHtml(formatNumber(item.JumlahPengeluaranPrimer.trim())),
-            escapeHtml(formatNumber(item.JumlahPengeluaranSekunder.trim())),
-            escapeHtml(formatNumber(item.JumlahPengeluaranTritier.trim())),
-            escapeHtml(item.KodeBarang.trim()),
-            escapeHtml(item.IdType.trim()),
-            escapeHtml(item.SatPrimer.trim()),
-            escapeHtml(item.SatSekunder.trim()),
-            escapeHtml(item.SatTritier.trim()),
-            escapeHtml(item.IdPenerima1.trim()),
+            escapeHtml(item.IdTransaksi?.trim() ?? ''),
+            escapeHtml(item.NamaType?.trim() ?? ''),
+            escapeHtml(item.UraianDetailTransaksi?.trim() ?? ''),
+            escapeHtml(item.IdPenerima?.trim() ?? ''),
+            escapeHtml(item.SaatAwalTransaksi?.trim() ?? ''),
+            escapeHtml(item.NamaDivisi?.trim() ?? ''),
+            escapeHtml(item.NamaObjek?.trim() ?? ''),
+            escapeHtml(item.NamaKelompokUtama?.trim() ?? ''),
+            escapeHtml(item.NamaKelompok?.trim() ?? ''),
+            escapeHtml(item.NamaSubKelompok?.trim() ?? ''),
+            escapeHtml(formatNumber(item.JumlahPengeluaranPrimer)),
+            escapeHtml(formatNumber(item.JumlahPengeluaranSekunder)),
+            escapeHtml(formatNumber(item.JumlahPengeluaranTritier)),
+            escapeHtml(item.KodeBarang?.trim() ?? ''),
+            escapeHtml(item.IdType?.trim() ?? ''),
+            escapeHtml(item.SatPrimer?.trim() ?? ''),
+            escapeHtml(item.SatSekunder?.trim() ?? ''),
+            escapeHtml(item.SatTritier?.trim() ?? ''),
+            escapeHtml(item.IdPenerima1?.trim() ?? ''),
         ]);
     });
 
@@ -2335,7 +2335,7 @@ $(document).ready(function () {
             },
             stateLoadCallback: function (settings) {
                 let stateStorageName =
-                        window.location.pathname + "/colResizeStateData",
+                    window.location.pathname + "/colResizeStateData",
                     data = localStorage.getItem(stateStorageName);
                 return data != null ? JSON.parse(data) : null;
             },
