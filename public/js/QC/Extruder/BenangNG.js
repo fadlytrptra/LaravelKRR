@@ -137,27 +137,27 @@ jQuery(function ($) {
                 // Lokasi 1 boleh semua
                 btn_redisplay.click();
                 allowedType = ["1", "2"];
-                // btn_batal.click();
-                // $("#labelProses").text("Input Data");
-                // $("#btn_proses").text("PROSES");
+                btn_batal.click();
+                $("#labelProses").text("Input Data");
+                $("#btn_proses").text("PROSES");
                 break;
 
             case "2":
                 // Lokasi 2 hanya type tertentu
                 btn_redisplay.click();
                 allowedType = ["3"];
-                // btn_batal.click();
-                // $("#labelProses").text("Input Data");
-                // $("#btn_proses").text("PROSES");
+                btn_batal.click();
+                $("#labelProses").text("Input Data");
+                $("#btn_proses").text("PROSES");
                 break;
 
             case "3":
                 // Lokasi 3 hanya type tertentu
                 btn_redisplay.click();
                 allowedType = ["4", "5", "6"];
-                // btn_batal.click();
-                // $("#labelProses").text("Input Data");
-                // $("#btn_proses").text("PROSES");
+                btn_batal.click();
+                $("#labelProses").text("Input Data");
+                $("#btn_proses").text("PROSES");
                 break;
         }
     });
@@ -533,7 +533,7 @@ jQuery(function ($) {
             success: function (data) {
                 console.log(data);
 
-                $("#" + slcLokasi.id).val(data.data[0].lokasi).trigger("change");
+                // $("#" + slcLokasi.id).val(data.data[0].lokasi).trigger("change");
                 if (data.data[0].tanggal) {
                     const tgl = data.data[0].tanggal.split(' ')[0];
                     document.getElementById("tanggal").value = tgl;
