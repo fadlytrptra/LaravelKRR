@@ -193,6 +193,11 @@ jQuery(function ($) {
                 // jam_kerja_akhir.value = "07:00";
                 break;
 
+            case "D":
+                // jam_kerja_awal.value = "23:00";
+                // jam_kerja_akhir.value = "07:00";
+                break;
+
             default:
                 Swal.fire({
                     icon: "warning",
