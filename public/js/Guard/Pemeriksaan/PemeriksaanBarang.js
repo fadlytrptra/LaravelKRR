@@ -156,19 +156,13 @@ jQuery(function ($) {
     }
 
     const validRegions = [
-        "A", "B", "D", "E", "F",
-        "G", "H", "K", "L", "M",
-        "N", "P", "R", "S", "T",
-        "W", "Z", "AB", "AD", "AE",
-        "AG", "BA", "BB", "BD", "BE",
-        "BG", "BH", "BK", "BL", "BM",
-        "BN", "BP", "BR", "BT", "DA",
-        "DB", "DC", "DD", "DE", "DG",
-        "DH", "DK", "DL", "DM", "DN",
-        "DP", "DR", "DT", "DW", "EA",
-        "EB", "ED", "KB", "KH", "KT",
-        "KU", "PA", "PB", "PG", "PS",
-        "PT", "PY",
+        "A", "AA", "AB", "AD", "AE", "AG", "B", "BA", "BB", "BD",
+        "BE", "BG", "BH", "BK", "BL", "BM", "BN", "BP", "BR", "BT",
+        "D", "DA", "DB", "DC", "DD", "DE", "DG", "DH", "DK", "DL",
+        "DM", "DN", "DP", "DR", "DT", "DW", "E", "EA", "EB", "ED",
+        "F", "G", "H", "K", "KB", "KH", "KT", "KU", "L", "M",
+        "N", "P", "PA", "PB", "PG", "PS", "PT", "PY", "R", "S",
+        "T", "W", "Z"
     ]; //prettier-ignore
 
     function isValidPlat(nopol) {
