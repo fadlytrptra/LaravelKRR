@@ -73,6 +73,8 @@
                     contenteditable="true"></span>
                 <span id="jumlah_barangSekunderKolom" class="span-jumlah_barangSekunderKolom"
                     contenteditable="true"></span>
+                <span id="keterangan_SKBDNKolom" class="span-keterangan_SKBDNKolom"
+                    contenteditable="true"></span>
                 <span id="keterangan_tambahanKolom" class="span-keterangan_tambahanKolom"
                     contenteditable="true"></span>
                 <span id="alamat_kirimKolom" class="span-alamat_kirimKolom" contenteditable="true"></span>

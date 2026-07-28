@@ -150,13 +150,46 @@ jQuery(function ($) {
                     ).format("D-MMMM-YYYY");
                     truk_nopolKolom.innerHTML = data[0].TrukNopol;
                     no_spKolom.innerHTML = data[0].SuratPesanan;
-                    if (data[0].Ket !== null) {
+                    console.log(
+                        data[0].Ket !== null || data[0].Ket?.trim() !== "",
+                        data[0].Ket?.trim(),
+                        data[0].Ket?.trim() == "",
+                    );
+
+                    if (data[0].Ket == null || data[0].Ket?.trim() == "") {
+                        keterangan_tambahanKolom.style.display = "none";
+                    } else {
                         var ketWithLineBreaks = data[0].Ket.replace(
                             /\r\n/g,
                             " <br> ",
                         ); // Replace '\r\n' with '<br>'
+                        keterangan_tambahanKolom.innerHTML = ketWithLineBreaks;
+                        keterangan_tambahanKolom.style.display = "block";
                     }
-                    keterangan_tambahanKolom.innerHTML = ketWithLineBreaks;
+
+                    if (
+                        data[0].KetSKBDN == null ||
+                        data[0].KetSKBDN?.trim() == ""
+                    ) {
+                        keterangan_SKBDNKolom.style.display = "none";
+                    } else {
+                        var ketWithLineBreaks = data[0].KetSKBDN.replace(
+                            /\r\n/g,
+                            " <br> ",
+                        ); // Replace '\r\n' with '<br>'
+                        keterangan_SKBDNKolom.innerHTML = ketWithLineBreaks;
+                        keterangan_SKBDNKolom.style.display = "block";
+                    }
+
+                    if (
+                        data[0].Ket == null ||
+                        (data[0].Ket?.trim() == "" &&
+                            data[0].KetSKBDN == null) ||
+                        data[0].KetSKBDN?.trim() == ""
+                    ) {
+                        keterangan_tambahanKolom.style.display = "block";
+                    }
+
                     nama_customerKolomAlamat_kolom.innerHTML = data[0].NamaCust;
                     nama_customerKolomAlamat_kolom.innerHTML += "<br>" + data[0].Alamat; //prettier-ignore
                     satuan_barangPrimerKolom.innerHTML = data[0].satPrimer.trim(); //prettier-ignore

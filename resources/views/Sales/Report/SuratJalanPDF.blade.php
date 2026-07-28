@@ -82,6 +82,10 @@
             <td style="border: 1px solid black;padding:8px">{{ $items->NAMATYPEBARANG }} <br> {{ $items->NamaType }}
                 <br>
                 {{ $items->NO_PO }}
+                @if (!empty($items->KetSKBDN))
+                    <br>
+                    {{ $items->KetSKBDN }}
+                @endif
             </td>
             <td style="border: 1px solid black;padding:8px">{{ trim($satuanUmum) }} <br> {{ trim($items->satPrimer) }}
             </td>
@@ -96,64 +100,71 @@
     </div>
     <table style="width:100%; margin-top:10px;" cellpadding="0" cellspacing="0">
         <tr>
-
-            <!-- LEFT COLUMN -->
-            <td style="width:45%; vertical-align:top; padding-right:10px;">
-
-                <!-- SIGNATURE TABLE -->
-                <table style="width:100%; text-align:center; border-bottom:1px solid black; border-collapse:collapse;">
-
-                    <tr>
-                        <td style="font-weight:bold;">
-                            PENGIRIM,
-                        </td>
-                        <td></td>
-                    </tr>
-
-                    <!-- Signature Area -->
-                    <tr>
-                        <td style="height:90px; vertical-align:bottom;">
-                            {{-- @if (!empty($ttdBase64_1))
-                                <img src="{{ $ttdBase64_1 }}" style="display:block; margin:0 auto; max-height:70px;">
-                            @endif --}}
-                            @if (!empty($items->GbrAccMng))
-                                <img src="data:image/png;base64, {{ $items->GbrAccMng }}"
-                                    style="display:block; margin:0 auto; max-height:70px;">
-                            @endif
-                        </td>
-                    </tr>
-                    <!-- Name -->
-                    <tr>
-                        <td>
-                            @if (!empty($items->GbrAccMng))
-                                Warehouse<br>PT. Kerta Rajasa Raya
-                                {{-- {{ $items->NamaMng ?? '' }} --}}
-                            @endif
-                        </td>
-                    </tr>
-                </table>
-            </td>
-
-            <!-- RIGHT COLUMN -->
             <td style="width:55%; vertical-align:top; padding-left:10px;">
 
-                <table
-                    style="width:100%; text-align:center; border-bottom:1px solid black; border-collapse:collapse; font-size:14px; font-weight:bold;">
+                <table style="width:100%; border-bottom:1px solid black; border-collapse:collapse;">
 
+                    {{-- Header --}}
                     <tr>
-                        <td>
+                        <td
+                            style="
+                            width:30%;
+                            text-align:center;
+                            font-size:14px;
+                            font-weight:bold;
+                            vertical-align:top;
+                            padding-top:28px;
+                        ">
+                            PENGIRIM
+                        </td>
+
+                        <td
+                            style="
+                            width:70%;
+                            text-align:center;
+                            font-size:14px;
+                            font-weight:bold;
+                            padding-top:10px;
+                        ">
                             TANDA TERIMA <br>
                             BARANG TERSEBUT TELAH KAMI TERIMA DALAM KEADAAN CUKUP DAN BAIK
                         </td>
                     </tr>
 
+                    {{-- QR --}}
                     <tr>
-                        <td style="height:110px;"></td>
+                        <td style="height:120px; text-align:center; vertical-align:bottom; padding-top:15px;">
+                            @if (!empty($items->GbrAccMng))
+                                <img src="data:image/png;base64, {{ $items->GbrAccMng }}" style="max-height:110px;">
+                            @endif
+                        </td>
+
+                        <td style="height:120px; text-align:center; vertical-align:bottom; padding-top:15px;">
+                            {{-- @if ($ttCustomer)
+                                <img src="{{ $ttCustomer }}" style="max-height:110px;">
+                            @endif --}}
+                        </td>
+
+                        {{-- <td style="vertical-align:middle; padding-right:30px; width:150px;">
+                            <strong>Tanggal Terima:</strong><br>
+                            {{ \Carbon\Carbon::parse($otp->ApprovedAt)->locale('id')->translatedFormat('d F Y, H:i:s') }}
+                        </td> --}}
+                    </tr>
+
+                    {{-- Nama --}}
+                    <tr>
+                        <td style="text-align:center; font-size:15px; font-weight:normal; padding-bottom:15px;">
+                            PT. KERTA RAJASA RAYA
+                        </td>
+
+                        <td style="text-align:center; font-size:15px; font-weight:normal; padding-bottom:15px;">
+                            {{ $items->NamaCust ?? '-' }}
+                        </td>
                     </tr>
 
                 </table>
 
-                <table style="width:100%; font-size:12px; margin-top:10px;">
+                <table style="width:100%; font-size:12px; margin-top:50px;">
                     <tr>
                         <td><strong>Note :</strong></td>
                     </tr>

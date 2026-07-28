@@ -38,7 +38,8 @@
 .span-nama_customerKolomAlamat_kolom,
 .span-alamat_kirimKolom,
 .span-tanda_tanganKolom,
-.span-keterangan_tambahanKolom {
+.span-keterangan_tambahanKolom,
+.span-keterangan_SKBDNKolom {
     position: absolute;
     padding: 5px;
     box-sizing: border-box;
@@ -80,6 +81,11 @@
     word-break: break-all;
 }
 .span-keterangan_tambahanKolom {
+    top: 16.9cm;
+    left: 0.7cm;
+    max-width: 13cm;
+}
+.span-keterangan_SKBDNKolom {
     top: 16.9cm;
     left: 0.7cm;
     max-width: 13cm;
