@@ -46,6 +46,7 @@ $(document).ready(function () {
     let kategori_utama = document.getElementById("kategori_utama");
     let keterangan = document.getElementById("keterangan");
     let keteranganSKBDN = document.getElementById("keteranganSKBDN");
+    let syaratPenyerahanSKBDN = document.getElementById("syaratPenyerahanSKBDN"); //prettier-ignore
     let kode_barang = document.getElementById("kode_barang");
     let kodeStJual;
     let kodeStPrim;
@@ -627,6 +628,7 @@ $(document).ready(function () {
                 syarat_bayar.value = response[0].SyaratBayar;
                 keterangan.value = response[0].Ket;
                 keteranganSKBDN.value = response[0].KetSKBDN;
+                syaratPenyerahanSKBDN.value = response[0].SyaratPenyerahanSKBDN; //prettier-ignore
                 if (response[0].JnsFakturPjk == "0") {
                     faktur_pjkBiasa.value = response[0].JnsFakturPjk;
                 } else {
@@ -748,6 +750,7 @@ $(document).ready(function () {
                     syarat_bayar.value = response[0].SyaratBayar;
                     keterangan.value = response[0].Ket;
                     keteranganSKBDN.value = response[0].KetSKBDN;
+                    syaratPenyerahanSKBDN.value = response[0].SyaratPenyerahanSKBDN; //prettier-ignore
                     if (response[0].JnsFakturPjk == "0") {
                         faktur_pjkBiasa.value = response[0].JnsFakturPjk;
                     } else {

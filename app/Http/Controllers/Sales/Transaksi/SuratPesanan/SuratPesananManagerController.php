@@ -355,8 +355,9 @@ class SuratPesananManagerController extends Controller
         @User_id = ?,
         @Ket = ?,
         @KetSKBDN = ?,
+        @SyaratPenyerahanSKBDN = ?,
         @JnsFakturPjk = ?',
-            [$kode, $no_sp, $jenis_sp, $tgl_pesan, $IdCust, $no_po, $tgl_po, $no_pi, $jenis_bayar, $list_sales, $mata_uang, $syarat_bayar, $user, $keterangan, $keteranganSKBDN, $faktur_pjk],
+            [$kode, $no_sp, $jenis_sp, $tgl_pesan, $IdCust, $no_po, $tgl_po, $no_pi, $jenis_bayar, $list_sales, $mata_uang, $syarat_bayar, $user, $keterangan, $keteranganSKBDN, $keteranganSKBDN, $faktur_pjk],
         );
         // dd($inv, $adaDo, $terkirim, $id_pesanan, $adaDo == 0, $terkirim < 1, $inv->isEmpty(), $inv[0]->IdPenagihan);
         for ($i = 0; $i < count($id_pesanan); $i++) {

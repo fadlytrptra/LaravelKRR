@@ -116,14 +116,14 @@
                     action="{{ url('SuratPesanan') }}">
                     {{ csrf_field() }}
                     <div class="permohonan-s-p-container01" id="div_headerSuratPesanan">
-                        <div class="permohonan-s-p-container02"> <span class="permohonan-s-p-text">Tgl
-                                Pesan</span>{{-- <span
-                            class="permohonan-s-p-text01">Jenis SP</span> --}}
+                        <div class="permohonan-s-p-container02">
+                            <span class="permohonan-s-p-text">Tgl. Pesan</span>
                             <span permohonan-s-p-text03 style="display: none" id="lbl_sp">Nomor SP</span>
-                            <span class="permohonan-s-p-text02">Customer</span> <span class="permohonan-s-p-text03">No.
-                                PO</span>
-                            <span class="permohonan-s-p-text04">Tgl. PO</span> <span class="permohonan-s-p-text05">No.
-                                PI</span>
+                            <span class="permohonan-s-p-text02">Customer</span>
+                            <span class="permohonan-s-p-text03">No. PO</span>
+                            <span class="permohonan-s-p-text04">Tgl. PO</span>
+                            <span class="permohonan-s-p-text05">No. PI</span>
+                            <span class="permohonan-s-p-text13">Keterangan SKBDN</span>
                         </div>
                         <div class="permohonan-s-p-container03">
                             <div class="permohonan-s-p-container04"> <input type="date" id="tgl_pesan"
@@ -168,13 +168,17 @@
                                     placeholder="placeholder" class="permohonan-s-p-textinput05 input" /> </div>
                             <div class="permohonan-s-p-container09"> <input type="text" placeholder="Nomor PI"
                                     class="permohonan-s-p-textinput06 input" id="no_pi" name="no_pi" /> </div>
+                            <div class="permohonan-s-p-container16">
+                                <textarea class="input" name="keteranganSKBDN" id="keteranganSKBDN" cols="60" rows="3"
+                                    placeholder="Keterangan SKBDN"></textarea>
+                            </div>
                         </div>
                         <div class="permohonan-s-p-container10"> <span class="permohonan-s-p-text06">Sales</span>
                             <span class="permohonan-s-p-text07">Mata Uang</span>
                             <span class="permohonan-s-p-text08">Jns Bayar</span>
                             <span class="permohonan-s-p-text09">Syarat Bayar</span>
                             <span class="permohonan-s-p-text10">Keterangan</span>
-                            <span class="permohonan-s-p-text13">Keterangan SKBDN</span>
+                            <span class="permohonan-s-p-text12">Syarat Penyerahan</span>
                         </div>
                         <div class="permohonan-s-p-container11">
                             <div class="permohonan-s-p-container12"> <select name="list_sales" id="list_sales"
@@ -213,7 +217,8 @@
                                 <textarea class="input" name="keterangan" id="keterangan" cols="60" rows="3" placeholder="Keterangan"></textarea>
                             </div>
                             <div class="permohonan-s-p-container16">
-                                <textarea class="input" name="keteranganSKBDN" id="keteranganSKBDN" cols="60" rows="3" placeholder="Keterangan SKBDN"></textarea>
+                                <textarea class="input" name="syaratPenyerahanSKBDN" id="syaratPenyerahanSKBDN" cols="60" rows="3"
+                                    placeholder="Syarat Penyerahan SKBDN"></textarea>
                             </div>
                         </div>
                     </div>

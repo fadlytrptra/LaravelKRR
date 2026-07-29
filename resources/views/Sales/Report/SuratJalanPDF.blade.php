@@ -96,7 +96,12 @@
     </table>
     <div style="width: 98%;border: 1px solid black;margin-top: 10px;padding: 0.85%;">
         <h5>Syarat Penyerahan:</h5>
-        <p>Dikirim ke: {{ $items->AlamatKirim }}</p>
+        @if (!empty($items->SyaratPenyerahanSKBDN))
+            <br>
+            {!! nl2br(e($items->SyaratPenyerahanSKBDN)) !!}
+        @else
+            <p>Dikirim ke: {{ $items->AlamatKirim }}</p>
+        @endif
     </div>
     <table style="width:100%; margin-top:10px;" cellpadding="0" cellspacing="0">
         <tr>
