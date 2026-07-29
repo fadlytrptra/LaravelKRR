@@ -84,7 +84,7 @@
                 {{ $items->NO_PO }}
                 @if (!empty($items->KetSKBDN))
                     <br>
-                    {{ $items->KetSKBDN }}
+                    {!! nl2br(e($items->KetSKBDN)) !!}
                 @endif
             </td>
             <td style="border: 1px solid black;padding:8px">{{ trim($satuanUmum) }} <br> {{ trim($items->satPrimer) }}
