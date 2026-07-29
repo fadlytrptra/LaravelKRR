@@ -72,19 +72,20 @@
             $jumlahUmum = number_format($items->QtyTritier, 0, ',', '.');
         }
     @endphp
-    <table style="border: 1px solid black;width: 100%;border-collapse: collapse;margin-top: 10px;">
+    <table style="border: 1px solid black;width: 100%;border-collapse: collapse;margin-top: 10px">
         <tr>
             <th style="border: 1px solid black;padding:8px">Uraian</th>
             <th style="border: 1px solid black;padding:8px">Satuan</th>
             <th style="border: 1px solid black;padding:8px">Jumlah</th>
         </tr>
         <tr>
-            <td style="border: 1px solid black;padding:8px">{{ $items->NAMATYPEBARANG }} <br> {{ $items->NamaType }}
+            <td style="border: 1px solid black;padding:8px">{{ $items->NAMATYPEBARANG }} <br>
+                {{ $items->NamaType }}
                 <br>
                 {{ $items->NO_PO }}
                 @if (!empty($items->KetSKBDN))
                     <br>
-                    {!! nl2br(e($items->KetSKBDN)) !!}
+                    <p style="font-size: small">{!! nl2br(e($items->KetSKBDN)) !!}</p>
                 @endif
             </td>
             <td style="border: 1px solid black;padding:8px">{{ trim($satuanUmum) }} <br> {{ trim($items->satPrimer) }}
@@ -94,11 +95,10 @@
             </td>
         </tr>
     </table>
-    <div style="width: 98%;border: 1px solid black;margin-top: 10px;padding: 0.85%;">
+    <div style="width: 98%;border: 1px solid black;margin-top: 10px;padding: 0.85%">
         <h5>Syarat Penyerahan:</h5>
         @if (!empty($items->SyaratPenyerahanSKBDN))
-            <br>
-            {!! nl2br(e($items->SyaratPenyerahanSKBDN)) !!}
+            <p style="font-size: small">{!! nl2br(e($items->SyaratPenyerahanSKBDN)) !!}</p>
         @else
             <p>Dikirim ke: {{ $items->AlamatKirim }}</p>
         @endif
