@@ -781,17 +781,103 @@ jQuery(function ($) {
         this.value = this.value.toUpperCase();
     });
 
+    async function compressImage(file, maxSizeKB = 500) {
+        return new Promise((resolve, reject) => {
+            if (!file.type.startsWith("image/")) {
+                resolve(file);
+                return;
+            }
+
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                img.src = e.target.result;
+            };
+
+            img.onload = function () {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                let width = img.width;
+                let height = img.height;
+
+                const maxDimension = 1920;
+
+                if (width > height && width > maxDimension) {
+                    height *= maxDimension / width;
+                    width = maxDimension;
+                } else if (height > maxDimension) {
+                    width *= maxDimension / height;
+                    height = maxDimension;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                ctx.drawImage(img, 0, 0, width, height);
+
+                let quality = 0.9;
+
+                function compress() {
+                    canvas.toBlob(
+                        function (blob) {
+                            if (!blob) {
+                                reject("Gagal mengompres gambar");
+                                return;
+                            }
+
+                            // Jika sudah <= target atau kualitas sudah terlalu rendah
+                            if (
+                                blob.size <= maxSizeKB * 1024 ||
+                                quality <= 0.1
+                            ) {
+                                const compressedFile = new File(
+                                    [blob],
+                                    file.name,
+                                    {
+                                        type: "image/jpeg",
+                                        lastModified: Date.now(),
+                                    }
+                                );
+                                resolve(compressedFile);
+                            } else {
+                                quality -= 0.05;
+                                compress();
+                            }
+                        },
+                        "image/jpeg",
+                        quality
+                    );
+                }
+
+                compress();
+            };
+
+            img.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
     let selectedFiles = [];
-    foto_pengiriman.addEventListener("change", function () {
+    foto_pengiriman.addEventListener("change", async function () {
         $("#loading-screen").css("display", "flex");
-        let currentTotalSize = selectedFiles.reduce(
-            (sum, file) => sum + file.size,
-            0,
-        );
 
         for (const file of this.files) {
-            currentTotalSize += file.size;
+            let finalFile = file;
+
+            // Kompres jika > 500 KB
+            if (file.size > 500 * 1024) {
+                finalFile = await compressImage(file, 500);
+            }
+
+            selectedFiles.push(finalFile);
         }
+
+        let currentTotalSize = selectedFiles.reduce(
+            (sum, file) => sum + file.size,
+            0
+        );
 
         const maxTotalSize = 50 * 1024 * 1024;
 
@@ -800,18 +886,15 @@ jQuery(function ($) {
                 "Total ukuran file tidak boleh melebihi 50 MB.";
 
             this.value = "";
+            $("#loading-screen").hide();
             return;
         }
 
         document.getElementById("error-message").textContent = "";
 
-        for (const file of this.files) {
-            selectedFiles.push(file);
-        }
+        await renderPreview();
 
-        renderPreview().then(() => {
-            $("#loading-screen").css("display", "none");
-        });
+        $("#loading-screen").hide();
     });
 
     function renderPreview() {
