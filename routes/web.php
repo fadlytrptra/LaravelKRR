@@ -166,6 +166,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/heartbeat', function () {
         return response()->json(['status' => 'ok']);
     });
+    Route::get('/bon-kas/list-acc', [App\Http\Controllers\BonKasController::class, 'listAccBonKas'])->name('bon-kas.list-acc');
     Route::resource('bon-kas', App\Http\Controllers\BonKasController::class);
     Route::get('/bon-kas-putih', [App\Http\Controllers\BonKasController::class, 'bonKasPutih'])->name('bonKasPutih');
     Route::get('/bon-kas-merah', [App\Http\Controllers\BonKasController::class, 'bonKasMerah'])->name('bonKasMerah');
