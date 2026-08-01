@@ -1,0 +1,514 @@
+<style>
+    .modal-tambah-bon-kas {
+        max-width: 1400px !important;
+        width: 90% !important;
+        margin: 30px auto;
+    }
+
+    .modal-tambah-bon-kas .modal-content {
+        width: 100%;
+    }
+    #terbilang{
+        margin-top: 4px;
+        color: #343a40;
+        font-weight: 500;
+        font-size: 1.25rem;
+    }
+    .modal-penyesuaian{
+        max-width: 1100px !important;
+        width: 95%;
+    }
+
+    .table-penyesuaian{
+        max-height: 380px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid #dee2e6;
+    }
+
+    #tblPenyesuaianBonKasMerah{
+        margin-bottom: 0;
+    }
+
+    #tblPenyesuaianBonKasMerah thead th{
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #fff;
+        vertical-align: middle;
+    }
+
+    #tblPenyesuaianBonKasMerah td{
+        vertical-align: middle;
+    }
+
+    #tblPenyesuaianBonKasMerah td:nth-child(4),
+    #tblPenyesuaianBonKasMerah th:nth-child(4){
+        text-align: right;
+    }
+</style>
+
+
+
+{{-- Modal Tambah Bon Kas Putih --}}
+<div class="modal fade" id="modalTambahBonKasPutih" tabindex="-1" aria-labelledby="modalTambahBonKasPutihLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-tambah-bon-kas">
+        <div class="modal-content">
+
+            {{-- HEADER --}}
+            <div class="modal-header bg-primary text-white">
+
+                <div class="row align-items-center w-100">
+
+                    <div class="col-md-6">
+                        <h4 class="modal-title mb-0"
+                            id="modalTambahBonKasPutihLabel">
+                            BON KAS PUTIH
+                        </h4>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label text-end fw-bold">
+                                Kode Bon Kas
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" id="kodeBonKasForm" class="form-control" value="{{ $kodeBonKasPutih ?? '-' }}" readonly>
+                            </div>
+
+                            <div class="col-sm-1 text-end">
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {{-- BODY --}}
+            <div class="modal-body">
+
+                {{-- ERROR --}}
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+
+                {{-- FORM --}}
+                <form id="formBonKasPutih" action="{{ route('bon-kas.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <input type="hidden" name="JenisBonKas" value="P">
+                    <input type="hidden" name="Penerima" value="{{ Auth::user()->NomorUser }}">
+                    <input type="hidden" name="action" id="formAction" value="simpan">
+                    <input type="hidden" name="Mengetahui" id="formMengetahui">
+                    <input type="hidden" id="TotalPenyesuaian" name="TotalPenyesuaian" value="">
+                    <div id="listKodeBonKasMerah"></div>
+
+                    {{-- TANGGAL, JUMLAH, NO PO, PENYESUAIAN MERAH --}}
+                    <div class="row">
+                        {{-- TANGGAL --}}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    Tanggal
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="tanggal"
+                                    class="form-control"
+                                    name="tanggal"
+                                    value="{{ date('Y-m-d') }}"
+                                    readonly>
+                            </div>
+                        </div>
+
+                        {{-- NO PO --}}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    No PO
+                                    <span class="text-muted">(Opsional)</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="noPO"
+                                    class="form-control @error('NoPO') is-invalid @enderror"
+                                    name="NoPO"
+                                    value="{{ old('NoPO') }}"
+                                    placeholder="Masukkan Nomor PO"
+                                    tabindex="1">
+
+                                @error('NoPO')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        {{-- JUMLAH --}}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    Jumlah Uang (Rp)
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="jumlah"
+                                    class="form-control @error('jumlah') is-invalid @enderror"
+                                    name="jumlah"
+                                    value="{{ old('jumlah') ? number_format(old('jumlah'), 2, ',', '.') : '' }}"
+                                    placeholder="Masukkan jumlah uang"
+                                    inputmode="numeric"
+                                    autocomplete="off"
+                                    tabindex="2">
+
+                                @error('jumlah')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+                        </div>
+
+                        {{-- PENYESUAIAN --}}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+
+                                <label class="form-label fw-bold">
+                                    Penyesuaian
+                                </label>
+
+                                <button
+                                    type="button"
+                                    id="btnPilihBonKasMerah"
+                                    class="btn btn-danger w-100"
+                                    disabled>
+                                    Pilih Bon Kas Merah
+                                </button>
+
+                                <small id="infoPenyesuaian" class="text-muted d-block mt-2">
+                                    Belum ada Bon Kas Merah dipilih
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{-- TERBILANG --}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Terbilang</h4>
+                            <h4 id="terbilang"
+                                class="d-block mb-3"
+                                style="margin-top:2px;color:#343a40;font-weight:500;">
+                                (....................................................................................................................)
+                            </h4>
+                        </div>
+                    </div>
+
+
+                    {{-- URAIAN --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            Uraian
+                        </label>
+
+                        <textarea
+                            id="uraian"
+                            class="form-control @error('uraian') is-invalid @enderror"
+                            rows="5"
+                            name="uraian"
+                            placeholder="Masukkan uraian"
+                            tabindex="3">{{ old('uraian') }}</textarea>
+
+                        @error('uraian')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- DOKUMENTASI --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            Upload Dokumentasi
+                        </label>
+
+                        <input type="file"
+                               id="dokumentasi"
+                               name="dokumentasi[]"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.pdf"
+                               multiple
+                               tabindex="4">
+
+                        <small class="text-muted">
+                            Total maksimal 5 MB.
+                        </small>
+
+                        <div class="mt-3"
+                             id="listDokumentasi">
+                        </div>
+                    </div>
+
+
+                    <hr>
+
+
+                    {{-- TANDA TANGAN --}}
+                    <div class="row text-center mt-4">
+                        {{-- MENERIMA --}}
+                        <div class="col-md-4">
+                            <h5>
+                                Menerima
+                            </h5>
+
+                            <div class="text-center mb-2"
+                                 style="height:120px;">
+
+                                @if(!empty(Auth::user()->FotoTtd))
+
+                                    <img
+                                        src="data:image/png;base64,{{ Auth::user()->FotoTtd }}"
+                                        style="
+                                            max-height:100px;
+                                            max-width:180px;
+                                        "
+                                        id="ttdPenerimaModal">
+
+                                @endif
+
+                            </div>
+
+                            <hr class="mb-2">
+
+                            <div class="fw-bold" id="namaPenerima">
+                                {{ Auth::user()->NamaUser }}
+                            </div>
+
+                        </div>
+
+
+                        {{-- MENGETAHUI --}}
+                        <div class="col-md-4">
+
+                            <h5>
+                                Mengetahui
+                            </h5>
+
+                            <div class="text-center mb-2" style="height:120px;">
+                                <img
+                                    id="ttdMengetahuiModal"
+                                    style="
+                                        display:none;
+                                        max-height:100px;
+                                        max-width:180px;
+                                    ">
+
+                            </div>
+
+                            <hr class="mb-2">
+
+                            <div class="text-muted" id="namaMengetahui">
+                                Belum Ditentukan
+                            </div>
+
+                        </div>
+
+
+                        {{-- KASIR --}}
+                        <div class="col-md-4">
+                            <h5>
+                                Kasir
+                            </h5>
+
+                           <div class="text-center mb-2" style="height:120px;">
+
+                                <img
+                                    id="ttdKasirModal"
+                                    style="
+                                        display:none;
+                                        max-height:100px;
+                                        max-width:180px;
+                                    ">
+
+                            </div>
+
+                            <hr class="mb-2">
+
+                            <div
+                                class="text-muted"
+                                id="namaKasir">
+                                Belum Ditentukan
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            {{-- FOOTER --}}
+            <div class="modal-footer">
+
+                <button type="button"
+                        id="btnCancel"
+                        class="btn btn-danger"
+                        data-bs-dismiss="modal"
+                        tabindex="7">
+                    Cancel
+                </button>
+
+                <button type="button"
+                        id="btnSimpan"
+                        class="btn btn-secondary"
+                        tabindex="5">
+                    Save
+                </button>
+
+                <button type="button"
+                        id="btn-kirim"
+                        class="btn btn-warning"
+                        tabindex="6">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{-- MODAL PREVIEW GAMBAR --}}
+<div class="modal fade"
+     id="modalPreview"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+
+        <div class="modal-content border-0">
+
+            <div class="modal-header border-0 d-flex justify-content-end">
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+            <div class="modal-body text-center">
+
+                <img id="previewImage"
+                     class="img-fluid rounded"
+                     style="max-height:80vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL PENYESUAIAN BON KAS MERAH --}}
+<div class="modal fade" id="modalPenyesuaianBonKasMerah" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-penyesuaian">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    Penyesuaian Bon Kas Merah
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive table-penyesuaian">
+                    <table class="table table-bordered table-hover mb-0" id="tblPenyesuaianBonKasMerah">
+                        <thead>
+                            <tr>
+                                <th width="60" class="text-center">
+                                    Pilih
+                                </th>
+                                <th width="130">
+                                    Kode
+                                </th>
+                                <th width="120">
+                                    Tanggal
+                                </th>
+                                <th width="180" class="text-end">
+                                    Jumlah
+                                </th>
+                                <th>
+                                    Uraian
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            Bon Kas Putih
+                        </label>
+                        <input id="txtJumlahPutih" class="form-control text-end" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            Total Bon Kas Merah
+                        </label>
+                        <input id="txtTotalMerah" class="form-control text-end" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            Selisih
+                        </label>
+                        <input id="txtSelisih" class="form-control text-end" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    Batal
+                </button>
+
+                <button class="btn btn-primary" id="btnGunakanPenyesuaian">
+                    Gunakan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

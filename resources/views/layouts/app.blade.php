@@ -7,7 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF Token -->
 
     <link rel="icon" href="{{ asset('/images/KRR.png') }}" type="image/gif" sizes="17x15">
-    <title style="font-size: 20px">{{ config('app.name', 'Laravel') }}</title>
+    {{-- <title style="font-size: 20px">{{ config('app.name', 'Laravel') }}</title> --}}
+    <title>@yield('title', config('app.name'))</title>
     <!-- Scripts -->
     <script src="{{ asset('js/jquery-3.1.0.js') }}" loading=lazy></script>
 
@@ -22,6 +23,7 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('js/numeral.min.js') }}"></script>
     <script src="{{ asset('js/User.js') }}"></script>
+    <script src="{{ asset('js/jsdelivrNpmSelect2.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -37,6 +39,7 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="{{ asset('css/FontsGoogleMaterialIcons.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fonts.googleapis.MaterialSymbolsOutlined.css') }}" />
+    <link href="{{ asset('css/JsdelivrNpmSelect2.css') }}" rel="stylesheet" />
     @guest
     @else
         <script src="{{ asset('js/RDZ.js') }}"></script>
@@ -80,6 +83,55 @@
                                             data-bs-target="#modalIntercom">
                                             INTERCOM
                                         </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        @endif
+
+                        @if (request()->is('home') || request()->is('list-bon-kas-merah') || request()->is('list-bon-kas-putih') || request()->is('bon-kas') || request()->is('bon-kas/list-acc'))
+                            <div class="dropdown d-inline-block">
+                                <button class="menu-navbar dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    Administrasi
+                                </button>
+
+                                <ul class="dropdown-menu menu-bon-kas">
+                                    <li>
+                                        <a class="dropdown-item"
+                                        tabindex="-1"
+                                        style="color:black;font-size:15px;display:block;cursor:default;">
+                                            Bon Kas
+                                            <span style="float:right;">»</span>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            {{-- <li>
+                                                <a class="dropdown-item"
+                                                href="{{ route('listBonKasMerah') }}">
+                                                    Bon Kas Merah
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                href="{{ route('listBonKasPutih') }}">
+                                                    Bon Kas Putih
+                                                </a>
+                                            </li> --}}
+                                            <li>
+                                                <a class="dropdown-item"
+                                                href="{{ route('bon-kas.index') }}">
+                                                    List Bon Kas
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                href="{{ route('bon-kas.list-acc') }}">
+                                                    List ACC Bon Kas
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </li>
                                 </ul>
                             </div>
@@ -264,16 +316,6 @@
         @endif
 
         <script>
-            $(document).ready(function() {
-                $('.dropdown-submenu a.test').on("click", function(e) {
-                    $(this).next('ul').toggle();
-                    e.stopPropagation();
-                    e.preventDefault();
-                });
-            });
-        </script>
-
-        <script>
             function openTambahPengumuman() {
                 let pengumumanEl = document.getElementById('modalPengumuman');
                 let tambahEl = document.getElementById('tambahPengumumanModal');
@@ -301,6 +343,7 @@
                     });
                 }
             });
+
         </script>
 
         <style>
