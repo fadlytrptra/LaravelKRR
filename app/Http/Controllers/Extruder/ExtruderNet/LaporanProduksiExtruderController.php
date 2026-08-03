@@ -1948,6 +1948,49 @@ class LaporanProduksiExtruderController extends Controller
 
     }
 
+    public function print(Request $request)
+    {
+        // dd($request->all());
+        $idLaporan = $request->input('idLaporan');
+
+        $data = DB::connection('ConnExtruder')
+            ->table('LaporanProduksiExtruder')
+            ->where('idLaporan', $idLaporan)
+            ->first();
+
+        if (!$data) {
+            abort(404, 'Data laporan tidak ditemukan');
+        }
+
+        $userInput = trim($data->userInput);
+
+        $ttdRaw = DB::connection('ConnEDP')
+            ->select(
+                'EXEC SP_4451_EDP_MaintenanceTTDUser @XKode = ?, @XNomorUser = ?',
+                [2, $userInput]
+            );
+
+        $ttd = null;
+
+        if (!empty($ttdRaw)) {
+            $row = $ttdRaw[0];
+
+            $ttd = [
+                'NamaUser' => $row->NamaUser,
+                'FotoTtd' => trim($row->FotoTtd),
+            ];
+        }
+
+
+        return view(
+            'Extruder.Extruder.printLaporanProduksiExtruder',
+            [
+                'data' => $data,
+                'ttd' => $ttd
+            ]
+        );
+    }
+
     public function show(Request $request, $id)
     {
         if ($id == 'getPrintLaporan') {
@@ -2013,7 +2056,7 @@ class LaporanProduksiExtruderController extends Controller
             $id_lokasi = $request->input('id_lokasi');
             // dd($tgl_awal . ' - ' . $tgl_akhir);
             $results = DB::connection('ConnExtruder')
-            ->select('EXEC SP_4451_GetDataLaporanProduksiExtruder @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @lokasi = ?', [4, $tgl_awal, $tgl_akhir, $id_lokasi]);
+                ->select('EXEC SP_4451_GetDataLaporanProduksiExtruder @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @lokasi = ?', [4, $tgl_awal, $tgl_akhir, $id_lokasi]);
             $response = [];
             foreach ($results as $row) {
                 $response[] = [

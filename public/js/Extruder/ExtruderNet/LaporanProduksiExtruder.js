@@ -665,6 +665,7 @@ $(document).ready(function () {
         });
     });
 
+    //#region Link
     $("#table_laporan").on("click", ".link-idheader", function () {
         const id = $(this).data('id');
         console.log('Koreksi data ID:', id);
@@ -1373,7 +1374,6 @@ $(document).ready(function () {
                 prongLL.textContent = data.data[0].prongLL;
                 silLL.textContent = data.data[0].silLL;
                 total.textContent = data.data[0].total;
-                console.log(rB.textContent);
                 $("#modalLaporan").modal("show");
                 console.log(rB.textContent);
 
@@ -2613,7 +2613,10 @@ $(document).ready(function () {
                 const params = new URLSearchParams(dataPrint).toString();
 
                 // Buka halaman print dengan dataPrint
-                window.open(`${printLaporanUrl}?${params}`, "_blank");
+                window.open(
+                    `${printLaporanUrl}?idLaporan=${id}`,
+                    '_blank'
+                );
             },
             error: function (xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
@@ -2685,6 +2688,12 @@ $(document).ready(function () {
             rG.checked = true;
             rG.dispatchEvent(new Event("change"));
         }
+
+        // if ($("#" + slcLokasi.id).val() == "3") {
+        //     $("#modalLohia").modal("show");
+        // } else {
+            $("#modalLaporan").modal("show");
+        // }
     });
 
     btn_simpanLaporan.addEventListener("click", async function (event) {

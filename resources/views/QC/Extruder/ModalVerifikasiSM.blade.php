@@ -1404,7 +1404,7 @@
             });
         });
 
-        let printContent = clone.innerHTML;
+        let printContent = clone.outerHTML;
 
         // Buka tab baru
         let printWindow = window.open("", "_blank");
@@ -1507,9 +1507,11 @@
         printWindow.focus();
 
         // Tunggu render selesai
-        setTimeout(() => {
-            printWindow.print();
-            printWindow.close();
-        }, 500);
+        printWindow.onload = function() {
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+            }, 1000);
+        };
     });
 </script>

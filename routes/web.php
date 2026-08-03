@@ -523,9 +523,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('LaporanProduksiExtruder', App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class);
     Route::resource('ACCPengecekanMB', App\Http\Controllers\Extruder\ExtruderNet\ACCPengecekanMBController::class);
     Route::resource('ACCBenangNG', App\Http\Controllers\Extruder\ExtruderNet\ACCBenangNGController::class);
-    Route::get('/print-laporan-produksi-extruder', function () {
-        return view('Extruder.Extruder.printLaporanProduksiExtruder');
-    })->name('print.laporan.produksi.extruder');
+    Route::get('/print-laporan-produksi-extruder', [App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class, 'print'])
+    ->name('print.laporan.produksi.extruder');
     #endregion
 
     Route::get('/beratStandar/{fun_str}/{fun_data}', [BeratController::class, 'beratStandar']);

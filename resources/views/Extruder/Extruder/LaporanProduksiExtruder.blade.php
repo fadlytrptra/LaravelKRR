@@ -82,7 +82,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12 RDZMobilePaddingLR0">
                 {{-- <button class="acs-icon-btn acs-add-btn acs-float" onclick="openNewWindow('Customer/create')"> --}}
-                <button class="acs-icon-btn acs-add-btn acs-float" data-bs-toggle="modal" data-bs-target="#modalLaporan"
+                <button class="acs-icon-btn acs-add-btn acs-float" {{--data-bs-toggle="modal" data-bs-target="#modalLaporan"--}}
                     data-typeForm="tambah" id="btn_tambahLaporan">
                     <div class="acs-add-icon"></div>
                     <div class="acs-btn-txt">Tambah Laporan</div>
@@ -1361,7 +1361,7 @@
             </div>
         </div>
     </div>
-    {{-- @include('Sales.Master.Customer.ModalCustomer') --}}
+    {{-- @include('Extruder.Extruder.ModalLaporanProdGedD') --}}
     <script src="{{ asset('js/Extruder/ExtruderNet/LaporanProduksiExtruder.js') }}"></script>
     {{-- @include('Extruder.Extruder.printLaporanProduksiExtruder') --}}
 @endsection

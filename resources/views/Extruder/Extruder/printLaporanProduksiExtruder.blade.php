@@ -74,373 +74,394 @@
 <!DOCTYPE html>
 <html lang="id">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="{{ asset('js/numeral.min.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const params = new URLSearchParams(window.location.search);
+        function formatPrint(val) {
+        if (val === '' || val === null || isNaN(val)) return '';
 
-        // const ttd = params.get("ttd");
-        const idLaporan = params.get("idLaporan");
-        const referensi = params.get("referensi");
-        const tanggal = params.get("tanggal");
-        const halaman = params.get("halaman");
-        const effisiensi = params.get("effisiensi");
-        const shiftValue = params.get("shiftValue");
-        const timeStart = params.get("timeStart");
-        const timeEnd = params.get("timeEnd");
-        const spek_mesin = params.get("spek_mesin");
-        const spek_benang = params.get("spek_benang");
-        const colorB = params.get("colorB");
-        const colorC = params.get("colorC");
-        const colorD = params.get("colorD");
-        const colorE = params.get("colorE");
-        const colorF = params.get("colorF");
-        const colorG = params.get("colorG");
-        const timeA = params.get("timeA");
-        const timeB = params.get("timeB");
-        const timeC = params.get("timeC");
-        const timeD = params.get("timeD");
-        const timeE = params.get("timeE");
-        const timeF = params.get("timeF");
-        const timeG = params.get("timeG");
-        const c1A = params.get("c1A");
-        const c1B = params.get("c1B");
-        const c1C = params.get("c1C");
-        const c1D = params.get("c1D");
-        const c1E = params.get("c1E");
-        const c1F = params.get("c1F");
-        const c1G = params.get("c1G");
-        const c2A = params.get("c2A");
-        const c2B = params.get("c2B");
-        const c2C = params.get("c2C");
-        const c2D = params.get("c2D");
-        const c2E = params.get("c2E");
-        const c2F = params.get("c2F");
-        const c2G = params.get("c2G");
-        const c3A = params.get("c3A");
-        const c3B = params.get("c3B");
-        const c3C = params.get("c3C");
-        const c3D = params.get("c3D");
-        const c3E = params.get("c3E");
-        const c3F = params.get("c3F");
-        const c3G = params.get("c3G");
-        const c4A = params.get("c4A");
-        const c4B = params.get("c4B");
-        const c4C = params.get("c4C");
-        const c4D = params.get("c4D");
-        const c4E = params.get("c4E");
-        const c4F = params.get("c4F");
-        const c4G = params.get("c4G");
-        const c5A = params.get("c5A");
-        const c5B = params.get("c5B");
-        const c5C = params.get("c5C");
-        const c5D = params.get("c5D");
-        const c5E = params.get("c5E");
-        const c5F = params.get("c5F");
-        const c5G = params.get("c5G");
-        const c6A = params.get("c6A");
-        const c6B = params.get("c6B");
-        const c6C = params.get("c6C");
-        const c6D = params.get("c6D");
-        const c6E = params.get("c6E");
-        const c6F = params.get("c6F");
-        const c6G = params.get("c6G");
-        const c7A = params.get("c7A");
-        const c7B = params.get("c7B");
-        const c7C = params.get("c7C");
-        const c7D = params.get("c7D");
-        const c7E = params.get("c7E");
-        const c7F = params.get("c7F");
-        const c7G = params.get("c7G");
-        const c8A = params.get("c8A");
-        const c8B = params.get("c8B");
-        const c8C = params.get("c8C");
-        const c8D = params.get("c8D");
-        const c8E = params.get("c8E");
-        const c8F = params.get("c8F");
-        const c8G = params.get("c8G");
-        const flA = params.get("flA");
-        const flB = params.get("flB");
-        const flC = params.get("flC");
-        const flD = params.get("flD");
-        const flE = params.get("flE");
-        const flF = params.get("flF");
-        const flG = params.get("flG");
-        const scA = params.get("scA");
-        const scB = params.get("scB");
-        const scC = params.get("scC");
-        const scD = params.get("scD");
-        const scE = params.get("scE");
-        const scF = params.get("scF");
-        const scG = params.get("scG");
-        const jnA = params.get("jnA");
-        const jnB = params.get("jnB");
-        const jnC = params.get("jnC");
-        const jnD = params.get("jnD");
-        const jnE = params.get("jnE");
-        const jnF = params.get("jnF");
-        const jnG = params.get("jnG");
-        const d1A = params.get("d1A");
-        const d1B = params.get("d1B");
-        const d1C = params.get("d1C");
-        const d1D = params.get("d1D");
-        const d1E = params.get("d1E");
-        const d1F = params.get("d1F");
-        const d1G = params.get("d1G");
-        const d2A = params.get("d2A");
-        const d2B = params.get("d2B");
-        const d2C = params.get("d2C");
-        const d2D = params.get("d2D");
-        const d2E = params.get("d2E");
-        const d2F = params.get("d2F");
-        const d2G = params.get("d2G");
-        const d3A = params.get("d3A");
-        const d3B = params.get("d3B");
-        const d3C = params.get("d3C");
-        const d3D = params.get("d3D");
-        const d3E = params.get("d3E");
-        const d3F = params.get("d3F");
-        const d3G = params.get("d3G");
-        const d4A = params.get("d4A");
-        const d4B = params.get("d4B");
-        const d4C = params.get("d4C");
-        const d4D = params.get("d4D");
-        const d4E = params.get("d4E");
-        const d4F = params.get("d4F");
-        const d4G = params.get("d4G");
-        const d5A = params.get("d5A");
-        const d5B = params.get("d5B");
-        const d5C = params.get("d5C");
-        const d5D = params.get("d5D");
-        const d5E = params.get("d5E");
-        const d5F = params.get("d5F");
-        const d5G = params.get("d5G");
-        const d6A = params.get("d6A");
-        const d6B = params.get("d6B");
-        const d6C = params.get("d6C");
-        const d6D = params.get("d6D");
-        const d6E = params.get("d6E");
-        const d6F = params.get("d6F");
-        const d6G = params.get("d6G");
-        const srA = params.get("srA");
-        const srB = params.get("srB");
-        const srC = params.get("srC");
-        const srD = params.get("srD");
-        const srE = params.get("srE");
-        const srF = params.get("srF");
-        const srG = params.get("srG");
-        const mrA = params.get("mrA");
-        const mrB = params.get("mrB");
-        const mrC = params.get("mrC");
-        const mrD = params.get("mrD");
-        const mrE = params.get("mrE");
-        const mrF = params.get("mrF");
-        const mrG = params.get("mrG");
-        const mvA = params.get("mvA");
-        const mvB = params.get("mvB");
-        const mvC = params.get("mvC");
-        const mvD = params.get("mvD");
-        const mvE = params.get("mvE");
-        const mvF = params.get("mvF");
-        const mvG = params.get("mvG");
-        const mpp1A = params.get("mpp1A");
-        const mpp1B = params.get("mpp1B");
-        const mpp1C = params.get("mpp1C");
-        const mpp1D = params.get("mpp1D");
-        const mpp1E = params.get("mpp1E");
-        const mpp1F = params.get("mpp1F");
-        const mpp1G = params.get("mpp1G");
-        const mpp2A = params.get("mpp2A");
-        const mpp2B = params.get("mpp2B");
-        const mpp2C = params.get("mpp2C");
-        const mpp2D = params.get("mpp2D");
-        const mpp2E = params.get("mpp2E");
-        const mpp2F = params.get("mpp2F");
-        const mpp2G = params.get("mpp2G");
-        const qbA = params.get("qbA");
-        const qbB = params.get("qbB");
-        const qbC = params.get("qbC");
-        const qbD = params.get("qbD");
-        const qbE = params.get("qbE");
-        const qbF = params.get("qbF");
-        const qbG = params.get("qbG");
-        const fewA = params.get("fewA");
-        const fewB = params.get("fewB");
-        const fewC = params.get("fewC");
-        const fewD = params.get("fewD");
-        const fewE = params.get("fewE");
-        const fewF = params.get("fewF");
-        const fewG = params.get("fewG");
-        const swA = params.get("swA");
-        const swB = params.get("swB");
-        const swC = params.get("swC");
-        const swD = params.get("swD");
-        const swE = params.get("swE");
-        const swF = params.get("swF");
-        const swG = params.get("swG");
-        const noyA = params.get("noyA");
-        const noyB = params.get("noyB");
-        const noyC = params.get("noyC");
-        const noyD = params.get("noyD");
-        const noyE = params.get("noyE");
-        const noyF = params.get("noyF");
-        const noyG = params.get("noyG");
-        const wgA = params.get("wgA");
-        const wgB = params.get("wgB");
-        const wgC = params.get("wgC");
-        const wgD = params.get("wgD");
-        const wgE = params.get("wgE");
-        const wgF = params.get("wgF");
-        const wgG = params.get("wgG");
-        const rs1A = params.get("rs1A");
-        const rs1B = params.get("rs1B");
-        const rs1C = params.get("rs1C");
-        const rs1D = params.get("rs1D");
-        const rs1E = params.get("rs1E");
-        const rs1F = params.get("rs1F");
-        const rs1G = params.get("rs1G");
-        const rs2A = params.get("rs2A");
-        const rs2B = params.get("rs2B");
-        const rs2C = params.get("rs2C");
-        const rs2D = params.get("rs2D");
-        const rs2E = params.get("rs2E");
-        const rs2F = params.get("rs2F");
-        const rs2G = params.get("rs2G");
-        const rs3A = params.get("rs3A");
-        const rs3B = params.get("rs3B");
-        const rs3C = params.get("rs3C");
-        const rs3D = params.get("rs3D");
-        const rs3E = params.get("rs3E");
-        const rs3F = params.get("rs3F");
-        const rs3G = params.get("rs3G");
-        const strA = params.get("strA");
-        const strB = params.get("strB");
-        const strC = params.get("strC");
-        const strD = params.get("strD");
-        const strE = params.get("strE");
-        const strF = params.get("strF");
-        const strG = params.get("strG");
-        const rA = params.get("rA");
-        const rB = params.get("rB");
-        const rC = params.get("rC");
-        const rD = params.get("rD");
-        const rE = params.get("rE");
-        const rF = params.get("rF");
-        const rG = params.get("rG");
-        const uotA = params.get("uotA");
-        const uotB = params.get("uotB");
-        const uotC = params.get("uotC");
-        const uotD = params.get("uotD");
-        const uotE = params.get("uotE");
-        const uotF = params.get("uotF");
-        const uotG = params.get("uotG");
-        const lotA = params.get("lotA");
-        const lotB = params.get("lotB");
-        const lotC = params.get("lotC");
-        const lotD = params.get("lotD");
-        const lotE = params.get("lotE");
-        const lotF = params.get("lotF");
-        const lotG = params.get("lotG");
-        const at1A = params.get("at1A");
-        const at1B = params.get("at1B");
-        const at1C = params.get("at1C");
-        const at1D = params.get("at1D");
-        const at1E = params.get("at1E");
-        const at1F = params.get("at1F");
-        const at1G = params.get("at1G");
-        const at2A = params.get("at2A");
-        const at2B = params.get("at2B");
-        const at2C = params.get("at2C");
-        const at2D = params.get("at2D");
-        const at2E = params.get("at2E");
-        const at2F = params.get("at2F");
-        const at2G = params.get("at2G");
-        const at3A = params.get("at3A");
-        const at3B = params.get("at3B");
-        const at3C = params.get("at3C");
-        const at3D = params.get("at3D");
-        const at3E = params.get("at3E");
-        const at3F = params.get("at3F");
-        const at3G = params.get("at3G");
-        const time1 = params.get("time1");
-        const remark1 = params.get("remark1");
-        const time2 = params.get("time2");
-        const remark2 = params.get("remark2");
-        const time3 = params.get("time3");
-        const remark3 = params.get("remark3");
-        const time4 = params.get("time4");
-        const remark4 = params.get("remark4");
-        const time5 = params.get("time5");
-        const remark5 = params.get("remark5");
-        const time6 = params.get("time6");
-        const remark6 = params.get("remark6");
-        const kwhM1 = params.get("kwhM1");
-        const kwhM2 = params.get("kwhM2");
-        const jamProd = params.get("jamProd");
-        const ppA = params.get("ppA");
-        const ppB = params.get("ppB");
-        const ppC = params.get("ppC");
-        const ppD = params.get("ppD");
-        const cacA = params.get("cacA");
-        const cacB = params.get("cacB");
-        const cacC = params.get("cacC");
-        const cacD = params.get("cacD");
-        const cacE = params.get("cacE");
-        const cacF = params.get("cacF");
-        const mbA = params.get("mbA");
-        const mbB = params.get("mbB");
-        const mbC = params.get("mbC");
-        const mbD = params.get("mbD");
-        const mbE = params.get("mbE");
-        const mbF = params.get("mbF");
-        const uvA = params.get("uvA");
-        const uvB = params.get("uvB");
-        const uvC = params.get("uvC");
-        const uvD = params.get("uvD");
-        const uvE = params.get("uvE");
-        const uvF = params.get("uvF");
-        const asbA = params.get("asbA");
-        const asbB = params.get("asbB");
-        const asbC = params.get("asbC");
-        const asbD = params.get("asbD");
-        const asbE = params.get("asbE");
-        const asbF = params.get("asbF");
-        const llA = params.get("llA");
-        const llB = params.get("llB");
-        const llC = params.get("llC");
-        const llD = params.get("llD");
-        const llF = params.get("llF");
-        const bhn1A = params.get("bhn1A");
-        const bhn1B = params.get("bhn1B");
-        const bhn1C = params.get("bhn1C");
-        const bhn1D = params.get("bhn1D");
-        const bhn1E = params.get("bhn1E");
-        const bhn1F = params.get("bhn1F");
-        const bhn2A = params.get("bhn2A");
-        const bhn2B = params.get("bhn2B");
-        const bhn2C = params.get("bhn2C");
-        const bhn2D = params.get("bhn2D");
-        const bhn2E = params.get("bhn2E");
-        const bhn2F = params.get("bhn2F");
-        const mbAT = params.get("mbAT");
-        const uvAT = params.get("uvAT");
-        const asbAT = params.get("asbAT");
-        const llAT = params.get("llAT");
-        const bngM = params.get("bngM");
-        const prongM = params.get("prongM");
-        const silM = params.get("silM");
-        const bngL = params.get("bngL");
-        const prongL = params.get("prongL");
-        const silL = params.get("silL");
-        const bngMe = params.get("bngMe");
-        const prongMe = params.get("prongMe");
-        const silMe = params.get("silMe");
-        const bngGB = params.get("bngGB");
-        const prongGB = params.get("prongGB");
-        const silGB = params.get("silGB");
-        const bngLL = params.get("bngLL");
-        const prongLL = params.get("prongLL");
-        const silLL = params.get("silLL");
-        const total = params.get("total");
+        let num = parseFloat(val);
+
+        // 10.00 → 10
+        if (Number.isInteger(num)) return numeral(num).format('0');
+
+        // **Jika angka punya lebih dari 1 decimal yang bukan .x0 atau .75 → tampilkan apa adanya**
+        let decimal = (num.toString().split('.')[1] || '');
+        if (decimal.length > 1 && decimal !== '75' && decimal !== '70') {
+            return numeral(num).format('0.00');  // contoh: 10.23 → 10.23
+        }
+
+        // 10.75 → 10.75
+        if (decimal === '75') return numeral(num).format('0.00');
+
+        // 10.70 → 10.7
+        return numeral(num).format('0.[0]');
+    }
+        // const params = new URLSearchParams(window.location.search);
+        const data = @json($data);
+        const ttd = @json($ttd);
+
+        const idLaporan = data.idLaporan ?? '';
+        const referensi = data.referensi ?? '';
+        const tanggal = data.tanggal ?? '';
+        const effisiensi = data.effisiensi ?? '';
+        const shiftValue = data.shiftValue ?? '';
+        const timeStart = data.timeStart ?? '';
+        const timeEnd = data.timeEnd ?? '';
+        const spek_mesin = data.spek_mesin ?? '';
+        const spek_benang = data.spek_benang ?? '';
+        const colorB = data.colorB ?? 'black';
+        const colorC = data.colorC ?? 'black';
+        const colorD = data.colorD ?? 'black';
+        const colorE = data.colorE ?? 'black';
+        const colorF = data.colorF ?? 'black';
+        const colorG = data.colorG ?? 'black';
+        const timeA = data.timeA ?? '';
+        const timeB = data.timeB ?? '';
+        const timeC = data.timeC ?? '';
+        const timeD = data.timeD ?? '';
+        const timeE = data.timeE ?? '';
+        const timeF = data.timeF ?? '';
+        const timeG = data.timeG ?? '';
+        const c1A = formatPrint(data.c1A) ?? '';
+        const c1B = formatPrint(data.c1B) ?? '';
+        const c1C = formatPrint(data.c1C) ?? '';
+        const c1D = formatPrint(data.c1D) ?? '';
+        const c1E = formatPrint(data.c1E) ?? '';
+        const c1F = formatPrint(data.c1F) ?? '';
+        const c1G = formatPrint(data.c1G) ?? '';
+        const c2A = formatPrint(data.c2A) ?? '';
+        const c2B = formatPrint(data.c2B) ?? '';
+        const c2C = formatPrint(data.c2C) ?? '';
+        const c2D = formatPrint(data.c2D) ?? '';
+        const c2E = formatPrint(data.c2E) ?? '';
+        const c2F = formatPrint(data.c2F) ?? '';
+        const c2G = formatPrint(data.c2G) ?? '';
+        const c3A = formatPrint(data.c3A) ?? '';
+        const c3B = formatPrint(data.c3B) ?? '';
+        const c3C = formatPrint(data.c3C) ?? '';
+        const c3D = formatPrint(data.c3D) ?? '';
+        const c3E = formatPrint(data.c3E) ?? '';
+        const c3F = formatPrint(data.c3F) ?? '';
+        const c3G = formatPrint(data.c3G) ?? '';
+        const c4A = formatPrint(data.c4A) ?? '';
+        const c4B = formatPrint(data.c4B) ?? '';
+        const c4C = formatPrint(data.c4C) ?? '';
+        const c4D = formatPrint(data.c4D) ?? '';
+        const c4E = formatPrint(data.c4E) ?? '';
+        const c4F = formatPrint(data.c4F) ?? '';
+        const c4G = formatPrint(data.c4G) ?? '';
+        const c5A = formatPrint(data.c5A) ?? '';
+        const c5B = formatPrint(data.c5B) ?? '';
+        const c5C = formatPrint(data.c5C) ?? '';
+        const c5D = formatPrint(data.c5D) ?? '';
+        const c5E = formatPrint(data.c5E) ?? '';
+        const c5F = formatPrint(data.c5F) ?? '';
+        const c5G = formatPrint(data.c5G) ?? '';
+        const c6A = formatPrint(data.c6A) ?? '';
+        const c6B = formatPrint(data.c6B) ?? '';
+        const c6C = formatPrint(data.c6C) ?? '';
+        const c6D = formatPrint(data.c6D) ?? '';
+        const c6E = formatPrint(data.c6E) ?? '';
+        const c6F = formatPrint(data.c6F) ?? '';
+        const c6G = formatPrint(data.c6G) ?? '';
+        const c7A = formatPrint(data.c7A) ?? '';
+        const c7B = formatPrint(data.c7B) ?? '';
+        const c7C = formatPrint(data.c7C) ?? '';
+        const c7D = formatPrint(data.c7D) ?? '';
+        const c7E = formatPrint(data.c7E) ?? '';
+        const c7F = formatPrint(data.c7F) ?? '';
+        const c7G = formatPrint(data.c7G) ?? '';
+        const c8A = formatPrint(data.c8A) ?? '';
+        const c8B = formatPrint(data.c8B) ?? '';
+        const c8C = formatPrint(data.c8C) ?? '';
+        const c8D = formatPrint(data.c8D) ?? '';
+        const c8E = formatPrint(data.c8E) ?? '';
+        const c8F = formatPrint(data.c8F) ?? '';
+        const c8G = formatPrint(data.c8G) ?? '';
+        const flA = formatPrint(data.flA) ?? '';
+        const flB = formatPrint(data.flB) ?? '';
+        const flC = formatPrint(data.flC) ?? '';
+        const flD = formatPrint(data.flD) ?? '';
+        const flE = formatPrint(data.flE) ?? '';
+        const flF = formatPrint(data.flF) ?? '';
+        const flG = formatPrint(data.flG) ?? '';
+        const scA = formatPrint(data.scA) ?? '';
+        const scB = formatPrint(data.scB) ?? '';
+        const scC = formatPrint(data.scC) ?? '';
+        const scD = formatPrint(data.scD) ?? '';
+        const scE = formatPrint(data.scE) ?? '';
+        const scF = formatPrint(data.scF) ?? '';
+        const scG = formatPrint(data.scG) ?? '';
+        const jnA = formatPrint(data.jnA) ?? '';
+        const jnB = formatPrint(data.jnB) ?? '';
+        const jnC = formatPrint(data.jnC) ?? '';
+        const jnD = formatPrint(data.jnD) ?? '';
+        const jnE = formatPrint(data.jnE) ?? '';
+        const jnF = formatPrint(data.jnF) ?? '';
+        const jnG = formatPrint(data.jnG) ?? '';
+        const d1A = formatPrint(data.d1A) ?? '';
+        const d1B = formatPrint(data.d1B) ?? '';
+        const d1C = formatPrint(data.d1C) ?? '';
+        const d1D = formatPrint(data.d1D) ?? '';
+        const d1E = formatPrint(data.d1E) ?? '';
+        const d1F = formatPrint(data.d1F) ?? '';
+        const d1G = formatPrint(data.d1G) ?? '';
+        const d2A = formatPrint(data.d2A) ?? '';
+        const d2B = formatPrint(data.d2B) ?? '';
+        const d2C = formatPrint(data.d2C) ?? '';
+        const d2D = formatPrint(data.d2D) ?? '';
+        const d2E = formatPrint(data.d2E) ?? '';
+        const d2F = formatPrint(data.d2F) ?? '';
+        const d2G = formatPrint(data.d2G) ?? '';
+        const d3A = formatPrint(data.d3A) ?? '';
+        const d3B = formatPrint(data.d3B) ?? '';
+        const d3C = formatPrint(data.d3C) ?? '';
+        const d3D = formatPrint(data.d3D) ?? '';
+        const d3E = formatPrint(data.d3E) ?? '';
+        const d3F = formatPrint(data.d3F) ?? '';
+        const d3G = formatPrint(data.d3G) ?? '';
+        const d4A = formatPrint(data.d4A) ?? '';
+        const d4B = formatPrint(data.d4B) ?? '';
+        const d4C = formatPrint(data.d4C) ?? '';
+        const d4D = formatPrint(data.d4D) ?? '';
+        const d4E = formatPrint(data.d4E) ?? '';
+        const d4F = formatPrint(data.d4F) ?? '';
+        const d4G = formatPrint(data.d4G) ?? '';
+        const d5A = formatPrint(data.d5A) ?? '';
+        const d5B = formatPrint(data.d5B) ?? '';
+        const d5C = formatPrint(data.d5C) ?? '';
+        const d5D = formatPrint(data.d5D) ?? '';
+        const d5E = formatPrint(data.d5E) ?? '';
+        const d5F = formatPrint(data.d5F) ?? '';
+        const d5G = formatPrint(data.d5G) ?? '';
+        const d6A = formatPrint(data.d6A) ?? '';
+        const d6B = formatPrint(data.d6B) ?? '';
+        const d6C = formatPrint(data.d6C) ?? '';
+        const d6D = formatPrint(data.d6D) ?? '';
+        const d6E = formatPrint(data.d6E) ?? '';
+        const d6F = formatPrint(data.d6F) ?? '';
+        const d6G = formatPrint(data.d6G) ?? '';
+        const srA = data.srA ?? '';
+        const srB = data.srB ?? '';
+        const srC = data.srC ?? '';
+        const srD = data.srD ?? '';
+        const srE = data.srE ?? '';
+        const srF = data.srF ?? '';
+        const srG = data.srG ?? '';
+        const mrA = data.mrA ?? '';
+        const mrB = data.mrB ?? '';
+        const mrC = data.mrC ?? '';
+        const mrD = data.mrD ?? '';
+        const mrE = data.mrE ?? '';
+        const mrF = data.mrF ?? '';
+        const mrG = data.mrG ?? '';
+        const mvA = data.mvA ?? '';
+        const mvB = data.mvB ?? '';
+        const mvC = data.mvC ?? '';
+        const mvD = data.mvD ?? '';
+        const mvE = data.mvE ?? '';
+        const mvF = data.mvF ?? '';
+        const mvG = data.mvG ?? '';
+        const mpp1A = data.mpp1A ?? '';
+        const mpp1B = data.mpp1B ?? '';
+        const mpp1C = data.mpp1C ?? '';
+        const mpp1D = data.mpp1D ?? '';
+        const mpp1E = data.mpp1E ?? '';
+        const mpp1F = data.mpp1F ?? '';
+        const mpp1G = data.mpp1G ?? '';
+        const mpp2A = data.mpp2A ?? '';
+        const mpp2B = data.mpp2B ?? '';
+        const mpp2C = data.mpp2C ?? '';
+        const mpp2D = data.mpp2D ?? '';
+        const mpp2E = data.mpp2E ?? '';
+        const mpp2F = data.mpp2F ?? '';
+        const mpp2G = data.mpp2G ?? '';
+        const qbA = data.qbA ?? '';
+        const qbB = data.qbB ?? '';
+        const qbC = data.qbC ?? '';
+        const qbD = data.qbD ?? '';
+        const qbE = data.qbE ?? '';
+        const qbF = data.qbF ?? '';
+        const qbG = data.qbG ?? '';
+        const fewA = data.fewA ?? '';
+        const fewB = data.fewB ?? '';
+        const fewC = data.fewC ?? '';
+        const fewD = data.fewD ?? '';
+        const fewE = data.fewE ?? '';
+        const fewF = data.fewF ?? '';
+        const fewG = data.fewG ?? '';
+        const swA = data.swA ?? '';
+        const swB = data.swB ?? '';
+        const swC = data.swC ?? '';
+        const swD = data.swD ?? '';
+        const swE = data.swE ?? '';
+        const swF = data.swF ?? '';
+        const swG = data.swG ?? '';
+        const noyA = data.noyA ?? '';
+        const noyB = data.noyB ?? '';
+        const noyC = data.noyC ?? '';
+        const noyD = data.noyD ?? '';
+        const noyE = data.noyE ?? '';
+        const noyF = data.noyF ?? '';
+        const noyG = data.noyG ?? '';
+        const wgA = data.wgA ?? '';
+        const wgB = data.wgB ?? '';
+        const wgC = data.wgC ?? '';
+        const wgD = data.wgD ?? '';
+        const wgE = data.wgE ?? '';
+        const wgF = data.wgF ?? '';
+        const wgG = data.wgG ?? '';
+        const rs1A = data.rs1A ?? '';
+        const rs1B = data.rs1B ?? '';
+        const rs1C = data.rs1C ?? '';
+        const rs1D = data.rs1D ?? '';
+        const rs1E = data.rs1E ?? '';
+        const rs1F = data.rs1F ?? '';
+        const rs1G = data.rs1G ?? '';
+        const rs2A = data.rs2A ?? '';
+        const rs2B = data.rs2B ?? '';
+        const rs2C = data.rs2C ?? '';
+        const rs2D = data.rs2D ?? '';
+        const rs2E = data.rs2E ?? '';
+        const rs2F = data.rs2F ?? '';
+        const rs2G = data.rs2G ?? '';
+        const rs3A = data.rs3A ?? '';
+        const rs3B = data.rs3B ?? '';
+        const rs3C = data.rs3C ?? '';
+        const rs3D = data.rs3D ?? '';
+        const rs3E = data.rs3E ?? '';
+        const rs3F = data.rs3F ?? '';
+        const rs3G = data.rs3G ?? '';
+        const strA = data.strA ?? '';
+        const strB = data.strB ?? '';
+        const strC = data.strC ?? '';
+        const strD = data.strD ?? '';
+        const strE = data.strE ?? '';
+        const strF = data.strF ?? '';
+        const strG = data.strG ?? '';
+        const rA = data.rA ?? '';
+        const rB = data.rB ?? '';
+        const rC = data.rC ?? '';
+        const rD = data.rD ?? '';
+        const rE = data.rE ?? '';
+        const rF = data.rF ?? '';
+        const rG = data.rG ?? '';
+        const uotA = data.uotA ?? '';
+        const uotB = data.uotB ?? '';
+        const uotC = data.uotC ?? '';
+        const uotD = data.uotD ?? '';
+        const uotE = data.uotE ?? '';
+        const uotF = data.uotF ?? '';
+        const uotG = data.uotG ?? '';
+        const lotA = data.lotA ?? '';
+        const lotB = data.lotB ?? '';
+        const lotC = data.lotC ?? '';
+        const lotD = data.lotD ?? '';
+        const lotE = data.lotE ?? '';
+        const lotF = data.lotF ?? '';
+        const lotG = data.lotG ?? '';
+        const at1A = data.at1A ?? '';
+        const at1B = data.at1B ?? '';
+        const at1C = data.at1C ?? '';
+        const at1D = data.at1D ?? '';
+        const at1E = data.at1E ?? '';
+        const at1F = data.at1F ?? '';
+        const at1G = data.at1G ?? '';
+        const at2A = data.at2A ?? '';
+        const at2B = data.at2B ?? '';
+        const at2C = data.at2C ?? '';
+        const at2D = data.at2D ?? '';
+        const at2E = data.at2E ?? '';
+        const at2F = data.at2F ?? '';
+        const at2G = data.at2G ?? '';
+        const at3A = data.at3A ?? '';
+        const at3B = data.at3B ?? '';
+        const at3C = data.at3C ?? '';
+        const at3D = data.at3D ?? '';
+        const at3E = data.at3E ?? '';
+        const at3F = data.at3F ?? '';
+        const at3G = data.at3G ?? '';
+        const time1 = data.time1 ?? '';
+        const remark1 = data.remark1 ?? '';
+        const time2 = data.time2 ?? '';
+        const remark2 = data.remark2 ?? '';
+        const time3 = data.time3 ?? '';
+        const remark3 = data.remark3 ?? '';
+        const time4 = data.time4 ?? '';
+        const remark4 = data.remark4 ?? '';
+        const time5 = data.time5 ?? '';
+        const remark5 = data.remark5 ?? '';
+        const time6 = data.time6 ?? '';
+        const remark6 = data.remark6 ?? '';
+        const kwhM1 = data.kwhM1 ?? '';
+        const kwhM2 = data.kwhM2 ?? '';
+        const jamProd = data.jamProd ?? '';
+        const ppA = data.ppA ?? '';
+        const ppB = data.ppB ?? '';
+        const ppC = data.ppC ?? '';
+        const ppD = data.ppD ?? '';
+        const cacA = data.cacA ?? '';
+        const cacB = data.cacB ?? '';
+        const cacC = data.cacC ?? '';
+        const cacD = data.cacD ?? '';
+        const cacE = data.cacE ?? '';
+        const cacF = data.cacF ?? '';
+        const mbA = data.mbA ?? '';
+        const mbB = data.mbB ?? '';
+        const mbC = data.mbC ?? '';
+        const mbD = data.mbD ?? '';
+        const mbE = data.mbE ?? '';
+        const mbF = data.mbF ?? '';
+        const uvA = data.uvA ?? '';
+        const uvB = data.uvB ?? '';
+        const uvC = data.uvC ?? '';
+        const uvD = data.uvD ?? '';
+        const uvE = data.uvE ?? '';
+        const uvF = data.uvF ?? '';
+        const asbA = data.asbA ?? '';
+        const asbB = data.asbB ?? '';
+        const asbC = data.asbC ?? '';
+        const asbD = data.asbD ?? '';
+        const asbE = data.asbE ?? '';
+        const asbF = data.asbF ?? '';
+        const llA = data.llA ?? '';
+        const llB = data.llB ?? '';
+        const llC = data.llC ?? '';
+        const llD = data.llD ?? '';
+        const llF = data.llF ?? '';
+        const bhn1A = data.bhn1A ?? '';
+        const bhn1B = data.bhn1B ?? '';
+        const bhn1C = data.bhn1C ?? '';
+        const bhn1D = data.bhn1D ?? '';
+        const bhn1E = data.bhn1E ?? '';
+        const bhn1F = data.bhn1F ?? '';
+        const bhn2A = data.bhn2A ?? '';
+        const bhn2B = data.bhn2B ?? '';
+        const bhn2C = data.bhn2C ?? '';
+        const bhn2D = data.bhn2D ?? '';
+        const bhn2E = data.bhn2E ?? '';
+        const bhn2F = data.bhn2F ?? '';
+        const mbAT = data.mbAT ?? '';
+        const uvAT = data.uvAT ?? '';
+        const asbAT = data.asbAT ?? '';
+        const llAT = data.llAT ?? '';
+        const bngM = data.bngM ?? '';
+        const prongM = data.prongM ?? '';
+        const silM = data.silM ?? '';
+        const bngL = data.bngL ?? '';
+        const prongL = data.prongL ?? '';
+        const silL = data.silL ?? '';
+        const bngMe = data.bngMe ?? '';
+        const prongMe = data.prongMe ?? '';
+        const silMe = data.silMe ?? '';
+        const bngGB = data.bngGB ?? '';
+        const prongGB = data.prongGB ?? '';
+        const silGB = data.silGB ?? '';
+        const bngLL = data.bngLL ?? '';
+        const prongLL = data.prongLL ?? '';
+        const silLL = data.silLL ?? '';
+        const total = data.total ?? '';
 
         function applyColorGroup(fields, color) {
             fields.forEach(id => {
@@ -521,70 +542,12 @@
         colorG === "red" ? "red" : "black";
         applyColorGroup(fieldsG, colorG);
 
-        // if (ttd && ttd !== "") {
-        //     let imgTtd = ttd;
-
-        //     // jaga-jaga kalau prefix hilang
-        //     if (!imgTtd.startsWith("data:image")) {
-        //         imgTtd = "data:image/png;base64," + imgTtd;
-        //     }
-
-        //     document.getElementById("ttd_cog").src = imgTtd;
-        //     document.getElementById("ttd_cog").style.display = "block";
-        // }
-        // let csrfToken = document
-        // .querySelector('meta[name="csrf-token"]')
-        // .getAttribute("content");
-        $.ajax({
-            url: "LaporanProduksiExtruder/getPrintLaporan",
-            type: "GET",
-            data: {
-                _token: "{{ csrf_token() }}",
-                idLaporan: idLaporan,
-            },
-            success: function(data) {
-                console.log(data);
-
-                if (data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
-
-                    let ttd = data.ttd.FotoTtd;
-
-                    // pastikan ada prefix base64
-                    if (!ttd.startsWith("data:image")) {
-                        ttd = "data:image/png;base64," + ttd;
-                    }
-
-                    /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_cog")
-                        .attr("src", ttd)
-                        .show();
-
-                    setTimeout(() => {
-                        window.print();
-                    }, 500);
-                } else {
-                    $("#ttd_cog")
-                        .attr("src", "")
-                        .show();
-
-                    setTimeout(() => {
-                        window.print();
-                    }, 500);
-                }
-            },
-            error: function(xhr, status, error) {
-                var err = eval("(" + xhr.responseText + ")");
-                alert(err.Message);
-            },
-        });
-
-
         if (referensi) document.getElementById("referensi").textContent = referensi;
         if (tanggal) {
             const tgl = tanggal.split(' ')[0];
             document.getElementById("tanggal").value = tgl;
         }
-        if (halaman) document.getElementById("halaman").innerHTML = halaman;
+        // if (halaman) document.getElementById("halaman").innerHTML = halaman;
         if (effisiensi) document.getElementById("effisiensi").textContent = effisiensi;
         if (shiftValue) {
             document.getElementById("shiftValue").value = shiftValue;
@@ -1129,6 +1092,37 @@
         if (prongLL) document.getElementById("prongLL").textContent = prongLL;
         if (silLL) document.getElementById("silLL").textContent = silLL;
         if (total) document.getElementById("total").textContent = total;
+
+        setTimeout(() => {
+
+            if (ttd && ttd.FotoTtd && ttd.FotoTtd !== "") {
+
+                let fotoTtd = ttd.FotoTtd;
+
+                // pastikan ada prefix base64
+                if (!fotoTtd.startsWith("data:image")) {
+                    fotoTtd = "data:image/png;base64," + fotoTtd;
+                }
+
+                $("#ttd_cog")
+                    .attr("src", fotoTtd)
+                    .show();
+
+            } else {
+
+                $("#ttd_cog")
+                    .attr("src", "")
+                    .show();
+
+            }
+
+        }, 500);
+
+
+        // print terakhir
+        setTimeout(() => {
+            window.print();
+        }, 1000);
     });
 </script>
 
