@@ -58,6 +58,7 @@
                                         <th>Tanggal</th>
                                         <th>Spek Mesin</th>
                                         <th>Spek Benang</th>
+                                        <th>Bahan PP</th>
                                         <th>User EXT</th>
                                         <th>Aksi</th>
                                     </tr>

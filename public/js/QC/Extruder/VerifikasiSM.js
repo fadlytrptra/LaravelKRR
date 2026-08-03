@@ -582,6 +582,7 @@ jQuery(function ($) {
                 },
                 { data: "spek_mesin" },
                 { data: "spek_benang" },
+                { data: "bahanPP" },
                 { data: "userInput" },
                 {
                     data: null,
@@ -680,6 +681,42 @@ jQuery(function ($) {
             }
         });
     });
+
+    // function highlightRow(prefix) {
+    //     const suffixes = ["A", "B", "C", "D", "E", "F", "G"];
+
+    //     const baseElement = document.getElementById(prefix + "A");
+
+    //     console.log(baseElement);
+
+    //     const baseValue = baseElement.textContent.trim();
+    //     console.log("Base:", baseValue);
+
+    //     let isDifferent = false;
+
+    //     for (let i = 1; i < suffixes.length; i++) {
+    //         const el = document.getElementById(prefix + suffixes[i]);
+
+    //         const value = el.textContent.trim();
+
+    //         console.log(prefix + suffixes[i], value);
+
+    //         if (value === "") continue;
+
+    //         if (baseValue !== value) {
+    //             console.log("Beda!", baseValue, value);
+    //             isDifferent = true;
+    //             break;
+    //         }
+    //     }
+
+    //     console.log("isDifferent =", isDifferent);
+
+    //     suffixes.forEach(suffix => {
+    //         document.getElementById(prefix + suffix)
+    //             .style.backgroundColor = isDifferent ? "yellow" : "";
+    //     });
+    // }
 
     let idLapKoreksi = null;
     $("#table_atas").on("click", ".link-idheader", function () {
@@ -1397,6 +1434,51 @@ jQuery(function ($) {
                 prongLL.textContent = data.data[0].prongLL;
                 silLL.textContent = data.data[0].silLL;
                 total.textContent = data.data[0].total;
+                // highlightRow("c1");
+                // highlightRow("c2");
+                // highlightRow("c3");
+                // highlightRow("c4");
+                // highlightRow("c5");
+                // highlightRow("c6");
+                // highlightRow("c7");
+                // highlightRow("c8");
+
+                // highlightRow("fl");
+                // highlightRow("sc");
+                // highlightRow("jn");
+
+                // highlightRow("d1");
+                // highlightRow("d2");
+                // highlightRow("d3");
+                // highlightRow("d4");
+                // highlightRow("d5");
+                // highlightRow("d6");
+
+                // highlightRow("sr");
+                // highlightRow("mr");
+                // highlightRow("mv");
+
+                // highlightRow("mpp1");
+                // highlightRow("mpp2");
+
+                // highlightRow("qb");
+                // highlightRow("few");
+                // highlightRow("sw");
+                // highlightRow("noy");
+                // highlightRow("wg");
+
+                // highlightRow("rs1");
+                // highlightRow("rs2");
+                // highlightRow("rs3");
+
+                // highlightRow("str");
+                // highlightRow("r");
+                // highlightRow("uot");
+                // highlightRow("lot");
+
+                // highlightRow("at1");
+                // highlightRow("at2");
+                // highlightRow("at3");
                 document.getElementById("ketHead").textContent = "Keterangan"
                 keterangan.innerHTML = data.data[0].keterangan
                     ? data.data[0].keterangan.replace(/\n/g, "<br>")

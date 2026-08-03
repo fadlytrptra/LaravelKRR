@@ -119,6 +119,7 @@ class VerifikasiSMController extends Controller
                     'spek_benang' => trim($row->spek_benang),
                     'userInput' => trim($row->userInput),
                     'userVerified' => trim($row->userVerified),
+                    'bahanPP' => $row->bahanPP ?? '',
                 ];
             }
             // dd($response);

@@ -11,7 +11,7 @@
 ========================= */
     .laporan-extruder {
         font-family: "Times New Roman", serif;
-        font-size: 12px;
+        font-size: 15px;
         color: #000;
     }
 
@@ -58,7 +58,7 @@
     }
 
     .laporan-extruder .small-text {
-        font-size: 10px;
+        font-size: 15px;
     }
 
     .laporan-extruder .remark {
@@ -452,7 +452,7 @@
                                     Tanggal:</td>
                                 <td colspan="4" class="small-text left" style="border-left:none !important">
                                     <input class="small-text left" type="date" id="tanggal"
-                                        style="border:none; width:50%; outline:none;">
+                                        style="border:none; width:100%; outline:none;">
                                 </td>
                             </tr>
                             <tr>
@@ -1426,7 +1426,7 @@
 
                     .textBener {
                         font-family: "Times New Roman", serif;
-                        font-size: 10px;
+                        font-size: 15px;
                         color: #000;
                     }
 
@@ -1477,7 +1477,7 @@
                     }
 
                     .small-text {
-                        font-size: 10px;
+                        font-size: 15px;
                     }
 
                     .remark {
