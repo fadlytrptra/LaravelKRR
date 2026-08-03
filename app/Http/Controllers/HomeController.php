@@ -364,4 +364,15 @@ class HomeController extends Controller
             return redirect('home')->with('status', 'Anda Tidak Memiliki Hak Akses Program PDAM!');
         }
     }
+
+    public function Kencana()
+    {
+        $result = (new HakAksesController)->HakAksesProgram('Kencana');
+        $access = (new HakAksesController)->HakAksesFiturMaster('Kencana');
+        if ($result > 0) {
+            return view('layouts.appKencana', compact('access'));
+        } else {
+            return redirect('home')->with('status', 'Anda Tidak Memiliki Hak Akses Program Kencana!');
+        }
+    }
 }

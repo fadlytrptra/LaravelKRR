@@ -138,6 +138,7 @@
                         @endif
 
                     </div>
+
                     @guest
                     @else
                         <div class="NameAndroid RDZNavBrandCenter" style="display:none;padding-top: 5px;">
@@ -182,6 +183,18 @@
                                     </form>
                                 </div>
                             </li> --}}
+                            <li class="nav-item me-3 d-flex align-items-center">
+                                <a href="{{ route('company.profile') }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-outline-primary btn-sm border-0">
+                                    <span class="material-icons"
+                                        style="font-size:18px;vertical-align:middle;">
+                                        business
+                                    </span>
+                                    Company Profile
+                                </a>
+                            </li>
                                 <div style="border-right: 1px solid;margin-right: 5px;padding-right: 5px;"
                                     class="NameWindows">
                                     <p style="font-size: 15px;display: block;margin-bottom: 0px;"><label

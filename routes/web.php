@@ -87,8 +87,10 @@ use App\Http\Controllers\Inventory\Transaksi\Mutasi\PengembalianPascaPenjualanCo
 use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HomeComProController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\IntercomController;
+use Illuminate\Support\Facades\Session;
 
 use App\Http\Controllers\WORKSHOP\Workshop\Transaksi\MaintenanceOrderKerjaController;
 use App\Http\Controllers\WORKSHOP\Workshop\Proyek\MaintenanceOrderProyekController;
@@ -1826,5 +1828,48 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('PDAM', 'App\Http\Controllers\HomeController@PDAM')->name('PDAM.Home');
     Route::resource('InputPDAM', App\Http\Controllers\PDAM\InputPDAMController::class);
     Route::resource('InputSumberAir', App\Http\Controllers\PDAM\InputSumberAirController::class);
+    #endregion
+
+    #region Kencana
+    // Route::get('Kencana', 'App\Http\Controllers\HomeController@Kencana')->name('Kencana.Home');
+    // Route::resource('Kencana/PermohonanPembelian', App\Http\Controllers\Kencana\PermohonanPembelianController::class);
+    // Route::resource('Kencana/AccPermohonan', App\Http\Controllers\Kencana\AccPermohonanController::class);
+    // Route::resource('Kencana/AccPembelian', App\Http\Controllers\Kencana\AccPembelianController::class);
+    // Route::resource('Kencana/SppbPembelian', App\Http\Controllers\Kencana\SppbPembelianController::class);
+    // Route::resource('Kencana/BttbPembelian', App\Http\Controllers\Kencana\BttbPembelianController::class);
+    // Route::resource('Kencana/TransferBarang', App\Http\Controllers\Kencana\TransferBarangController::class);
+    #endregion
+
+    #region Company Profile
+    Route::get('/company-profile', [HomeComProController::class, 'index'])
+        ->name('company.profile');
+
+    Route::get('/language/{locale}', function ($locale) {
+        if (!in_array($locale, ['id', 'en'])) {
+            abort(400);
+        }
+
+        Session::put('locale', $locale);
+
+        return redirect()->back();
+    })->name('language.switch');
+
+    Route::get('/product/block-bottom', function () {
+        return view('Product.blockBottom');
+    })->name('product.blockBottom');
+
+    Route::get('/product/block-fibc', function () {
+        return view('Product.fibc');
+    })->name('product.fibc');
+
+    Route::get('/product/block-woven', function () {
+        return view('Product.woven');
+    })->name('product.woven');
+
+    Route::view('/catalogue', 'Catalogue.indexCatalogue')
+        ->name('catalogue.index');
+
+    Route::view('/sertifikasi', 'Sertifikasi.indexSertifikasi')
+        ->name('sertifikasi.index');
     #endregion
 });
