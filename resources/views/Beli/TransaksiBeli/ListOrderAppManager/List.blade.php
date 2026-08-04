@@ -132,6 +132,8 @@
                                             <th>Tgl. Dibutuhkan</th>
                                             <th>Keterangan Order</th>
                                             <th>Keterangan Internal</th>
+                                            <th>Status Attachment</th>
+                                            <th>Attachment</th>
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -183,7 +183,7 @@ function inisialisasiDataTable(response) {
                     return data == "-"
                         ? '<p style="text-align:center;font-size: 14px;">-</p>'
                         : data ||
-                              '<p style="text-align:center;font-size: 14px;">-</p>';
+                        '<p style="text-align:center;font-size: 14px;">-</p>';
                 },
             },
             {
@@ -192,11 +192,45 @@ function inisialisasiDataTable(response) {
                     return data == "-"
                         ? '<p style="text-align:center;font-size: 14px;">-</p>'
                         : data ||
-                              '<p style="text-align:center;font-size: 14px;">-</p>';
+                        '<p style="text-align:center;font-size: 14px;">-</p>';
                 },
             },
+            {
+                data: "HasAttachment",
+                className: "text-center",
+                render: function (data) {
+                    return data ? "Ya" : "Tidak";
+                }
+            },
+            {
+                data: "HasAttachment",
+                orderable: false,
+                searchable: false,
+                className: "text-center",
+                render: function (data, type, row) {
+
+                    if (!data) {
+                        return "";
+                    }
+
+                    return `
+                    <button
+                        type="button"
+                        class="btn btn-success btn-sm btn-download-attachment"
+                        data-notrans="${row.No_trans}">
+                        Print
+                    </button>`;
+                }
+            }
         ],
+        columnDefs: [
+            {
+                targets: 14, // index kolom Attachment
+                visible: false
+            }
+        ]
     });
+
     $("#table_ListOrder tbody")
         .off("dblclick", "tr")
         .on("dblclick", "tr", function () {
@@ -222,6 +256,35 @@ function inisialisasiDataTable(response) {
             );
         }
     );
+    $("#table_ListOrder tbody")
+        .off("click", ".btn-download-attachment")
+        .on("click", ".btn-download-attachment", function () {
+
+            let noTrans = $(this).data("notrans");
+
+            let checkUrl = `/FinalApprove/getDokumentasi/${noTrans}`;
+            let downloadUrl = `/FinalApprove/downloadDokumentasi/${noTrans}`;
+
+            fetch(checkUrl)
+                .then(response => {
+
+                    if (response.status === 204 || !response.ok) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Dokumentasi tidak ada"
+                        });
+                        return;
+                    }
+
+                    window.open(`/FinalApprove/printDokumentasi/${noTrans}`, "_blank");
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal mengecek dokumentasi"
+                    });
+                });
+        });
 }
 
 checkedAll.addEventListener("click", function (event) {
@@ -250,20 +313,36 @@ checkedAll.addEventListener("click", function (event) {
 btnPrint.addEventListener("click", function () {
     let checkedRowData = [];
     let checkboxes = document.querySelectorAll('input[name="checked"]:checked');
+
     checkboxes.forEach(function (checkbox) {
         let rowData = [];
         let row = checkbox.parentNode.parentNode;
+
+        // ambil data row DataTable
+        let table = $("#table_ListOrder").DataTable();
+        let dataRow = table.row(row).data();
+
         row.querySelectorAll("td").forEach(function (cell, index) {
-            if (index > 0 && index != 3) {
+
+            // skip checkbox, StatusBeli, dan Attachment
+            if (index > 0 && index != 3 && index != 14) {
+
                 let cellText = cell.textContent.trim();
-                // cellText = cellText.replace(/,/g, ".");
                 rowData.push(cellText);
             }
+
         });
+
+        // tambahkan kolom Attachment paling kanan
+        rowData.push(
+            dataRow.HasAttachment ? "Ya" : "Tidak"
+        );
 
         checkedRowData.push(rowData);
     });
+
     if (checkedRowData.length > 0 && checkedRowData[0].length > 0) {
+
         let headerRow = [
             "Tgl. & Jam Approve",
             "No. Order",
@@ -276,16 +355,26 @@ btnPrint.addEventListener("click", function () {
             "Divisi",
             "Tgl. Dibutuhkan",
             "Keterangan Order",
-            "Keterangan Internal",
+            "Keterangan Internal",
+            "Attachment"
         ];
+
         checkedRowData.unshift(headerRow);
 
         let wb = XLSX.utils.book_new();
         let ws = XLSX.utils.aoa_to_sheet(checkedRowData);
+
         ws["!cols"] = [];
+
         headerRow.forEach(function (_, index) {
-            ws["!cols"][index] = { wch: 10, s: { wrapText: true } };
+            ws["!cols"][index] = {
+                wch: 15,
+                s: {
+                    wrapText: true
+                }
+            };
         });
+
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
         let fileName =
@@ -296,6 +385,7 @@ btnPrint.addEventListener("click", function () {
         }
 
         XLSX.writeFile(wb, fileName);
+
     } else {
         alert("Pilih Data Yang Akan DiPrint Terlebih Dahulu");
     }

@@ -316,6 +316,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/MaintenanceOrderPembeliann/Delete', 'App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController@delete')->name('maintenanceorderpembelian.delete');
     Route::post('/MaintenanceOrderPembeliann/uploadDokumentasi', [MaintenanceOrderPembelianController::class, 'uploadDokumentasi'])->name('maintenanceorderpembelian.upload');
     Route::delete('/MaintenanceOrderPembeliann/deleteDokumentasi', [MaintenanceOrderPembelianController::class, 'deleteDokumentasi']);
+    Route::get('/FinalApprove/printDokumentasi/{noTrans}', [FinalApproveController::class, 'printDokumentasi']);
 
 
     Route::get('/CariTypeSearch', 'App\Http\Controllers\Beli\Informasi\CariTypeController@searchData')->name('caritype.search');

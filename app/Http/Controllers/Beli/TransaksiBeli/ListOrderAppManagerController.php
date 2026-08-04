@@ -40,6 +40,16 @@ class ListOrderAppManagerController extends Controller
                         'YTRANSBL.Tgl_Dibutuhkan',
                         'YTRANSBL.keterangan',
                         'YTRANSBL.Ket_Internal',
+                        DB::raw("
+                            CASE
+                                WHEN
+                                    (YTRANSBL.DokumentasiFile IS NOT NULL AND DATALENGTH(YTRANSBL.DokumentasiFile) > 0)
+                                    OR
+                                    (YTRANSBL.Dokumentasi IS NOT NULL AND LTRIM(RTRIM(YTRANSBL.Dokumentasi)) <> '')
+                                THEN 1
+                                ELSE 0
+                            END AS HasAttachment
+                        "),
                         'STATUS_ORDER.Status',
                         'YTRANSBL.Operator',
                         'YTRANSBL.StatusOrder',
@@ -69,15 +79,53 @@ class ListOrderAppManagerController extends Controller
         $stBeli = $request->input('stBeli');
         $MinDate = $request->input('MinDate');
         $MaxDate = $request->input('MaxDate');
+
         if (($Kd_Div != null) && ($stBeli != null) && ($MinDate != null) && ($MaxDate != null)) {
             try {
-                $redisplay = DB::connection('ConnPurchase')->select('exec SP_5409_LIST_ORDER @stBeli=?, @Kd_Div = ?, @kd = ?, @MinDate = ?, @MaxDate = ?', [$stBeli, $Kd_Div, $kd, $MinDate, $MaxDate]);
+
+                $redisplay = DB::connection('ConnPurchase')->select(
+                    'exec SP_5409_LIST_ORDER @stBeli=?, @Kd_Div=?, @kd=?, @MinDate=?, @MaxDate=?',
+                    [$stBeli, $Kd_Div, $kd, $MinDate, $MaxDate]
+                );
+
+                // Ambil seluruh No_trans
+                $noTransList = collect($redisplay)
+                    ->pluck('No_trans')
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->toArray();
+
+                // Ambil data attachment sekali saja
+                $attachments = DB::connection('ConnPurchase')
+                    ->table('YTRANSBL')
+                    ->select('No_trans', 'Dokumentasi', 'DokumentasiFile')
+                    ->whereIn('No_trans', $noTransList)
+                    ->get()
+                    ->keyBy('No_trans');
+
+                // Tambahkan property HasAttachment
+                foreach ($redisplay as $item) {
+
+                    $item->HasAttachment = false;
+
+                    if (isset($attachments[$item->No_trans])) {
+
+                        $doc = $attachments[$item->No_trans];
+
+                        $item->HasAttachment =
+                            (!is_null($doc->DokumentasiFile) && strlen($doc->DokumentasiFile) > 0) ||
+                            (!is_null($doc->Dokumentasi) && trim($doc->Dokumentasi) !== '');
+                    }
+                }
+
                 return datatables($redisplay)->make(true);
+
             } catch (\Throwable $Error) {
-                return Response()->json($Error);
+                return response()->json($Error);
             }
         } else {
-            return Response()->json('Parameter harus di isi');
+            return response()->json('Parameter harus di isi');
         }
     }
     public function divisi()

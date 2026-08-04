@@ -12,6 +12,7 @@ use App\Http\Controllers\HakAksesController;
 use DateTime;
 use DateTimeZone;
 use DB;
+use setasign\Fpdi\Fpdi;
 
 
 class FinalApproveController extends Controller
@@ -794,6 +795,92 @@ class FinalApproveController extends Controller
 
         return response('', 204);
     }
+
+    public function printDokumentasi($noTrans)
+    {
+        $data = DB::connection('ConnPurchase')
+            ->table('YTRANSBL')
+            ->select('Dokumentasi', 'DokumentasiFile')
+            ->where('No_trans', trim($noTrans))
+            ->first();
+
+        if (!$data) {
+            abort(404);
+        }
+
+        // =====================
+        // Jika PDF
+        // =====================
+        if (!empty($data->DokumentasiFile)) {
+
+            $tempPdf = storage_path("app/temp_{$noTrans}.pdf");
+            file_put_contents($tempPdf, $data->DokumentasiFile);
+
+            $pdf = new Fpdi();
+            $pdf->SetAutoPageBreak(false);
+            $pageCount = $pdf->setSourceFile($tempPdf);
+
+            for ($page = 1; $page <= $pageCount; $page++) {
+
+                $tpl = $pdf->importPage($page);
+
+                $size = $pdf->getTemplateSize($tpl);
+
+                $orientation = ($size['width'] > $size['height'])
+                    ? 'L'
+                    : 'P';
+
+
+                $pdf->AddPage(
+                    $orientation,
+                    [
+                        $size['width'],
+                        $size['height']
+                    ]
+                );
+
+
+                // Header No Order
+                $pdf->SetFont('Arial', 'B', 12);
+
+                $pdf->SetXY(0, 5);
+
+                $pdf->Cell(
+                    $size['width'],
+                    8,
+                    'No Order : ' . $noTrans,
+                    0,
+                    1,
+                    'C'
+                );
+
+
+                // Isi PDF digeser sedikit ke bawah
+                $pdf->useTemplate(
+                    $tpl,
+                    0,
+                    15,
+                    $size['width'],
+                    $size['height'] - 15
+                );
+            }
+
+            unlink($tempPdf);
+
+            return response($pdf->Output('S'))
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="Dokumentasi.pdf"');
+        }
+
+        // =====================
+        // Jika Gambar
+        // =====================
+        return view('Beli.TransaksiBeli.ListOrderAppManager.printDokumentasi', compact('noTrans'));
+    }
+    // public function printDokumentasi($noTrans)
+    // {
+    //     return view('Beli.TransaksiBeli.ListOrderAppManager.printDokumentasi', compact('noTrans'));
+    // }
 
     public function getFotoBarang($kdBarang)
     {
