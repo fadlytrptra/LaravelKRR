@@ -647,6 +647,31 @@
                         height: 30px;
                     }
 
+                    .cacat-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        cursor: pointer;
+                    }
+
+                    .kode {
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-weight: bold;
+                    }
+
+                    .kode.selected {
+                        border: 2px solid #000;
+                    }
+
+                    .nama {
+                        user-select: none;
+                    }
+
                     input,
                     textarea,
                     select {
