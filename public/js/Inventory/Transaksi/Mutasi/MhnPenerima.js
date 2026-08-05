@@ -1162,48 +1162,50 @@ btn_divisi2.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_divisi2").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getDivisi2",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                            },
+                const table = $("#table_divisi2").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    returnFocus: false,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getDivisi2",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
                         },
-                        columns: [{ data: "IdDivisi" }, { data: "NamaDivisi" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_divisi2 tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_divisi2_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_divisi2"),
-                    );
+                    },
+                    columns: [{ data: "IdDivisi" }, { data: "NamaDivisi" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_divisi2 tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_divisi2_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_divisi2");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1256,48 +1258,49 @@ btn_divisi.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_divisi").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getDivisi",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                            },
+                const table = $("#table_divisi").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getDivisi",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
                         },
-                        columns: [{ data: "IdDivisi" }, { data: "NamaDivisi" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_divisi tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_divisi_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_divisi"),
-                    );
+                    },
+                    columns: [{ data: "IdDivisi" }, { data: "NamaDivisi" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_divisi tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_divisi_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_divisi");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1348,49 +1351,50 @@ btn_objek2.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_objek2").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getObjek2",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                divisiId2: divisiId2.value,
-                            },
+                const table = $("#table_objek2").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getObjek2",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            divisiId2: divisiId2.value,
                         },
-                        columns: [{ data: "IdObjek" }, { data: "NamaObjek" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_objek2 tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_objek2_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_objek2"),
-                    );
+                    },
+                    columns: [{ data: "IdObjek" }, { data: "NamaObjek" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_objek2 tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_objek2_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_objek2");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1456,49 +1460,50 @@ btn_objek.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_objek").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getObjek",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                divisiId: divisiId.value,
-                            },
+                const table = $("#table_objek").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getObjek",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            divisiId: divisiId.value,
                         },
-                        columns: [{ data: "IdObjek" }, { data: "NamaObjek" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_objek tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_objek_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_objek"),
-                    );
+                    },
+                    columns: [{ data: "IdObjek" }, { data: "NamaObjek" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_objek tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_objek_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_objek");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1552,52 +1557,53 @@ btn_kelut2.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_kelut2").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getKelUt2",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                objekId2: objekId2.value,
-                            },
+                const table = $("#table_kelut2").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getKelUt2",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            objekId2: objekId2.value,
                         },
-                        columns: [
-                            { data: "IdKelompokUtama" },
-                            { data: "NamaKelompokUtama" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_kelut2 tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_kelut2_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_kelut2"),
-                    );
+                    },
+                    columns: [
+                        { data: "IdKelompokUtama" },
+                        { data: "NamaKelompokUtama" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_kelut2 tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_kelut2_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_kelut2");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1649,53 +1655,54 @@ btn_kelut.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_kelut").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        destroy: true,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getKelUt",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                objekId: objekId.value,
-                            },
+                const table = $("#table_kelut").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    destroy: true,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getKelUt",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            objekId: objekId.value,
                         },
-                        columns: [
-                            { data: "IdKelompokUtama" },
-                            { data: "NamaKelompokUtama" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_kelut tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_kelut_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_kelut"),
-                    );
+                    },
+                    columns: [
+                        { data: "IdKelompokUtama" },
+                        { data: "NamaKelompokUtama" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_kelut tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_kelut_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_kelut");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1751,52 +1758,53 @@ btn_kelompok2.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_kelompok2").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getKelompok2",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                kelutId2: kelutId2.value,
-                            },
+                const table = $("#table_kelompok2").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getKelompok2",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            kelutId2: kelutId2.value,
                         },
-                        columns: [
-                            { data: "idkelompok" },
-                            { data: "namakelompok" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_kelompok2 tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_kelompok2_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_kelompok2"),
-                    );
+                    },
+                    columns: [
+                        { data: "idkelompok" },
+                        { data: "namakelompok" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_kelompok2 tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_kelompok2_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_kelompok2");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1848,53 +1856,54 @@ btn_kelompok.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_kelompok").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        destroy: true,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getKelompok",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                kelutId: kelutId.value,
-                            },
+                const table = $("#table_kelompok").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    destroy: true,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getKelompok",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            kelutId: kelutId.value,
                         },
-                        columns: [
-                            { data: "idkelompok" },
-                            { data: "namakelompok" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_kelompok tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_kelompok_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_kelompok"),
-                    );
+                    },
+                    columns: [
+                        { data: "idkelompok" },
+                        { data: "namakelompok" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_kelompok tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_kelompok_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_kelompok");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1947,52 +1956,53 @@ btn_subkel2.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_subkel2").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getSubkel2",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                kelompokId2: kelompokId2.value,
-                            },
+                const table = $("#table_subkel2").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getSubkel2",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            kelompokId2: kelompokId2.value,
                         },
-                        columns: [
-                            { data: "IdSubkelompok" },
-                            { data: "NamaSubKelompok" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_subkel2 tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_subkel2_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_subkel2"),
-                    );
+                    },
+                    columns: [
+                        { data: "IdSubkelompok" },
+                        { data: "NamaSubKelompok" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_subkel2 tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_subkel2_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_subkel2");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -2040,53 +2050,54 @@ btn_subkel.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_subkel").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        destroy: true,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getSubkel",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                kelompokId: kelompokId.value,
-                            },
+                const table = $("#table_subkel").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    destroy: true,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getSubkel",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            kelompokId: kelompokId.value,
                         },
-                        columns: [
-                            { data: "IdSubkelompok" },
-                            { data: "NamaSubKelompok" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_subkel tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_subkel_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_subkel"),
-                    );
+                    },
+                    columns: [
+                        { data: "IdSubkelompok" },
+                        { data: "NamaSubKelompok" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_subkel tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_subkel_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_subkel");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -2146,48 +2157,49 @@ btn_namaBarang.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_namaBarang").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "MhnPenerima/getSubkelType",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                subkelId: subkelId.value,
-                            },
+                const table = $("#table_namaBarang").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "MhnPenerima/getSubkelType",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            subkelId: subkelId.value,
                         },
-                        columns: [{ data: "IdType" }, { data: "NamaType" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "200px",
-                            },
-                        ],
-                    });
-                    $("#table_namaBarang tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_namaBarang_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_namaBarang"),
-                    );
+                    },
+                    columns: [{ data: "IdType" }, { data: "NamaType" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "200px",
+                        },
+                    ],
                 });
+                $("#table_namaBarang tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_namaBarang_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_namaBarang");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
