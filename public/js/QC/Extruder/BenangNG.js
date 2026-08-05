@@ -865,7 +865,7 @@ jQuery(function ($) {
                             .addClass("selected");
                     }
                 });
-                document.getElementById("sebab_ng_lap").textContent = data.data[0].keterangan;
+                document.getElementById("sebab_ng_lap").textContent = data.data[0].sebab_ng;
                 document.getElementById("down_grade_lap").textContent = data.data[0].down_grade;
                 document.getElementById("up_grade_lap").textContent = data.data[0].up_grade;
                 document.getElementById("reject_lap").textContent = data.data[0].reject;
