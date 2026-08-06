@@ -80,6 +80,7 @@ jQuery(function ($) {
                 },
                 didOpen: () => {
                     jQuery(function ($) {
+                        let orderSetting = (kode === 7) ? [[0, "asc"]] : [[0, "desc"]];
                         const table = $("#tanggalTable").DataTable({
                             responsive: true,
                             processing: true,
@@ -109,6 +110,7 @@ jQuery(function ($) {
                                     data: 'Shift',
                                 },
                             ],
+                            order: orderSetting,
                             paging: false,
                             scrollY: "400px",
                             scrollCollapse: true,

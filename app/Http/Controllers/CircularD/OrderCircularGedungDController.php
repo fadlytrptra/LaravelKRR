@@ -202,7 +202,7 @@ class OrderCircularGedungDController extends Controller
                         ]);
                 }
 
-                if ($kode == 1) {
+                if ($kode == 7) {
                     // Cek apakah data sudah ada
                     $cek = DB::connection('ConnCircular')->select(
                         'exec Sp_List_ProsesMeter @Kode = ?, @Tanggal = ?, @Shift = ?',
@@ -471,7 +471,7 @@ class OrderCircularGedungDController extends Controller
                             'error' => 'Tidak bisa diproses dengan PROSES PERTAMA, harus dengan UPDATE PROSES !!..'
                         ]);
                     }
-                } else if ($kode == 2) {
+                } else if ($kode == 8) {
                     // Jalankan prosedur update proses
                     // $hasil = DB::connection('ConnCircular')->statement(
                     //     'exec Sp_Proses_Meter @Kode = ?, @Tanggal = ?, @Shift = ?',
