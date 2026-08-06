@@ -465,7 +465,7 @@ btnProses.addEventListener("click", function () {
                 "~" +
                 txtEfisiensi.value +
                 "~" +
-                txtPanjangPotongan.value;
+                (txtPanjangPotongan.value || 0);
             break;
 
         default:
@@ -491,7 +491,7 @@ btnProses.addEventListener("click", function () {
                 "~" +
                 txtEfisiensi.value +
                 "~" +
-                txtPanjangPotongan.value;
+                (txtPanjangPotongan.value || 0);
             break;
     }
     hidData2.value = slcIdOrder.value + "~" + listOrder;
