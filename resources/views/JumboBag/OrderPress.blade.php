@@ -619,8 +619,8 @@
                                     colspan="4" rowspan="12">
 
                                     <img id="gambar_print" src="#" alt="Preview Image"
-                                        style="max-width:100%;
-                                            max-height:100%;
+                                        style="max-width:80%;
+                                            max-height:80%;
                                             width:auto;
                                             height:auto;
                                             object-fit:contain;
