@@ -85,8 +85,37 @@ class VerifikasiSMController extends Controller
                     return response()->json(['message' => 'Keterangan berhasil diupdate!']);
 
                 case 3:
+                    DB::connection('ConnExtruder')
+                        ->statement(
+                            'EXEC SP_4451_GetDataLaporanProduksiExtruder 
+                        @kode = ?,
+                        @idLaporan = ?,
+                        @keterangan = ?',
+                            [
+                                7,
+                                $idLaporan,
+                                $keterangan,
+                            ]
+                        );
 
-                // return response()->json(['message' => 'Data berhasil dihapus!']);
+                    return response()->json(['message' => 'Keterangan berhasil diupdate!']);
+                
+                case 4:
+                    // Simpan
+                    DB::connection('ConnExtruder')
+                        ->statement(
+                            'EXEC SP_4451_GetDataLaporanProduksiExtruder 
+                        @kode = ?,
+                        @idLaporan = ?,
+                        @user_input = ?',
+                            [
+                                8,
+                                $idLaporan,
+                                $user_input,
+                            ]
+                        );
+
+                    return response()->json(['message' => 'Data berhasil diverifikasi!']);
 
                 default:
                     return response()->json(['error', 'Proses tidak valid']);
@@ -105,25 +134,50 @@ class VerifikasiSMController extends Controller
             $tgl_awal = $request->input('tgl_awal');
             $tgl_akhir = $request->input('tgl_akhir');
             $id_lokasi = $request->input('id_lokasi');
-            $results = DB::connection('ConnExtruder')
-                ->select('EXEC SP_4451_GetDataLaporanProduksiExtruder @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @lokasi = ?', [4, $tgl_awal, $tgl_akhir, $id_lokasi]);
-            $response = [];
-            foreach ($results as $row) {
-                $response[] = [
-                    'tanggal' => Carbon::parse($row->tanggal)->format('m/d/Y'),
-                    'tanggal_raw' => Carbon::parse($row->tanggal)->format('Y-m-d'),
-                    'idLaporan' => trim($row->idLaporan),
-                    'shiftValue' => trim($row->shiftValue),
-                    // 'tanggal' => trim($row->tanggal),
-                    'spek_mesin' => trim($row->spek_mesin),
-                    'spek_benang' => trim($row->spek_benang),
-                    'userInput' => trim($row->userInput),
-                    'userVerified' => trim($row->userVerified),
-                    'bahanPP' => $row->bahanPP ?? '',
-                ];
+
+            if ($id_lokasi == 3) {
+                // dd($tgl_awal, $tgl_akhir, $id_lokasi);
+                $results = DB::connection('ConnExtruder')
+                    ->select('EXEC SP_4451_LaporanProduksiLohia @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @lokasi = ?', [5, $tgl_awal, $tgl_akhir, $id_lokasi]);
+                // dd($results);
+                $response = [];
+                foreach ($results as $row) {
+                    $response[] = [
+                        'tanggal' => Carbon::parse($row->tanggal)->format('m/d/Y'),
+                        'tanggal_raw' => Carbon::parse($row->tanggal)->format('Y-m-d'),
+                        'idLaporan' => trim($row->idLaporan),
+                        'shiftValue' => trim($row->shiftValue),
+                        // 'tanggal' => trim($row->tanggal),
+                        'spek_mesin' => trim($row->spek_mesin),
+                        'spek_benang' => trim($row->spek_benang),
+                        'userInput' => trim($row->user_input),
+                        'userVerified' => trim($row->userVerified),
+                        'bahanPP' => $row->bahanPP ?? '',
+                    ];
+                }
+                // dd($response); 
+                return datatables($response)->make(true);
+            } else {
+                $results = DB::connection('ConnExtruder')
+                    ->select('EXEC SP_4451_GetDataLaporanProduksiExtruder @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @lokasi = ?', [4, $tgl_awal, $tgl_akhir, $id_lokasi]);
+                $response = [];
+                foreach ($results as $row) {
+                    $response[] = [
+                        'tanggal' => Carbon::parse($row->tanggal)->format('m/d/Y'),
+                        'tanggal_raw' => Carbon::parse($row->tanggal)->format('Y-m-d'),
+                        'idLaporan' => trim($row->idLaporan),
+                        'shiftValue' => trim($row->shiftValue),
+                        // 'tanggal' => trim($row->tanggal),
+                        'spek_mesin' => trim($row->spek_mesin),
+                        'spek_benang' => trim($row->spek_benang),
+                        'userInput' => trim($row->userInput),
+                        'userVerified' => trim($row->userVerified),
+                        'bahanPP' => $row->bahanPP ?? '',
+                    ];
+                }
+                // dd($response);
+                return datatables($response)->make(true);
             }
-            // dd($response);
-            return datatables($response)->make(true);
         } else if ($id == 'getDataPrint') {
             $idLaporan = $request->input('idLaporan');
             $results = DB::connection('ConnExtruder')
@@ -162,6 +216,45 @@ class VerifikasiSMController extends Controller
                 ]);
 
             }
+        } else if ($id == 'getPrintLaporanL') {
+            $idLaporan = $request->input('idLaporan');
+            $results = DB::connection('ConnExtruder')
+                ->table('LaporanProduksiLohia')
+                ->where('idLaporan', $idLaporan)
+                ->select('*')
+                ->get();
+            if ($results) {
+                $userInput = trim($results[0]->userInput);
+                $userVerified = trim($results[0]->userVerified) ?? '';
+            }
+            // dd($results);
+            $ttdRaw = DB::connection('ConnEDP')
+                ->select('EXEC SP_4451_EDP_MaintenanceTTDUser @XKode = ?, @XNomorUser = ?', [2, $userVerified]);
+            $ttd = null;
+            if (!empty($ttdRaw)) {
+                $row = $ttdRaw[0]; // ttd pasti 1 baris
+                $ttd = [
+                    'NamaUser' => $row->NamaUser,
+                    'FotoTtd' => trim($row->FotoTtd) ?? '',
+                ];
+            }
+
+            // dd($ttd);
+            if (!empty($results)) {
+                return response()->json([
+                    'status' => 'ada',
+                    'ttd' => $ttd,
+                    'data' => $results
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'tidakAda',
+                    'ttd' => [],
+                    'data' => []
+                ]);
+
+            }
+
         }
     }
 

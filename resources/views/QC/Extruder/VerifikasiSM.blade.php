@@ -74,6 +74,7 @@
     </div>
 </div>
 @include('QC.Extruder.ModalVerifikasiSM')
+@include('QC.Extruder.ModalVerifikasiSMLohia')
 {{-- @include('Guard.Pemeriksaan.ModalPemeriksaanBarangCustomer') --}}
 <script type="text/javascript" src="{{ asset('js/QC/Extruder/VerifikasiSM.js') }}"></script>
 @endsection

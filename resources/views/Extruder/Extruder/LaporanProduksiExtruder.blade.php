@@ -115,7 +115,7 @@
                         <button class="btn btn-info w-100" id="btn_redisplay">Redisplay</button>
                     </div>
                 </div>
-                <button type="button" id="btn_print" class="btn btn-success" style="display: none">Print</button>
+                {{-- <button type="button" id="btn_print" class="btn btn-success" style="display: none">Print</button> --}}
                 <script>
                     const printLaporanUrl = "{{ route('print.laporan.produksi.extruder') }}";
                 </script>
@@ -1361,7 +1361,7 @@
             </div>
         </div>
     </div>
-    {{-- @include('Extruder.Extruder.ModalLaporanProdGedD') --}}
+    @include('Extruder.Extruder.ModalLaporanProdGedD')
     <script src="{{ asset('js/Extruder/ExtruderNet/LaporanProduksiExtruder.js') }}"></script>
     {{-- @include('Extruder.Extruder.printLaporanProduksiExtruder') --}}
 @endsection
