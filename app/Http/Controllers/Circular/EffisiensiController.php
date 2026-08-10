@@ -93,12 +93,16 @@ class EffisiensiController extends Controller
                             // ambil data eff dan hasil meter per mesin
                             $data = DB::connection('ConnCircular')
                                 ->table('INF_Effisiensi')
-                                ->select('Effisiensi', 'Hasil_Meter')
                                 ->where('Tgl_Log', $tanggal)
                                 ->where('Shift', $shift)
                                 ->where('Nama_mesin', $NmMesin)
                                 ->where('Id_order', $IdOrder)
                                 ->where('Id_Lokasi', '<>', 4)
+                                ->selectRaw('
+                                    SUM(Hasil_Meter) as Hasil_Meter,
+                                    AVG(Effisiensi) as Effisiensi,
+                                    SUM(Hasil_Kg) as Hasil_Kg
+                                ')
                                 ->first();
 
                             $eff[$shift] = $data->Effisiensi ?? 0;
