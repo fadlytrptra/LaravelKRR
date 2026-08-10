@@ -352,7 +352,7 @@
                                 <span>Kd. Barang</span>
                             </div>
                             <div class="col-5">
-                                <input type="text" class="form-control" id="Kdbarangmodal" name="Kdbarangmodal">
+                                <input type="text" class="form-control" id="Kdbarangmodal" name="Kdbarangmodal" enterkeyhint="enter">
                             </div>
                             <div class="col-2" style="text-align: right;">
                                 <span style="color: red">input PDF</span>
@@ -369,7 +369,7 @@
                             </div>
                             <div class="col-2">
                                 <input type="text" class="form-control" id="NomorGambarModal"
-                                    name="NomorGambarModal">
+                                    name="NomorGambarModal" enterkeyhint="enter">
                             </div>
                             <div class="col-3">
                                 <input type="text" class="form-control" id="NamaBarangModal"
