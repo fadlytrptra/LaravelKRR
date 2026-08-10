@@ -318,13 +318,13 @@ btnPrint.addEventListener("click", function () {
         let rowData = [];
         let row = checkbox.parentNode.parentNode;
 
-        // ambil data row DataTable
+        // Ambil data row DataTable
         let table = $("#table_ListOrder").DataTable();
         let dataRow = table.row(row).data();
 
         row.querySelectorAll("td").forEach(function (cell, index) {
 
-            // skip checkbox, StatusBeli, dan Attachment
+            // Skip checkbox, StatusBeli, dan Attachment
             if (index > 0 && index != 3 && index != 14) {
 
                 let cellText = cell.textContent.trim();
@@ -333,10 +333,7 @@ btnPrint.addEventListener("click", function () {
 
         });
 
-        // tambahkan kolom Attachment paling kanan
-        rowData.push(
-            dataRow.HasAttachment ? "Ya" : "Tidak"
-        );
+        // Tidak perlu menambahkan Attachment
 
         checkedRowData.push(rowData);
     });
@@ -355,8 +352,7 @@ btnPrint.addEventListener("click", function () {
             "Divisi",
             "Tgl. Dibutuhkan",
             "Keterangan Order",
-            "Keterangan Internal",
-            "Attachment"
+            "Keterangan Internal"
         ];
 
         checkedRowData.unshift(headerRow);
