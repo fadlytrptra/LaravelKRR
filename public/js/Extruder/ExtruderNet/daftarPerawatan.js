@@ -38,7 +38,7 @@ const colRawat = [
     { width: "150px" }, // Penyelesaian
     { width: "1px" }, // Mulai
     { width: "1px" }, // Selesai
-    { width: "1px" }, // Kode
+    // { width: "1px" }, // Kode
 ];
 
 var pilRawat = -1;
@@ -57,7 +57,8 @@ RW_btnConfirm.addEventListener("click", function () {
 //#region Functions
 function RW_showData() {
     // SP_5298_EXT_DATA_PERAWATAN
-    fetchSelect("/Catat/getDataPerawatan/" + RW_tanggal, (data) => {
+    // PERBAIKAN: Gunakan koma (,) untuk memisahkan URL dan fungsi callback
+    fetchSelectAsync(`/Catat/getDataPerawatan/${safeUrlParam(RW_tanggal)}`, (data) => {
         let pushedData = [];
         for (let i = 0; i < data.length; i++) {
             listRawat.push({
@@ -184,7 +185,7 @@ function init_rw() {
                 Penyelesaian: " ",
                 WaktuMulai: " ",
                 WaktuSelesai: " ",
-                Kode: " ",
+                // Kode: " ",
             },
         ],
         colRawat

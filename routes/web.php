@@ -520,7 +520,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Extruder/Extruder/Order/{formName?}/{namaGedung?}', [OrderController::class, 'index']);
     Route::get('/Extruder/Extruder/Konversi/{formName?}/{namaGedung?}', [KonversiController::class, 'index']);
     Route::get('/Extruder/Extruder/Benang/{formName?}/{namaGedung?}', [BenangController::class, 'index']);
-    Route::get('/Extruder/Extruder/Catat/{formName?}', [PencatatanController::class, 'index']);
+    Route::get('/Extruder/Extruder/Catat/{formName?}/{namaGedung?}', [PencatatanController::class, 'index']);
     Route::resource('LaporanProduksiExtruder', App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class);
     Route::resource('ACCPengecekanMB', App\Http\Controllers\Extruder\ExtruderNet\ACCPengecekanMBController::class);
     Route::resource('ACCBenangNG', App\Http\Controllers\Extruder\ExtruderNet\ACCBenangNGController::class);
@@ -536,7 +536,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Master/getCekBahanKite/{kode}', [MasterController::class, 'getCekBahanKite']);
     Route::get('/Master/getKiteExtruder/{kode}/{tgl_start?}/{kode_barang?}/{jenis_fas?}/{bahan_pp?}/{benang?}/{meter?}/{roll?}/{meter_awal?}/{hasil?}/{id_order?}/{caco3?}', [MasterController::class, 'getKiteExtruder']);
     Route::get('/Master/getKiteExtOrder/{kode}/{id_order}', [MasterController::class, 'getKiteExtOrder']);
-    Route::get('/Master/getKiteExtruder7/{id_order}/{tgl_start}/{bahan_pp}/{caco3}/{benang}', [MasterController::class, 'getKiteExtruder7']);
+
+    Route::post('/Master/insKiteExtruder', [MasterController::class, 'insKiteExtruder']);
+    Route::post('/Master/insKiteExtruder7', [MasterController::class, 'insKiteExtruder7']);
     #endregion
 
     #region ExtruderNet - Master (Tropodo)
@@ -554,15 +556,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Master/getCekKomposisi/{id}', [MasterController::class, 'getCekKomposisi']);
     Route::get('/Master/getIdMesin/{id_kel}', [MasterController::class, 'getIdMesin']);
 
-    Route::get('/Master/insKomposisiBahan/{id_komposisi}/{id_objek}/{nama_objek}/{id_kelompok_utama}/{nama_kelompok_utama}/{id_kelompok}/{nama_kelompok}/{id_sub_kelompok}/{nama_sub_kelompok}/{id_type}/{nama_type}/{kd_brg?}/{jumlah_primer}/{sat_primer?}/{jumlah_sekunder}/{sat_sekunder?}/{jumlah_tritier}/{sat_tritier?}/{persentase}/{status_type}/{cadangan?}', [MasterController::class, 'insKomposisiBahan']);
-    Route::get('/Master/insMasterKomposisi/{nama_komposisi}/{id_mesin}/{id_divisi}', [MasterController::class, 'insMasterKomposisi']);
+    Route::post('/Master/insKomposisiBahan', [MasterController::class, 'insKomposisiBahan']);
+    Route::post('/Master/insMasterKomposisi', [MasterController::class, 'insMasterKomposisi']);
     Route::get('/Master/getMasterKomposisi/{id_divisi}', [MasterController::class, 'getMasterKomposisi']);
 
-    Route::get('/Master/updIdKomposisiCounter/{id_divisi}', [MasterController::class, 'updIdKomposisiCounter']);
+    Route::post('/Master/updIdKomposisiCounter', [MasterController::class, 'updIdKomposisiCounter']);
 
-    Route::get('/Master/delMasterKomposisi/{id_komposisi}', [MasterController::class, 'delMasterKomposisi']);
-    Route::get('/Master/delKomposisiBahan1/{id_komposisi}/{id_type}', [MasterController::class, 'delKomposisiBahan1']);
-    Route::get('/Master/delKomposisiBahan/{id_komposisi}', [MasterController::class, 'delKomposisiBahan']);
+    Route::delete('/Master/delMasterKomposisi/{id_komposisi}', [MasterController::class, 'delMasterKomposisi']);
+    Route::delete('/Master/delKomposisiBahan1/{id_komposisi}/{id_type}', [MasterController::class, 'delKomposisiBahan1']);
+    Route::delete('/Master/delKomposisiBahan/{id_komposisi}', [MasterController::class, 'delKomposisiBahan']);
     #endregion
 
     #region ExtruderNet - Master (Mojosari)
@@ -571,29 +573,29 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Master/getPrgBomBarang/{kode}/{kode_barang?}/{id_komposisi?}/{id_kelompok?}/{id_divisi?}/{mesin?}', [MasterController::class, 'getPrgBomBarang']);
     Route::get('/Master/getPrgTypeProduksi/{kode}/{id_kelut}', [MasterController::class, 'getPrgTypeProduksi']);
 
-    Route::get('/Master/insKomposisiBahanMjs/{kode}/{id_komposisi}/{id_type?}/{kd_brg?}/{id_divisi?}/{persentase?}/{primer?}/{sekunder?}/{tritier?}/{cadangan?}/{tmp_tritir?}/{id_type1?}', [MasterController::class, 'insKomposisiBahanMjs']);
+    Route::post('/Master/insKomposisiBahanMjs', [MasterController::class, 'insKomposisiBahanMjs']);
 
-    Route::get('/Master/delKomposisiBahanMjs/{id_komposisi}', [MasterController::class, 'delKomposisiBahanMjs']);
+    Route::delete('/Master/delKomposisiBahanMjs/{id_komposisi}', [MasterController::class, 'delKomposisiBahanMjs']);
     #endregion
 
     #region ExtruderNet - Form Bagian Order
     Route::get('/Order/getListBenang/{kode}', [OrderController::class, 'getListBenang']);
-    Route::get('/Order/insOrderBenang/{gedung}/{tanggal}/{identifikasi}/{kode?}', [OrderController::class, 'insOrderBenang']);
+    Route::post('/Order/insOrderBenang', [OrderController::class, 'insOrderBenang']);
     Route::get('/Order/getNoOrder/{kode?}', [OrderController::class, 'getNoOrder']);
     Route::get('/Order/getNoOrderMjs/', [OrderController::class, 'getNoOrderMjs']);
-    Route::get('/Order/insOrderDetail/{id_order}/{type_benang}/{jmlh_primer}/{jmlh_sekunder}/{jmlh_tritier}/{prod_primer}/{prod_sekunder}/{prod_tritier}', [OrderController::class, 'insOrderDetail']);
-    Route::get('/Order/updCounterOrder/{id_divisi}', [OrderController::class, 'updCounterOrder']);
+    Route::post('/Order/insOrderDetail', [OrderController::class, 'insOrderDetail']);
+    Route::put('/Order/updCounterOrder', [OrderController::class, 'updCounterOrder']);
 
     Route::get('/Order/getOrderBlmAcc/{divisi}', [OrderController::class, 'getOrderBlmAcc']);
     Route::get('/Order/getListSpek/{id_order}', [OrderController::class, 'getListSpek']);
-    Route::get('/Order/updAccOrder/{id_order}', [OrderController::class, 'updAccOrder']);
+    Route::put('/Order/updAccOrder', [OrderController::class, 'updAccOrder']);
 
     Route::get('/Order/getListBatalOrd/{id_divisi}', [OrderController::class, 'getListBatalOrd']);
     Route::get('/Order/getListOrderBtl/{id_order}', [OrderController::class, 'getListOrderBtl']);
-    Route::get('/Order/updStatusOrder/{id_order}/{status}/{ket}', [OrderController::class, 'updStatusOrder']);
+    Route::put('/Order/updStatusOrder', [OrderController::class, 'updStatusOrder']);
     #endregion
 
-    #region ExtruderNet - Form Konversi Mohon
+    #region ExtruderNet - Form Form Konversi Mohon
     Route::get('/Konversi/getListKomposisiBahan/{id_komposisi}', [KonversiController::class, 'getListKomposisiBahan']);
     Route::get('/Konversi/getSatuan/{id_type}', [KonversiController::class, 'getSatuan']);
     Route::get('/Konversi/getSaldoBarang/{id_type}', [KonversiController::class, 'getSaldoBarang']);
@@ -607,17 +609,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Konversi/getListSpek/{id_order}', [KonversiController::class, 'getListSpek']);
     Route::get('/Konversi/getSaldoInv/{id_type}', [KonversiController::class, 'getSaldoInv']);
 
-    Route::get('/Konversi/insTmpTransaksi/{id_type_transaksi}/{uraian_detail_transaksi}/{id_type}/{saat_awal_transaksi}/{jumlah_keluar_primer}/{jumlah_keluar_sekunder}/{jumlah_keluar_tritier}/{asal_sub_kel}/{id_konversi}', [KonversiController::class, 'insTmpTransaksi']);
-    Route::get('/Konversi/insDetailKonversi/{id_konversi}/{id_type}/{jumlah_primer}/{jumlah_sekunder}/{jumlah_tritier}/{presentase?}/{id_konversi_inv}', [KonversiController::class, 'insDetailKonversi']);
-    Route::get('/Konversi/insMasterKonversi/{tgl}/{shift}/{awal}/{akhir}/{mesin}/{ukuran}/{denier}/{warna}/{lot_number}/{id_order}/{no_urut}/{id_komp}/{jam1}/{jam2}/{kode?}', [KonversiController::class, 'insMasterKonversi']);
-    Route::get('/Konversi/getMasterKonversi/{kode?}', [KonversiController::class, 'getMasterKonversi']);
-
-    Route::get('/Konversi/updListCounter', [KonversiController::class, 'updListCounter']);
+    Route::post('/Konversi/insTmpTransaksi', [KonversiController::class, 'insTmpTransaksi']);
+    Route::post('/Konversi/insDetailKonversi', [KonversiController::class, 'insDetailKonversi']);
+    Route::post('/Konversi/insMasterKonversi', [KonversiController::class, 'insMasterKonversi']);
+    Route::get('/Konversi/getMasterKonversi/{divisi?}', [KonversiController::class, 'getMasterKonversi']);
+    Route::put('/Konversi/updListCounter', [KonversiController::class, 'updListCounter']);
     Route::get('/Konversi/getListCounter', [KonversiController::class, 'getListCounter']);
-    Route::get('/Konversi/updMasterKonversi/{tgl}/{shift}/{awal}/{akhir}/{ukuran}/{denier}/{warna}/{lot_number}/{jam1}/{jam2}/{id_konv}', [KonversiController::class, 'updMasterKonversi']);
+    Route::put('/Konversi/updMasterKonversi', [KonversiController::class, 'updMasterKonversi']);
 
-    Route::get('/Konversi/delDetailKonversi/{id_konversi}/{id_konv_inv}', [KonversiController::class, 'delDetailKonversi']);
-    Route::get('/Konversi/delKonversi/{id_konversi}', [KonversiController::class, 'delKonversi']);
+    Route::delete('/Konversi/delDetailKonversi', [KonversiController::class, 'delDetailKonversi']);
+    Route::delete('/Konversi/delKonversi/{id_konversi}', [KonversiController::class, 'delKonversi']);
     #endregion
 
     #region ExtruderNet - Form Konversi ACC
@@ -629,11 +630,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Konversi/getIdTransInv/{id_type}/{subkel}/{tgl}/{shift}', [KonversiController::class, 'getIdTransInv']);
     Route::get('/Konversi/getOrderStatus/{id_order}', [KonversiController::class, 'getOrderStatus']);
 
-    Route::get('/Konversi/updProsesACCKonversi/{id_transaksi}/{id_type}/{waktu_acc}/{keluar_primer}/{keluar_sekunder}/{keluar_tritier}/{masuk_primer}/{masuk_sekunder}/{masuk_tritier}', [KonversiController::class, 'updProsesACCKonversi']);
-    Route::get('/Konversi/updProsesHutang/{id_type}/{subkel}/{id_inv}', [KonversiController::class, 'updProsesHutang']);
-    Route::get('/Konversi/updACCMasterKonv/{id_konversi}', [KonversiController::class, 'updACCMasterKonv']);
+    Route::put('/Konversi/updProsesACCKonversi', [KonversiController::class, 'updProsesACCKonversi']);
+    Route::put('/Konversi/updProsesHutang', [KonversiController::class, 'updProsesHutang']);
+    Route::put('/Konversi/updACCMasterKonv', [KonversiController::class, 'updACCMasterKonv']);
 
-    Route::get('/Konversi/updSaldoOrderDetail/{id_order}/{no_urut_order}/{primer}/{sekunder}/{tritier}', [KonversiController::class, 'updSaldoOrderDetail']);
+    Route::put('/Konversi/updSaldoOrderDetail', [KonversiController::class, 'updSaldoOrderDetail']);
     Route::get('/Konversi/getSaldoOrderDetail/{id_order}/{no_urut_order}', [KonversiController::class, 'getSaldoOrderDetail']);
     #endregion
 
@@ -644,19 +645,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Benang/getListProdNG/{no_konv}', [BenangController::class, 'getListProdNG']);
     Route::get('/Benang/getCekDataNG/{kode}/{no_konv}/{id_type}', [BenangController::class, 'getCekDataNG']);
     Route::get('/Benang/getListIdKonv1/{id_divisi}/{tanggal}/{shift}/{id_konversi?}/{id_type?}', [BenangController::class, 'getListIdKonv1']);
+    Route::get('/Benang/getListIdKonv2/{id_konversi}', [BenangController::class, 'getListIdKonv2']);
     Route::get('/Benang/getListIdKonv3/{id_konversi}/{id_type}', [BenangController::class, 'getListIdKonv3']);
     Route::get('/Benang/getListCounter', [BenangController::class, 'getListCounter']);
 
-    Route::get('/Benang/insMasterKonvNG/{tanggal}/{id_konversi_ext}', [BenangController::class, 'insMasterKonvNG']);
+    Route::post('/Benang/insMasterKonvNG', [BenangController::class, 'insMasterKonvNG']);
     Route::get('/Benang/getMasterKonversiNG', [BenangController::class, 'getMasterKonversiNG']);
-    Route::get('/Benang/insDetailKonvNG/{id_konversi_ng}/{id_type}/{jumlah_primer}/{jumlah_sekunder}/{jumlah_tritier}/{id_konv_inv?}', [BenangController::class, 'insDetailKonvNG']);
-    Route::get('/Benang/insAsalTmpTrans/{id_type_transaksi}/{uraian_detail_transaksi}/{id_type}/{saat_awal_transaksi}/{jumlah_primer}/{jumlah_sekunder}/{jumlah_tritier}/{asal_sub_kel}/{id_konversi}', [BenangController::class, 'insAsalTmpTrans']);
-    Route::get('/Benang/insTujuanTmpTrans/{id_type_transaksi}/{uraian_detail_transaksi}/{id_type}/{saat_awal_transaksi}/{jumlah_keluar_primer}/{jumlah_keluar_sekunder}/{jumlah_keluar_tritier}/{tujuan_sub_kel}/{id_konversi}', [BenangController::class, 'insTujuanTmpTrans']);
+    Route::post('/Benang/insDetailKonvNG', [BenangController::class, 'insDetailKonvNG']);
+    Route::post('/Benang/insAsalTmpTrans', [BenangController::class, 'insAsalTmpTrans']);
+    Route::post('/Benang/insTujuanTmpTrans', [BenangController::class, 'insTujuanTmpTrans']);
 
-    Route::get('/Benang/updDetailKonvNG/{id_konversi}/{id_type}/{j_primer}/{j_sekunder}/{j_tritier}', [BenangController::class, 'updDetailKonvNG']);
-    Route::get('/Benang/updTmpTransaksi/{id_transaksi}/{uraian_detail_transaksi}/{jumlah_keluar_primer}/{jumlah_keluar_sekunder}/{jumlah_keluar_tritier}/{tujuan_sub_kelompok?}', [BenangController::class, 'updTmpTransaksi']);
+    Route::put('/Benang/updDetailKonvNG', [BenangController::class, 'updDetailKonvNG']);
+    Route::put('/Benang/updTmpTransaksi', [BenangController::class, 'updTmpTransaksi']);
 
-    Route::get('/Benang/delKonversiNG/{id_konversi}', [BenangController::class, 'delKonversiNG']);
+    Route::delete('/Benang/delKonversiNG/{id_konversi}', [BenangController::class, 'delKonversiNG']);
     #endregion
 
     #region ExtruderNet - Form Benang ACC
@@ -665,8 +667,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Benang/getPenyesuaianTransaksi/{kode?}/{id_type?}/{id_type_transaksi?}/{id_transaksi?}/{kode_barang?}/{id_sub_kel?}', [BenangController::class, 'getPenyesuaianTransaksi']);
     Route::get('/Benang/getTransaksiKonversiNG/{id_konversi_ng}', [BenangController::class, 'getTransaksiKonversiNG']);
 
-    Route::get('/Benang/updProsesACCKonversi/{id_transaksi}/{id_type}/{waktu_acc}/{keluar_primer}/{keluar_sekunder}/{keluar_tritier}/{masuk_primer}/{masuk_sekunder}/{masuk_tritier}', [BenangController::class, 'updProsesACCKonversi']);
-    Route::get('/Benang/updACCKonversiNG/{id_konversi_ng}', [BenangController::class, 'updACCKonversiNG']);
+    Route::put('/Benang/updProsesACCKonversi', [BenangController::class, 'updProsesACCKonversi']);
+    Route::put('/Benang/updACCKonversiNG', [BenangController::class, 'updACCKonversiNG']);
     #endregion
 
     #region ExtruderNet - Form Rincian Konversi
@@ -686,9 +688,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Catat/getListShift/{id_konversi}', [PencatatanController::class, 'getListShift']);
     Route::get('/Catat/getNoTrans', [PencatatanController::class, 'getNoTrans']);
 
-    Route::get('/Catat/insGangguanProd/{tanggal}/{id_mesin}/{id_gangguan}/{id_konversi?}/{shift}/{awal}/{akhir}/{awal_gangguan}/{akhir_gangguan}/{jumlah_jam}/{jumlah_menit}/{status}/{keterangan}/{jam_user}', [PencatatanController::class, 'insGangguanProd']);
-    Route::get('/Catat/updGangguanProd/{no_trans}/{awal}/{akhir}/{jam}/{menit}/{ket}', [PencatatanController::class, 'updGangguanProd']);
-    Route::get('/Catat/delGangguanProd/{no_trans}', [PencatatanController::class, 'delGangguanProd']);
+    Route::post('/Catat/insGangguanProd', [PencatatanController::class, 'insGangguanProd']);
+    Route::put('/Catat/updGangguanProd', [PencatatanController::class, 'updGangguanProd']);
+    Route::delete('/Catat/delGangguanProd/{no_trans}', [PencatatanController::class, 'delGangguanProd']);
     #endregion
 
     #region ExtruderNet - Form Catat Daya
@@ -697,9 +699,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Catat/getListDataKwahMesin/{bulan}/{tahun}', [PencatatanController::class, 'getListDataKwahMesin']);
     Route::get('/Catat/getKwahMesin/{tanggal}/{id_divisi}', [PencatatanController::class, 'getKwahMesin']);
 
-    Route::get('/Catat/insKwahMesin/{tanggal}/{id_mesin}/{jam}/{counter}/{kali}/{jam_user}', [PencatatanController::class, 'insKwahMesin']);
-    Route::get('/Catat/updKwahMesin/{id_kwah_mesin}/{counter}', [PencatatanController::class, 'updKwahMesin']);
-    Route::get('/Catat/delKwahMesin/{id_kwah}', [PencatatanController::class, 'delKwahMesin']);
+    Route::post('/Catat/insKwahMesin', [PencatatanController::class, 'insKwahMesin']);
+    Route::put('/Catat/updKwahMesin', [PencatatanController::class, 'updKwahMesin']);
+    Route::delete('/Catat/delKwahMesin/{id_kwah}', [PencatatanController::class, 'delKwahMesin']);
     #endregion
 
     #region ExtruderNet - Form Catat Effisiensi
@@ -708,9 +710,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Catat/getListIdKonversi/{tanggal}/{no_mesin}/{shift}', [PencatatanController::class, 'getListIdKonversi']);
     Route::get('/Catat/getCekDataEff/{tgl}/{mesin}/{shift}/{awal}/{akhir}/{id_konversi}', [PencatatanController::class, 'getCekDataEff']);
 
-    Route::get('/Catat/insEff/{Tanggal}/{IdMesin}/{Shift}/{AwalProduksi}/{AkhirProduksi}/{IdKonversi}/{ScrewRevolution}/{MotorCurrent}/{SlitterWidth}/{NoOfYarn}/{WaterGap}/{RollSpeed3}/{StretchingRatio}/{Relax}/{Denier}/{DenierRata}/{JamUser}', [PencatatanController::class, 'insEff']);
-    Route::get('/Catat/updEff/{Tanggal}/{IdMesin}/{Shift}/{AwalProduksi}/{AkhirProduksi}/{IdKonversi}/{ScrewRevolution}/{MotorCurrent}/{SlitterWidth}/{NoOfYarn}/{WaterGap}/{RollSpeed3}/{StretchingRatio}/{Relax}/{Denier}/{DenierRata}/{JamUser}', [PencatatanController::class, 'updEff']);
-    Route::get('/Catat/delEff/{Tanggal}/{IdMesin}/{Shift}/{AwalProduksi}/{AkhirProduksi}', [PencatatanController::class, 'delEff']);
+    Route::post('/Catat/insEff', [PencatatanController::class, 'insEff']);
+    Route::put('/Catat/updEff', [PencatatanController::class, 'updEff']);
+    Route::delete('/Catat/delEff', [PencatatanController::class, 'delEff']);
     #endregion
 
     #region ExtruderNet - Form Catat Perawatan
@@ -721,9 +723,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Catat/getJenisPenyelesaian/{id_perawatan}', [PencatatanController::class, 'getJenisPenyelesaian']);
     Route::get('/Catat/getDataPerawatan/{tanggal}', [PencatatanController::class, 'getDataPerawatan']);
 
-    Route::get('/Catat/insPerawatan/{tanggal}/{shift}/{waktu}/{id_perawatan}/{id_mesin}/{no_winder}/{gangguan}/{sebab}/{solusi}/{mulai}/{selesai}/{id_gangguan?}', [PencatatanController::class, 'insPerawatan']);
-    Route::get('/Catat/updPerawatan/{shift}/{waktu}/{id_perawatan}/{id_mesin}/{no_winder}/{gangguan}/{sebab}/{solusi}/{mulai}/{selesai}/{kode}/{id_gangguan?}', [PencatatanController::class, 'updPerawatan']);
-    Route::get('/Catat/delPerawatan/{kode}', [PencatatanController::class, 'delPerawatan']);
+    Route::post('/Catat/insPerawatan', [PencatatanController::class, 'insPerawatan']);
+    Route::put('/Catat/updPerawatan', [PencatatanController::class, 'updPerawatan']);
+    Route::delete('/Catat/delPerawatan/{kode}', [PencatatanController::class, 'delPerawatan']);
     #endregion
 
     #region GPS

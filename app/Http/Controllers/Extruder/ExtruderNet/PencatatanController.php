@@ -4,33 +4,57 @@ namespace App\Http\Controllers\Extruder\ExtruderNet;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 class PencatatanController extends Controller
 {
-    public function index($form_name)
+    public function index($form_name, $nama_gedung = null)
     {
         $view_name = 'extruder.Extruder.' . $form_name;
         $form_data = [];
 
+        $id_divisi = "";
+        $kode_mesin = "";
+        switch ($nama_gedung) {
+            case 'D':
+                $id_divisi = 'DEX';
+                $kode_mesin = 3;
+                break;
+
+            default:
+                $id_divisi = 'EXT';
+                $kode_mesin = 1;
+                break;
+        }
+
+        if ($nama_gedung == "D") {
+            return redirect('/Extruder/Extruder')
+                ->with('info', 'Maaf, sementara fitur Pencatatan dan Perawatan hanya dapat dilakukan pada gedung Tropodo.');
+        }
+
         switch ($form_name) {
             case 'formCatatGangguan':
                 $form_data = [
-                    'listMesin' => $this->getListMesin(1),
+                    'listMesin' => $this->getListMesin($kode_mesin),
                     'listGangguan' => $this->getListGangguan(),
                 ];
                 break;
+
             case 'formCatatDaya':
-                $form_data = ['listMesin' => $this->getListMesin(1)];
+                $form_data = ['listMesin' => $this->getListMesin($kode_mesin)];
                 break;
+
             case 'formCatatEffisiensi':
-                $form_data = ['listMesin' => $this->getListMesin(1)];
+                $form_data = ['listMesin' => $this->getListMesin($kode_mesin)];
                 break;
+
             case 'formCatatPerawatan':
                 $form_data = [
-                    'listPerawatan' => $this->getListJnsPerawatan("EXT"),
-                    'listMesin' => $this->getListMesin(1),
+                    'listPerawatan' => $this->getListJnsPerawatan($id_divisi),
+                    'listMesin' => $this->getListMesin($kode_mesin),
                 ];
                 break;
 
@@ -38,12 +62,12 @@ class PencatatanController extends Controller
                 break;
         }
 
+        $form_data['namaGedung'] = $nama_gedung;
         $view_data = [
             'pageName' => 'Extruder',
             'formName' => $form_name,
             'formData' => $form_data,
         ];
-
 
         return view($view_name, $view_data);
     }
@@ -79,35 +103,113 @@ class PencatatanController extends Controller
         // @IdPerawatan int
     }
 
-    public function insPerawatan($tanggal, $shift, $waktu, $id_perawatan, $id_mesin, $no_winder, $gangguan, $sebab, $solusi, $mulai, $selesai, $id_gangguan = null)
+    public function insPerawatan(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_PERAWATAN @tanggal = ?, @userId = '. Auth::user()->NomorUser.', @shift = ?, @waktu = ?, @IdPerawatan = ?, @idmesin = ?, @nowinder = ?, @idGangguan = ?, @gangguan = ?, @sebab = ?, @solusi = ?, @mulai = ?, @selesai = ?, @userinput = '. Auth::user()->NomorUser,
-            [$tanggal, $shift, str_replace('_', ' ', $waktu), $id_perawatan, $id_mesin, $no_winder, $id_gangguan, str_replace('_', ' ', $gangguan), str_replace('_', ' ', $sebab), str_replace('_', ' ', $solusi), $mulai, $selesai]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'shift' => 'required|string|max:1',
+                'waktu' => 'required|string|max:15',
+                'id_perawatan' => 'required|integer',
+                'id_mesin' => 'required|string|max:5',
+                'no_winder' => 'required|string|max:5',
+                'gangguan' => 'required|string|max:200',
+                'sebab' => 'required|string|max:200',
+                'solusi' => 'required|string|max:200',
+                'mulai' => 'required|string',
+                'selesai' => 'required|string',
+                'id_gangguan' => 'nullable|integer'
+            ]);
 
-        // @tanggal datetime, @userId char(4), @shift char(1), @waktu varchar(15), @IdPerawatan int, @idmesin char(5), @nowinder char(5), @idGangguan int=null, @gangguan varchar(200), @sebab varchar(200), @solusi varchar(200), @mulai datetime, @selesai datetime, @userinput varchar(7)
+            $userId = Auth::user()->NomorUser;
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_PERAWATAN @tanggal = ?, @userId = ?, @shift = ?, @waktu = ?, @IdPerawatan = ?, @idmesin = ?, @nowinder = ?, @idGangguan = ?, @gangguan = ?, @sebab = ?, @solusi = ?, @mulai = ?, @selesai = ?, @userinput = ?',
+                [
+                    $validated['tanggal'],
+                    $userId,
+                    $validated['shift'],
+                    str_replace('_', ' ', $validated['waktu']),
+                    $validated['id_perawatan'],
+                    $validated['id_mesin'],
+                    $validated['no_winder'],
+                    $validated['id_gangguan'] ?? null,
+                    str_replace('_', ' ', $validated['gangguan']),
+                    str_replace('_', ' ', $validated['sebab']),
+                    str_replace('_', ' ', $validated['solusi']),
+                    $validated['mulai'],
+                    $validated['selesai'],
+                    $userId
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updPerawatan($shift, $waktu, $id_perawatan, $id_mesin, $no_winder, $gangguan, $sebab, $solusi, $mulai, $selesai, $kode, $id_gangguan = null)
+    public function updPerawatan(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_PERAWATAN @shift = ?, @waktu = ?, @IdPerawatan = ?, @idmesin = ?, @nowinder = ?, @idGangguan = ?, @gangguan = ?, @sebab = ?, @solusi = ?, @mulai = ?, @selesai = ?, @Kode = ?, @userkoreksi = '. Auth::user()->NomorUser,
-            [$shift, str_replace('_', ' ', $waktu), $id_perawatan, $id_mesin, $no_winder, $id_gangguan, str_replace('_', ' ', $gangguan), str_replace('_', ' ', $sebab), str_replace('_', ' ', $solusi), $mulai, $selesai, $kode]
-        );
+        try {
+            $validated = $request->validate([
+                'shift' => 'required|string|max:1',
+                'waktu' => 'required|string|max:15',
+                'id_perawatan' => 'required|integer',
+                'id_mesin' => 'required|string|max:5',
+                'no_winder' => 'required|string|max:5',
+                'gangguan' => 'required|string|max:200',
+                'sebab' => 'required|string|max:200',
+                'solusi' => 'required|string|max:200',
+                'mulai' => 'required|string',
+                'selesai' => 'required|string',
+                'kode' => 'required|integer',
+                'id_gangguan' => 'nullable|integer'
+            ]);
 
-        // @shift char(1), @waktu varchar(15), @IdPerawatan int, @idmesin char(5), @nowinder char(5), @idGangguan int=null, @gangguan varchar(200), @sebab varchar(200), @solusi varchar(200), @mulai datetime, @selesai datetime, @Kode int, @userkoreksi char(4) = null
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_PERAWATAN @shift = ?, @waktu = ?, @IdPerawatan = ?, @idmesin = ?, @nowinder = ?, @idGangguan = ?, @gangguan = ?, @sebab = ?, @solusi = ?, @mulai = ?, @selesai = ?, @Kode = ?, @userkoreksi = ?',
+                [
+                    $validated['shift'],
+                    str_replace('_', ' ', $validated['waktu']),
+                    $validated['id_perawatan'],
+                    $validated['id_mesin'],
+                    $validated['no_winder'],
+                    $validated['id_gangguan'] ?? null,
+                    str_replace('_', ' ', $validated['gangguan']),
+                    str_replace('_', ' ', $validated['sebab']),
+                    str_replace('_', ' ', $validated['solusi']),
+                    $validated['mulai'],
+                    $validated['selesai'],
+                    $validated['kode'],
+                    Auth::user()->NomorUser
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function delPerawatan($kode)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_PERAWATAN @Kode = ?',
-            [$kode]
-        );
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_PERAWATAN @Kode = ?',
+                [$kode]
+            );
 
-        // @Kode int
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
+    #endregion
+
 
     public function getJenisPenyebab($id_perawatan)
     {
@@ -190,34 +292,143 @@ class PencatatanController extends Controller
         // @tgl datetime, @mesin char(5), @shift char(2), @awal datetime, @akhir datetime, @idkonv varchar(14)
     }
 
-    public function insEff($Tanggal, $IdMesin, $Shift, $AwalProduksi, $AkhirProduksi, $IdKonversi, $ScrewRevolution, $MotorCurrent, $SlitterWidth, $NoOfYarn, $WaterGap, $RollSpeed3, $StretchingRatio, $Relax, $Denier, $DenierRata, $JamUser)
+    public function insEff(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_EFF @Tanggal = ?, @IdMesin = ?, @Shift = ?, @AwalProduksi = ?, @AkhirProduksi = ?, @IdKonversi = ?, @ScrewRevolution = ?, @MotorCurrent = ?, @SlitterWidth = ?, @NoOfYarn = ?, @WaterGap = ?, @RollSpeed3 = ?, @StretchingRatio = ?, @Relax = ?, @Denier = ?, @DenierRata = ?, @JamUser = ?, @UserInput = '. Auth::user()->NomorUser,
-            [$Tanggal, $IdMesin, $Shift, str_replace('T', ' ', $AwalProduksi), str_replace('T', ' ', $AkhirProduksi), $IdKonversi, $ScrewRevolution, $MotorCurrent, $SlitterWidth, $NoOfYarn, $WaterGap, $RollSpeed3, $StretchingRatio, $Relax, $Denier, $DenierRata, $JamUser]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'id_mesin' => 'required|string|max:5',
+                'shift' => 'required|string|max:2',
+                'awal_produksi' => 'required|string',
+                'akhir_produksi' => 'required|string',
+                'id_konversi' => 'required|string|max:14',
+                'screw_revolution' => 'required|numeric',
+                'motor_current' => 'required|numeric',
+                'slitter_width' => 'required|numeric',
+                'no_of_yarn' => 'required|numeric',
+                'water_gap' => 'required|numeric',
+                'roll_speed3' => 'required|numeric',
+                'stretching_ratio' => 'required|numeric',
+                'relax' => 'required|numeric',
+                'denier' => 'required|numeric',
+                'denier_rata' => 'required|numeric',
+                'jam_user' => 'required|string'
+            ]);
 
-        // @Tanggal datetime, @IdMesin char(5), @Shift char(2), @AwalProduksi datetime, @AkhirProduksi datetime, @IdKonversi varchar(14), @ScrewRevolution numeric(9,2), @MotorCurrent numeric(9,2), @SlitterWidth numeric(9,2), @NoOfYarn numeric(9,2), @WaterGap numeric(9,2), @RollSpeed3 numeric(9,2), @StretchingRatio numeric(9,2), @Relax numeric(9,2), @Denier numeric(9,2), @DenierRata numeric(9,2), @JamUser datetime, @UserInput char(7)
+            $f_jam_user = Carbon::today()->format('Y-m-d') . ' ' . $validated['jam_user'];
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_EFF @Tanggal = ?, @IdMesin = ?, @Shift = ?, @AwalProduksi = ?, @AkhirProduksi = ?, @IdKonversi = ?, @ScrewRevolution = ?, @MotorCurrent = ?, @SlitterWidth = ?, @NoOfYarn = ?, @WaterGap = ?, @RollSpeed3 = ?, @StretchingRatio = ?, @Relax = ?, @Denier = ?, @DenierRata = ?, @JamUser = ?, @UserInput = ?',
+                [
+                    $validated['tanggal'],
+                    $validated['id_mesin'],
+                    $validated['shift'],
+                    $validated['awal_produksi'],
+                    $validated['akhir_produksi'],
+                    $validated['id_konversi'],
+                    $validated['screw_revolution'],
+                    $validated['motor_current'],
+                    $validated['slitter_width'],
+                    $validated['no_of_yarn'],
+                    $validated['water_gap'],
+                    $validated['roll_speed3'],
+                    $validated['stretching_ratio'],
+                    $validated['relax'],
+                    $validated['denier'],
+                    $validated['denier_rata'],
+                    $f_jam_user,
+                    Auth::user()->NomorUser
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updEff($Tanggal, $IdMesin, $Shift, $AwalProduksi, $AkhirProduksi, $IdKonversi, $ScrewRevolution, $MotorCurrent, $SlitterWidth, $NoOfYarn, $WaterGap, $RollSpeed3, $StretchingRatio, $Relax, $Denier, $DenierRata, $JamUser)
+    public function updEff(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_EFF @Tanggal = ?, @IdMesin = ?, @Shift = ?, @AwalProduksi = ?, @AkhirProduksi = ?, @IdKonversi = ?, @ScrewRevolution = ?, @MotorCurrent = ?, @SlitterWidth = ?, @NoOfYarn = ?, @WaterGap = ?, @RollSpeed3 = ?, @StretchingRatio = ?, @Relax = ?, @Denier = ?, @DenierRata = ?, @JamUser = ?, @UserInput = '. Auth::user()->NomorUser,
-            [$Tanggal, $IdMesin, $Shift, str_replace('T', ' ', $AwalProduksi), str_replace('T', ' ', $AkhirProduksi), $IdKonversi, $ScrewRevolution, $MotorCurrent, $SlitterWidth, $NoOfYarn, $WaterGap, $RollSpeed3, $StretchingRatio, $Relax, $Denier, $DenierRata, $JamUser]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'id_mesin' => 'required|string|max:5',
+                'shift' => 'required|string|max:2',
+                'awal_produksi' => 'required|string',
+                'akhir_produksi' => 'required|string',
+                'id_konversi' => 'required|string|max:14',
+                'screw_revolution' => 'required|numeric',
+                'motor_current' => 'required|numeric',
+                'slitter_width' => 'required|numeric',
+                'no_of_yarn' => 'required|numeric',
+                'water_gap' => 'required|numeric',
+                'roll_speed3' => 'required|numeric',
+                'stretching_ratio' => 'required|numeric',
+                'relax' => 'required|numeric',
+                'denier' => 'required|numeric',
+                'denier_rata' => 'required|numeric',
+                'jam_user' => 'required|string'
+            ]);
 
-        // @Tanggal datetime, @IdMesin char(5), @Shift char(2), @AwalProduksi datetime, @AkhirProduksi datetime, @IdKonversi varchar(14), @ScrewRevolution numeric(9,2), @MotorCurrent numeric(9,2), @SlitterWidth numeric(9,2), @NoOfYarn numeric(9,2), @WaterGap numeric(9,2), @RollSpeed3 numeric(9,2), @StretchingRatio numeric(9,2), @Relax numeric(9,2), @Denier numeric(9,2), @DenierRata numeric(9,2), @JamUser datetime, @UserInput char(7)
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_EFF @Tanggal = ?, @IdMesin = ?, @Shift = ?, @AwalProduksi = ?, @AkhirProduksi = ?, @IdKonversi = ?, @ScrewRevolution = ?, @MotorCurrent = ?, @SlitterWidth = ?, @NoOfYarn = ?, @WaterGap = ?, @RollSpeed3 = ?, @StretchingRatio = ?, @Relax = ?, @Denier = ?, @DenierRata = ?, @JamUser = ?, @UserInput = ?',
+                [
+                    $validated['tanggal'],
+                    $validated['id_mesin'],
+                    $validated['shift'],
+                    str_replace('T', ' ', $validated['awal_produksi']),
+                    str_replace('T', ' ', $validated['akhir_produksi']),
+                    $validated['id_konversi'],
+                    $validated['screw_revolution'],
+                    $validated['motor_current'],
+                    $validated['slitter_width'],
+                    $validated['no_of_yarn'],
+                    $validated['water_gap'],
+                    $validated['roll_speed3'],
+                    $validated['stretching_ratio'],
+                    $validated['relax'],
+                    $validated['denier'],
+                    $validated['denier_rata'],
+                    $validated['jam_user'],
+                    Auth::user()->NomorUser
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function delEff($Tanggal, $IdMesin, $Shift, $AwalProduksi, $AkhirProduksi)
+    public function delEff(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_EFF @Tanggal = ?, @IdMesin = ?, @Shift = ?, @AwalProduksi = ?, @AkhirProduksi = ?',
-            [$Tanggal, $IdMesin, $Shift, str_replace('T', ' ', $AwalProduksi), str_replace('T', ' ', $AkhirProduksi)]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'id_mesin' => 'required|string|max:5',
+                'shift' => 'required|string|max:2',
+                'awal_produksi' => 'required|string',
+                'akhir_produksi' => 'required|string'
+            ]);
 
-        // @Tanggal datetime, @IdMesin char(5), @Shift char(2), @AwalProduksi datetime, @AkhirProduksi datetime
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_EFF @Tanggal = ?, @IdMesin = ?, @Shift = ?, @AwalProduksi = ?, @AkhirProduksi = ?',
+                [
+                    $validated['tanggal'],
+                    $validated['id_mesin'],
+                    $validated['shift'],
+                    str_replace('T', ' ', $validated['awal_produksi']),
+                    str_replace('T', ' ', $validated['akhir_produksi'])
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 
@@ -242,34 +453,74 @@ class PencatatanController extends Controller
         // @bulan  varchar(2), @tahun varchar(4)
     }
 
-    public function insKwahMesin($tanggal, $id_mesin, $jam, $counter, $kali, $jam_user)
+    public function insKwahMesin(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_KWAH_MESIN @tanggal = ?, @idmesin = ?, @jam = ?, @counter = ?, @kali = ?, @jamuser = ?, @user = '. Auth::user()->NomorUser,
-            [$tanggal, $id_mesin, $jam, $counter, $kali, $jam_user]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'id_mesin' => 'required|string|max:5',
+                'jam' => 'required|string',
+                'counter' => 'required|numeric',
+                'kali' => 'required|numeric',
+                'jam_user' => 'required|string'
+            ]);
 
-        // @tanggal  datetime, @idmesin  varchar(5), @jam datetime, @counter  numeric(10,2), @kali  numeric(10,2), @jamuser datetime, @user  varchar(7)
+            $f_jam = Carbon::today()->format('Y-m-d') . ' ' . $validated['jam'];
+            $f_jam_user = Carbon::today()->format('Y-m-d') . ' ' . $validated['jam_user'];
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_KWAH_MESIN @tanggal = ?, @idmesin = ?, @jam = ?, @counter = ?, @kali = ?, @jamuser = ?, @user = ?',
+                [
+                    $validated['tanggal'],
+                    $validated['id_mesin'],
+                    $f_jam,
+                    $validated['counter'],
+                    $validated['kali'],
+                    $f_jam_user,
+                    Auth::user()->NomorUser
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updKwahMesin($id_kwah_mesin, $counter)
+    public function updKwahMesin(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_KWAH_MESIN @idkwahmesin = ?, @counter = ?',
-            [$id_kwah_mesin, $counter]
-        );
+        try {
+            $validated = $request->validate([
+                'id_kwah_mesin' => 'required|integer',
+                'counter' => 'required|numeric'
+            ]);
 
-        // @IdKWaHMesin numeric(9,0), @counter  numeric(10,2)
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_KWAH_MESIN @idkwahmesin = ?, @counter = ?',
+                [$validated['id_kwah_mesin'], $validated['counter']]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function delKwahMesin($id_kwah)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_KWAH_MESIN @IdKwah = ?',
-            [$id_kwah]
-        );
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_KWAH_MESIN @IdKwah = ?',
+                [$id_kwah]
+            );
 
-        // @IdKwah numeric(9,0)
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function getListDataKwahMesin($bulan, $tahun)
@@ -363,34 +614,101 @@ class PencatatanController extends Controller
         );
     }
 
-    public function insGangguanProd($tanggal, $id_mesin, $id_gangguan, $id_konversi = null, $shift, $awal, $akhir, $awal_gangguan, $akhir_gangguan, $jumlah_jam, $jumlah_menit, $status, $keterangan, $jam_user)
+    // p  #region Gangguan - Mutasi
+    public function insGangguanProd(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_GANGGUAN_PROD @Tanggal = ?, @IdMesin = ?, @IdGangguan = ?, @IdKonversi = ?, @Shift = ?, @Awal = ?, @Akhir = ?, @AwalGangguan = ?, @AkhirGangguan = ?, @JumlahJam = ?, @JumlahMenit = ?, @Status = ?, @Keterangan = ?, @JamUser = ?, @User = '. Auth::user()->NomorUser,
-            [$tanggal, $id_mesin, $id_gangguan, $id_konversi, $shift, str_replace('T', ' ', $awal), str_replace('T', ' ', $akhir), str_replace('T', ' ', $awal_gangguan), str_replace('T', ' ', $akhir_gangguan), $jumlah_jam, $jumlah_menit, $status, $keterangan, $jam_user]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'id_mesin' => 'required|string|max:5',
+                'id_gangguan' => 'required|string|max:5',
+                'id_konversi' => 'nullable|string|max:14',
+                'shift' => 'required|string|max:2',
+                'awal' => 'required|string',
+                'akhir' => 'required|string',
+                'awal_gangguan' => 'required|string',
+                'akhir_gangguan' => 'required|string',
+                'jumlah_jam' => 'required|numeric',
+                'jumlah_menit' => 'required|numeric',
+                'status' => 'required|string|max:1',
+                'keterangan' => 'required|string|max:100',
+                'jam_user' => 'required|string'
+            ]);
 
-        // @Tanggal Datetime, @IdMesin Char(5), @IdGangguan Char(5), @IdKonversi Char(14)=null, @Shift Char(2), @Awal datetime, @Akhir datetime, @AwalGangguan datetime, @AkhirGangguan datetime, @JumlahJam numeric(9, @JumlahMenit numeric(9, @Status Char(1), @Keterangan Varchar(100), @JamUser datetime, @User Char(7)
+            $f_jam_user = Carbon::today()->format('Y-m-d') . ' ' . $validated['jam_user'];
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_GANGGUAN_PROD @Tanggal = ?, @IdMesin = ?, @IdGangguan = ?, @IdKonversi = ?, @Shift = ?, @Awal = ?, @Akhir = ?, @AwalGangguan = ?, @AkhirGangguan = ?, @JumlahJam = ?, @JumlahMenit = ?, @Status = ?, @Keterangan = ?, @JamUser = ?, @User = ?',
+                [
+                    $validated['tanggal'],
+                    $validated['id_mesin'],
+                    $validated['id_gangguan'],
+                    $validated['id_konversi'] ?? null,
+                    $validated['shift'],
+                    str_replace('T', ' ', $validated['awal']),
+                    str_replace('T', ' ', $validated['akhir']),
+                    str_replace('T', ' ', $validated['awal_gangguan']),
+                    str_replace('T', ' ', $validated['akhir_gangguan']),
+                    $validated['jumlah_jam'],
+                    $validated['jumlah_menit'],
+                    $validated['status'],
+                    $validated['keterangan'],
+                    $f_jam_user,
+                    Auth::user()->NomorUser
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updGangguanProd($no_trans, $awal, $akhir, $jam, $menit, $ket)
+    public function updGangguanProd(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_GANGGUAN_PROD @NoTrans = ?, @Awal = ?, @Akhir = ?, @Jam = ?, @Menit = ?, @Ket = ?',
-            [$no_trans, str_replace('T', ' ', $awal), str_replace('T', ' ', $akhir), $jam, $menit, $ket]
-        );
+        try {
+            $validated = $request->validate([
+                'no_trans' => 'required|integer',
+                'awal' => 'required|string',
+                'akhir' => 'required|string',
+                'jam' => 'required|numeric',
+                'menit' => 'required|numeric',
+                'ket' => 'required|string|max:100'
+            ]);
 
-        // @NoTrans int, @Awal datetime, @Akhir datetime, @Jam numeric(9,0), @Menit numeric(9,0), @Ket varchar(100)
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_GANGGUAN_PROD @NoTrans = ?, @Awal = ?, @Akhir = ?, @Jam = ?, @Menit = ?, @Ket = ?',
+                [
+                    $validated['no_trans'],
+                    str_replace('T', ' ', $validated['awal']),
+                    str_replace('T', ' ', $validated['akhir']),
+                    $validated['jam'],
+                    $validated['menit'],
+                    $validated['ket']
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function delGangguanProd($no_trans)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_GANGGUAN_PROD @NoTrans = ?',
-            [$no_trans]
-        );
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_GANGGUAN_PROD @NoTrans = ?',
+                [$no_trans]
+            );
 
-        // @NoTrans int
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 }

@@ -84,8 +84,8 @@
                 <h1><a>Maintenance Komposisi Bahan Tropodo</a></h1>
             @elseif($formName == 'formKomposisiMojosari' && $formData['namaGedung'] == 'D')
                 <h1><a>Maintenance Komposisi Bahan Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formKomposisiMojosari')
-                <h1><a>Maintenance Komposisi Bahan Mojosari</a></h1>
+            @elseif($formName == 'formKomposisiMojosari' && $formData['namaGedung'] == 'B')
+                <h1><a>Maintenance Komposisi Bahan Mojosari Gedung B</a></h1>
             @elseif($formName == 'formKiteMaster')
                 <h1><a>Master KITE</a></h1>
             @elseif($formName == 'formKiteEstimasi')
@@ -94,54 +94,62 @@
                 <h1><a>Maintenance Order Mojosari Gedung B</a></h1>
             @elseif($formName == 'formOrderMaintenance' && $formData['namaGedung'] == 'D')
                 <h1><a>Maintenance Order Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formOrderMaintenance')
-                <h1><a>Maintenance Order</a></h1>
+            @elseif($formName == 'formOrderMaintenance' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Maintenance Order Tropodo</a></h1>
             @elseif($formName == 'formOrderACC' && $formData['namaGedung'] == 'B')
                 <h1><a>ACC Order Mojosari Gedung B</a></h1>
             @elseif($formName == 'formOrderACC' && $formData['namaGedung'] == 'D')
                 <h1><a>ACC Order Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formOrderACC')
-                <h1><a>ACC Order</a></h1>
+            @elseif($formName == 'formOrderACC' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>ACC Order Tropodo</a></h1>
             @elseif($formName == 'formOrderStatus' && $formData['namaGedung'] == 'B')
                 <h1><a>Pembatalan Order Mojosari Gedung B</a></h1>
             @elseif($formName == 'formOrderStatus' && $formData['namaGedung'] == 'D')
                 <h1><a>Pembatalan Order Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formOrderStatus')
-                <h1><a>Pembatalan Order</a></h1>
+            @elseif($formName == 'formOrderStatus' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Pembatalan Order Tropodo</a></h1>
             @elseif($formName == 'formKonversiMohon' && $formData['namaGedung'] == 'B')
                 <h1><a>Permohonan Konversi Mojosari Gedung B</a></h1>
             @elseif($formName == 'formKonversiMohon' && $formData['namaGedung'] == 'D')
                 <h1><a>Permohonan Konversi Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formKonversiMohon')
-                <h1><a>Permohonan Konversi</a></h1>
+            @elseif($formName == 'formKonversiMohon' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Permohonan Konversi Tropodo</a></h1>
             @elseif($formName == 'formKonversiACC' && $formData['namaGedung'] == 'B')
                 <h1><a>ACC Konversi Mojosari Gedung B</a></h1>
             @elseif($formName == 'formKonversiACC' && $formData['namaGedung'] == 'D')
                 <h1><a>ACC Konversi Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formKonversiACC')
-                <h1><a>ACC Konversi</a></h1>
+            @elseif($formName == 'formKonversiACC' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>ACC Konversi Tropodo</a></h1>
             @elseif($formName == 'formBenangMohon' && $formData['namaGedung'] == 'D')
                 <h1><a>Permohonan Konversi NG Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formBenangMohon')
-                <h1><a>Permohonan Konversi NG</a></h1>
+            @elseif($formName == 'formBenangMohon' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Permohonan Konversi NG Tropodo</a></h1>
             @elseif($formName == 'formBenangACC' && $formData['namaGedung'] == 'D')
                 <h1><a>ACC Konversi NG Mojosari Gedung D</a></h1>
-            @elseif($formName == 'formBenangACC')
-                <h1><a>ACC Konversi NG</a></h1>
-            @elseif($formName == 'formCatatGangguan')
-                <h1><a>Pencatatan Gangguan Produksi</a></h1>
-            @elseif($formName == 'formCatatDaya')
-                <h1><a>Pencatatan Daya Produksi</a></h1>
+            @elseif($formName == 'formBenangACC' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>ACC Konversi NG Tropodo</a></h1>
+            @elseif($formName == 'formCatatGangguan' && $formData['namaGedung'] == 'D')
+                <h1><a>Pencatatan Gangguan Produksi Gedung Mojosari D</a></h1>
+            @elseif($formName == 'formCatatGangguan' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Pencatatan Gangguan Produksi Tropodo</a></h1>
+            @elseif($formName == 'formCatatDaya' && $formData['namaGedung'] == 'D')
+                <h1><a>Pencatatan Daya Produksi Mojosari Gedung D</a></h1>
+            @elseif($formName == 'formCatatDaya' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Pencatatan Daya Produksi Tropodo</a></h1>
             @elseif($formName == 'LaporanProduksiExtruder')
                 <h1><a>Laporan Produksi Extruder</a></h1>
             @elseif($formName == 'ACCPengecekanMB')
                 <h1><a>ACC Pengecekan Mutu Benang</a></h1>
             @elseif($formName == 'ACCBenangNG')
                 <h1><a>ACC Benang NG</a></h1>
-            @elseif($formName == 'formCatatEffisiensi')
-                <h1><a>Pencatatan Effisiensi</a></h1>
-            @elseif($formName == 'formCatatPerawatan')
-                <h1><a>Pencatatan Perawatan</a></h1>
+            @elseif($formName == 'formCatatEffisiensi' && $formData['namaGedung'] == 'D')
+                <h1><a>Pencatatan Effisiensi Gedung D</a></h1>
+            @elseif($formName == 'formCatatEffisiensi' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Pencatatan Effisiensi Tropodo</a></h1>
+            @elseif($formName == 'formCatatPerawatan' && $formData['namaGedung'] == 'D')
+                <h1><a>Pencatatan Perawatan Gedung D</a></h1>
+            @elseif($formName == 'formCatatPerawatan' && $formData['namaGedung'] == 'Tropodo')
+                <h1><a>Pencatatan Perawatan Tropodo</a></h1>
             @elseif($formName == 'formScanGelondongan')
                 <h1><a>Scan Kirim Barcode Gelondongan</a></h1>
             @elseif($formName == 'formBatalGelondongan')
@@ -413,7 +421,7 @@
     <script src="{{ asset('js/Extruder/extruder_main.js') }}"></script>
 
     <main id="main">
-        <div class="container-fluid px-2">
+        <div class="container">
             @yield('content')
         </div>
     </main><!-- End #main -->

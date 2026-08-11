@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Extruder\ExtruderNet;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class MasterController extends Controller
 {
@@ -53,7 +53,6 @@ class MasterController extends Controller
             'formName' => $form_name,
             'formData' => $form_data,
         ];
-        // dd($view_data);
         return view($view_name, $view_data);
     }
 
@@ -70,19 +69,42 @@ class MasterController extends Controller
 
     public function getKiteExtruder($kode, $tgl_start = null, $kode_barang = null, $jenis_fas = null, $bahan_pp = null, $benang = null, $meter = null, $roll = null, $meter_awal = null, $hasil = null, $id_order = null, $caco3 = null)
     {
-        if ($kode == '1' || $kode == '7') {
-            return DB::connection('ConnExtruder')->statement(
-                'exec SP_1273_EXT_KITE @Kode = ?, @TglStart = ?, @KodeBarang = ?, @JenisFas = ?, @BahanPP = ?, @Benang = ?, @Meter = ?, @Roll = ?, @MeterAwal = ?, @Hasil = ?, @IdOrder = ?, @CaCO3 = ?',
-                [$kode, $tgl_start, $kode_barang, $jenis_fas, $bahan_pp, $benang, $meter, $roll, $meter_awal, $hasil, $id_order, $caco3]
-            );
-        } else {
-            return DB::connection('ConnExtruder')->select(
-                'exec SP_1273_EXT_KITE @Kode = ?, @TglStart = ?, @KodeBarang = ?, @JenisFas = ?, @BahanPP = ?, @Benang = ?, @Meter = ?, @Roll = ?, @MeterAwal = ?, @Hasil = ?, @IdOrder = ?, @CaCO3 = ?',
-                [$kode, $tgl_start, $kode_barang, $jenis_fas, $bahan_pp, $benang, $meter, $roll, $meter_awal, $hasil, $id_order, $caco3]
-            );
-        }
+        // Hanya SELECT untuk route GET ini
+        return DB::connection('ConnExtruder')->select(
+            'exec SP_1273_EXT_KITE @Kode = ?, @TglStart = ?, @KodeBarang = ?, @JenisFas = ?, @BahanPP = ?, @Benang = ?, @Meter = ?, @Roll = ?, @MeterAwal = ?, @Hasil = ?, @IdOrder = ?, @CaCO3 = ?',
+            [$kode, $tgl_start, $kode_barang, $jenis_fas, $bahan_pp, $benang, $meter, $roll, $meter_awal, $hasil, $id_order, $caco3]
+        );
+    }
 
-        // @Kode char(1), @TglStart date = null, @KodeBarang char(9) = null, @JenisFas varchar(50) = null, @BahanPP decimal(18,0) = null, @Benang decimal(18,2) = null, @Meter decimal(18,0) = null, @Roll decimal(18,0) = null, @MeterAwal decimal(18,2) = null, @Hasil decimal(18,2) = null, @IdOrder int = null, @CaCO3 decimal(18,2) = null
+    public function insKiteExtruder(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'kode' => 'required|string',
+                'tgl_start' => 'nullable|date',
+                'kode_barang' => 'nullable|string',
+                'jenis_fas' => 'nullable|string',
+                'bahan_pp' => 'nullable|numeric',
+                'benang' => 'nullable|numeric',
+                'meter' => 'nullable|numeric',
+                'roll' => 'nullable|numeric',
+                'meter_awal' => 'nullable|numeric',
+                'hasil' => 'nullable|numeric',
+                'id_order' => 'nullable|integer',
+                'caco3' => 'nullable|numeric'
+            ]);
+            extract($validated);
+
+            // Eksekusi insert/update
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_1273_EXT_KITE @Kode = ?, @TglStart = ?, @KodeBarang = ?, @JenisFas = ?, @BahanPP = ?, @Benang = ?, @Meter = ?, @Roll = ?, @MeterAwal = ?, @Hasil = ?, @IdOrder = ?, @CaCO3 = ?',
+                [$kode, $tgl_start ?? null, $kode_barang ?? null, $jenis_fas ?? null, $bahan_pp ?? null, $benang ?? null, $meter ?? null, $roll ?? null, $meter_awal ?? null, $hasil ?? null, $id_order ?? null, $caco3 ?? null]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function getKiteExtOrder($kode, $id_order)
@@ -93,12 +115,27 @@ class MasterController extends Controller
         );
     }
 
-    public function getKiteExtruder7($id_order, $tgl_start, $bahan_pp, $caco3, $benang)
+    public function insKiteExtruder7(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_1273_EXT_KITE @Kode = 7, @IdOrder = ?, @TglStart = ?, @BahanPP = ?, @CaCO3 = ?, @Benang = ?',
-            [$id_order, $tgl_start, $bahan_pp, $caco3, $benang]
-        );
+        try {
+            $validated = $request->validate([
+                'id_order' => 'required|integer',
+                'tgl_start' => 'required|date',
+                'bahan_pp' => 'required|numeric',
+                'caco3' => 'required|numeric',
+                'benang' => 'required|numeric'
+            ]);
+            extract($validated);
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_1273_EXT_KITE @Kode = 7, @IdOrder = ?, @TglStart = ?, @BahanPP = ?, @CaCO3 = ?, @Benang = ?',
+                [$id_order, $tgl_start, $bahan_pp, $caco3, $benang]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 
@@ -133,32 +170,60 @@ class MasterController extends Controller
         // @Kode char(2), @KodeBarang  char(9) = null, @IdKomposisi char(9) = null, @IdKelompok char(6) = null, @IdDivisi char(3) = null, @Mesin varchar(50) = null
     }
 
-    public function insKomposisiBahanMjs($kode, $id_komposisi, $id_type = null, $kd_brg = null, $id_divisi = null, $persentase = null, $primer = null, $sekunder = null, $tritier = null, $cadangan = null, $tmp_tritir = null, $id_type1 = null)
+
+    public function insKomposisiBahanMjs(Request $request)
     {
-        if ($kode == "3") {
-            return DB::connection('ConnInventory')->select(
-                'exec SP_1273_MEX_INSERT_KOMPOSISI_BAHAN @Kode = ?, @IdKomposisi = ?, @IdType = ?, @KdBrg = ?, @IdDivisi = ?, @Persentase = ?, @Primer = ?, @Sekunder = ?, @Tritier = ?, @Cadangan = ?, @TmpTritir = ?, @IdType1 = ?',
-                [$kode, $id_komposisi, $id_type, $kd_brg, $id_divisi, $persentase, $primer, $sekunder, $tritier, $cadangan, $tmp_tritir, $id_type1]
-            );
-        } else {
-            return DB::connection('ConnInventory')->statement(
-                'exec SP_1273_MEX_INSERT_KOMPOSISI_BAHAN @Kode = ?, @IdKomposisi = ?, @IdType = ?, @KdBrg = ?, @IdDivisi = ?, @Persentase = ?, @Primer = ?, @Sekunder = ?, @Tritier = ?, @Cadangan = ?, @TmpTritir = ?, @IdType1 = ?',
-                [$kode, $id_komposisi, $id_type, $kd_brg, $id_divisi, $persentase, $primer, $sekunder, $tritier, $cadangan, $tmp_tritir, $id_type1]
-            );
+        try {
+            $validated = $request->validate([
+                'kode' => 'required|string',
+                'id_komposisi' => 'required|string',
+                'id_type' => 'nullable|string',
+                'kd_brg' => 'nullable|string',
+                'id_divisi' => 'nullable|string',
+                'persentase' => 'nullable|numeric',
+                'primer' => 'nullable|numeric',
+                'sekunder' => 'nullable|numeric',
+                'tritier' => 'nullable|numeric',
+                'cadangan' => 'nullable|numeric',
+                'tmp_tritir' => 'nullable|numeric',
+                'id_type1' => 'nullable|string',
+            ]);
+
+            extract($validated);
+
+            $userId = Auth::user()->User_id ?? Auth::user()->id ?? 'SYSTEM';
+
+            if ($kode == "3") {
+                $result = DB::connection('ConnInventory')->select(
+                    'exec SP_1273_MEX_INSERT_KOMPOSISI_BAHAN @Kode = ?, @IdKomposisi = ?, @IdType = ?, @KdBrg = ?, @IdDivisi = ?, @Persentase = ?, @Primer = ?, @Sekunder = ?, @Tritier = ?, @Cadangan = ?, @TmpTritir = ?, @IdType1 = ?',
+                    [$kode, $id_komposisi, $id_type ?? null, $kd_brg ?? null, $id_divisi ?? null, $persentase ?? null, $primer ?? null, $sekunder ?? null, $tritier ?? null, $cadangan ?? null, $tmp_tritir ?? null, $id_type1 ?? null]
+                );
+                return response()->json(['status' => 'success', 'data' => $result]);
+            } else {
+                DB::connection('ConnInventory')->statement(
+                    'exec SP_1273_MEX_INSERT_KOMPOSISI_BAHAN @Kode = ?, @IdKomposisi = ?, @IdType = ?, @KdBrg = ?, @IdDivisi = ?, @Persentase = ?, @Primer = ?, @Sekunder = ?, @Tritier = ?, @Cadangan = ?, @TmpTritir = ?, @IdType1 = ?',
+                    [$kode, $id_komposisi, $id_type ?? null, $kd_brg ?? null, $id_divisi ?? null, $persentase ?? null, $primer ?? null, $sekunder ?? null, $tritier ?? null, $cadangan ?? null, $tmp_tritir ?? null, $id_type1 ?? null]
+                );
+                return response()->json(['status' => 'success']);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
-
-
-        // @Kode char(1), @IdKomposisi  varchar(9), @IdType  varchar(20) = null, @KdBrg  varchar(9)=null, @IdDivisi char(3)=null, @Persentase numeric(9,2) = null, @Primer numeric(9,2)= null, @Sekunder numeric(9,2)= null, @Tritier numeric(9,2)= null, @Cadangan int=null, @TmpTritir numeric(9,2) = null, @IdType1 varchar(20) = null
     }
 
     public function delKomposisiBahanMjs($id_komposisi)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_1273_MEX_DELETE_KOMPOSISI_BAHAN @idkomposisi = ?',
-            [$id_komposisi]
-        );
-
-        // @idkomposisi  varchar(9)
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_1273_MEX_DELETE_KOMPOSISI_BAHAN @idkomposisi = ?',
+                [$id_komposisi]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function getPrgTypeProduksi($kode, $id_kelut)
@@ -295,42 +360,94 @@ class MasterController extends Controller
 
     public function delKomposisiBahan1($id_komposisi, $id_type)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_KOMPOSISI_BAHAN_1 @idkomposisi = ?, @idtype = ?',
-            [$id_komposisi, $id_type]
-        );
-
-        // @idkomposisi varchar(10), @idtype varchar(20)
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_KOMPOSISI_BAHAN_1 @idkomposisi = ?, @idtype = ?',
+                [$id_komposisi, $id_type]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function insKomposisiBahan($id_komposisi, $id_objek, $nama_objek, $id_kelompok_utama, $nama_kelompok_utama, $id_kelompok, $nama_kelompok, $id_sub_kelompok, $nama_sub_kelompok, $id_type, $nama_type, $kd_brg = null, $jumlah_primer, $sat_primer = null, $jumlah_sekunder, $sat_sekunder = null, $jumlah_tritier, $sat_tritier = null, $persentase, $status_type, $cadangan = 0)
+    public function insKomposisiBahan(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_KOMPOSISI_BAHAN @IdKomposisi = ?, @IdObjek = ?, @NamaObjek = ?, @IdKelompokUtama = ?, @NamaKelompokUtama = ?, @IdKelompok = ?, @NamaKelompok = ?, @IdSubKelompok = ?, @NamaSubKelompok = ?, @IdType = ?, @NamaType = ?, @KdBrg = ?, @JumlahPrimer = ?, @SatPrimer = ?, @JumlahSekunder = ?, @SatSekunder = ?, @JumlahTritier = ?, @SatTritier = ?, @Persentase = ?, @StatusType = ?, @Cadangan = ?',
-            [$id_komposisi, $id_objek, str_replace('_', ' ', str_replace('/', '~', $nama_objek)), $id_kelompok_utama, str_replace('_', ' ', str_replace('/', '~', $nama_kelompok_utama)), $id_kelompok, str_replace('_', ' ', str_replace('/', '~', $nama_kelompok)), $id_sub_kelompok, str_replace('_', ' ', str_replace('/', '~', $nama_sub_kelompok)), $id_type, str_replace('_', ' ', str_replace('/', '~', $nama_type)), $kd_brg, $jumlah_primer, $sat_primer, $jumlah_sekunder, $sat_sekunder, $jumlah_tritier, $sat_tritier, $persentase, $status_type, $cadangan]
-        );
+        try {
+            $validated = $request->validate([
+                'id_komposisi' => 'required|string',
+                'id_objek' => 'required|string',
+                'nama_objek' => 'required|string',
+                'id_kelompok_utama' => 'required|string',
+                'nama_kelompok_utama' => 'required|string',
+                'id_kelompok' => 'required|string',
+                'nama_kelompok' => 'required|string',
+                'id_sub_kelompok' => 'required|string',
+                'nama_sub_kelompok' => 'required|string',
+                'id_type' => 'required|string',
+                'nama_type' => 'required|string',
+                'kd_brg' => 'nullable|string',
+                'jumlah_primer' => 'required|numeric',
+                'sat_primer' => 'nullable|string',
+                'jumlah_sekunder' => 'required|numeric',
+                'sat_sekunder' => 'nullable|string',
+                'jumlah_tritier' => 'required|numeric',
+                'sat_tritier' => 'nullable|string',
+                'persentase' => 'required|numeric',
+                'status_type' => 'required|string',
+                'cadangan' => 'nullable|numeric'
+            ]);
 
-        // @IdKomposisi  varchar(9), @IdObjek  varchar(3), @NamaObjek  varchar(50), @IdKelompokUtama  char(4), @NamaKelompokUtama  varchar(50), @IdKelompok  char(4), @NamaKelompok  varchar(50), @IdSubKelompok  char(6), @NamaSubKelompok  varchar(50), @IdType  varchar(20), @NamaType  varchar(100), @KdBrg  varchar(9)=null, @JumlahPrimer numeric(9,2), @SatPrimer  varchar(4)=null, @JumlahSekunder numeric(9,2), @SatSekunder  varchar(4)=null, @JumlahTritier numeric(9,2), @SatTritier  varchar(4)=null, @Persentase numeric(9,2), @StatusType  char(2), @Cadangan int = 0
+            extract($validated);
+            $cadangan = $cadangan ?? 0;
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_KOMPOSISI_BAHAN @IdKomposisi = ?, @IdObjek = ?, @NamaObjek = ?, @IdKelompokUtama = ?, @NamaKelompokUtama = ?, @IdKelompok = ?, @NamaKelompok = ?, @IdSubKelompok = ?, @NamaSubKelompok = ?, @IdType = ?, @NamaType = ?, @KdBrg = ?, @JumlahPrimer = ?, @SatPrimer = ?, @JumlahSekunder = ?, @SatSekunder = ?, @JumlahTritier = ?, @SatTritier = ?, @Persentase = ?, @StatusType = ?, @Cadangan = ?',
+                [$id_komposisi, $id_objek, str_replace('_', ' ', str_replace('/', '~', $nama_objek)), $id_kelompok_utama, str_replace('_', ' ', str_replace('/', '~', $nama_kelompok_utama)), $id_kelompok, str_replace('_', ' ', str_replace('/', '~', $nama_kelompok)), $id_sub_kelompok, str_replace('_', ' ', str_replace('/', '~', $nama_sub_kelompok)), $id_type, str_replace('_', ' ', str_replace('/', '~', $nama_type)), $kd_brg ?? null, $jumlah_primer, $sat_primer ?? null, $jumlah_sekunder, $sat_sekunder ?? null, $jumlah_tritier, $sat_tritier ?? null, $persentase, $status_type, $cadangan]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function delKomposisiBahan($id_komposisi)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_KOMPOSISI_BAHAN @idkomposisi = ?',
-            [$id_komposisi]
-        );
-
-        // @idkomposisi  varchar(9)
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_KOMPOSISI_BAHAN @idkomposisi = ?',
+                [$id_komposisi]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function insMasterKomposisi($nama_komposisi, $id_mesin, $id_divisi, $user = null)
+    public function insMasterKomposisi(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_MASTER_KOMPOSISI @NamaKomposisi = ?, @idmesin = ?, @iddivisi = ?, @user = '. Auth::user()->NomorUser,
-            [str_replace('~', '/', strtoupper(str_replace('_', ' ', $nama_komposisi))), $id_mesin, $id_divisi, $user]
-        );
+        try {
+            $validated = $request->validate([
+                'nama_komposisi' => 'required|string|max:100',
+                'id_mesin' => 'required|string',
+                'id_divisi' => 'required|string',
+                'user' => 'nullable|string'
+            ]);
 
-        // @NamaKomposisi varchar(100), @idmesin varchar(5), @iddivisi char(3), @user varchar(4)=null
+            extract($validated);
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_MASTER_KOMPOSISI @NamaKomposisi = ?, @idmesin = ?, @iddivisi = ?, @user = ?',
+                [str_replace('~', '/', strtoupper(str_replace('_', ' ', $nama_komposisi))), $id_mesin, $id_divisi, Auth::user()->NomorUser]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function getMasterKomposisi($id_divisi)
@@ -348,14 +465,21 @@ class MasterController extends Controller
         // *Query SELECT pada SP_5298_EXT_INSERT_MASTER_KOMPOSISI
     }
 
-    public function updIdKomposisiCounter($id_divisi)
+    public function updIdKomposisiCounter(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_IDKOMPOSISI_COUNTER @iddivisi = ?',
-            [$id_divisi]
-        );
-
-        // @iddivisi char(3)
+        try {
+            $validated = $request->validate([
+                'id_divisi' => 'required|string'
+            ]);
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_IDKOMPOSISI_COUNTER @iddivisi = ?',
+                [$validated['id_divisi']]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function getCekKomposisi($id)
@@ -370,12 +494,16 @@ class MasterController extends Controller
 
     public function delMasterKomposisi($id_komposisi)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_DELETE_MASTER_KOMPOSISI @idkomposisi = ?',
-            [$id_komposisi]
-        );
-
-        // @idkomposisi  varchar(9)
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_DELETE_MASTER_KOMPOSISI @idkomposisi = ?',
+                [$id_komposisi]
+            );
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 }

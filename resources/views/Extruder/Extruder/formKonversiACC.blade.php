@@ -36,14 +36,7 @@
                                     <th>Spek</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" class="text-center">
-                                        <h1 class="mt-3">Tabel masih kosong...</h1>
-                                    </td>
-                                    <td class="hidden"></td>
-                                </tr>
-                            </tbody>
+
                         </table>
                     </div>
 
@@ -64,9 +57,9 @@
                             </div>
                             <div class="col-lg-8">
                                 <div class="input-group">
-                                    <input type="text" id="shift" class="form-control" style="max-width: 50px;"
+                                    <input type="text" id="shift" class="form-control" style="max-width: 50px; border-right: none;"
                                         disabled>
-                                    <input type="time" id="shift_awal" class="form-control unclickable">
+                                    <input type="time" id="shift_awal" class="form-control unclickable" style="border-left: none;">
                                     <span class="input-group-text">s/d</span>
                                     <input type="time" id="shift_akhir" class="form-control unclickable">
                                 </div>
@@ -79,8 +72,8 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="input-group">
-                                    <input type="text" id="id_mesin" class="form-control" disabled>
-                                    <input type="text" id="nama_mesin" class="form-control" style="width: 12.5vw;"
+                                    <input type="text" id="id_mesin" class="form-control border-right: none;" disabled>
+                                    <input type="text" id="nama_mesin" class="form-control" style="width: 12.5vw; border-left: none;"
                                         disabled>
                                 </div>
                             </div>
@@ -143,8 +136,8 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="input-group">
-                                    <input type="text" id="id_order" class="form-control" disabled>
-                                    <input type="text" id="nama_order" class="form-control" style="width: 12.5vw;"
+                                    <input type="text" id="id_order" class="form-control" style="border-right: none;" disabled>
+                                    <input type="text" id="nama_order" class="form-control" style="width: 12.5vw; border-left: none;"
                                         disabled>
                                 </div>
                             </div>
@@ -156,9 +149,9 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="input-group">
-                                    <input type="text" id="id_komposisi" class="form-control" disabled>
+                                    <input type="text" id="id_komposisi" class="form-control" style="border-right: none;" disabled>
                                     <input type="text" id="nama_komposisi" class="form-control"
-                                        style="width: 12.5vw;" disabled>
+                                        style="width: 12.5vw; border-left: none;" disabled>
                                 </div>
                             </div>
                         </div>
@@ -193,6 +186,7 @@
                     <thead>
                         <tr>
                             <th>Nama Type</th>
+                            <th>ID Type</th>
                             <th>Qty. Primer</th>
                             <th>Sat. Primer</th>
                             <th>Qty. Sekunder</th>
@@ -205,7 +199,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            @php $tableWidth = 9; @endphp
+                            @php $tableWidth = 10; @endphp
                             <td colspan="{{ $tableWidth }}" class="text-center">
                                 <h1 class="mt-3">Tabel masih kosong...</h1>
                             </td>

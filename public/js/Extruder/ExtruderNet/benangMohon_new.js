@@ -1,18 +1,22 @@
-//#region Variables
+//#region Variabel DOM Elements
+const inputIdNomor = document.getElementById("id_nomor");
+const txtNomor = document.getElementById("txt_nomor");
+const btnLookupNomor = document.getElementById("btn_lookup_nomor");
 
-/**
- * Script tersambung dengan "rincianKonversi.js"
- * Pastikan tidak ada duplikasi nama variabel untuk menghindari error
- */
+const inputIdNoKonversi = document.getElementById("id_no_konversi");
+const txtNoKonversi = document.getElementById("txt_no_konversi");
+const btnLookupNoKonversi = document.getElementById("btn_lookup_no_konversi");
 
-const slcMesin = document.getElementById("select_mesin");
-const slcNomor = document.getElementById("select_nomor");
-const slcNoKonversi = document.getElementById("select_nomor_konversi");
-const slcType = document.getElementById("select_type");
+const inputIdType = document.getElementById("id_type");
+const txtType = document.getElementById("txt_type");
+const btnLookupType = document.getElementById("btn_lookup_type");
 
+const txtMesin = document.getElementById("txt_mesin");
 const txtShift = document.getElementById("shift");
 const timeAwal = document.getElementById("shift_awal");
 const timeAkhir = document.getElementById("shift_akhir");
+const dateMohon = document.getElementById("tanggal_mohon");
+const dateInput = document.getElementById("tanggal");
 
 const btnIsi = document.getElementById("btn_isi");
 const btnKoreksi = document.getElementById("btn_koreksi");
@@ -20,351 +24,461 @@ const btnHapus = document.getElementById("btn_hapus");
 const btnProses = document.getElementById("btn_proses");
 const btnKeluar = document.getElementById("btn_keluar");
 
-const dateMohon = document.getElementById("tanggal_mohon");
-const dateInput = document.getElementById("tanggal");
-
-/**
- * Tanggal Mohon
- * - digunakan saat melakukan insert data ke database.
- * - saat ketik enter tanggal berubah sesuai tanggal biasa.
- * - tidak memiliki dampak apapun saat mode "Koreksi" dan "Hapus".
- *
- * Tanggal biasa
- * - digunakan untuk mencari nomor konversi yang diinginkan.
- * - digunakan pada 3 proses "Isi", "Koreksi", dan "Hapus".
- */
-
 const hidRincianKonv = document.getElementById("form_rk_return");
-const listOfSlc = document.querySelectorAll("select");
 
 const namaGedung = document.getElementById("nama_gedung").value;
-const idDivisi = namaGedung == "D" ? "DEX" : "EXT";
+const idDivisi = namaGedung === "D" ? "DEX" : "EXT";
 
 const listAsal = [];
 const listTujuan = [];
-/* ISI LIST ASAL & TUJUAN
-    0 IdType
-    1 NamaType
-    2 JumlahPrimer
-    3 JumlahSekunder
-    4 JumlahTritier
-    5 NamaObjek
-    6 NamaKelompokUtama
-    7 NamaKelompok
-    8 NamaSubKelompok
-    9 IdObjek
-    10 IdKelompokUtama
-    11 IdKelompok
-    12 IdSubKelompok
-    13 IdTransaksi
-*/
-
-const posAsal = $("#table_asal").offset().top - 125;
-const posTujuan = $("#table_tujuan").offset().top - 125;
 const colTable = [
-    { width: "100px" }, // Id Type
-    { width: "150px" }, // Nama Type
-    { width: "75px" }, // Jumlah Primer
-    { width: "75px" }, // Jumlah Sekunder
-    { width: "75px" }, // Jumlah Tritier
-    { width: "125px" }, // Nama Objek
-    { width: "90px" }, // Nama Kelompok Utama
-    { width: "90px" }, // Nama Kelompok
-    { width: "90px" }, // Nama Sub-kelompok
-    { width: "90px" }, // Id Objek
-    { width: "90px" }, // Id Kelompok Utama
-    { width: "90px" }, // Id Kelompok
-    { width: "90px" }, // Id Sub-kelompok
-    { width: "90px" }, // Id Transaksi
+    { width: "100px" }, // IdType
+    { width: "150px" }, // NamaType
+    { width: "75px" }, // JumlahPrimer
+    { width: "75px" }, // JumlahSekunder
+    { width: "75px" }, // JumlahTritier
+    { width: "125px" }, // NamaObjek
+    { width: "90px" }, // NamaKelompokUtama
+    { width: "90px" }, // NamaKelompok
+    { width: "90px" }, // NamaSubKelompok
+    { width: "90px" }, // IdObjek
+    { width: "90px" }, // IdKelompokUtama
+    { width: "90px" }, // IdKelompok
+    { width: "90px" }, // IdSubKelompok
+    { width: "90px" }, // IdTransaksi
 ];
 
-var modeProses = "";
-var refetchNomor = false;
-var refetchType = false;
-var refetchKonversi = false;
-var clickedTable = "";
-var [pilAsal, pilTujuan] = [-1, -1];
+window.modeProses = "";
+let pilAsal = -1;
+let pilTujuan = -1;
+let clickedTable = "";
 //#endregion
 
-//#region Events
+//#region Generic Modal Lookup System
+let currentLookupData = [];
+let filteredLookupData = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+let currentLookupConfig = {};
+let selectedRowIndex = 0;
+
+async function openLookupModal(config) {
+    try {
+        currentLookupConfig = config;
+        currentPage = 1;
+
+        const showPageSelect = document.getElementById("showPerPage");
+        itemsPerPage = parseInt(showPageSelect.value) || 10;
+
+        document.getElementById("lookupTitle").innerText = config.title;
+        const trHeader = document.getElementById("lookupHeaders");
+        trHeader.innerHTML = config.headers
+            .map((h) => `<th>${h}</th>`)
+            .join("");
+
+        const tbody = document.getElementById("lookupBody");
+        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center"><div class="spinner-border spinner-border-sm"></div> Memuat data...</td></tr>`;
+        document.getElementById("paginationControls").innerHTML = "";
+
+        const modalEl = document.getElementById("modalLookupGeneric");
+        const modalInstance = new bootstrap.Modal(modalEl);
+        modalInstance.show();
+
+        const data = await fetchSelectAsync(config.url);
+        currentLookupData = data;
+        filteredLookupData = data;
+        renderLookupTable();
+        renderPagination();
+
+        selectedRowIndex = 0;
+        setTimeout(() => {
+            document.getElementById("lookupSearch").focus();
+            highlightSelectedRow();
+        }, 150);
+
+        const searchInput = document.getElementById("lookupSearch");
+        searchInput.value = "";
+        searchInput.onkeyup = function (e) {
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                const rows = document.querySelectorAll("#lookupBody tr");
+                if (rows.length > 0) rows[selectedRowIndex].focus();
+                return;
+            }
+            if (e.key === "Enter") {
+                e.preventDefault();
+                const rows = document.querySelectorAll("#lookupBody tr");
+                if (rows.length > 0) rows[selectedRowIndex].click();
+                return;
+            }
+            const keyword = this.value.toLowerCase();
+            filteredLookupData = currentLookupData.filter((row) => {
+                return config.columns.some((col) =>
+                    String(row[col] || "")
+                        .toLowerCase()
+                        .includes(keyword),
+                );
+            });
+            currentPage = 1;
+            renderLookupTable();
+            renderPagination();
+        };
+
+        showPageSelect.onchange = function () {
+            itemsPerPage = parseInt(this.value);
+            currentPage = 1;
+            renderLookupTable();
+            renderPagination();
+        };
+    } catch (error) {
+        Swal.fire(
+            "Error System",
+            error.message || "Gagal memuat data lookup",
+            "error",
+        );
+    }
+}
+
+function highlightSelectedRow() {
+    const rows = document.querySelectorAll("#lookupBody tr");
+    rows.forEach((row, index) => {
+        if (index === selectedRowIndex) row.classList.add("table-primary");
+    });
+}
+
+function renderLookupTable() {
+    const tbody = document.getElementById("lookupBody");
+    const config = currentLookupConfig;
+    tbody.innerHTML = "";
+
+    if (filteredLookupData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center text-danger">Data tidak ditemukan</td></tr>`;
+        return;
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(
+        startIndex + itemsPerPage,
+        filteredLookupData.length,
+    );
+    const paginatedData = filteredLookupData.slice(startIndex, endIndex);
+
+    paginatedData.forEach((row, idx) => {
+        const tr = document.createElement("tr");
+        tr.style.cursor = "pointer";
+        tr.tabIndex = 0;
+        config.columns.forEach((col) => {
+            const td = document.createElement("td");
+            td.textContent = row[col] || "-";
+            tr.appendChild(td);
+        });
+        tr.addEventListener("click", () => {
+            const modalEl = document.getElementById("modalLookupGeneric");
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+            config.onSelect(row);
+        });
+        tr.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                this.click();
+            } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                const next = this.nextElementSibling;
+                if (next) next.focus();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                const prev = this.previousElementSibling;
+                if (prev) prev.focus();
+                else document.getElementById("lookupSearch").focus();
+            }
+        });
+        tbody.appendChild(tr);
+    });
+    highlightSelectedRow();
+}
+
+function renderPagination() {
+    const paginationEl = document.getElementById("paginationControls");
+    paginationEl.innerHTML = "";
+    const totalPages = Math.ceil(filteredLookupData.length / itemsPerPage);
+    if (totalPages <= 1) return;
+
+    const prevLi = document.createElement("li");
+    prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+    prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous">&laquo;</a>`;
+    prevLi.onclick = (e) => {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            renderLookupTable();
+            renderPagination();
+        }
+    };
+    paginationEl.appendChild(prevLi);
+
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    for (let i = startPage; i <= endPage; i++) {
+        const pageLi = document.createElement("li");
+        pageLi.className = `page-item ${currentPage === i ? "active" : ""}`;
+        pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        pageLi.onclick = (e) => {
+            e.preventDefault();
+            currentPage = i;
+            renderLookupTable();
+            renderPagination();
+        };
+        paginationEl.appendChild(pageLi);
+    }
+
+    const nextLi = document.createElement("li");
+    nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+    nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next">&raquo;</a>`;
+    nextLi.onclick = (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderLookupTable();
+            renderPagination();
+        }
+    };
+    paginationEl.appendChild(nextLi);
+}
+//#endregion
+
+//#region Lookup Triggers (Events)
+btnLookupNomor.addEventListener("click", function () {
+    if (window.modeProses !== "koreksi" && window.modeProses !== "hapus") {
+        Swal.fire(
+            "Peringatan",
+            "Mode yang aktif tidak memerlukan pemilihan nomor.",
+            "warning",
+        );
+        return;
+    }
+    if (!dateInput.value) {
+        Swal.fire("Peringatan", "Pilih tanggal terlebih dahulu.", "warning");
+        dateInput.focus();
+        return;
+    }
+
+    openLookupModal({
+        title: "Pilih Nomor Konversi NG",
+        url: `/Benang/getKoreksiSortirNGBlmAcc/${safeUrlParam(dateInput.value)}`,
+        headers: ["ID Konversi NG", "Mesin"],
+        columns: ["IdKonversiNG", "MesinShift"],
+        onSelect: (row) => {
+            inputIdNomor.value = row.IdKonversiNG;
+            txtNomor.value = row.MesinShift;
+            const parts = (row.MesinShift || "").split("/");
+            txtMesin.value = parts.length >= 2 ? parts[0].trim() : "";
+            txtShift.value =
+                parts.length >= 2 ? parts[1].trim().toUpperCase() : "";
+
+            listAsal.length = 0;
+            clearTable_DataTable(
+                "table_asal",
+                colTable.length,
+                "padding=250px",
+            );
+            listTujuan.length = 0;
+            clearTable_DataTable(
+                "table_tujuan",
+                colTable.length,
+                "padding=250px",
+            );
+
+            lihatDataKonversiNGFetch(row.IdKonversiNG, () => {
+                if (window.modeProses === "koreksi") {
+                    $("html, body").animate(
+                        { scrollTop: $("#table_asal").offset().top - 125 },
+                        100,
+                    );
+                } else if (window.modeProses === "hapus") {
+                    btnProses.disabled = false;
+                    btnProses.focus();
+                }
+            });
+        },
+    });
+});
+
+btnLookupNoKonversi.addEventListener("click", function () {
+    if (window.modeProses !== "isi") {
+        Swal.fire(
+            "Peringatan",
+            'Pemilihan nomor konversi hanya pada mode "Isi".',
+            "warning",
+        );
+        return;
+    }
+    if (!dateInput.value || !txtShift.value) {
+        Swal.fire(
+            "Peringatan",
+            "Tanggal dan Shift harus diisi terlebih dahulu.",
+            "warning",
+        );
+        return;
+    }
+
+    openLookupModal({
+        title: "Pilih Nomor Konversi",
+        url: `/Benang/getListIdKonv1/${safeUrlParam(idDivisi)}/${safeUrlParam(dateInput.value)}/${safeUrlParam(txtShift.value)}`,
+        headers: ["ID Konversi", "Type Mesin"],
+        columns: ["Konversi", "TypeMesin"],
+        onSelect: (row) => {
+            const konv = row.Konversi || "";
+            const parts = konv.split("//");
+            const idKonv = parts[0] || "";
+            const namaKomposisi = parts[1] || "";
+
+            inputIdNoKonversi.value = idKonv;
+            txtNoKonversi.value = namaKomposisi;
+            txtMesin.value = row.TypeMesin || "";
+
+            // Reset shift awal/akhir dengan mengambil dari data konversi (jika ada)
+            fetchSelectAsync(`/Benang/getListIdKonv2/${safeUrlParam(idKonv)}`)
+                .then((data) => {
+                    if (data && data.length > 0) {
+                        timeAwal.value = dateTimetoTime(data[0].AwalShift);
+                        timeAkhir.value = dateTimetoTime(data[0].AkhirShift);
+                    } else {
+                        timeAwal.value = "00:00";
+                        timeAkhir.value = "00:00";
+                    }
+                })
+                .catch(() => {
+                    timeAwal.value = "00:00";
+                    timeAkhir.value = "00:00";
+                });
+
+            listAsal.length = 0;
+            clearTable_DataTable(
+                "table_asal",
+                colTable.length,
+                "padding=250px",
+            );
+            listTujuan.length = 0;
+            clearTable_DataTable(
+                "table_tujuan",
+                colTable.length,
+                "padding=250px",
+            );
+
+            btnLookupType.disabled = false;
+            btnLookupType.focus();
+        },
+    });
+});
+
+btnLookupType.addEventListener("click", function () {
+    if (window.modeProses !== "isi") {
+        Swal.fire(
+            "Peringatan",
+            'Pemilihan type hanya pada mode "Isi".',
+            "warning",
+        );
+        return;
+    }
+    if (!inputIdNoKonversi.value) {
+        Swal.fire(
+            "Peringatan",
+            "Pilih nomor konversi terlebih dahulu.",
+            "warning",
+        );
+        return;
+    }
+    if (listTujuan.length > 0) {
+        Swal.fire(
+            "Peringatan",
+            "Tidak boleh mengubah type karena sudah ada item tujuan konversi.",
+            "warning",
+        );
+        return;
+    }
+
+    openLookupModal({
+        title: "Pilih Type Produksi NG",
+        url: `/Benang/getListProdNG/${safeUrlParam(inputIdNoKonversi.value)}`,
+        headers: ["ID Type", "Nama Type"],
+        columns: ["IdType", "Type"],
+        onSelect: (row) => {
+            inputIdType.value = row.IdType;
+            txtType.value = row.Type;
+
+            // Cek data NG (kode 1)
+            fetchSelectAsync(
+                `/Benang/getCekDataNG/1/${safeUrlParam(inputIdNoKonversi.value)}/${safeUrlParam(row.IdType)}`,
+            )
+                .then((data) => {
+                    if (data.length > 0 && data[0].ada > 0) {
+                        // Ada, cek status ACC (kode 2)
+                        fetchSelectAsync(
+                            `/Benang/getCekDataNG/2/${safeUrlParam(inputIdNoKonversi.value)}/${safeUrlParam(row.IdType)}`,
+                        ).then((data2) => {
+                            if (data2.length > 0) {
+                                const pesan =
+                                    data2[0].SaatLog != null
+                                        ? `${row.Type} sudah disortir dan di-ACC.\nCek datanya di Kartu Barang Inventory.`
+                                        : `${row.Type} sudah disortir namun belum di-ACC.\nCek datanya di ACC Sortir Benang NG.`;
+                                Swal.fire("Peringatan", pesan, "warning");
+                            }
+                        });
+                    } else {
+                        displayDataBenangNGFetch();
+                    }
+                })
+                .catch(() =>
+                    Swal.fire("Error", "Gagal mengecek data NG.", "error"),
+                );
+        },
+    });
+});
+//#endregion
+
+//#region Input & Core Events
 dateInput.addEventListener("change", function () {
-    refetchNomor = true;
-    refetchKonversi = true;
+    resetAllFields();
 });
 
 dateInput.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
-        if (modeProses == "isi") {
+    if (event.key === "Enter") {
+        if (window.modeProses === "isi") {
             txtShift.disabled = false;
             txtShift.focus();
-        } else if (modeProses == "koreksi" || modeProses == "hapus") {
-            slcNomor.disabled = false;
-            slcNomor.focus();
+        } else if (
+            window.modeProses === "koreksi" ||
+            window.modeProses === "hapus"
+        ) {
+            btnLookupNomor.disabled = false;
+            btnLookupNomor.focus();
         }
     }
 });
 
 dateMohon.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
         dateInput.value = dateMohon.value;
         btnIsi.focus();
     }
 });
 
 txtShift.addEventListener("change", function () {
-    refetchKonversi = true;
+    inputIdNoKonversi.value = "";
+    txtNoKonversi.value = "";
 });
 
 txtShift.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
-        if (this.value.trim() != "") {
+    if (event.key === "Enter") {
+        if (this.value.trim() !== "") {
             this.value = this.value.toUpperCase();
-            slcNoKonversi.disabled = false;
-            slcNoKonversi.focus();
-        } else this.select();
-    }
-});
-
-slcNomor.addEventListener("mousedown", function () {
-    if (refetchNomor) {
-        refetchNomor = false;
-        clearOptions(this);
-        const errorOption = addLoadingOption(this);
-        const optionKeys = {
-            valueKey: "MesinShift",
-            textKey: "IdKonversiNG",
-        };
-
-        // SP_5298_EXT_KOREKSI_SORTIRNG_BLMACC
-        fetchSelect(
-            "/Benang/getKoreksiSortirNGBlmAcc/" + dateInput.value,
-            (data) => {
-                if (data.length > 0) {
-                    addOptions(this, data, optionKeys);
-                    this.removeChild(errorOption);
-                } else refetchNomor = true;
-            },
-            errorOption
-        );
-    }
-});
-
-slcNomor.addEventListener("keydown", function (event) {
-    if (event.key === "Enter" && refetchNomor) {
-        refetchNomor = false;
-        clearOptions(this);
-        const errorOption = addLoadingOption(this);
-        const optionKeys = {
-            valueKey: "MesinShift",
-            textKey: "IdKonversiNG",
-        };
-
-        // SP_5298_EXT_KOREKSI_SORTIRNG_BLMACC
-        fetchSelect(
-            "/Benang/getKoreksiSortirNGBlmAcc/" + dateInput.value,
-            (data) => {
-                if (data.length > 0) {
-                    addOptions(this, data, optionKeys);
-                    this.removeChild(errorOption);
-                } else refetchNomor = true;
-            },
-            errorOption
-        );
-    }
-});
-
-slcNomor.addEventListener("change", function () {
-    let type_mesin = this.value.split("/")[0];
-    addOptionIfNotExists(slcMesin, type_mesin);
-    txtShift.value = this.value.split("/")[1];
-
-    lihatDataKonversiNGFetch(
-        this.options[this.selectedIndex].text.split(" | ")[1],
-        () => {
-            if (modeProses == "koreksi") {
-                $("html, body").animate({ scrollTop: posAsal }, 100);
-            } else if (modeProses == "hapus") {
-                btnProses.focus();
-            }
+            btnLookupNoKonversi.disabled = false;
+            btnLookupNoKonversi.focus();
+        } else {
+            this.select();
         }
-    );
-});
-
-slcNoKonversi.addEventListener("mousedown", function () {
-    removeOption(this, "", "//");
-    this.selectedIndex = 0;
-
-    if (refetchKonversi) {
-        refetchKonversi = false;
-        clearOptions(this);
-        const errorOption = addLoadingOption(this);
-        const optionKeys = {
-            valueKey: "Konversi",
-            textKey: "TypeMesin",
-        };
-
-        // SP_5298_EXT_LIST_IDKONV
-        // AMBIL DARI VW_PRG_5298_EXT_LIST_IDKONV
-        fetchSelect(
-            "/Benang/getListIdKonv1/" +
-                idDivisi +
-                "/" +
-                dateInput.value +
-                "/" +
-                txtShift.value,
-            (data) => {
-                if (data.length > 0) {
-                    addOptions(this, data, optionKeys);
-                    this.removeChild(errorOption);
-                } else refetchKonversi = true;
-            },
-            errorOption
-        );
     }
-});
-
-slcNoKonversi.addEventListener("keydown", function (event) {
-    removeOption(this, "", "//");
-    this.selectedIndex = 0;
-
-    if (event.key === "Enter" && refetchKonversi) {
-        refetchKonversi = false;
-        clearOptions(this);
-        const errorOption = addLoadingOption(this);
-        const optionKeys = {
-            valueKey: "Konversi",
-            textKey: "TypeMesin",
-        };
-
-        // SP_5298_EXT_LIST_IDKONV
-        // AMBIL DARI VW_PRG_5298_EXT_LIST_IDKONV
-        fetchSelect(
-            "/Benang/getListIdKonv1/" +
-                idDivisi +
-                "/" +
-                dateInput.value +
-                "/" +
-                txtShift.value,
-            (data) => {
-                if (data.length > 0) {
-                    addOptions(this, data, optionKeys);
-                    this.removeChild(errorOption);
-                } else refetchKonversi = true;
-            },
-            errorOption
-        );
-    }
-});
-
-slcNoKonversi.addEventListener("change", function () {
-    refetchType = true;
-    listAsal.length = 0;
-    clearTable_DataTable("table_asal", colTable.length, "padding=250px");
-    listTujuan.length = 0;
-    clearTable_DataTable("table_tujuan", colTable.length, "padding=250px");
-
-    let id_konv = this.value.split("//")[0];
-    let komposisi = this.value.split("//")[1];
-    let type_mesin = this.options[this.selectedIndex].text.split("|")[1].trim();
-    addOptionIfNotExists(slcMesin, type_mesin);
-    addOptionIfNotExists(this, id_konv, id_konv + " | " + komposisi);
-    slcType.disabled = false;
-    slcType.focus();
-});
-
-slcType.addEventListener("mousedown", function () {
-    if (listTujuan.length <= 0) {
-        if (refetchType) {
-            refetchType = false;
-            clearOptions(this);
-            const errorOption = addLoadingOption(this);
-            const optionKeys = {
-                valueKey: "IdType",
-                textKey: "Type",
-            };
-
-            // SP_5298_EXT_LIST_PROD_NG
-            // AMBIL DARI VW_PRG_5298_EXT_LIST_PROD_NG
-            fetchSelect(
-                "/Benang/getListProdNG/" + slcNoKonversi.value,
-                (data) => {
-                    if (data.length > 0) {
-                        addOptions(this, data, optionKeys, false);
-                        this.removeChild(errorOption);
-                    } else refetchType = true;
-                },
-                errorOption
-            );
-        }
-    } else alert("Tidak Boleh Ubah Type, Karena Sudah Ada Item Tujuan Konversi");
-});
-
-slcType.addEventListener("keydown", function (event) {
-    if (listTujuan.length <= 0) {
-        if (event.key === "Enter" && refetchType) {
-            refetchType = false;
-            clearOptions(this);
-            const errorOption = addLoadingOption(this);
-            const optionKeys = {
-                valueKey: "IdType",
-                textKey: "Type",
-            };
-
-            // SP_5298_EXT_LIST_PROD_NG
-            // AMBIL DARI VW_PRG_5298_EXT_LIST_PROD_NG
-            fetchSelect(
-                "/Benang/getListProdNG/" + slcNoKonversi.value,
-                (data) => {
-                    if (data.length > 0) {
-                        addOptions(this, data, optionKeys, false);
-                        this.removeChild(errorOption);
-                    } else refetchType = true;
-                },
-                errorOption
-            );
-        }
-    } else alert("Tidak Boleh Ubah Type, Karena Sudah Ada Item Tujuan Konversi");
-});
-
-slcType.addEventListener("change", function () {
-    // SP_5298_EXT_CEK_DATA_NG Kode 1
-    fetchSelect(
-        "/Benang/getCekDataNG/1/" + slcNoKonversi.value + "/" + slcType.value,
-        (data) => {
-            if (data.length > 0) {
-                if (data[0].ada > 0) {
-                    // SP_5298_EXT_CEK_DATA_NG Kode 2
-                    fetchSelect(
-                        "/Benang/getCekDataNG/2/" +
-                            slcNoKonversi.value +
-                            "/" +
-                            slcType.value,
-                        (data2) => {
-                            if (data2.length > 0) {
-                                let nama_type =
-                                    slcType.options[slcType.selectedIndex].text;
-
-                                if (data2[0].SaatLog != null) {
-                                    alert(
-                                        nama_type +
-                                            " sudah disortir dan di-ACC.\n" +
-                                            "Cek datanya di Kartu Barang Inventory."
-                                    );
-                                } else
-                                    alert(
-                                        nama_type +
-                                            " sudah disortir namun belum di-ACC.\n" +
-                                            "Cek datanya di ACC Sortir Benang NG."
-                                    );
-                            }
-                        }
-                    );
-                } else {
-                    displayDataBenangNGFetch();
-                }
-            } else alert("Data Benang NG tidak ditemukan.");
-        }
-    );
 });
 
 btnIsi.addEventListener("click", function () {
@@ -372,718 +486,723 @@ btnIsi.addEventListener("click", function () {
     dateInput.classList.remove("unclickable");
     dateInput.value = dateMohon.value;
     dateInput.focus();
-    modeProses = "isi";
+    window.modeProses = "isi";
     toggleButtons(2);
-    slcNomor.disabled = true;
+    btnLookupNomor.disabled = true;
+    btnLookupNoKonversi.disabled = true;
+    btnLookupType.disabled = true;
 });
 
 btnKoreksi.addEventListener("click", function () {
     clearAll();
     dateInput.classList.remove("unclickable");
-    slcNomor.disabled = false;
-    slcNomor.focus();
-    refetchNomor = true;
-    modeProses = "koreksi";
+    window.modeProses = "koreksi";
     toggleButtons(2);
+    btnLookupNomor.disabled = false;
+    btnLookupNomor.focus();
 });
 
 btnHapus.addEventListener("click", function () {
     clearAll();
     dateInput.classList.remove("unclickable");
-    slcNomor.disabled = false;
-    slcNomor.focus();
-    refetchNomor = true;
-    modeProses = "hapus";
+    window.modeProses = "hapus";
     toggleButtons(2);
+    btnLookupNomor.disabled = false;
+    btnLookupNomor.focus();
 });
 
-btnProses.addEventListener("click", function () {
-    if (modeProses == "isi") {
-        if (listAsal.length <= 0 || listTujuan.length <= 0) {
-            alert(
-                "Data tidak dapat diproses karena tidak ada asal atau tujuan konversi."
-            );
-        } else {
-            prosesIsiFetch();
+btnProses.addEventListener("click", async function () {
+    try {
+        if (window.modeProses === "isi") {
+            if (listAsal.length <= 0 || listTujuan.length <= 0) {
+                Swal.fire(
+                    "Peringatan",
+                    "Data tidak dapat diproses karena tidak ada asal atau tujuan konversi.",
+                    "warning",
+                );
+                return;
+            }
+            await prosesIsiFetch();
+        } else if (window.modeProses === "koreksi") {
+            if (!inputIdNomor.value) {
+                Swal.fire(
+                    "Peringatan",
+                    "Pilih dulu data konversi yang akan dikoreksi.",
+                    "warning",
+                );
+                return;
+            }
+            const confirm = await Swal.fire({
+                title: "Koreksi",
+                html: `Apakah anda yakin akan mengoreksi data <b>${txtNomor.value}</b>?`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Koreksi",
+            });
+            if (confirm.isConfirmed) await prosesKoreksiFetch();
+        } else if (window.modeProses === "hapus") {
+            if (!inputIdNomor.value) {
+                Swal.fire(
+                    "Peringatan",
+                    "Pilih dulu data konversi yang akan dihapus.",
+                    "warning",
+                );
+                return;
+            }
+            const confirm = await Swal.fire({
+                title: "Hapus",
+                html: `Apakah anda yakin akan menghapus data <b>${txtNomor.value}</b>?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus",
+            });
+            if (confirm.isConfirmed) await prosesHapusFetch(inputIdNomor.value);
         }
-    } else if (modeProses == "koreksi") {
-        if (slcNomor.selectedIndex == 0) {
-            alert("Pilih dulu data konversi yang akan dikoreksi.");
-        } else {
-            showModal(
-                "Koreksi",
-                "Apakah anda yakin akan mengoreksi data <b>" +
-                    slcNomor.value +
-                    "</b>?",
-                () => {
-                    prosesKoreksiFetch(slcNomor.value);
-                }
-            );
-        }
-    } else if (modeProses == "hapus") {
-        if (slcNomor.selectedIndex == 0) {
-            alert("Pilih dulu data konversi yang akan dikoreksi.");
-        } else {
-            showModal(
-                "Hapus",
-                "Apakah anda yakin akan menghapus data <b>" +
-                    slcNomor.options[slcNomor.selectedIndex].text +
-                    "</b>?",
-                () => {
-                    prosesHapusFetch(
-                        slcNomor.options[slcNomor.selectedIndex].text.split(
-                            " | "
-                        )[1]
-                    );
-                }
-            );
-        }
+    } catch (error) {
+        Swal.fire("Error System", error.message || error, "error");
     }
 });
 
 btnKeluar.addEventListener("click", function () {
-    if (this.textContent != "Keluar") {
+    if (this.textContent !== "Keluar") {
         toggleButtons(1);
         clearAll();
         disableAll();
-        modeProses = "";
-    } else window.location.href = "/Extruder/ExtruderNet";
+        window.modeProses = "";
+        btnIsi.focus();
+    } else {
+        window.location.href = "/Extruder/ExtruderNet";
+    }
 });
 
 hidRincianKonv.addEventListener("change", function () {
-    if (clickedTable == "asal") {
-        if (modeProses == "isi") {
-            listTujuan.length = 0;
+    if (clickedTable === "asal") {
+        if (pilAsal === -1 || pilAsal >= listAsal.length) {
+            const idType = RK_txtIdType.value;
+            const foundIdx = listAsal.findIndex(
+                (item) => item.IdType === idType,
+            );
+            if (foundIdx !== -1) {
+                pilAsal = foundIdx;
+            } else {
+                console.warn("Tidak ditemukan indeks asal yang cocok");
+                clickedTable = "";
+                return;
+            }
+        }
+        if (window.modeProses === "isi") {
             listTujuan.push({
-                IdType: RK_slcType.value,
-                NamaType:
-                    RK_slcType.options[RK_slcType.selectedIndex].text.split(
-                        " | "
-                    )[1],
+                IdType: RK_txtIdTypeTujuan.value,
+                NamaType: RK_txtNamaTypeTujuan.value,
                 JumlahPrimer: txtPrimerTujuan.value,
                 JumlahSekunder: txtSekunderTujuan.value,
                 JumlahTritier: txtTritierTujuan.value,
                 NamaObjek: "Bahan & Hasil Produksi",
-                NamaKelompokUtama: RK_slcKelut.value,
-                NamaKelompok: RK_slcKelut.options[
-                    RK_slcKelut.selectedIndex
-                ].text
-                    .split("|")[1]
-                    .trim(),
-                NamaSubKelompok: RK_slcSubkel.options[
-                    RK_slcSubkel.selectedIndex
-                ].text
-                    .split("|")[1]
-                    .trim(),
+                NamaKelompokUtama: RK_txtNamaKelutTujuan.value,
+                NamaKelompok: RK_txtNamaKelTujuan.value,
+                NamaSubKelompok: RK_txtNamaSubkelTujuan.value,
                 IdObjek: "032",
-                IdKelompokUtama: RK_slcKelut.value,
-                IdKelompok: RK_slcKelompok.value,
-                IdSubKelompok: RK_slcSubkel.value,
+                IdKelompokUtama: RK_txtIdKelutTujuan.value,
+                IdKelompok: RK_txtIdKelTujuan.value,
+                IdSubKelompok: RK_txtIdSubkelTujuan.value,
                 IdTransaksi: "",
             });
-
             addTable_DataTable(
                 "table_tujuan",
                 listTujuan,
                 colTable,
                 rowClickedTujuan,
-                "125px"
+                "125px",
             );
-        } else if (modeProses == "koreksi") {
+        } else if (window.modeProses === "koreksi") {
             listAsal[pilAsal].JumlahPrimer = txtPrimerAsal.value;
             listAsal[pilAsal].JumlahSekunder = txtSekunderAsal.value;
             listAsal[pilAsal].JumlahTritier = txtTritierAsal.value;
-
             addTable_DataTable(
                 "table_asal",
                 listAsal,
                 colTable,
                 rowClickedAsal,
-                "125px"
+                "125px",
             );
         }
-    } else if (clickedTable == "tujuan") {
+    } else if (clickedTable === "tujuan") {
+        if (pilTujuan === -1 || pilTujuan >= listTujuan.length) {
+            const idType = RK_txtIdTypeTujuan.value;
+            const foundIdx = listTujuan.findIndex(
+                (item) => item.IdType === idType,
+            );
+            if (foundIdx !== -1) {
+                pilTujuan = foundIdx;
+            } else {
+                console.warn("Tidak ditemukan indeks tujuan yang cocok");
+                clickedTable = "";
+                return;
+            }
+        }
         listTujuan[pilTujuan].JumlahPrimer = txtPrimerTujuan.value;
         listTujuan[pilTujuan].JumlahSekunder = txtSekunderTujuan.value;
         listTujuan[pilTujuan].JumlahTritier = txtTritierTujuan.value;
-
         addTable_DataTable(
             "table_tujuan",
             listTujuan,
             colTable,
             rowClickedTujuan,
-            "125px"
+            "125px",
         );
     }
-
     clickedTable = "";
+    pilAsal = -1;
+    pilTujuan = -1;
     btnProses.focus();
 });
 
 $("#form_rincian_konversi").on("hidden.bs.modal", function () {
+    if (clickedTable !== "") {
+        clickedTable = "";
+        pilAsal = -1;
+        pilTujuan = -1;
+    }
     RK_clearAll();
-    pilAsal = -1;
     clearSelection_DataTable("table_asal");
-    pilTujuan = -1;
     clearSelection_DataTable("table_tujuan");
 });
 //#endregion
 
-//#region Functions
-function lihatDataKonversiNGFetch(id_konversi, post_action = null) {
+//#region Utility & Helper Functions
+function resetAllFields() {
+    inputIdNomor.value = "";
+    txtNomor.value = "";
+    inputIdNoKonversi.value = "";
+    txtNoKonversi.value = "";
+    inputIdType.value = "";
+    txtType.value = "";
     listAsal.length = 0;
-    clearTable_DataTable("table_asal", colTable.length, [
-        "padding=250px",
-        "Memuat data...",
-    ]);
-
+    clearTable_DataTable("table_asal", colTable.length, "padding=250px");
     listTujuan.length = 0;
-    clearTable_DataTable("table_tujuan", colTable.length, [
-        "padding=250px",
-        "Memuat data...",
-    ]);
-
-    // SP_5298_EXT_LISTDATA_NG
-    fetchSelect(
-        "/Benang/getListDataNG/" + id_konversi.trim() + "/" + dateInput.value,
-        (data_ng) => {
-            if (data_ng.length > 0) {
-                timeAwal.value = dateTimetoTime(data_ng[0].AwalShift);
-                timeAkhir.value = dateTimetoTime(data_ng[0].AkhirShift);
-
-                addOptionIfNotExists(
-                    slcNoKonversi,
-                    data_ng[0].IdKonversiEXT,
-                    data_ng[0].IdKonversiEXT + " | " + data_ng[0].NamaKomposisi
-                );
-
-                // SP_5298_EXT_DETAILURAIAN_KONV_NG
-                fetchSelect(
-                    "/Benang/getDetailUraianKonvNG/" + data_ng[0].IdKonversiINV,
-                    (d) => {
-                        for (let i = 0; i < d.length; i++) {
-                            if (d[i].UraianDetailTransaksi == "Asal Konversi") {
-                                listAsal.push({
-                                    IdType: d[i].IdType,
-                                    NamaType: d[i].NamaType,
-                                    JumlahPrimer: d[i].JumlahPengeluaranPrimer,
-                                    JumlahSekunder:
-                                        d[i].JumlahPengeluaranSekunder,
-                                    JumlahTritier:
-                                        d[i].JumlahPengeluaranTritier,
-                                    NamaObjek: d[i].NamaObjek,
-                                    NamaKelompokUtama: d[i].NamaKelompokUtama,
-                                    NamaKelompok: d[i].NamaKelompok,
-                                    NamaSubKelompok: d[i].NamaSubKelompok,
-                                    IdObjek: d[i].IdObjek,
-                                    IdKelompokUtama: d[i].IdKelompokUtama,
-                                    IdKelompok: d[i].IdKelompok,
-                                    IdSubKelompok: d[i].IdSubkelompok,
-                                    IdTransaksi: d[i].IdTransaksi,
-                                });
-
-                                addTable_DataTable(
-                                    "table_asal",
-                                    listAsal,
-                                    colTable,
-                                    rowClickedAsal,
-                                    "125px"
-                                );
-                            } else if (
-                                d[i].UraianDetailTransaksi == "Tujuan Konversi"
-                            ) {
-                                listTujuan.push({
-                                    IdType: d[i].IdType,
-                                    NamaType: d[i].NamaType,
-                                    JumlahPrimer: d[i].JumlahPemasukanPrimer,
-                                    JumlahSekunder:
-                                        d[i].JumlahPemasukanSekunder,
-                                    JumlahTritier: d[i].JumlahPemasukanTritier,
-                                    NamaObjek: d[i].NamaObjek,
-                                    NamaKelompokUtama: d[i].NamaKelompokUtama,
-                                    NamaKelompok: d[i].NamaKelompok,
-                                    NamaSubKelompok: d[i].NamaSubKelompok,
-                                    IdObjek: d[i].IdObjek,
-                                    IdKelompokUtama: d[i].IdKelompokUtama,
-                                    IdKelompok: d[i].IdKelompok,
-                                    IdSubKelompok: d[i].IdSubkelompok,
-                                    IdTransaksi: d[i].IdTransaksi,
-                                });
-
-                                addTable_DataTable(
-                                    "table_tujuan",
-                                    listTujuan,
-                                    colTable,
-                                    rowClickedTujuan,
-                                    "125px"
-                                );
-                            }
-
-                            if (d.length <= 0)
-                                alert("Data konversi tidak ditemukan.");
-                        }
-
-                        if (post_action != null) post_action();
-                    }
-                );
-            } else console.log("Data NG tidak ditemukan.");
-        }
-    );
+    clearTable_DataTable("table_tujuan", colTable.length, "padding=250px");
 }
 
-function displayDataBenangNGFetch(post_action = null) {
-    // SP_5298_EXT_LIST_IDKONV Kode 3
-    fetchSelect(
-        "/Benang/getListIdKonv3/" + slcNoKonversi.value + "/" + slcType.value,
-        (d) => {
-            if (d.length > 0) {
-                $("html, body").animate({ scrollTop: posAsal }, 100);
-                for (let i = 0; i < d.length; i++) {
-                    listAsal.push({
-                        IdType: d[i].IdType,
-                        NamaType: d[i].NamaType,
-                        JumlahPrimer: d[i].JumlahPrimer,
-                        JumlahSekunder: d[i].JumlahSekunder,
-                        JumlahTritier: d[i].JumlahTritier,
-                        NamaObjek: d[i].NamaObjek,
-                        NamaKelompokUtama: d[i].NamaKelompokUtama,
-                        NamaKelompok: d[i].NamaKelompok,
-                        NamaSubKelompok: d[i].NamaSubKelompok,
-                        IdObjek: d[i].IdObjek,
-                        IdKelompokUtama: d[i].IdKelompokUtama,
-                        IdKelompok: d[i].IdKelompok,
-                        IdSubKelompok: d[i].IdSubKelompok,
-                        IdTransaksi: "",
-                    });
-                }
-
-                addTable_DataTable(
-                    "table_asal",
-                    listAsal,
-                    colTable,
-                    rowClickedAsal,
-                    "125px"
-                );
-            } else alert("Hasil Konversi Tidak Menghasilkan Benang NG");
-            if (post_action != null) post_action();
-        }
-    );
-}
-
-function prosesIsiFetch() {
-    // SP_5298_EXT_INSERT_MASTERKONV_NG
-    fetchStmt(
-        "/Benang/insMasterKonvNG/" +
-            dateMohon.value +
-            "/" +
-            slcNoKonversi.value,
-        () => {
-            fetchSelect("/Benang/getMasterKonversiNG", (data) => {
-                if (data.IdKonversiNG !== undefined) {
-                    addOptionIfNotExists(slcNomor, data.IdKonversiNG);
-
-                    // SP_5298_EXT_LIST_COUNTER
-                    fetchSelect("/Benang/getListCounter", (dataCounter) => {
-                        if (dataCounter.length > 0) {
-                            insertDetailFetch(
-                                padLeft(dataCounter[0].NoKonversi, 9, "0"),
-                                () => {
-                                    clearAll();
-                                    disableAll();
-                                    toggleButtons(1);
-                                    modeProses = "";
-                                    alert("Data berhasil tersimpan.");
-                                    btnIsi.focus();
-                                    RK_modeProses = "";
-                                }
-                            );
-                        }
-                    });
-                } else alert("SP_5298_EXT_INSERT_MASTERKONV_NG");
-            });
-        }
-    );
-}
-
-function insertDetailFetch(id_konv_inv, post_action = null) {
-    for (let i = 0; i < listAsal.length; i++) {
-        // SP_5298_EXT_INSERT_DETAILKONV_NG
-        fetchStmt(
-            "/Benang/insDetailKonvNG/" +
-                slcNomor.options[slcNomor.selectedIndex].text +
-                "/" +
-                listAsal[i].IdType.trim() +
-                "/" +
-                listAsal[i].JumlahPrimer +
-                "/" +
-                listAsal[i].JumlahSekunder +
-                "/" +
-                listAsal[i].JumlahTritier +
-                "/" +
-                id_konv_inv,
-            () => {
-                if (i == listAsal.length - 1) {
-                    createTmpTransaksiInventoryFetch(i, id_konv_inv, 0, () => {
-                        if (post_action != null) post_action();
-                    });
-                } else {
-                    createTmpTransaksiInventoryFetch(i, id_konv_inv, 0);
-                }
-            }
-        );
-    }
-
-    for (let i = 0; i < listTujuan.length; i++) {
-        // SP_5298_EXT_INSERT_DETAILKONV_NG
-        fetchStmt(
-            "/Benang/insDetailKonvNG/" +
-                slcNomor.options[slcNomor.selectedIndex].text +
-                "/" +
-                listTujuan[i].IdType.trim() +
-                "/" +
-                listTujuan[i].JumlahPrimer +
-                "/" +
-                listTujuan[i].JumlahSekunder +
-                "/" +
-                listTujuan[i].JumlahTritier +
-                "/" +
-                id_konv_inv,
-            () => {
-                createTmpTransaksiInventoryFetch(i, id_konv_inv, 1);
-            }
-        );
-    }
-}
-
-function createTmpTransaksiInventoryFetch(
-    i,
-    id_konv_inv,
-    status,
-    post_action = null
-) {
-    if (status == 0) {
-        // SP_5298_EXT_INSERT_04_ASALTMPTRANSAKSI
-        fetchStmt(
-            "/Benang/insAsalTmpTrans/04/asal_konversi/" +
-                listAsal[i].IdType.trim() +
-                "/" +
-                dateMohon.value +
-                "/" +
-                listAsal[i].JumlahPrimer +
-                "/" +
-                listAsal[i].JumlahSekunder +
-                "/" +
-                listAsal[i].JumlahTritier +
-                "/" +
-                listAsal[i].IdSubKelompok.trim() +
-                "/" +
-                id_konv_inv.trim(),
-            () => {
-                if (post_action != null) post_action();
-            }
-        );
-    } else if (status == 1) {
-        // SP_5298_EXT_INSERT_04_TUJUANTMPTRANSAKSI
-        fetchStmt(
-            "/Benang/insTujuanTmpTrans/04/tujuan_konversi/" +
-                listTujuan[i].IdType.trim() +
-                "/" +
-                dateMohon.value +
-                "/" +
-                listTujuan[i].JumlahPrimer +
-                "/" +
-                listTujuan[i].JumlahSekunder +
-                "/" +
-                listTujuan[i].JumlahTritier +
-                "/" +
-                listTujuan[i].IdSubKelompok.trim() +
-                "/" +
-                id_konv_inv.trim(),
-            () => {
-                if (post_action != null) post_action();
-            }
-        );
-    }
-}
-
-function prosesKoreksiFetch() {
-    let [asalDone, tujuanDone] = [false, false];
-    const post_action = () => {
-        clearAll();
-        disableAll();
-        toggleButtons(1);
-        modeProses = "";
-        alert("Data berhasil dikoreksi.");
-        btnIsi.focus();
-        RK_modeProses = "";
-    };
-
-    for (let i = 0; i < listAsal.length; i++) {
-        // SP_5298_EXT_UPDATE_DETAIL_KONV_NG
-        fetchStmt(
-            "/Benang/updDetailKonvNG/" +
-                slcNomor.options[slcNomor.selectedIndex].text.split(" | ")[1] +
-                "/" +
-                listAsal[i].IdType +
-                "/" +
-                listAsal[i].JumlahPrimer +
-                "/" +
-                listAsal[i].JumlahSekunder +
-                "/" +
-                listAsal[i].JumlahTritier,
-            () => {
-                // SP_5298_EXT_UPDATE_TMPTRANSAKSI
-                fetchStmt(
-                    "/Benang/updTmpTransaksi/" +
-                        listAsal[i].IdTransaksi +
-                        "/asal_konversi/" +
-                        listAsal[i].JumlahPrimer +
-                        "/" +
-                        listAsal[i].JumlahSekunder +
-                        "/" +
-                        listAsal[i].JumlahTritier,
-                    () => {
-                        asalDone = true;
-                        if (i == listAsal.length - 1 && tujuanDone)
-                            post_action();
-                    }
-                );
-            }
-        );
-    }
-
-    for (let i = 0; i < listTujuan.length; i++) {
-        // SP_5298_EXT_UPDATE_DETAIL_KONV_NG
-        fetchStmt(
-            "/Benang/updDetailKonvNG/" +
-                slcNomor.options[slcNomor.selectedIndex].text.split(" | ")[1] +
-                "/" +
-                listTujuan[i].IdType +
-                "/" +
-                listTujuan[i].JumlahPrimer +
-                "/" +
-                listTujuan[i].JumlahSekunder +
-                "/" +
-                listTujuan[i].JumlahTritier,
-            () => {
-                // SP_5298_EXT_UPDATE_TMPTRANSAKSI
-                fetchStmt(
-                    "/Benang/updTmpTransaksi/" +
-                        listTujuan[i].IdTransaksi +
-                        "/tujuan_konversi/" +
-                        listTujuan[i].JumlahPrimer +
-                        "/" +
-                        listTujuan[i].JumlahSekunder +
-                        "/" +
-                        listTujuan[i].JumlahTritier,
-                    () => {
-                        tujuanDone = true;
-                        if (i == listTujuan.length - 1 && asalDone)
-                            post_action();
-                    }
-                );
-            }
-        );
-    }
-}
-
-function prosesHapusFetch(id_konversi_ng) {
-    // SP_5409_EXT_DELETE_KONVERSI_NG
-    fetchStmt("/Benang/delKonversiNG/" + id_konversi_ng, () => {
-        clearAll();
-        disableAll();
-        toggleButtons(1);
-        modeProses = "";
-        alert("Data berhasil dihapus.");
-        btnIsi.focus();
-        RK_modeProses = "";
-        refetchNomor = true;
-    });
-}
-
-function rowClickedAsal(row, data, _) {
-    if (pilAsal == findClickedRowInList(listAsal, "IdType", data.IdType)) {
-        row.style.background = "white";
-        pilAsal = -1;
-    } else {
-        pilAsal = findClickedRowInList(listAsal, "IdType", data.IdType);
-        clearSelection_DataTable("tabel_asal");
-        row.style.background = "aliceblue";
-        clickedTable = "asal";
-
-        if (modeProses == "koreksi" || modeProses == "isi") {
-            RK_txtIdKelut.value = data.IdKelompokUtama;
-            RK_txtNamaKelut.value = data.NamaKelompokUtama;
-            RK_txtIdKelompok.value = data.IdKelompok;
-            RK_txtNamaKelompok.value = data.NamaKelompok;
-            RK_txtIdSubkel.value = data.IdSubKelompok;
-            RK_txtNamaSubkel.value = data.NamaSubKelompok;
-            RK_txtIdType.value = data.IdType;
-            RK_txtNamaType.value = data.NamaType;
-
-            if (modeProses == "koreksi") {
-                txtPrimerAsal.value = data.JumlahPrimer;
-                txtSekunderAsal.value = data.JumlahSekunder;
-                txtTritierAsal.value = data.JumlahTritier;
-
-                RK_disableAll("asal");
-                RK_modeProses = "asal";
-            }
-
-            RK_modeProses = "asal";
-            saldoTypeFetch(RK_txtIdType.value, true);
-            $("#form_rincian_konversi").modal("show");
-        }
-    }
-}
-
-function rowClickedTujuan(row, data, _) {
-    if (pilTujuan == findClickedRowInList(listTujuan, "IdType", data.IdType)) {
-        row.style.background = "white";
-        pilTujuan = -1;
-    } else {
-        pilTujuan = findClickedRowInList(listTujuan, "IdType", data.IdType);
-        clearSelection_DataTable("tabel_asal");
-        row.style.background = "aliceblue";
-        clickedTable = "tujuan";
-
-        if (modeProses == "koreksi") {
-            addOptionIfNotExists(
-                RK_slcKelut,
-                data.IdKelompokUtama,
-                data.IdKelompokUtama + " | " + data.NamaKelompokUtama
-            );
-
-            addOptionIfNotExists(
-                RK_slcKelompok,
-                data.IdKelompok,
-                data.IdKelompok + " | " + data.NamaKelompok
-            );
-
-            addOptionIfNotExists(
-                RK_slcSubkel,
-                data.IdSubKelompok,
-                data.IdSubKelompok + " | " + data.NamaSubKelompok
-            );
-
-            addOptionIfNotExists(
-                RK_slcType,
-                data.IdType,
-                data.IdType + " | " + data.NamaType
-            );
-
-            txtPrimerTujuan.value = data.JumlahPrimer;
-            txtSekunderTujuan.value = data.JumlahSekunder;
-            txtTritierTujuan.value = data.JumlahTritier;
-
-            RK_disableAll("tujuan");
-            RK_modeProses = "tujuan";
-            saldoTypeFetch(listTujuan[pilTujuan].IdType, false);
-            $("#form_rincian_konversi").modal("show");
-        }
-    }
+function clearAll() {
+    resetAllFields();
+    txtMesin.value = "";
+    txtShift.value = "";
+    timeAwal.value = "00:00";
+    timeAkhir.value = "00:00";
+    dateInput.value = getCurrentDate();
+    dateMohon.value = getCurrentDate();
+    btnLookupNomor.disabled = true;
+    btnLookupNoKonversi.disabled = true;
+    btnLookupType.disabled = true;
 }
 
 function disableAll() {
-    listOfSlc.forEach((slc) => (slc.disabled = true));
+    btnLookupNomor.disabled = true;
+    btnLookupNoKonversi.disabled = true;
+    btnLookupType.disabled = true;
     timeAwal.classList.add("unclickable");
     timeAkhir.classList.add("unclickable");
     dateInput.classList.add("unclickable");
     txtShift.disabled = true;
 }
 
-function clearAll() {
-    listOfSlc.forEach((slc) => (slc.selectedIndex = 0));
-    timeAwal.value = "00:00";
-    timeAkhir.value = "00:00";
-    txtShift.value = "";
-    dateInput.value = getCurrentDate();
-    dateMohon.value = getCurrentDate();
+function toggleButtons(tmb) {
+    if (tmb === 1) {
+        btnIsi.disabled = false;
+        btnKoreksi.disabled = false;
+        btnHapus.disabled = false;
+        btnProses.disabled = true;
+        btnKeluar.textContent = "Keluar";
+    } else if (tmb === 2) {
+        btnIsi.disabled = true;
+        btnKoreksi.disabled = true;
+        btnHapus.disabled = true;
+        btnProses.disabled = false;
+        btnKeluar.textContent = "Batal";
+    }
+}
+
+function lihatDataKonversiNGFetch(id_konversi, post_action = null) {
     listAsal.length = 0;
     clearTable_DataTable("table_asal", colTable.length, "padding=250px");
     listTujuan.length = 0;
     clearTable_DataTable("table_tujuan", colTable.length, "padding=250px");
+
+    fetchSelectAsync(
+        `/Benang/getListDataNG/${safeUrlParam(id_konversi.trim())}/${safeUrlParam(dateInput.value)}`,
+    )
+        .then((data_ng) => {
+            if (data_ng.length > 0) {
+                timeAwal.value = dateTimetoTime(data_ng[0].AwalShift);
+                timeAkhir.value = dateTimetoTime(data_ng[0].AkhirShift);
+
+                if (!inputIdNoKonversi.value) {
+                    inputIdNoKonversi.value = data_ng[0].IdKonversiEXT;
+                    txtNoKonversi.value = data_ng[0].NamaKomposisi;
+                }
+
+                return fetchSelectAsync(
+                    `/Benang/getDetailUraianKonvNG/${safeUrlParam(data_ng[0].IdKonversiINV)}`,
+                );
+            } else {
+                Swal.fire(
+                    "Peringatan",
+                    "Data NG tidak ditemukan untuk tanggal ini.",
+                    "warning",
+                );
+                return [];
+            }
+        })
+        .then((detail) => {
+            if (detail && detail.length > 0) {
+                detail.forEach((item) => {
+                    if (item.UraianDetailTransaksi === "Asal Konversi") {
+                        listAsal.push({
+                            IdType: item.IdType,
+                            NamaType: item.NamaType,
+                            JumlahPrimer: item.JumlahPengeluaranPrimer,
+                            JumlahSekunder: item.JumlahPengeluaranSekunder,
+                            JumlahTritier: item.JumlahPengeluaranTritier,
+                            NamaObjek: item.NamaObjek,
+                            NamaKelompokUtama: item.NamaKelompokUtama,
+                            NamaKelompok: item.NamaKelompok,
+                            NamaSubKelompok: item.NamaSubKelompok,
+                            IdObjek: item.IdObjek,
+                            IdKelompokUtama: item.IdKelompokUtama,
+                            IdKelompok: item.IdKelompok,
+                            IdSubKelompok: item.IdSubkelompok,
+                            IdTransaksi: item.IdTransaksi,
+                        });
+                        addTable_DataTable(
+                            "table_asal",
+                            listAsal,
+                            colTable,
+                            rowClickedAsal,
+                            "125px",
+                        );
+                    } else if (
+                        item.UraianDetailTransaksi === "Tujuan Konversi"
+                    ) {
+                        listTujuan.push({
+                            IdType: item.IdType,
+                            NamaType: item.NamaType,
+                            JumlahPrimer: item.JumlahPemasukanPrimer,
+                            JumlahSekunder: item.JumlahPemasukanSekunder,
+                            JumlahTritier: item.JumlahPemasukanTritier,
+                            NamaObjek: item.NamaObjek,
+                            NamaKelompokUtama: item.NamaKelompokUtama,
+                            NamaKelompok: item.NamaKelompok,
+                            NamaSubKelompok: item.NamaSubKelompok,
+                            IdObjek: item.IdObjek,
+                            IdKelompokUtama: item.IdKelompokUtama,
+                            IdKelompok: item.IdKelompok,
+                            IdSubKelompok: item.IdSubkelompok,
+                            IdTransaksi: item.IdTransaksi,
+                        });
+                        addTable_DataTable(
+                            "table_tujuan",
+                            listTujuan,
+                            colTable,
+                            rowClickedTujuan,
+                            "125px",
+                        );
+                    }
+                });
+            }
+            if (post_action) post_action();
+        })
+        .catch(() =>
+            Swal.fire("Error", "Gagal mengambil data konversi NG.", "error"),
+        );
 }
 
-function toggleButtons(tmb) {
-    switch (tmb) {
-        case 1:
-            btnIsi.disabled = false;
-            btnKoreksi.disabled = false;
-            btnHapus.disabled = false;
-            btnProses.disabled = true;
-            btnKeluar.textContent = "Keluar";
-            break;
-        case 2:
-            btnIsi.disabled = true;
-            btnKoreksi.disabled = true;
-            btnHapus.disabled = true;
-            btnProses.disabled = false;
-            btnKeluar.textContent = "Batal";
-            break;
+function displayDataBenangNGFetch(post_action = null) {
+    fetchSelectAsync(
+        `/Benang/getListIdKonv3/${safeUrlParam(inputIdNoKonversi.value)}/${safeUrlParam(inputIdType.value)}`,
+    )
+        .then((data) => {
+            if (data.length > 0) {
+                $("html, body").animate(
+                    { scrollTop: $("#table_asal").offset().top - 125 },
+                    100,
+                );
+                listAsal.length = 0;
+                data.forEach((item) => {
+                    listAsal.push({
+                        IdType: item.IdType,
+                        NamaType: item.NamaType,
+                        JumlahPrimer: item.JumlahPrimer,
+                        JumlahSekunder: item.JumlahSekunder,
+                        JumlahTritier: item.JumlahTritier,
+                        NamaObjek: item.NamaObjek,
+                        NamaKelompokUtama: item.NamaKelompokUtama,
+                        NamaKelompok: item.NamaKelompok,
+                        NamaSubKelompok: item.NamaSubKelompok,
+                        IdObjek: item.IdObjek,
+                        IdKelompokUtama: item.IdKelompokUtama,
+                        IdKelompok: item.IdKelompok,
+                        IdSubKelompok: item.IdSubKelompok,
+                        IdTransaksi: "",
+                    });
+                });
+                addTable_DataTable(
+                    "table_asal",
+                    listAsal,
+                    colTable,
+                    rowClickedAsal,
+                    "125px",
+                );
+                setTimeout(() => {
+                    const rows = $("#table_asal tbody tr");
 
-        default:
-            break;
+                    if (rows.length > 0) {
+                        rows.attr("tabindex", "0");
+                        rows.removeClass("keyboard-selected");
+
+                        rows.eq(0).addClass("keyboard-selected").focus();
+                    }
+                }, 100);
+            } else {
+                Swal.fire(
+                    "Peringatan",
+                    "Hasil Konversi Tidak Menghasilkan Benang NG",
+                    "warning",
+                );
+            }
+            if (typeof post_action === "function") post_action(data.length > 0);
+        })
+        .catch(() =>
+            Swal.fire("Error", "Gagal mengambil data benang NG.", "error"),
+        );
+}
+
+async function prosesIsiFetch() {
+    try {
+        await fetchPost("/Benang/insMasterKonvNG", {
+            tanggal: dateMohon.value,
+            id_konversi_ext: inputIdNoKonversi.value,
+        });
+
+        const dataKonv = await fetchSelectAsync("/Benang/getMasterKonversiNG");
+        if (!dataKonv.IdKonversiNG)
+            throw new Error("Gagal mendapatkan ID Konversi NG");
+
+        const idKonvNG = dataKonv.IdKonversiNG;
+        inputIdNomor.value = idKonvNG;
+        txtNomor.value = idKonvNG;
+
+        const counterData = await fetchSelectAsync("/Benang/getListCounter");
+        const id_konv_inv = padLeft(counterData[0].NoKonversi, 9, "0");
+
+        await insertDetailLogic(id_konv_inv);
+
+        clearAll();
+        disableAll();
+        toggleButtons(1);
+        window.modeProses = "";
+        btnIsi.focus();
+        Swal.fire("Berhasil", "Data berhasil tersimpan.", "success");
+    } catch (error) {
+        Swal.fire("Error", error.message || "Gagal menyimpan data.", "error");
     }
 }
-//#endregion
 
-function init() {
-    $("#table_asal").DataTable({
-        responsive: true,
-        paging: false,
-        scrollY: "125px",
-        scrollX: "1000000px",
-        columns: colTable,
-        dom: '<"row"<"col-sm-6"i><"col-sm-6"f>>' + '<"row"<"col-sm-12"tr>>',
-        language: {
-            searchPlaceholder: " Tabel asal...",
-            search: "",
-        },
-    });
+async function insertDetailLogic(id_konv_inv) {
+    for (let i = 0; i < listAsal.length; i++) {
+        try {
+            await fetchPost("/Benang/insDetailKonvNG", {
+                id_konversi_ng: inputIdNomor.value,
+                id_type: listAsal[i].IdType.trim(),
+                jumlah_primer: listAsal[i].JumlahPrimer,
+                jumlah_sekunder: listAsal[i].JumlahSekunder,
+                jumlah_tritier: listAsal[i].JumlahTritier,
+                id_konv_inv: id_konv_inv,
+            });
+            await fetchPost("/Benang/insAsalTmpTrans", {
+                id_type_transaksi: "04",
+                uraian_detail_transaksi: "asal_konversi",
+                id_type: listAsal[i].IdType.trim(),
+                saat_awal_transaksi: dateMohon.value,
+                jumlah_primer: listAsal[i].JumlahPrimer,
+                jumlah_sekunder: listAsal[i].JumlahSekunder,
+                jumlah_tritier: listAsal[i].JumlahTritier,
+                asal_sub_kel: listAsal[i].IdSubKelompok.trim(),
+                id_konversi: id_konv_inv.trim(),
+            });
+        } catch (e) {
+            throw new Error(`Gagal insert asal index ${i}: ${e.message}`);
+        }
+    }
 
-    $("#table_tujuan").DataTable({
-        responsive: true,
-        paging: false,
-        scrollY: "125px",
-        scrollX: "1000000px",
-        columns: colTable,
-        dom: '<"row"<"col-sm-6"i><"col-sm-6"f>>' + '<"row"<"col-sm-12"tr>>',
-        language: {
-            searchPlaceholder: " Tabel tujuan...",
-            search: "",
-        },
+    for (let i = 0; i < listTujuan.length; i++) {
+        try {
+            await fetchPost("/Benang/insDetailKonvNG", {
+                id_konversi_ng: inputIdNomor.value,
+                id_type: listTujuan[i].IdType.trim(),
+                jumlah_primer: listTujuan[i].JumlahPrimer,
+                jumlah_sekunder: listTujuan[i].JumlahSekunder,
+                jumlah_tritier: listTujuan[i].JumlahTritier,
+                id_konv_inv: id_konv_inv,
+            });
+            await fetchPost("/Benang/insTujuanTmpTrans", {
+                id_type_transaksi: "04",
+                uraian_detail_transaksi: "tujuan_konversi",
+                id_type: listTujuan[i].IdType.trim(),
+                saat_awal_transaksi: dateMohon.value,
+                jumlah_primer: listTujuan[i].JumlahPrimer,
+                jumlah_sekunder: listTujuan[i].JumlahSekunder,
+                jumlah_tritier: listTujuan[i].JumlahTritier,
+                tujuan_sub_kel: listTujuan[i].IdSubKelompok.trim(),
+                id_konversi: id_konv_inv.trim(),
+            });
+        } catch (e) {
+            throw new Error(`Gagal insert tujuan index ${i}: ${e.message}`);
+        }
+    }
+}
 
-        initComplete: function () {
-            var searchInput = $('input[type="search"]').addClass(
-                "form-control"
+async function prosesKoreksiFetch() {
+    try {
+        const idKonvNG = inputIdNomor.value;
+
+        for (let i = 0; i < listAsal.length; i++) {
+            await fetchPost(
+                "/Benang/updDetailKonvNG",
+                {
+                    id_konversi: idKonvNG,
+                    id_type: listAsal[i].IdType,
+                    j_primer: listAsal[i].JumlahPrimer,
+                    j_sekunder: listAsal[i].JumlahSekunder,
+                    j_tritier: listAsal[i].JumlahTritier,
+                },
+                "PUT",
             );
+            await fetchPost(
+                "/Benang/updTmpTransaksi",
+                {
+                    id_transaksi: listAsal[i].IdTransaksi,
+                    uraian_detail_transaksi: "asal_konversi",
+                    jumlah_keluar_primer: listAsal[i].JumlahPrimer,
+                    jumlah_keluar_sekunder: listAsal[i].JumlahSekunder,
+                    jumlah_keluar_tritier: listAsal[i].JumlahTritier,
+                    asal_sub_kel: listAsal[i].IdSubKelompok || "",
+                    tujuan_sub_kelompok: "",
+                },
+                "PUT",
+            );
+        }
 
-            searchInput.wrap('<div class="input-group"></div>');
-            searchInput.before('<span class="input-group-text">Cari:</span>');
-        },
-    });
+        for (let i = 0; i < listTujuan.length; i++) {
+            await fetchPost(
+                "/Benang/updDetailKonvNG",
+                {
+                    id_konversi: idKonvNG,
+                    id_type: listTujuan[i].IdType,
+                    j_primer: listTujuan[i].JumlahPrimer,
+                    j_sekunder: listTujuan[i].JumlahSekunder,
+                    j_tritier: listTujuan[i].JumlahTritier,
+                },
+                "PUT",
+            );
+            await fetchPost(
+                "/Benang/updTmpTransaksi",
+                {
+                    id_transaksi: listTujuan[i].IdTransaksi,
+                    uraian_detail_transaksi: "tujuan_konversi",
+                    jumlah_keluar_primer: listTujuan[i].JumlahPrimer,
+                    jumlah_keluar_sekunder: listTujuan[i].JumlahSekunder,
+                    jumlah_keluar_tritier: listTujuan[i].JumlahTritier,
+                    asal_sub_kel: "",
+                    tujuan_sub_kelompok: listTujuan[i].IdSubKelompok || "",
+                },
+                "PUT",
+            );
+        }
 
+        clearAll();
+        disableAll();
+        toggleButtons(1);
+        window.modeProses = "";
+        btnIsi.focus();
+        Swal.fire("Berhasil", "Data berhasil dikoreksi.", "success");
+    } catch (error) {
+        Swal.fire("Error", error.message || "Gagal mengkoreksi data.", "error");
+    }
+}
+
+async function prosesHapusFetch(idKonvNG) {
+    try {
+        await fetchPost(
+            `/Benang/delKonversiNG/${safeUrlParam(idKonvNG)}`,
+            {},
+            "DELETE",
+        );
+        clearAll();
+        disableAll();
+        toggleButtons(1);
+        window.modeProses = "";
+        btnIsi.focus();
+        Swal.fire("Berhasil", "Data berhasil dihapus.", "success");
+    } catch (error) {
+        Swal.fire("Error", error.message || "Gagal menghapus data.", "error");
+    }
+}
+
+function rowClickedAsal(row, data, event) {
+    const idx = findClickedRowInList(listAsal, "IdType", data.IdType);
+    if (pilAsal === idx) {
+        row.classList.remove("keyboard-selected");
+        pilAsal = -1;
+        return;
+    }
+
+    pilAsal = idx;
+    clearSelection_DataTable("table_asal");
+
+    $("#table_asal tbody tr").removeClass("keyboard-selected");
+    row.classList.add("keyboard-selected");
+    clickedTable = "asal";
+
+    RK_txtIdKelut.value = data.IdKelompokUtama;
+    RK_txtNamaKelut.value = data.NamaKelompokUtama;
+    RK_txtIdKelompok.value = data.IdKelompok;
+    RK_txtNamaKelompok.value = data.NamaKelompok;
+    RK_txtIdSubkel.value = data.IdSubKelompok;
+    RK_txtNamaSubkel.value = data.NamaSubKelompok;
+    RK_txtIdType.value = data.IdType;
+    RK_txtNamaType.value = data.NamaType;
+
+    if (window.modeProses === "koreksi") {
+        txtPrimerAsal.value = data.JumlahPrimer;
+        txtSekunderAsal.value = data.JumlahSekunder;
+        txtTritierAsal.value = data.JumlahTritier;
+
+        RK_setStateKoreksi("asal");
+        RK_modeProses = "asal";
+        saldoTypeFetch(RK_txtIdType.value, true);
+    } else if (window.modeProses === "isi") {
+        RK_clearTujuan();
+        txtPrimerAsal.value = data.JumlahPrimer;
+        txtSekunderAsal.value = data.JumlahSekunder;
+        txtTritierAsal.value = data.JumlahTritier;
+
+        RK_setState(false, true, true);
+        RK_modeProses = "asal";
+        saldoTypeFetch(RK_txtIdType.value, true);
+    } else {
+        return;
+    }
+
+    $("#form_rincian_konversi").modal("show");
+}
+
+function rowClickedTujuan(row, data, event) {
+    const idx = findClickedRowInList(listTujuan, "IdType", data.IdType);
+    if (pilTujuan === idx) {
+        row.style.background = "white";
+        pilTujuan = -1;
+        return;
+    }
+    pilTujuan = idx;
+    clearSelection_DataTable("table_tujuan");
+    row.style.background = "aliceblue";
+    clickedTable = "tujuan";
+
+    if (window.modeProses === "koreksi") {
+        RK_txtIdKelutTujuan.value = data.IdKelompokUtama;
+        RK_txtNamaKelutTujuan.value = data.NamaKelompokUtama;
+        RK_txtIdKelTujuan.value = data.IdKelompok;
+        RK_txtNamaKelTujuan.value = data.NamaKelompok;
+        RK_txtIdSubkelTujuan.value = data.IdSubKelompok;
+        RK_txtNamaSubkelTujuan.value = data.NamaSubKelompok;
+        RK_txtIdTypeTujuan.value = data.IdType;
+        RK_txtNamaTypeTujuan.value = data.NamaType;
+
+        txtPrimerTujuan.value = data.JumlahPrimer;
+        txtSekunderTujuan.value = data.JumlahSekunder;
+        txtTritierTujuan.value = data.JumlahTritier;
+
+        RK_setStateKoreksi("tujuan");
+        RK_modeProses = "tujuan";
+        saldoTypeFetch(data.IdType, false);
+
+        $("#form_rincian_konversi").modal("show");
+    }
+}
+
+$(document).ready(function () {
     clearTable_DataTable("table_asal", colTable.length, "padding=250px");
     clearTable_DataTable("table_tujuan", colTable.length, "padding=250px");
+
+    $("#table_asal tbody")
+        .off("click keydown", "tr")
+        .on("click", "tr", function (e) {
+            const table = $("#table_asal").DataTable();
+            const idx = table.row(this).index();
+            const data = listAsal[idx];
+
+            if (data) {
+                rowClickedAsal(this, data, e);
+            }
+        })
+        .on("keydown", "tr", function (e) {
+            const rows = $("#table_asal tbody tr");
+            const index = rows.index(this);
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+
+                if (index < rows.length - 1) {
+                    rows.removeClass("keyboard-selected");
+
+                    rows.eq(index + 1)
+                        .addClass("keyboard-selected")
+                        .attr("tabindex", "0")
+                        .focus();
+                }
+            }
+
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+
+                if (index > 0) {
+                    rows.removeClass("keyboard-selected");
+
+                    rows.eq(index - 1)
+                        .addClass("keyboard-selected")
+                        .attr("tabindex", "0")
+                        .focus();
+                }
+            }
+
+            if (e.key === "Enter") {
+                e.preventDefault();
+
+                const table = $("#table_asal").DataTable();
+                const data = table.row(this).data();
+
+                if (data) {
+                    rowClickedAsal(this, data, e);
+                }
+            }
+        });
+
+    $("#table_tujuan tbody")
+        .off("click", "tr")
+        .on("click", "tr", function (e) {
+            const table = $("#table_tujuan").DataTable();
+            const idx = table.row(this).index();
+            const data = listTujuan[idx];
+            if (data) rowClickedTujuan(this, data, e);
+        });
+
     dateInput.value = getCurrentDate();
     dateMohon.value = getCurrentDate();
     timeAkhir.value = "00:00";
     timeAwal.value = "00:00";
+
     btnIsi.focus();
-
-    /**
-     * DEBUG
-     */
-
-    // dateInput.value = "2023-08-22";
-    // lihatDataKonversiNGFetch("1");
-
-    // txtShift.value = "P";
-
-    // addOptionIfNotExists(slcNoKonversi, "EXT-0000009043");
-    // addOptionIfNotExists(slcType, "1");
-    // displayDataBenangNGFetch();
-}
-
-$(document).ready(() => init());
+    toggleButtons(1);
+    disableAll();
+});
+//#endregion

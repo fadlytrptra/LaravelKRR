@@ -27,7 +27,7 @@
                             <th>Penyelesaian</th>
                             <th>Mulai</th>
                             <th>Selesai</th>
-                            <th>Kode</th>
+                            {{-- <th>Kode</th> --}}
                         </tr>
                     </thead>
                     <tbody></tbody>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Extruder\ExtruderNet;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -108,24 +108,61 @@ class BenangController extends Controller
         // @idkonvNG  varchar(14)
     }
 
-    public function updProsesACCKonversi($id_transaksi, $id_type, $waktu_acc, $keluar_primer, $keluar_sekunder, $keluar_tritier, $masuk_primer, $masuk_sekunder, $masuk_tritier)
+    public function updProsesACCKonversi(Request $request)
     {
-        return DB::connection('ConnInventory')->statement(
-            'exec SP_5298_EXT_PROSES_ACC_KONVERSI @XIdTransaksi = ?, @XIdType = ?, @XUserACC = ' . Auth::user()->NomorUser . ', @XWaktuACC = ?, @XKeluarPrimer = ?, @XKeluarSekunder = ?, @XKeluarTritier = ?, @XMasukPrimer = ?, @XMasukSekunder = ?, @XMasukTritier = ?',
-            [$id_transaksi, $id_type, $waktu_acc, $keluar_primer, $keluar_sekunder, $keluar_tritier, $masuk_primer, $masuk_sekunder, $masuk_tritier]
-        );
+        try {
+            $validated = $request->validate([
+                'id_transaksi' => 'required|integer',
+                'id_type' => 'required|string',
+                'waktu_acc' => 'nullable|string',
+                'keluar_primer' => 'required|numeric',
+                'keluar_sekunder' => 'required|numeric',
+                'keluar_tritier' => 'required|numeric',
+                'masuk_primer' => 'required|numeric',
+                'masuk_sekunder' => 'required|numeric',
+                'masuk_tritier' => 'required|numeric'
+            ]);
 
-        // @XIdTransaksi  integer, @XIdType  varchar(20), @XUserACC char(7), @XWaktuACC  datetime = null, @XKeluarPrimer  numeric(9,2), @XKeluarSekunder  numeric(9,2), @XKeluarTritier  numeric(9,2), @XMasukPrimer  numeric(9,2), @XMasukSekunder  numeric(9,2), @XMasukTritier  numeric(9,2)
+            DB::connection('ConnInventory')->statement(
+                'exec SP_5298_EXT_PROSES_ACC_KONVERSI @XIdTransaksi = ?, @XIdType = ?, @XUserACC = ?, @XWaktuACC = ?, @XKeluarPrimer = ?, @XKeluarSekunder = ?, @XKeluarTritier = ?, @XMasukPrimer = ?, @XMasukSekunder = ?, @XMasukTritier = ?',
+                [
+                    $validated['id_transaksi'],
+                    $validated['id_type'],
+                    Auth::user()->NomorUser,
+                    $validated['waktu_acc'] ?? null,
+                    $validated['keluar_primer'],
+                    $validated['keluar_sekunder'],
+                    $validated['keluar_tritier'],
+                    $validated['masuk_primer'],
+                    $validated['masuk_sekunder'],
+                    $validated['masuk_tritier']
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updACCKonversiNG($id_konversi_ng)
+    public function updACCKonversiNG(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_ACC_KONVERSI_NG @IdKonversiNG = ?, @UserAcc = ' . Auth::user()->NomorUser,
-            [$id_konversi_ng]
-        );
+        try {
+            $validated = $request->validate([
+                'id_konversi_ng' => 'required|integer'
+            ]);
 
-        // @IdKonversiNG int, @UserAcc char(7)
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_ACC_KONVERSI_NG @IdKonversiNG = ?, @UserAcc = ?',
+                [$validated['id_konversi_ng'], Auth::user()->NomorUser]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 
@@ -222,6 +259,14 @@ class BenangController extends Controller
         // @IdDivisi char(3)=null, @Tanggal datetime=null, @Shift char(2)=null
     }
 
+    public function getListIdKonv2($id_konversi)
+    {
+        return DB::connection('ConnExtruder')->select(
+            'exec SP_5298_EXT_LIST_IDKONV @kode = 2, @IdKonversi = ?',
+            [$id_konversi]
+        );
+    }
+
     public function getListIdKonv3($id_konversi, $id_type)
     {
         return DB::connection('ConnExtruder')->select(
@@ -233,15 +278,24 @@ class BenangController extends Controller
         // dd($this->getListIdKonv(3, 'KONV0001', 'type1'));
     }
 
-    public function insMasterKonvNG($tanggal, $id_konversi_ext)
+    public function insMasterKonvNG(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_MASTERKONV_NG @Tanggal = ?, @UserInput = ' . Auth::user()->NomorUser . ', @IdKonversiEXT = ?',
-            [$tanggal, $id_konversi_ext]
-        );
+        try {
+            $validated = $request->validate([
+                'tanggal' => 'required|date',
+                'id_konversi_ext' => 'required|string'
+            ]);
 
-        // LAST Belum di-cek
-        // @Tanggal datetime, @UserInput Char(7), @IdKonversiEXT Char(14)
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_MASTERKONV_NG @Tanggal = ?, @UserInput = ?, @IdKonversiEXT = ?',
+                [$validated['tanggal'], Auth::user()->NomorUser, $validated['id_konversi_ext']]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function getMasterKonversiNG()
@@ -261,64 +315,173 @@ class BenangController extends Controller
         );
     }
 
-    public function insDetailKonvNG($id_konversi_ng, $id_type, $jumlah_primer, $jumlah_sekunder, $jumlah_tritier, $id_konv_inv = null)
+    public function insDetailKonvNG(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_DETAILKONV_NG @IdKonversiNG = ?, @IdType = ?, @JumlahPrimer = ?, @JumlahSekunder = ?, @JumlahTritier = ?, @IdKonv_Inv = ?',
-            [$id_konversi_ng, $id_type, $jumlah_primer, $jumlah_sekunder, $jumlah_tritier, $id_konv_inv]
-        );
+        try {
+            $validated = $request->validate([
+                'id_konversi_ng' => 'required|integer',
+                'id_type' => 'required|string',
+                'jumlah_primer' => 'required|numeric',
+                'jumlah_sekunder' => 'required|numeric',
+                'jumlah_tritier' => 'required|numeric',
+                'id_konv_inv' => 'nullable|string'
+            ]);
 
-        // @IdKonversiNG int, @IdType varchar(20), @JumlahPrimer numeric(9,2), @JumlahSekunder numeric(9,2), @JumlahTritier numeric(9,2), @IdKonv_Inv varchar(10) = null
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_DETAILKONV_NG @IdKonversiNG = ?, @IdType = ?, @JumlahPrimer = ?, @JumlahSekunder = ?, @JumlahTritier = ?, @IdKonv_Inv = ?',
+                [$validated['id_konversi_ng'], $validated['id_type'], $validated['jumlah_primer'], $validated['jumlah_sekunder'], $validated['jumlah_tritier'], $validated['id_konv_inv']]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function insAsalTmpTrans($id_type_transaksi, $uraian_detail_transaksi, $id_type, $saat_awal_transaksi, $jumlah_primer, $jumlah_sekunder, $jumlah_tritier, $asal_sub_kel, $id_konversi)
+    public function insAsalTmpTrans(Request $request)
     {
-        return DB::connection('ConnInventory')->statement(
-            'exec SP_5298_EXT_INSERT_04_ASALTMPTRANSAKSI @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XIdType = ?, @XIdPemohon = ' . Auth::user()->NomorUser . ', @XSaatawalTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalsubKel = ?, @XIdKonversi = ?',
-            [$id_type_transaksi, Str::title(str_replace('_', ' ', $uraian_detail_transaksi)), $id_type, $saat_awal_transaksi, $jumlah_primer, $jumlah_sekunder, $jumlah_tritier, $asal_sub_kel, $id_konversi]
-        );
+        try {
+            $validated = $request->validate([
+                'id_type_transaksi' => 'required|string',
+                'uraian_detail_transaksi' => 'required|string',
+                'id_type' => 'required|string',
+                'saat_awal_transaksi' => 'required|string',
+                'jumlah_primer' => 'required|numeric',
+                'jumlah_sekunder' => 'required|numeric',
+                'jumlah_tritier' => 'required|numeric',
+                'asal_sub_kel' => 'required|string',
+                'id_konversi' => 'required|string'
+            ]);
 
-        // @XIdTypeTransaksi  char(2), @XUraianDetailTransaksi  varchar(50), @XIdType  varchar(20), @XIdPemohon  char(7), @XSaatawalTransaksi  datetime, @XJumlahKeluarPrimer  numeric(15,2), @XJumlahKeluarSekunder numeric(15,2), @XJumlahKeluarTritier numeric(15,2), @XAsalsubKel  char(6), @XIdKonversi  char(9)
+            DB::connection('ConnInventory')->statement(
+                'exec SP_5298_EXT_INSERT_04_ASALTMPTRANSAKSI @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XIdType = ?, @XIdPemohon = ?, @XSaatawalTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalsubKel = ?, @XIdKonversi = ?',
+                [
+                    $validated['id_type_transaksi'],
+                    Str::title(str_replace('_', ' ', $validated['uraian_detail_transaksi'])),
+                    $validated['id_type'],
+                    Auth::user()->NomorUser,
+                    $validated['saat_awal_transaksi'],
+                    $validated['jumlah_primer'],
+                    $validated['jumlah_sekunder'],
+                    $validated['jumlah_tritier'],
+                    $validated['asal_sub_kel'],
+                    $validated['id_konversi']
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function insTujuanTmpTrans($id_type_transaksi, $uraian_detail_transaksi, $id_type, $saat_awal_transaksi, $jumlah_primer, $jumlah_sekunder, $jumlah_tritier, $tujuan_sub_kel, $id_konversi)
+    public function insTujuanTmpTrans(Request $request)
     {
-        return DB::connection('ConnInventory')->statement(
-            'exec SP_5298_EXT_INSERT_04_TUJUANTMPTRANSAKSI @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XIdType = ?, @XIdPemohon = ' . Auth::user()->NomorUser . ', @XSaatawalTransaksi = ?, @XJumlahMasukPrimer = ?, @XJumlahMasukSekunder = ?, @XJumlahMasukTritier = ?, @XTujuansubKel = ?, @XIdKonversi = ?',
-            [$id_type_transaksi, Str::title(str_replace('_', ' ', $uraian_detail_transaksi)), $id_type, $saat_awal_transaksi, $jumlah_primer, $jumlah_sekunder, $jumlah_tritier, $tujuan_sub_kel, $id_konversi]
-        );
+        try {
+            $validated = $request->validate([
+                'id_type_transaksi' => 'required|string',
+                'uraian_detail_transaksi' => 'required|string',
+                'id_type' => 'required|string',
+                'saat_awal_transaksi' => 'required|string',
+                'jumlah_primer' => 'required|numeric',
+                'jumlah_sekunder' => 'required|numeric',
+                'jumlah_tritier' => 'required|numeric',
+                'tujuan_sub_kel' => 'required|string',
+                'id_konversi' => 'required|string'
+            ]);
 
-        // @XIdTypeTransaksi  char(2), @XUraianDetailTransaksi  varchar(50), @XIdType  varchar(20), @XIdPemohon  char(7), @XSaatawalTransaksi  datetime, @XJumlahMasukPrimer  numeric(15,2), @XJumlahMasukSekunder numeric(15,2), @XJumlahMasukTritier numeric(15,2), @XtujuansubKel  char(6), @XIdKonversi  char(9)
+            DB::connection('ConnInventory')->statement(
+                'exec SP_5298_EXT_INSERT_04_TUJUANTMPTRANSAKSI @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XIdType = ?, @XIdPemohon = ?, @XSaatawalTransaksi = ?, @XJumlahMasukPrimer = ?, @XJumlahMasukSekunder = ?, @XJumlahMasukTritier = ?, @XtujuansubKel = ?, @XIdKonversi = ?',
+                [
+                    $validated['id_type_transaksi'],
+                    Str::title(str_replace('_', ' ', $validated['uraian_detail_transaksi'])),
+                    $validated['id_type'],
+                    Auth::user()->NomorUser,
+                    $validated['saat_awal_transaksi'],
+                    $validated['jumlah_primer'],
+                    $validated['jumlah_sekunder'],
+                    $validated['jumlah_tritier'],
+                    $validated['tujuan_sub_kel'],
+                    $validated['id_konversi']
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updDetailKonvNG($id_konversi, $id_type, $j_primer, $j_sekunder, $j_tritier)
+    public function updDetailKonvNG(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_DETAIL_KONV_NG @idkonversi = ?, @idType = ?, @jprimer = ?, @jsekunder = ?, @jtritier = ?',
-            [$id_konversi, $id_type, $j_primer, $j_sekunder, $j_tritier]
-        );
+        try {
+            $validated = $request->validate([
+                'id_konversi' => 'required|integer',
+                'id_type' => 'required|string',
+                'j_primer' => 'required|numeric',
+                'j_sekunder' => 'required|numeric',
+                'j_tritier' => 'required|numeric'
+            ]);
 
-        // @idkonversi int, @idType varchar(20), @jprimer numeric(18,2), @jsekunder numeric(18,2), @jtritier numeric(18,2)
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_DETAIL_KONV_NG @idkonversi = ?, @idType = ?, @jprimer = ?, @jsekunder = ?, @jtritier = ?',
+                [$validated['id_konversi'], $validated['id_type'], $validated['j_primer'], $validated['j_sekunder'], $validated['j_tritier']]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updTmpTransaksi($id_transaksi, $uraian_detail_transaksi, $jumlah_keluar_primer, $jumlah_keluar_sekunder, $jumlah_keluar_tritier, $tujuan_sub_kelompok = null)
+    public function updTmpTransaksi(Request $request)
     {
-        return DB::connection('ConnInventory')->statement(
-            'exec SP_5298_EXT_UPDATE_TMPTRANSAKSI @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanSubKelompok = ?',
-            [$id_transaksi, Str::title(str_replace('_', ' ', $uraian_detail_transaksi)), $jumlah_keluar_primer, $jumlah_keluar_sekunder, $jumlah_keluar_tritier, $tujuan_sub_kelompok]
-        );
+        try {
+            $validated = $request->validate([
+                'id_transaksi' => 'required|integer',
+                'uraian_detail_transaksi' => 'required|string',
+                'jumlah_keluar_primer' => 'required|numeric',
+                'jumlah_keluar_sekunder' => 'required|numeric',
+                'jumlah_keluar_tritier' => 'required|numeric',
+                'tujuan_sub_kelompok' => 'nullable|string'
+            ]);
 
-        // @XIdTransaksi       int, @XUraianDetailTransaksi varchar (150) = null, @XJumlahKeluarPrimer numeric (9,2), @XJumlahKeluarSekunder numeric (9,2), @XJumlahKeluarTritier numeric (9,2), @XTujuanSubKelompok char (6) =null
+            DB::connection('ConnInventory')->statement(
+                'exec SP_5298_EXT_UPDATE_TMPTRANSAKSI @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanSubKelompok = ?',
+                [
+                    $validated['id_transaksi'],
+                    Str::title(str_replace('_', ' ', $validated['uraian_detail_transaksi'])),
+                    $validated['jumlah_keluar_primer'],
+                    $validated['jumlah_keluar_sekunder'],
+                    $validated['jumlah_keluar_tritier'],
+                    $validated['tujuan_sub_kelompok']
+                ]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function delKonversiNG($id_konversi)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5409_EXT_DELETE_KONVERSI_NG @idkonversi = ?',
-            [$id_konversi]
-        );
+        try {
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5409_EXT_DELETE_KONVERSI_NG @idkonversi = ?',
+                [$id_konversi]
+            );
 
-        // @idkonversi varchar(14)
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Extruder\ExtruderNet;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -35,11 +35,13 @@ class OrderController extends Controller
 
         switch ($form_name) {
             case 'formOrderMaintenance':
-                $form_data = ['listBenang' => $this->getListBenang($kode_benang)];
+                // $form_data = ['listBenang' => $this->getListBenang($kode_benang)];
+                $form_data = [];
                 break;
 
             case 'formOrderStatus':
                 $form_data = ['listBatalOrder' => $this->getListBatalOrd($id_divisi)];
+                // $form_data = [];
                 break;
 
             default:
@@ -65,67 +67,141 @@ class OrderController extends Controller
         );
     }
 
-    public function insOrderBenang($gedung, $tanggal, $identifikasi, $kode = null)
+    public function insOrderBenang(Request $request)
     {
-        if ($gedung == 'B') {
-            return DB::connection('ConnExtruder')->statement(
-                'exec SP_1273_MEX_INSERT_ORDER_BENANG @tanggal = ?, @identifikasi = ?, @user = '. Auth::user()->NomorUser,
-                [$tanggal, str_replace('~', '/', strtoupper(str_replace('_', ' ', $identifikasi)))]
-            );
-        } else {
-            return DB::connection('ConnExtruder')->statement(
-                'exec SP_5298_EXT_INSERT_ORDER_BENANG @tanggal = ?, @identifikasi = ?, @user = '. Auth::user()->NomorUser.', @kode = ?',
-                [$tanggal, str_replace('~', '/', strtoupper(str_replace('_', ' ', $identifikasi))), $kode]
-            );
+        try {
+            $validated = $request->validate([
+                'gedung' => 'required|string',
+                'tanggal' => 'required|date',
+                'identifikasi' => 'required|string',
+                'kode' => 'nullable|string'
+            ]);
+
+            $cleanIdentifikasi = strtoupper($validated['identifikasi']);
+            $userId = Auth::user()->NomorUser;
+
+            if ($validated['gedung'] === 'B') {
+                DB::connection('ConnExtruder')->statement(
+                    'exec SP_1273_MEX_INSERT_ORDER_BENANG @tanggal = ?, @identifikasi = ?, @user = ?',
+                    [$validated['tanggal'], $cleanIdentifikasi, $userId]
+                );
+            } else {
+                DB::connection('ConnExtruder')->statement(
+                    'exec SP_5298_EXT_INSERT_ORDER_BENANG @tanggal = ?, @identifikasi = ?, @user = ?, @kode = ?',
+                    [$validated['tanggal'], $cleanIdentifikasi, $userId, $validated['kode'] ?? null]
+                );
+            }
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 
+    // public function getNoOrder($kode = null)
+    // {
+    //     $divisi = $kode == 'D'
+    //         ? 'DEX'
+    //         : 'EXT';
+
+    //     $mCounterResult = DB::connection('ConnExtruder')
+    //         ->select('SELECT IdOrder + 1 AS mCounter FROM CounterTrans WHERE divisi = ?', [$divisi]);
+
+    //     $mCounter = $mCounterResult[0]->mCounter;
+    //     $mCode = '000000000' . $mCounter;
+    //     $mCode = $divisi . substr($mCode, -7);
+
+    //     return response()->json(['NoOrder' => $mCode]);
+
+    //     // *Query SELECT pada SP_5298_EXT_INSERT_ORDER_BENANG
+    // }
+
+    // public function getNoOrderMjs()
+    // {
+    //     $mCounterResult = DB::connection('ConnExtruder')
+    //         ->select('SELECT IdOrder + 1 AS mCounter FROM CounterTrans WHERE divisi = ?', ['MEX']);
+
+    //     $mCounter = $mCounterResult[0]->mCounter;
+    //     $mCode = '000000000' . $mCounter;
+    //     $mCode = 'MEX' . substr($mCode, -7);
+
+    //     return response()->json(['NoOrder' => $mCode]);
+
+    //     // *Query SELECT pada SP_1273_MEX_INSERT_ORDER_BENANG
+    // }
+
     public function getNoOrder($kode = null)
     {
-        $divisi = $kode == 'D'
-            ? 'DEX'
-            : 'EXT';
+        $divisi = $kode == 'D' ? 'DEX' : 'EXT';
 
         $mCounterResult = DB::connection('ConnExtruder')
-            ->select('SELECT IdOrder + 1 AS mCounter FROM CounterTrans WHERE divisi = ?', [$divisi]);
+            ->select('SELECT IdOrder AS mCounter FROM CounterTrans WHERE divisi = ?', [$divisi]);
 
-        $mCounter = $mCounterResult[0]->mCounter;
+        $mCounter = !empty($mCounterResult) ? $mCounterResult[0]->mCounter + 1 : 1;
+
         $mCode = '000000000' . $mCounter;
         $mCode = $divisi . substr($mCode, -7);
 
         return response()->json(['NoOrder' => $mCode]);
-
-        // *Query SELECT pada SP_5298_EXT_INSERT_ORDER_BENANG
     }
 
     public function getNoOrderMjs()
     {
         $mCounterResult = DB::connection('ConnExtruder')
-            ->select('SELECT IdOrder + 1 AS mCounter FROM CounterTrans WHERE divisi = ?', ['MEX']);
+            ->select('SELECT IdOrder AS mCounter FROM CounterTrans WHERE divisi = ?', ['MEX']);
 
-        $mCounter = $mCounterResult[0]->mCounter;
+        $mCounter = !empty($mCounterResult) ? $mCounterResult[0]->mCounter + 1 : 1;
+
         $mCode = '000000000' . $mCounter;
         $mCode = 'MEX' . substr($mCode, -7);
 
         return response()->json(['NoOrder' => $mCode]);
-
-        // *Query SELECT pada SP_1273_MEX_INSERT_ORDER_BENANG
     }
 
-    public function insOrderDetail($id_order, $type_benang, $jmlh_primer, $jmlh_sekunder, $jmlh_tritier, $prod_primer, $prod_sekunder, $prod_tritier)
+    public function insOrderDetail(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_INSERT_ORDERDETAIL_BENANG @idorder = ?, @typebenang = ?, @jumlahprimer = ?, @jumlahsekunder = ?, @jumlahtritier = ?, @jumprodprimer = ?, @jumprodsekunder = ?, @jumprodtritier = ?',
-            [$id_order, str_replace('~', '/', strtoupper(str_replace('_', ' ', $type_benang))), $jmlh_primer, $jmlh_sekunder, $jmlh_tritier, $prod_primer, $prod_sekunder, $prod_tritier]
-        );
+        try {
+            $validated = $request->validate([
+                'id_order' => 'required|string',
+                'type_benang' => 'required|string',
+                'jmlh_primer' => 'required|numeric',
+                'jmlh_sekunder' => 'required|numeric',
+                'jmlh_tritier' => 'required|numeric',
+                'prod_primer' => 'required|numeric',
+                'prod_sekunder' => 'required|numeric',
+                'prod_tritier' => 'required|numeric'
+            ]);
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_INSERT_ORDERDETAIL_BENANG @idorder = ?, @typebenang = ?, @jumlahprimer = ?, @jumlahsekunder = ?, @jumlahtritier = ?, @jumprodprimer = ?, @jumprodsekunder = ?, @jumprodtritier = ?',
+                [$validated['id_order'], strtoupper($validated['type_benang']), $validated['jmlh_primer'], $validated['jmlh_sekunder'], $validated['jmlh_tritier'], $validated['prod_primer'], $validated['prod_sekunder'], $validated['prod_tritier']]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
-    public function updCounterOrder($id_divisi)
+    public function updCounterOrder(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_UPDATE_COUNTER_ORDER @iddivisi = ?',
-            [$id_divisi]
-        );
+        try {
+            $validated = $request->validate([
+                'id_divisi' => 'required|string'
+            ]);
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_UPDATE_COUNTER_ORDER @iddivisi = ?',
+                [$validated['id_divisi']]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 
@@ -146,12 +222,23 @@ class OrderController extends Controller
         );
     }
 
-    public function updAccOrder($id_order)
+    public function updAccOrder(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_ACC_ORDER @idorder = ?, @useracc = '. Auth::user()->NomorUser,
-            [$id_order]
-        );
+        try {
+            $validated = $request->validate([
+                'id_order' => 'required|string'
+            ]);
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_ACC_ORDER @idorder = ?, @useracc = ?',
+                [$validated['id_order'], Auth::user()->NomorUser]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 
@@ -172,12 +259,25 @@ class OrderController extends Controller
         );
     }
 
-    public function updStatusOrder($id_order, $status, $ket)
+    public function updStatusOrder(Request $request)
     {
-        return DB::connection('ConnExtruder')->statement(
-            'exec SP_5298_EXT_STATUS_ORDER @idorder = ?, @status = ?, @ket = ?',
-            [$id_order, $status, strtoupper(str_replace('_', ' ', $ket))]
-        );
+        try {
+            $validated = $request->validate([
+                'id_order' => 'required|string',
+                'status' => 'required|string',
+                'ket' => 'required|string'
+            ]);
+
+            DB::connection('ConnExtruder')->statement(
+                'exec SP_5298_EXT_STATUS_ORDER @idorder = ?, @status = ?, @ket = ?',
+                [$validated['id_order'], $validated['status'], strtoupper($validated['ket'])]
+            );
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     #endregion
 }
