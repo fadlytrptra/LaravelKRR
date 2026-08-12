@@ -1833,22 +1833,13 @@ Route::group(['middleware' => ['auth']], function () {
     #endregion
 
     #region Kencana
-    Route::get('Kencana', 'App\Http\Controllers\HomeController@Kencana')->name('Kencana.Home');
-    Route::put('/Kencana/BttbPembelian/updateFlag',[App\Http\Controllers\Kencana\BttbPembelianController::class, 'updateFlag']);
-    Route::resource('Kencana/PermohonanPembelian', App\Http\Controllers\Kencana\PermohonanPembelianController::class);
-    Route::get('/Kencana/AccPermohonan/dokumentasi/{noTrans}',[App\Http\Controllers\Kencana\AccPermohonanController::class, 'downloadDokumentasi'])->name('AccPermohonan.downloadDokumentasi');
-    Route::resource('Kencana/AccPermohonan', App\Http\Controllers\Kencana\AccPermohonanController::class);
-    Route::get('/Kencana/AccPembelian/dokumentasi/{noTrans}', [App\Http\Controllers\Kencana\AccPembelianController::class, 'downloadDokumentasi'])->name('AccPembelian.downloadDokumentasi');
-    Route::resource('Kencana/AccPembelian', App\Http\Controllers\Kencana\AccPembelianController::class);
-    Route::get('/Kencana/SppbPembelian/print', [App\Http\Controllers\Kencana\SppbPembelianController::class, 'print']);
-    Route::post('/Kencana/SppbPembelian/sendEmailSupplier', [App\Http\Controllers\Kencana\SppbPembelianController::class, 'sendEmailSupplier'])->name('SppbPembelian.sendEmailSupplier');
-    Route::resource('Kencana/SppbPembelian', App\Http\Controllers\Kencana\SppbPembelianController::class);
-    Route::resource('Kencana/BttbPembelian', App\Http\Controllers\Kencana\BttbPembelianController::class);
-    Route::resource('Kencana/TransferBarang', App\Http\Controllers\Kencana\TransferBarangController::class);
-    Route::get('Kencana/Billing/{id}/show', 'App\Http\Controllers\Kencana\BillingKencanaController@show')->name('billing.show');
-    Route::post('Kencana/Billing/{id}/up', 'App\Http\Controllers\Kencana\BillingKencanaController@update')->name('billing.update');
-    Route::post('Kencana/Billing/{id}', 'App\Http\Controllers\Kencana\BillingKencanaController@destroy')->name('billing.destroy');
-    Route::resource('Kencana/Billing', App\Http\Controllers\Kencana\BillingKencanaController::class);
+    // Route::get('Kencana', 'App\Http\Controllers\HomeController@Kencana')->name('Kencana.Home');
+    // Route::resource('Kencana/PermohonanPembelian', App\Http\Controllers\Kencana\PermohonanPembelianController::class);
+    // Route::resource('Kencana/AccPermohonan', App\Http\Controllers\Kencana\AccPermohonanController::class);
+    // Route::resource('Kencana/AccPembelian', App\Http\Controllers\Kencana\AccPembelianController::class);
+    // Route::resource('Kencana/SppbPembelian', App\Http\Controllers\Kencana\SppbPembelianController::class);
+    // Route::resource('Kencana/BttbPembelian', App\Http\Controllers\Kencana\BttbPembelianController::class);
+    // Route::resource('Kencana/TransferBarang', App\Http\Controllers\Kencana\TransferBarangController::class);
     #endregion
 
     #region Company Profile

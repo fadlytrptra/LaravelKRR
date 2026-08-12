@@ -138,30 +138,6 @@ return [
                 'name' => env('MAILSHIPMENT_FROM_NAME'),
             ],
         ],
-
-        'MailKencana' => [
-            'transport' => 'smtp',
-            'host' => env('MAILKENCANA_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAILKENCANA_PORT', 587),
-            'encryption' => env('MAILKENCANA_ENCRYPTION', 'tls'),
-            'username' => env('MAILKENCANA_USERNAME'),
-            'password' => env('MAILKENCANA_PASSWORD'),
-            'timeout' => null,
-            'auth_mode' => null,
-            'from' => [
-                'address' => env('MAILKENCANA_FROM_ADDRESS'),
-                'name' => env('MAILKENCANA_FROM_NAME'),
-            ],
-        ],
-
-        'gmail' => [
-            'transport' => 'smtp',
-            'host' => 'smtp.gmail.com',
-            'port' => 587,
-            'encryption' => 'tls',
-            'username' => env('GMAIL_USERNAME'),
-            'password' => env('GMAIL_APP_PASSWORD'),
-        ],
     ],
 
     /*
