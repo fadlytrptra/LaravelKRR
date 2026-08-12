@@ -138,6 +138,15 @@ return [
                 'name' => env('MAILSHIPMENT_FROM_NAME'),
             ],
         ],
+
+        'gmail' => [
+            'transport' => 'smtp',
+            'host' => 'smtp.gmail.com',
+            'port' => 587,
+            'encryption' => 'tls',
+            'username' => env('GMAIL_USERNAME'),
+            'password' => env('GMAIL_APP_PASSWORD'),
+        ],
     ],
 
     /*

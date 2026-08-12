@@ -318,6 +318,23 @@ return [
             'encrypt' => 'yes',
             'trust_server_certificate' => true,
         ],
+
+        'ConnKCNPurchase' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_SEVENTEENTH', '127.0.0.1'),
+            'port' => env('DB_PORT_SEVENTEENTH', '1433'),
+            'database' => env('DB_DATABASE_SEVENTEENTH', 'forge'),
+            'username' => env('DB_USERNAME_SEVENTEENTH', 'forge'),
+            'password' => env('DB_PASSWORD_SEVENTEENTH', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => 'yes',
+            'trust_server_certificate' => true,
+        ],
+
+
     ],
 
     /*
