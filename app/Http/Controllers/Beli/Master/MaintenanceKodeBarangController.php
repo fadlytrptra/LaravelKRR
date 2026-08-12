@@ -224,6 +224,42 @@ class MaintenanceKodeBarangController extends Controller
                     $Penjaluk,
                     $Barang_Export
                 ]);
+
+                $data = DB::connection('ConnKCNPurchase')->statement('exec SpInsert_TypeBarang_dotNet @USERINPUT =?, @Kriteria =?,@Jenis_Pembelian =?,@BrgSama =?,@KodeBrgAslinya =?,@NO_SUB_KATEGORI =?,@NAMA_BRG =?,@KET =?,@KET_KHUSUS =?,@ST_TRI =?,@ST_SEK =?,@ST_PRIM =?,@NO_SATUAN_UMUM =?,@ROUND =?,@D_Tek0 =?,@D_Tek1 =?,@D_Tek2 =?,@D_Tek3 =?,@D_Tek4 =?,@D_Tek5 =?,@D_Tek6 =?,@D_Tek7 =?,@D_Tek8 =?,@D_Tek9 =?,@D_Tek10 =?,@D_Tek11 =?,@D_Tek12 =?,@D_Tek13 =?,@Ket_Tek0 =?,@Ket_Tek1 =?,@KdSpec =?,@Penjaluk =?,@Barang_Export =?', [
+                    $USERINPUT,
+                    $Kriteria,
+                    $Jenis_Pembelian,
+                    $BrgSama,
+                    $KodeBrgAslinya,
+                    $NO_SUB_KATEGORI,
+                    $NAMA_BRG,
+                    $KET,
+                    $KET_KHUSUS,
+                    $ST_TRI,
+                    $ST_SEK,
+                    $ST_PRIM,
+                    $NO_SATUAN_UMUM,
+                    $ROUND,
+                    $D_Tek0,
+                    $D_Tek1,
+                    $D_Tek2,
+                    $D_Tek3,
+                    $D_Tek4,
+                    $D_Tek5,
+                    $D_Tek6,
+                    $D_Tek7,
+                    $D_Tek8,
+                    $D_Tek9,
+                    $D_Tek10,
+                    $D_Tek11,
+                    $D_Tek12,
+                    $D_Tek13,
+                    $Ket_Tek0,
+                    $Ket_Tek1,
+                    $KdSpec,
+                    $Penjaluk,
+                    $Barang_Export
+                ]);
                 return response()->json(['message' => 'Data berhasil ditambahkan', "kd" => $chrCounterBrg]);
             } catch (\Throwable $Error) {
                 return response()->json($Error);
@@ -232,6 +268,7 @@ class MaintenanceKodeBarangController extends Controller
             return response()->json('Parameter harus diisi');
         }
     }
+
     public function koreksi(Request $request)
     {
         $USERKOREKSI = trim(Auth::user()->NomorUser);
@@ -265,9 +302,50 @@ class MaintenanceKodeBarangController extends Controller
         $Penjaluk = $request->input('Penjaluk');
         $Barang_Export = $request->input('Barang_Export');
 
+        $cekDatabaseKCN = DB::connection('ConnKCNPurchase')
+            ->selectOne("SELECT DB_NAME() AS DatabaseName");
+
+        // dd([
+        //     'DatabaseKCN' => $cekDatabaseKCN->DatabaseName,
+        //     'KD_BRG' => $KD_BRG,
+        //     'KET' => $KET,
+        // ]);
+
         if ($KD_BRG != null) {
             try {
                 $data = DB::connection('ConnPurchase')->statement('exec spKoreksi_TypeBarang_dotNet @USERKOREKSI =?,@KD_BRG =?,@NO_SUB_KATEGORI =?,@NAMA_BRG =?,@KET =?,@KET_KHUSUS =?,@ST_TRI =?,@ST_SEK =?,@ST_PRIM =?,@NO_SATUAN_UMUM =?,@ROUND =?,@D_Tek0 =?,@D_Tek1 =?,@D_Tek2 =?,@D_Tek3 =?,@D_Tek4 =?,@D_Tek5 =?,@D_Tek6 =?,@D_Tek7 =?,@D_Tek8 =?,@D_Tek9 =?,@D_Tek10 =?,@D_Tek11 =?,@D_Tek12 =?,@D_Tek13 =?,@Ket_Tek0 =?,@Ket_Tek1 =?,@KdSpec =?,@Penjaluk =?,@Barang_Export =?', [
+                    $USERKOREKSI,
+                    $KD_BRG,
+                    $NO_SUB_KATEGORI,
+                    $NAMA_BRG,
+                    $KET,
+                    $KET_KHUSUS,
+                    $ST_TRI,
+                    $ST_SEK,
+                    $ST_PRIM,
+                    $NO_SATUAN_UMUM,
+                    $ROUND,
+                    $D_Tek0,
+                    $D_Tek1,
+                    $D_Tek2,
+                    $D_Tek3,
+                    $D_Tek4,
+                    $D_Tek5,
+                    $D_Tek6,
+                    $D_Tek7,
+                    $D_Tek8,
+                    $D_Tek9,
+                    $D_Tek10,
+                    $D_Tek11,
+                    $D_Tek12,
+                    $D_Tek13,
+                    $Ket_Tek0,
+                    $Ket_Tek1,
+                    $KdSpec,
+                    $Penjaluk,
+                    $Barang_Export
+                ]);
+                $data = DB::connection('ConnKCNPurchase')->statement('exec spKoreksi_TypeBarang_dotNet @USERKOREKSI =?,@KD_BRG =?,@NO_SUB_KATEGORI =?,@NAMA_BRG =?,@KET =?,@KET_KHUSUS =?,@ST_TRI =?,@ST_SEK =?,@ST_PRIM =?,@NO_SATUAN_UMUM =?,@ROUND =?,@D_Tek0 =?,@D_Tek1 =?,@D_Tek2 =?,@D_Tek3 =?,@D_Tek4 =?,@D_Tek5 =?,@D_Tek6 =?,@D_Tek7 =?,@D_Tek8 =?,@D_Tek9 =?,@D_Tek10 =?,@D_Tek11 =?,@D_Tek12 =?,@D_Tek13 =?,@Ket_Tek0 =?,@Ket_Tek1 =?,@KdSpec =?,@Penjaluk =?,@Barang_Export =?', [
                     $USERKOREKSI,
                     $KD_BRG,
                     $NO_SUB_KATEGORI,
@@ -321,16 +399,35 @@ class MaintenanceKodeBarangController extends Controller
                 $resultHapus = DB::connection('ConnPurchase')->statement('exec spDelete_TypeBarang_dotNet @KD_BRG =?', [
                     $KD_BRG0
                 ]);
-                if($resultHapus){
-                    if($result){
-                        return response()->json(['message' => 'Data berhasil dihapus']);
+                 $resultKCN = DB::connection('ConnKCNPurchase')->statement(
+                    'exec spDelete2_TypeBarang_dotNet @USERDELETE =?, @KD_BRG0 =?',
+                    [
+                        $USERDELETE,
+                        $KD_BRG0
+                    ]
+                );
+
+                $resultHapusKCN = DB::connection('ConnKCNPurchase')->statement(
+                    'exec spDelete_TypeBarang_dotNet @KD_BRG =?',
+                    [
+                        $KD_BRG0
+                    ]
+                );
+                if ($resultHapus && $resultHapusKCN) {
+                    if ($result && $resultKCN) {
+                        return response()->json([
+                            'message' => 'Data berhasil dihapus dari ConnPurchase dan ConnKCNPurchase'
+                        ]);
+                    } else {
+                        return response()->json([
+                            'message' => 'Data gagal dibackup'
+                        ]);
                     }
-                    else{
-                        return response()->json(['message' => 'Data Gagal dibackup']);
-                    }
-                }
-                else{
-                    return response()->json(['message' => 'GAGAL dihapus']);
+
+                } else {
+                    return response()->json([
+                        'message' => 'GAGAL dihapus'
+                    ]);
                 }
             } catch (\Throwable $Error) {
                 return response()->json($Error);
