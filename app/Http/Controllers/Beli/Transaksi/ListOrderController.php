@@ -24,7 +24,7 @@ class ListOrderController extends Controller
         $access = (new HakAksesController)->HakAksesFiturMaster('Beli');
         $date = Carbon::now()->format('Y-m-d');
         $idUser = trim(Auth::user()->NomorUser);
-        $dataDiv = DB::select('exec spSelect_UserDivisi_dotNet @Operator = ' . rtrim($idUser) . '');
+        $dataDiv = DB::connection('ConnPurchase')->select('exec spSelect_UserDivisi_dotNet @Operator = ' . rtrim($idUser) . '');
         $kategoriUtama = DB::connection('ConnPurchase')->select('exec spSelect_HirarkiTypeBarang_dotNet @MyType = ?', [1]);
         $satuanList = DB::connection('ConnPurchase')->select('exec sp_list_stri');
 
