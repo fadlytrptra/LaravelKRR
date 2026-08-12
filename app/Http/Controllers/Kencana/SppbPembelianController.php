@@ -939,7 +939,7 @@ class SppbPembelianController extends Controller
             // EMAIL TAMBAHAN UNTUK TESTING
             // =====================================================
             $emails[] =
-                'christoferromeo0207@gmail.com';
+                'admin@kencanarajasa.co.id';
 
             \Log::info(
                 'SPPB EMAIL - MULAI MAIL',
