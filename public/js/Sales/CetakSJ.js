@@ -363,7 +363,7 @@ jQuery(function ($) {
         $.get("/check-pdf-server", function (res) {
             if (res.alive) {
                 window.open(
-                    `http://192.168.99.94:8081/cetak-sj/download-pdf/${no_sjText.value}`,
+                    `${window.location.origin}/cetak-sj/download-pdf/${no_sjText.value}`,
                     "_blank",
                 );
             } else {
