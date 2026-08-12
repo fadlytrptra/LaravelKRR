@@ -126,40 +126,23 @@
                                                 $filteredArrayFitur = $filteredItemsFitur->all();
 
                                                 $combinedArrayFiturMenu = [];
-                                                // Fitur
                                                 foreach ($filteredArrayFitur as $fitur) {
                                                     $combinedArrayFiturMenu[] = [
                                                         'Nama' => $fitur->NamaFitur,
                                                         'Route' => $fitur->Route,
                                                         'IdMenu' => null,
-                                                        'NomorUrutDisplay' => null,
-                                                        'Tipe' => 'FITUR',
                                                     ];
                                                 }
 
-                                                // Menu
                                                 foreach ($filteredArrayMenu as $menu) {
                                                     $combinedArrayFiturMenu[] = [
                                                         'Nama' => $menu->NamaMenu,
                                                         'Route' => null,
                                                         'IdMenu' => $menu->IdMenu,
-                                                        'NomorUrutDisplay' => $menu->NomorUrutDisplay,
-                                                        'Tipe' => 'MENU',
                                                     ];
                                                 }
-
-                                                // Menu di atas, kemudian fitur
                                                 usort($combinedArrayFiturMenu, function ($a, $b) {
-                                                    if ($a['Tipe'] !== $b['Tipe']) {
-                                                        return $a['Tipe'] === 'MENU' ? -1 : 1;
-                                                    }
-
-                                                    if ($a['Tipe'] === 'MENU') {
-                                                        return ($a['NomorUrutDisplay'] ?? 9999)
-                                                            <=> ($b['NomorUrutDisplay'] ?? 9999);
-                                                    }
-
-                                                    return 0;
+                                                    return strcmp($a['Nama'], $b['Nama']);
                                                 });
                                             @endphp
                                             @foreach ($combinedArrayFiturMenu as $combinedArrayFiturMenus)
