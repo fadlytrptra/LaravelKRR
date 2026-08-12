@@ -1807,7 +1807,7 @@
                                 <div class="col-sm-1 offset-sm-6 text-right">
                                     <span id="fakturTunai_SymbolGrand">xxxx</span>
                                 </div>
-                                <div class="col-sm-2 text-right">
+                                <div class="col-sm-2 text-right" style="white-space: nowrap; overflow: hidden;">
                                     <span id="fakturTunai_Grand">-5.555.555,00</span>
                                 </div>
                             </div>
@@ -1875,7 +1875,7 @@
                                 <div class="col-sm-1 text-right" style="font-weight: bold">
                                     <span id="fakturTunai_SymbolTerbayar">xxxx</span>
                                 </div>
-                                <div class="col-sm-2 text-right" style="font-weight: bold">
+                                <div class="col-sm-2 text-right" style="font-weight: bold; white-space: nowrap; overflow: hidden;">
                                     <span id="fakturTunai_Terbayar">-5.555.555,00</span>
                                 </div>
                             </div>
@@ -2194,7 +2194,7 @@
                                 <div class="col-sm-1 offset-sm-6 text-right">
                                     <span id="fakturUangMuka_SymbolGrand">xxxx</span>
                                 </div>
-                                <div class="col-sm-2 text-right">
+                                <div class="col-sm-2 text-right" style="white-space: nowrap; overflow: hidden;">
                                     <span id="fakturUangMuka_Grand">-5.555.555,00</span>
                                 </div>
                             </div>
@@ -2262,7 +2262,7 @@
                                 <div class="col-sm-1 text-right" style="font-weight: bold">
                                     <span id="fakturUangMuka_SymbolTerbayar">xxxx</span>
                                 </div>
-                                <div class="col-sm-2 text-right" style="font-weight: bold">
+                                <div class="col-sm-2 text-right" style="font-weight: bold; white-space: nowrap; overflow: hidden;">
                                     <span id="fakturUangMuka_Terbayar">-5.555.555,00</span>
                                 </div>
                             </div>
