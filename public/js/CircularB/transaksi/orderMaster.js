@@ -463,7 +463,7 @@ btnProses.addEventListener("click", function () {
                 "~" +
                 jumlahBenang +
                 "~" +
-                txtEfisiensi.value +
+                (txtEfisiensi.value || 0) +
                 "~" +
                 (txtPanjangPotongan.value || 0);
             break;
@@ -489,7 +489,7 @@ btnProses.addEventListener("click", function () {
                 "~" +
                 jumlahBenang +
                 "~" +
-                txtEfisiensi.value +
+                (txtEfisiensi.value || 0) +
                 "~" +
                 (txtPanjangPotongan.value || 0);
             break;
