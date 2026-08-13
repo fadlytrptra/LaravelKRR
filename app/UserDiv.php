@@ -8,7 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class UserDiv extends Authenticatable
 {
+    protected $connection = 'ConnPurchase';
     protected $table = 'YUSER_DIVISI';
-    
+
     public $timestamps = false;
 }
