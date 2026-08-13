@@ -494,11 +494,11 @@ class FinalApproveController extends Controller
     public function isManager(string $user, string $kdDiv = null): bool
     {
         if ($kdDiv == null) {
-            return DB::table('YUSER_ACC_DIR')
+            return DB::connection('ConnPurchase')->table('YUSER_ACC_DIR')
                 ->where('Kd_user', $user)
                 ->exists();
         } else {
-            return DB::table('YUSER_ACC_DIR')
+            return DB::connection('ConnPurchase')->table('YUSER_ACC_DIR')
                 ->where('Kd_user', $user)
                 ->where('Kd_div', $kdDiv)
                 ->exists();
