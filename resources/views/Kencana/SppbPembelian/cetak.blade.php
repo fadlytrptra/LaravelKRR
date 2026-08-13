@@ -86,56 +86,126 @@
         .signature_imgCanvas {
             max-height: 80px;
         }
+
+        .print-header {
+            width: 100%;
+            border-collapse: collapse;
+            padding-bottom: 5px;
+        }
+
+        .print-header td {
+            padding: 0;
+            vertical-align: top;
+        }
+
+        .header-left {
+            width: 65%;
+            vertical-align: top !important;
+        }
+
+        .header-right {
+            width: 35%;
+            text-align: right;
+            font-size: 10px;
+            line-height: 1.35;
+            vertical-align: top !important;
+        }
+
+        .header-logo {
+            width: 70px;
+            height: auto;
+            display: block;
+            margin: 0;
+        }
+
+        .company-name {
+            color: #39833b;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.1;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+
+        .company-subtitle {
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1.1;
+            margin-top: 3px;
+            white-space: nowrap;
+        }
+
+        .office-title {
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .office-address {
+            font-size: 12px;
+            line-height: 1.25;
+        }
+
+        .office-contact {
+            font-size: 12px;
+            line-height: 1.35;
+            margin-top: 7px;
+        }
     </style>
 </head>
 
 <body>
     {{-- HEADER TEMPLATE --}}
-    <table>
+    <table class="print-header" cellpadding="0" cellspacing="0">
         <tr>
-            <td width="70%" valign="top">
-                <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                    <tr>
-                        <td valign="top" style="padding:0;">
-                            <img src="{{ $logo }}" width="95" style="display:block;">
-                        </td>
+            {{-- ========================= --}}
+            {{-- KIRI: LOGO DI ATAS + NAMA DI BAWAH --}}
+            {{-- ========================= --}}
+            <td class="header-left">
 
-                        <td valign="top" style="padding-left:6px; text-align:center; white-space:nowrap;">
-                            <div style="color:#165bda; font-size:16px; font-weight:bold; line-height:1.1;">
-                                KENCANA RAJASA RAYA
-                            </div>
-                            <div style="font-size:10px; line-height:1.25;">
-                                Jl. Raya Tropodo No. 1, Waru, Sidoarjo 61256<br>
-                                East Java, Indonesia<br>
-                            </div>
-                        </td>
+                <img
+                    src="{{ $logo }}"
+                    class="header-logo"
+                    alt="Logo"
+                >
 
-                        <td style="width:100%"></td>
-                    </tr>
-                </table>
+                <div class="company-name">
+                    PT. Kencana Rajasa Raya
+                </div>
+
+                <div class="company-subtitle">
+                    PP. MULTIFILAMENT YARN MANUFACTURER
+                </div>
+
             </td>
 
+            {{-- ========================= --}}
+            {{-- KANAN: ALAMAT & KONTAK --}}
+            {{-- ========================= --}}
+            <td class="header-right">
 
-            <td width="30%" valign="top">
-                <b>PURCHASE ORDER (P.O.)</b>
-                <table style="margin-top:6px;border:1px solid #000; font-size: 8px;">
-                    <tr>
-                        <td><b>NO. DOKUMEN</b></td>
-                        <td>: FM-7.4-01-BL-03-01</td>
-                    </tr>
-                    <tr>
-                        <td><b>REVISI</b></td>
-                        <td>: 4</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="height:36px;"></td>
-                    </tr>
-                </table>
+                <div class="office-title">
+                    MFG &amp; OFFICE :
+                </div>
+
+                <div class="office-address">
+                    Raya Tropodo No. 1 Waru, Sidoarjo 61256<br>
+                    East Java, Indonesia
+                </div>
+
+                <div class="office-contact">
+                    Phone : (031) 8669595, 8669966<br>
+                    Fax. : (031) 8669989<br>
+                    <i>e-mail : admin@kencanarajasa.co.id</i>
+                </div>
+
             </td>
-
         </tr>
     </table>
 
+    {{--Body--}}
     <div class="box">
         <table>
             <tr>

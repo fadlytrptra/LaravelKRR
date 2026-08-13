@@ -524,7 +524,7 @@ class SppbPembelianController extends Controller
             $total     += $row->Total;
         }
 
-        $logo = asset('images/logo_kencana.png');
+        $logo = asset('images/logo_kencana2.png');
 
         return view(
             'Kencana.SppbPembelian.cetak',
@@ -892,7 +892,7 @@ class SppbPembelianController extends Controller
             // LOGO
             // =====================================================
             $logoPath = public_path(
-                'images/logo_kencana.png'
+                'images/logo_kencana2.png'
             );
 
             if (!file_exists($logoPath)) {
