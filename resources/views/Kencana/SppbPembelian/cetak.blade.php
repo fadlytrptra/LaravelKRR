@@ -334,9 +334,23 @@
 
             <tr>
                 <td style="padding: 1px 0;"></td>
+                <td style="padding: 1px 0;">
+                    <b>DPP Nilai Lain</b>
+                </td>
+
+                <td
+                    style="padding: 1px 0; border-bottom: 1px solid;"
+                    class="right"
+                >
+                    {{ number_format(($subTotal ?? 0) * 11 / 12, 2, ',', '.') }}
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 1px 0;"></td>
 
                 <td style="padding: 1px 0;">
-                    <b>PPN</b>
+                    <b>VAT</b>
                 </td>
 
                 <td
