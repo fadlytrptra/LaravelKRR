@@ -40,10 +40,38 @@ class InputPLNController extends Controller
             $datetimeNow = now();
             $datetimeJam = $datetimeNow->toDateString() . ' ' . $jam;
 
-            $data = DB::connection('ConnUtility')->statement('exec SP_INSERT_PLN ? , ? , ? , ? , ? , ? , ?, ?', [$tanggal, $datetimeJam, $lwbp, $wbp, $kvar, $teknisi, $UserInput, $lokasi]);
-            return response()->json($data);
+            $result = DB::connection('ConnUtility')->statement(
+                'exec SP_INSERT_PLN ?, ?, ?, ?, ?, ?, ?, ?',
+                [
+                    $tanggal,
+                    $datetimeJam,
+                    $lwbp,
+                    $wbp,
+                    $kvar,
+                    $teknisi,
+                    $UserInput,
+                    $lokasi
+                ]
+            );
+
+            if (!$result) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data PLN gagal disimpan.'
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data PLN berhasil disimpan.'
+            ], 200);
+
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while saving the data. Please try again.');
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 

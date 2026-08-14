@@ -235,45 +235,57 @@ $(document).ready(function () {
                 $("#loading-screen").css("display", "flex");
             },
             success: function (response) {
-                nomorplnValue
-                    ? Swal.fire({
-                          icon: "success",
-                          title: "Data PLN Berhasil Diperbarui!",
-                          showConfirmButton: false,
-                          timer: "2000",
-                      })
-                    : Swal.fire({
-                          icon: "success",
-                          title: "Data PLN Berhasil Disimpan!",
-                          showConfirmButton: false,
-                          timer: "2000",
-                      });
-                tanggal.disabled = true;
-                jam.value = timeString;
-                jam.disabled = true;
-                lwbp.disabled = true;
-                lokasi.disabled = true;
-                wbp.disabled = true;
-                kvar.disabled = true;
-                teknisi.disabled = true;
-                updateButton.disabled = false;
-                inputButton.disabled = false;
-                deleteButton.disabled = false;
-                saveButton.disabled = true;
-                tanggal_Input.value = tanggal_Output;
-                clearForm();
-                dataTable.ajax.reload();
-                console.log("tanggal_Input:", tanggal_Input);
-                console.log("tanggal_Output:", tanggal_Output);
+                if (response.success) {
+                    nomorplnValue
+                        ? Swal.fire({
+                            icon: "success",
+                            title: "Data PLN Berhasil Diperbarui!",
+                            showConfirmButton: false,
+                            timer: 2000,
+                        })
+                        : Swal.fire({
+                            icon: "success",
+                            title: "Data PLN Berhasil Disimpan!",
+                            showConfirmButton: false,
+                            timer: 2000,
+                        });
+
+                    tanggal.disabled = true;
+                    jam.value = timeString;
+                    jam.disabled = true;
+                    lwbp.disabled = true;
+                    lokasi.disabled = true;
+                    wbp.disabled = true;
+                    kvar.disabled = true;
+                    teknisi.disabled = true;
+                    updateButton.disabled = false;
+                    inputButton.disabled = false;
+                    deleteButton.disabled = false;
+                    saveButton.disabled = true;
+
+                    tanggal_Input.value = tanggal_Output;
+
+                    clearForm();
+                    dataTable.ajax.reload();
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Data PLN Tidak Berhasil Disimpan!",
+                        text: response.message,
+                        showConfirmButton: true,
+                    });
+                }
             },
-            error: function (error) {
+            error: function (xhr) {
                 Swal.fire({
-                    icon: "failed",
+                    icon: "error",
                     title: "Data PLN Tidak Berhasil Disimpan!",
-                    showConfirmButton: false,
-                    timer: "2000",
+                    text: xhr.responseJSON?.message || "Terjadi kesalahan pada server.",
+                    showConfirmButton: true,
                 });
-                console.error("Error saving data:", error);
+
+                console.error("Error saving data:", xhr.responseText);
             },
             complete: function () {
                 // Hide loading screen
@@ -726,17 +738,17 @@ $(document).ready(function () {
             success: function (response) {
                 nomorsdpValue
                     ? Swal.fire({
-                          icon: "success",
-                          title: "Data sdp Berhasil Diperbarui!",
-                          showConfirmButton: false,
-                          timer: "2000",
-                      })
+                        icon: "success",
+                        title: "Data sdp Berhasil Diperbarui!",
+                        showConfirmButton: false,
+                        timer: "2000",
+                    })
                     : Swal.fire({
-                          icon: "success",
-                          title: "Data sdp Berhasil Disimpan!",
-                          showConfirmButton: false,
-                          timer: "2000",
-                      });
+                        icon: "success",
+                        title: "Data sdp Berhasil Disimpan!",
+                        showConfirmButton: false,
+                        timer: "2000",
+                    });
                 clearFormsdp();
                 tanggalsdp.disabled = true;
                 jamsdp.disabled = true;
@@ -1154,17 +1166,17 @@ $(document).ready(function () {
         var alert =
             mode === "insert"
                 ? Swal.fire({
-                      icon: "success",
-                      title: "Data Berita Acara Berhasil Disimpan!",
-                      showConfirmButton: false,
-                      timer: "2000",
-                  })
+                    icon: "success",
+                    title: "Data Berita Acara Berhasil Disimpan!",
+                    showConfirmButton: false,
+                    timer: "2000",
+                })
                 : Swal.fire({
-                      icon: "success",
-                      title: "Data Berita Acara Berhasil Diperbarui!",
-                      showConfirmButton: false,
-                      timer: "2000",
-                  });
+                    icon: "success",
+                    title: "Data Berita Acara Berhasil Diperbarui!",
+                    showConfirmButton: false,
+                    timer: "2000",
+                });
 
         $.ajax({
             url: url,
