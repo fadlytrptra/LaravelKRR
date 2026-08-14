@@ -302,7 +302,7 @@
                                 <th class="center">kgf</th>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R12</td>
+                                <td style="text-align:center" contenteditable="true" id="pos1">R12</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r12D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -313,11 +313,12 @@
                                     id="r12E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r12L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r12Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r12Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R11</td>
+                                <td style="text-align:center" contenteditable="true" id="pos2">R11</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r11D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -328,11 +329,12 @@
                                     id="r11E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r11L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r11Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r11Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R10</td>
+                                <td style="text-align:center" contenteditable="true" id="pos3">R10</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r10D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -343,11 +345,12 @@
                                     id="r10E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r10L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r10Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r10Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R9</td>
+                                <td style="text-align:center" contenteditable="true" id="pos4">R9</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r9D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -358,11 +361,12 @@
                                     id="r9E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r9L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r9Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r9Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R8</td>
+                                <td style="text-align:center" contenteditable="true" id="pos5">R8</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r8D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -373,11 +377,12 @@
                                     id="r8E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r8L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r8Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r8Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R7</td>
+                                <td style="text-align:center" contenteditable="true" id="pos6">R7</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r7D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -388,11 +393,12 @@
                                     id="r7E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r7L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r7Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r7Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R6</td>
+                                <td style="text-align:center" contenteditable="true" id="pos7">R6</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r6D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -403,11 +409,12 @@
                                     id="r6E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r6L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r6Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r6Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R5</td>
+                                <td style="text-align:center" contenteditable="true" id="pos8">R5</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r5D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -418,11 +425,12 @@
                                     id="r5E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r5L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r5Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r5Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R4</td>
+                                <td style="text-align:center" contenteditable="true" id="pos9">R4</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r4D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -433,11 +441,12 @@
                                     id="r4E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r4L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r4Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r4Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R3</td>
+                                <td style="text-align:center" contenteditable="true" id="pos10">R3</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r3D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -448,11 +457,12 @@
                                     id="r3E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r3L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r3Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r3Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R2</td>
+                                <td style="text-align:center" contenteditable="true" id="pos11">R2</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r2D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -463,11 +473,12 @@
                                     id="r2E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r2L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r2Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r2Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">R1</td>
+                                <td style="text-align:center" contenteditable="true" id="pos12">R1</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r1D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -478,11 +489,12 @@
                                     id="r1E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="r1L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="r1Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="r1Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L1</td>
+                                <td style="text-align:center" contenteditable="true" id="pos13">L1</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l1D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -493,11 +505,12 @@
                                     id="l1E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l1L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l1Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l1Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L2</td>
+                                <td style="text-align:center" contenteditable="true" id="pos14">L2</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l2D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -508,11 +521,12 @@
                                     id="l2E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l2L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l2Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l2Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L3</td>
+                                <td style="text-align:center" contenteditable="true" id="pos15">L3</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l3D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -523,11 +537,12 @@
                                     id="l3E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l3L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l3Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l3Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L4</td>
+                                <td style="text-align:center" contenteditable="true" id="pos16">L4</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l4D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -538,11 +553,12 @@
                                     id="l4E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l4L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l4Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l4Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L5</td>
+                                <td style="text-align:center" contenteditable="true" id="pos17">L5</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l5D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -553,11 +569,12 @@
                                     id="l5E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l5L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l5Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l5Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L6</td>
+                                <td style="text-align:center" contenteditable="true" id="pos18">L6</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l6D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -568,11 +585,12 @@
                                     id="l6E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l6L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l6Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l6Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L7</td>
+                                <td style="text-align:center" contenteditable="true" id="pos19">L7</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l7D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -583,11 +601,12 @@
                                     id="l7E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l7L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l7Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l7Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L8</td>
+                                <td style="text-align:center" contenteditable="true" id="pos20">L8</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l8D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -598,11 +617,12 @@
                                     id="l8E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l8L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l8Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l8Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L9</td>
+                                <td style="text-align:center" contenteditable="true" id="pos21">L9</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l9D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -613,11 +633,12 @@
                                     id="l9E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l9L" enterkeyhint="enter"></td>
-                                <td colspan="2" style="text-align:center" contenteditable="true" id="l9Ket" enterkeyhint="enter">
+                                <td colspan="2" style="text-align:center" contenteditable="true" id="l9Ket"
+                                    enterkeyhint="enter">
                                 </td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L10</td>
+                                <td style="text-align:center" contenteditable="true" id="pos22">L10</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l10D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -632,7 +653,7 @@
                                 <td style="text-align:center; width: 100px;">EXT</td>
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L11</td>
+                                <td style="text-align:center" contenteditable="true" id="pos23">L11</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l11D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
@@ -643,15 +664,27 @@
                                     id="l11E" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l11L" enterkeyhint="enter"></td>
-                                <td rowspan="2">
+                                {{-- <td rowspan="2">
                                     <img id="ttd_qc" style="display:none; max-width:70px;">
+                                </td> --}}
+                                <td rowspan="2"
+                                    style="border-bottom:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_qc"
+                                        style="display:block; width:100%; text-align:center !important;">
+                                    </span>
                                 </td>
-                                <td rowspan="2">
+                                <td rowspan="2"
+                                    style="border-bottom:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_ext"
+                                        style="display:block; width:100%; text-align:center !important;">
+                                    </span>
+                                </td>
+                                {{-- <td rowspan="2">
                                     <img id="ttd_ext" style="display:none; max-width:70px;">
-                                </td>
+                                </td> --}}
                             </tr>
                             <tr class="textBener">
-                                <td style="text-align:center">L12</td>
+                                <td style="text-align:center" contenteditable="true" id="pos24">L12</td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l12D" enterkeyhint="enter"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"

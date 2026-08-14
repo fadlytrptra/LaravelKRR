@@ -145,13 +145,13 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Tanggal</th>
-                                    <th>Type Mesin</th>
+                                    {{-- <th>Type Mesin</th> --}}
                                     <th>Nama Mesin</th>
-                                    <th>Jam Berhenti</th>
-                                    <th>Dijalankan</th>
+                                    {{-- <th>Jam Berhenti</th> --}}
+                                    {{-- <th>Dijalankan</th> --}}
                                     <th>Masalah</th>
                                     <th>Penyelesaian</th>
-                                    <th>User Input</th>
+                                    {{-- <th>User Input</th> --}}
                                     <th>Aksi</th>
                                 </tr>
                             </thead>

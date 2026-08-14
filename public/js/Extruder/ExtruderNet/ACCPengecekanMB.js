@@ -192,7 +192,7 @@ jQuery(function ($) {
 
     tanggal_laporan.valueAsDate = new Date();
     const slcLokasi = document.getElementById("lokasi");
-    const slcMesin  = document.getElementById("mesin");
+    const slcMesin = document.getElementById("mesin");
 
     tgl_awal.valueAsDate = new Date();
     tgl_akhir.valueAsDate = new Date();
@@ -452,7 +452,7 @@ jQuery(function ($) {
                         return data; // untuk sorting & filtering (yyyy-mm-dd)
                     },
                 },
-                 { data: "TypeMesin" },
+                { data: "TypeMesin" },
                 { data: "spek" },
                 { data: "NamaUser" },
                 {
@@ -535,6 +535,26 @@ jQuery(function ($) {
                 id_laporan: id,
             },
             success: function (data) {
+                if (data.data && data.data.length > 0) {
+                    $("#ttd_qc")
+                        .text(data.data[0].user_input)
+                        .show();
+                } else {
+                    $("#ttd_qc")
+                        .text("")
+                        .hide();
+                }
+
+                if (data.data && data.data.length > 0) {
+                    $("#ttd_ext")
+                        .text(data.data[0].user_acc)
+                        .show();
+                } else {
+                    $("#ttd_ext")
+                        .text("")
+                        .hide();
+                }
+
                 if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
                     let ttd = data.ttd.FotoTtd;
@@ -545,14 +565,14 @@ jQuery(function ($) {
                     }
 
                     /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_qc")
-                        .attr("src", ttd)
-                        .show();
+                    // $("#ttd_qc")
+                    //     .attr("src", ttd)
+                    //     .show();
                     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
                 } else {
-                    $("#ttd_qc")
-                        .attr("src", "")
-                        .show();
+                    // $("#ttd_qc")
+                    //     .attr("src", "")
+                    //     .show();
                     document.getElementById("nama_qc").textContent = "";
                 }
 
@@ -566,14 +586,14 @@ jQuery(function ($) {
                     }
 
                     /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_ext")
-                        .attr("src", ttd2)
-                        .show();
+                    // $("#ttd_ext")
+                    //     .attr("src", ttd2)
+                    //     .show();
                     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
                 } else {
-                    $("#ttd_ext")
-                        .attr("src", "")
-                        .show();
+                    // $("#ttd_ext")
+                    //     .attr("src", "")
+                    //     .show();
                     document.getElementById("nama_ext").textContent = "";
                 }
 

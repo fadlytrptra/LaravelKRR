@@ -555,11 +555,14 @@
                                     :</td>
                                 <td colspan="4" style="border-left:none !important" id="spek_mesin"
                                     contenteditable="true"></td>
-                                {{-- <td class="center bold" style="width:120px; border:none !important">
-                                                <img id="ttd_satpam" style="display:none; max-width:200px;">
-                                                </td> --}}
-                                <td rowspan="2" style="border-bottom:none !important">
+                                {{-- <td rowspan="2" style="border-bottom:none !important">
                                     <img id="ttd_qc" style="display:none; max-width:70px;">
+                                </td> --}}
+                                <td rowspan="2"
+                                    style="border-bottom:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_qc"
+                                        style="display:block; width:100%; text-align:center !important;">
+                                    </span>
                                 </td>
                                 <td rowspan="2" style="border-bottom:none !important">
                                     <img id="ttd_spvqc" style="display:none; max-width:70px;">

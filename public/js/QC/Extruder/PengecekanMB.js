@@ -26,6 +26,30 @@ jQuery(function ($) {
     let lot_no = document.getElementById("lot_no");
     let spek = document.getElementById("spek");
     let range = document.getElementById("range");
+    let pos1 = document.getElementById("pos1");
+    let pos2 = document.getElementById("pos2");
+    let pos3 = document.getElementById("pos3");
+    let pos4 = document.getElementById("pos4");
+    let pos5 = document.getElementById("pos5");
+    let pos6 = document.getElementById("pos6");
+    let pos7 = document.getElementById("pos7");
+    let pos8 = document.getElementById("pos8");
+    let pos9 = document.getElementById("pos9");
+    let pos10 = document.getElementById("pos10");
+    let pos11 = document.getElementById("pos11");
+    let pos12 = document.getElementById("pos12");
+    let pos13 = document.getElementById("pos13");
+    let pos14 = document.getElementById("pos14");
+    let pos15 = document.getElementById("pos15");
+    let pos16 = document.getElementById("pos16");
+    let pos17 = document.getElementById("pos17");
+    let pos18 = document.getElementById("pos18");
+    let pos19 = document.getElementById("pos19");
+    let pos20 = document.getElementById("pos20");
+    let pos21 = document.getElementById("pos21");
+    let pos22 = document.getElementById("pos22");
+    let pos23 = document.getElementById("pos23");
+    let pos24 = document.getElementById("pos24");
     let r12D = document.getElementById("r12D");
     let r12G = document.getElementById("r12G");
     let r12K = document.getElementById("r12K");
@@ -381,6 +405,10 @@ jQuery(function ($) {
 
     // Kolom yang mengikuti Enter
     const urutanKolom = {
+        Pos: [
+            "pos1", "pos2", "pos3", "pos4", "pos5", "pos6", "pos7", "pos8", "pos9", "pos10", "pos11", "pos12",
+            "pos13", "pos14", "pos15", "pos16", "pos17", "pos18", "pos19", "pos20", "pos21", "pos22", "pos23", "pos24",
+        ],
         D: [
             "r12D", "r11D", "r10D", "r9D", "r8D", "r7D", "r6D", "r5D", "r4D", "r3D", "r2D", "r1D",
             "l1D", "l2D", "l3D", "l4D", "l5D", "l6D", "l7D", "l8D", "l9D", "l10D", "l11D", "l12D"
@@ -625,6 +653,25 @@ jQuery(function ($) {
                 id_laporan: id,
             },
             success: function (data) {
+                if (data.data && data.data.length > 0) {
+                    $("#ttd_qc")
+                        .text(data.data[0].user_input)
+                        .show();
+                } else {
+                    $("#ttd_qc")
+                        .text("")
+                        .hide();
+                }
+
+                if (data.data && data.data.length > 0) {
+                    $("#ttd_ext")
+                        .text(data.data[0].user_acc)
+                        .show();
+                } else {
+                    $("#ttd_ext")
+                        .text("")
+                        .hide();
+                }
                 if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
                     let ttd = data.ttd.FotoTtd;
@@ -635,14 +682,14 @@ jQuery(function ($) {
                     }
 
                     /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_qc")
-                        .attr("src", ttd)
-                        .show();
+                    // $("#ttd_qc")
+                    //     .attr("src", ttd)
+                    //     .show();
                     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
                 } else {
-                    $("#ttd_qc")
-                        .attr("src", "")
-                        .show();
+                    // $("#ttd_qc")
+                    //     .attr("src", "")
+                    //     .show();
                     document.getElementById("nama_qc").textContent = "";
                 }
 
@@ -656,14 +703,14 @@ jQuery(function ($) {
                     }
 
                     /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_ext")
-                        .attr("src", ttd2)
-                        .show();
+                    // $("#ttd_ext")
+                    //     .attr("src", ttd2)
+                    //     .show();
                     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
                 } else {
-                    $("#ttd_ext")
-                        .attr("src", "")
-                        .show();
+                    // $("#ttd_ext")
+                    //     .attr("src", "")
+                    //     .show();
                     document.getElementById("nama_ext").textContent = "";
                 }
 
@@ -708,6 +755,59 @@ jQuery(function ($) {
                 lot_no.textContent = data.data[0].lot_no;
                 spek.textContent = data.data[0].spek;
                 range.textContent = data.data[0].range;
+
+                const positions = [
+                    pos1, pos2, pos3, pos4, pos5, pos6,
+                    pos7, pos8, pos9, pos10, pos11, pos12,
+                    pos13, pos14, pos15, pos16, pos17, pos18,
+                    pos19, pos20, pos21, pos22, pos23, pos24
+                ];
+
+                if ($("#" + slcLokasi.id).val() == 1) {
+                    const values = [
+                        'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                        'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                        'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                        'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                    ];
+
+                    positions.forEach((pos, index) => {
+                        pos.textContent = values[index];
+                        pos.setAttribute('contenteditable', 'false');
+                    });
+
+                } else {
+                    pos1.textContent = data.data[0].pos1;
+                    pos2.textContent = data.data[0].pos2;
+                    pos3.textContent = data.data[0].pos3;
+                    pos4.textContent = data.data[0].pos4;
+                    pos5.textContent = data.data[0].pos5;
+                    pos6.textContent = data.data[0].pos6;
+                    pos7.textContent = data.data[0].pos7;
+                    pos8.textContent = data.data[0].pos8;
+                    pos9.textContent = data.data[0].pos9;
+                    pos10.textContent = data.data[0].pos10;
+                    pos11.textContent = data.data[0].pos11;
+                    pos12.textContent = data.data[0].pos12;
+                    pos13.textContent = data.data[0].pos13;
+                    pos14.textContent = data.data[0].pos14;
+                    pos15.textContent = data.data[0].pos15;
+                    pos16.textContent = data.data[0].pos16;
+                    pos17.textContent = data.data[0].pos17;
+                    pos18.textContent = data.data[0].pos18;
+                    pos19.textContent = data.data[0].pos19;
+                    pos20.textContent = data.data[0].pos20;
+                    pos21.textContent = data.data[0].pos21;
+                    pos22.textContent = data.data[0].pos22;
+                    pos23.textContent = data.data[0].pos23;
+                    pos24.textContent = data.data[0].pos24;
+
+                    // Bisa diedit
+                    for (let i = 1; i <= 24; i++) {
+                        window['pos' + i].setAttribute('contenteditable', 'true');
+                    }
+                }
+
                 r12D.textContent = data.data[0].r12D;
                 r12G.textContent = formatPrint(data.data[0].r12G);
                 r12K.textContent = formatPrint(data.data[0].r12K);
@@ -899,6 +999,25 @@ jQuery(function ($) {
                 id_laporan: id,
             },
             success: function (data) {
+                if (data.data && data.data.length > 0) {
+                    $("#ttd_qc")
+                        .text(data.data[0].user_input)
+                        .show();
+                } else {
+                    $("#ttd_qc")
+                        .text("")
+                        .hide();
+                }
+
+                if (data.data && data.data.length > 0) {
+                    $("#ttd_ext")
+                        .text(data.data[0].user_acc)
+                        .show();
+                } else {
+                    $("#ttd_ext")
+                        .text("")
+                        .hide();
+                }
                 if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
                     let ttd = data.ttd.FotoTtd;
@@ -909,14 +1028,14 @@ jQuery(function ($) {
                     }
 
                     /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_qc")
-                        .attr("src", ttd)
-                        .show();
+                    // $("#ttd_qc")
+                    //     .attr("src", ttd)
+                    //     .show();
                     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
                 } else {
-                    $("#ttd_qc")
-                        .attr("src", "")
-                        .show();
+                    // $("#ttd_qc")
+                    //     .attr("src", "")
+                    //     .show();
                     document.getElementById("nama_qc").textContent = "";
                 }
 
@@ -930,14 +1049,14 @@ jQuery(function ($) {
                     }
 
                     /* ====== TAMPIL KE IMG ====== */
-                    $("#ttd_ext")
-                        .attr("src", ttd2)
-                        .show();
+                    // $("#ttd_ext")
+                    //     .attr("src", ttd2)
+                    //     .show();
                     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
                 } else {
-                    $("#ttd_ext")
-                        .attr("src", "")
-                        .show();
+                    // $("#ttd_ext")
+                    //     .attr("src", "")
+                    //     .show();
                     document.getElementById("nama_ext").textContent = "";
                 }
 
@@ -982,6 +1101,59 @@ jQuery(function ($) {
                 lot_no.textContent = data.data[0].lot_no;
                 spek.textContent = data.data[0].spek;
                 range.textContent = data.data[0].range;
+
+                const positions = [
+                    pos1, pos2, pos3, pos4, pos5, pos6,
+                    pos7, pos8, pos9, pos10, pos11, pos12,
+                    pos13, pos14, pos15, pos16, pos17, pos18,
+                    pos19, pos20, pos21, pos22, pos23, pos24
+                ];
+
+                if ($("#" + slcLokasi.id).val() == 1) {
+                    const values = [
+                        'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                        'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                        'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                        'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                    ];
+
+                    positions.forEach((pos, index) => {
+                        pos.textContent = values[index];
+                        pos.setAttribute('contenteditable', 'false');
+                    });
+
+                } else {
+                    pos1.textContent = data.data[0].pos1;
+                    pos2.textContent = data.data[0].pos2;
+                    pos3.textContent = data.data[0].pos3;
+                    pos4.textContent = data.data[0].pos4;
+                    pos5.textContent = data.data[0].pos5;
+                    pos6.textContent = data.data[0].pos6;
+                    pos7.textContent = data.data[0].pos7;
+                    pos8.textContent = data.data[0].pos8;
+                    pos9.textContent = data.data[0].pos9;
+                    pos10.textContent = data.data[0].pos10;
+                    pos11.textContent = data.data[0].pos11;
+                    pos12.textContent = data.data[0].pos12;
+                    pos13.textContent = data.data[0].pos13;
+                    pos14.textContent = data.data[0].pos14;
+                    pos15.textContent = data.data[0].pos15;
+                    pos16.textContent = data.data[0].pos16;
+                    pos17.textContent = data.data[0].pos17;
+                    pos18.textContent = data.data[0].pos18;
+                    pos19.textContent = data.data[0].pos19;
+                    pos20.textContent = data.data[0].pos20;
+                    pos21.textContent = data.data[0].pos21;
+                    pos22.textContent = data.data[0].pos22;
+                    pos23.textContent = data.data[0].pos23;
+                    pos24.textContent = data.data[0].pos24;
+
+                    // Bisa diedit
+                    for (let i = 1; i <= 24; i++) {
+                        window['pos' + i].setAttribute('contenteditable', 'true');
+                    }
+                }
+
                 r12D.textContent = data.data[0].r12D;
                 r12G.textContent = formatPrint(data.data[0].r12G);
                 r12K.textContent = formatPrint(data.data[0].r12K);
@@ -1218,15 +1390,54 @@ jQuery(function ($) {
         btn_grd.style.display = "block";
         btn_print.style.display = "none";
         tanggal_laporan.valueAsDate = new Date();
+        // $("#ttd_qc")
+        //     .attr("src", "")
+        //     .show();
         $("#ttd_qc")
-            .attr("src", "")
-            .show();
+            .text("")
+            .hide();
         document.getElementById("nama_qc").textContent = "";
+        // $("#ttd_ext")
+        //     .attr("src", "")
+        //     .show();
         $("#ttd_ext")
-            .attr("src", "")
-            .show();
+            .text("")
+            .hide();
         document.getElementById("nama_ext").textContent = "";
         $("#" + slcMesin.id).val(null).trigger("change");
+        // l8Ket.textContent = data.data[0].l8Ket;
+        r12Ket.textContent = "Status Benang";
+        r10Ket.textContent = "Bng Masuk = ";
+        r9Ket.textContent = "TR= TA=";
+        r8Ket.textContent = "Umur Silet =";
+        r7Ket.textContent = "Speed =";
+
+        const positions = [
+            pos1, pos2, pos3, pos4, pos5, pos6,
+            pos7, pos8, pos9, pos10, pos11, pos12,
+            pos13, pos14, pos15, pos16, pos17, pos18,
+            pos19, pos20, pos21, pos22, pos23, pos24
+        ];
+
+        if ($("#" + slcLokasi.id).val() == 1) {
+            const values = [
+                'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+            ];
+
+            positions.forEach((pos, index) => {
+                pos.textContent = values[index];
+                pos.setAttribute('contenteditable', 'false');
+            });
+
+        } else {
+            positions.forEach(pos => {
+                pos.textContent = '';
+                pos.setAttribute('contenteditable', 'true');
+            });
+        }
     });
 
     //#region Simpan
@@ -1275,6 +1486,30 @@ jQuery(function ($) {
                 lot_no: lot_no.textContent,
                 spek: spek.textContent,
                 range: range.textContent,
+                pos1: pos1.textContent,
+                pos2: pos2.textContent,
+                pos3: pos3.textContent,
+                pos4: pos4.textContent,
+                pos5: pos5.textContent,
+                pos6: pos6.textContent,
+                pos7: pos7.textContent,
+                pos8: pos8.textContent,
+                pos9: pos9.textContent,
+                pos10: pos10.textContent,
+                pos11: pos11.textContent,
+                pos12: pos12.textContent,
+                pos13: pos13.textContent,
+                pos14: pos14.textContent,
+                pos15: pos15.textContent,
+                pos16: pos16.textContent,
+                pos17: pos17.textContent,
+                pos18: pos18.textContent,
+                pos19: pos19.textContent,
+                pos20: pos20.textContent,
+                pos21: pos21.textContent,
+                pos22: pos22.textContent,
+                pos23: pos23.textContent,
+                pos24: pos24.textContent,
                 r12D: r12D.textContent,
                 r12G: r12G.textContent,
                 r12K: r12K.textContent,

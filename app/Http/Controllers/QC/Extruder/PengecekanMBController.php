@@ -64,6 +64,30 @@ class PengecekanMBController extends Controller
         $lot_no = $request->input('lot_no');
         $spek = $request->input('spek');
         $range = $request->input('range');
+        $pos1 = $request->input('pos1');
+        $pos2 = $request->input('pos2');
+        $pos3 = $request->input('pos3');
+        $pos4 = $request->input('pos4');
+        $pos5 = $request->input('pos5');
+        $pos6 = $request->input('pos6');
+        $pos7 = $request->input('pos7');
+        $pos8 = $request->input('pos8');
+        $pos9 = $request->input('pos9');
+        $pos10 = $request->input('pos10');
+        $pos11 = $request->input('pos11');
+        $pos12 = $request->input('pos12');
+        $pos13 = $request->input('pos13');
+        $pos14 = $request->input('pos14');
+        $pos15 = $request->input('pos15');
+        $pos16 = $request->input('pos16');
+        $pos17 = $request->input('pos17');
+        $pos18 = $request->input('pos18');
+        $pos19 = $request->input('pos19');
+        $pos20 = $request->input('pos20');
+        $pos21 = $request->input('pos21');
+        $pos22 = $request->input('pos22');
+        $pos23 = $request->input('pos23');
+        $pos24 = $request->input('pos24');
         $r12D = $request->input('r12D');
         $r12G = $request->input('r12G');
         $r12K = $request->input('r12K');
@@ -236,6 +260,30 @@ class PengecekanMBController extends Controller
                         @lot_no = ?,
                         @spek = ?,
                         @range = ?,
+                        @pos1 = ?,
+                        @pos2 = ?,
+                        @pos3 = ?,
+                        @pos4 = ?,
+                        @pos5 = ?,
+                        @pos6 = ?,
+                        @pos7 = ?,
+                        @pos8 = ?,
+                        @pos9 = ?,
+                        @pos10 = ?,
+                        @pos11 = ?,
+                        @pos12 = ?,
+                        @pos13 = ?,
+                        @pos14 = ?,
+                        @pos15 = ?,
+                        @pos16 = ?,
+                        @pos17 = ?,
+                        @pos18 = ?,
+                        @pos19 = ?,
+                        @pos20 = ?,
+                        @pos21 = ?,
+                        @pos22 = ?,
+                        @pos23 = ?,
+                        @pos24 = ?,
                         @r12D = ?,
                         @r12G = ?,
                         @r12K = ?,
@@ -399,6 +447,30 @@ class PengecekanMBController extends Controller
                                 $lot_no,
                                 $spek,
                                 $range,
+                                $pos1,
+                                $pos2,
+                                $pos3,
+                                $pos4,
+                                $pos5,
+                                $pos6,
+                                $pos7,
+                                $pos8,
+                                $pos9,
+                                $pos10,
+                                $pos11,
+                                $pos12,
+                                $pos13,
+                                $pos14,
+                                $pos15,
+                                $pos16,
+                                $pos17,
+                                $pos18,
+                                $pos19,
+                                $pos20,
+                                $pos21,
+                                $pos22,
+                                $pos23,
+                                $pos24,
                                 $r12D,
                                 $r12G,
                                 $r12K,
@@ -572,6 +644,30 @@ class PengecekanMBController extends Controller
                         @lot_no = ?,
                         @spek = ?,
                         @range = ?,
+                        @pos1 = ?,
+                        @pos2 = ?,
+                        @pos3 = ?,
+                        @pos4 = ?,
+                        @pos5 = ?,
+                        @pos6 = ?,
+                        @pos7 = ?,
+                        @pos8 = ?,
+                        @pos9 = ?,
+                        @pos10 = ?,
+                        @pos11 = ?,
+                        @pos12 = ?,
+                        @pos13 = ?,
+                        @pos14 = ?,
+                        @pos15 = ?,
+                        @pos16 = ?,
+                        @pos17 = ?,
+                        @pos18 = ?,
+                        @pos19 = ?,
+                        @pos20 = ?,
+                        @pos21 = ?,
+                        @pos22 = ?,
+                        @pos23 = ?,
+                        @pos24 = ?,
                         @r12D = ?,
                         @r12G = ?,
                         @r12K = ?,
@@ -735,6 +831,30 @@ class PengecekanMBController extends Controller
                                 $lot_no,
                                 $spek,
                                 $range,
+                                $pos1,
+                                $pos2,
+                                $pos3,
+                                $pos4,
+                                $pos5,
+                                $pos6,
+                                $pos7,
+                                $pos8,
+                                $pos9,
+                                $pos10,
+                                $pos11,
+                                $pos12,
+                                $pos13,
+                                $pos14,
+                                $pos15,
+                                $pos16,
+                                $pos17,
+                                $pos18,
+                                $pos19,
+                                $pos20,
+                                $pos21,
+                                $pos22,
+                                $pos23,
+                                $pos24,
                                 $r12D,
                                 $r12G,
                                 $r12K,

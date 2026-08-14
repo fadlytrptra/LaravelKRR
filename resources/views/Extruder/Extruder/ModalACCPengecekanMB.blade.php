@@ -643,12 +643,24 @@
                                     id="l11E"></td>
                                 <td style="text-align:center" contenteditable="true" class="only-number"
                                     id="l11L"></td>
-                                <td rowspan="2">
+                                {{-- <td rowspan="2">
                                     <img id="ttd_qc" style="display:none; max-width:70px;">
+                                </td> --}}
+                                <td rowspan="2"
+                                    style="border-bottom:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_qc"
+                                        style="display:block; width:100%; text-align:center !important;">
+                                    </span>
                                 </td>
-                                <td rowspan="2">
+                                <td rowspan="2"
+                                    style="border-bottom:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_ext"
+                                        style="display:block; width:100%; text-align:center !important;">
+                                    </span>
+                                </td>
+                                {{-- <td rowspan="2">
                                     <img id="ttd_ext" style="display:none; max-width:70px;">
-                                </td>
+                                </td> --}}
                             </tr>
                             <tr class="textBener">
                                 <td style="text-align:center">L12</td>

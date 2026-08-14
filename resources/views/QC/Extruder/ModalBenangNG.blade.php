@@ -472,12 +472,23 @@
                                 <td class="center bold" style="width:120px; border:none !important">Extruder</td>
                             </tr>
                             <tr>
-                                <td class="center bold" style="width:120px; border:none !important">
-                                    <img id="ttd_qc" style="display:none; max-width:200px;">
+                                {{-- <td rowspan="2">
+                                    <img id="ttd_qc" style="display:none; max-width:70px;">
+                                </td> --}}
+                                <td
+                                    style="border:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_qc" style="display:none; text-align:center !important;">
+                                    </span>
                                 </td>
-                                <td class="center bold" style="width:120px; border:none !important">
-                                    <img id="ttd_ext" style="display:none; max-width:200px;">
+
+                                <td
+                                    style="border:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_ext" style="display:none; text-align:center !important;">
+                                    </span>
                                 </td>
+                                {{-- <td rowspan="2">
+                                    <img id="ttd_ext" style="display:none; max-width:70px;">
+                                </td> --}}
                             </tr>
                             <tr>
                                 <td class="center bold" style="width:120px; border:none !important" id="nama_qc">

@@ -326,16 +326,16 @@ jQuery(function ($) {
                         return data; // untuk sorting & filtering (yyyy-mm-dd)
                     }
                 },
-                { data: "Type_Mesin" },
+                // { data: "Type_Mesin" },
                 { data: "Nama_mesin" },
-                { data: "jam_berhenti" },
-                { data: "jam_dijalankan" },
+                // { data: "jam_berhenti" },
+                // { data: "jam_dijalankan" },
                 { data: "masalah" },
                 { data: "penyelesaian" },
-                { data: "NamaUser" },
+                // { data: "NamaUser" },
                 {
                     data: null,
-                    orderable: false,
+                    orderable: false, 
                     searchable: false,
                     render: function (data, type, row) {
 

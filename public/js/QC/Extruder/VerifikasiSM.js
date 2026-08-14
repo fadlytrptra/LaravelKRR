@@ -714,6 +714,17 @@ jQuery(function ($) {
         scrollCollapse: true,
     });
 
+    $.ajaxSetup({
+        beforeSend: function () {
+            // Show the loading screen before the AJAX request
+            $("#loading-screen").css("display", "flex");
+        },
+        complete: function () {
+            // Hide the loading screen after the AJAX request completes
+            $("#loading-screen").css("display", "none");
+        },
+    });
+
     const slcLokasi = document.getElementById("lokasi");
 
     tgl_awal.valueAsDate = new Date();
@@ -783,6 +794,174 @@ jQuery(function ($) {
 
         // 10.70 → 10.7
         return numeral(num).format('0.[0]');
+    }
+
+    function hitungTotal() {
+        const elements = [
+            bngM, prongM, silM,
+            bngL, prongL, silL,
+            bngMe, prongMe, silMe,
+            bngGB, prongGB, silGB,
+            bngLL, prongLL, silLL
+        ];
+
+        let totalValue = 0;
+
+        elements.forEach(element => {
+            totalValue += numeral(element.textContent).value() || 0;
+        });
+
+        total.textContent = numeral(totalValue).format("0,0.00");
+    }
+
+    function hitungTotalD() {
+        const elements = [
+            bngMD, prongMD, silMD,
+            bngLD, prongLD, silLD,
+            bngMeD, prongMeD, silMeD,
+            bngGBD, prongGBD, silGBD,
+            bngLLD, prongLLD, silLLD
+        ];
+
+        let totalValue = 0;
+
+        elements.forEach(element => {
+            totalValue += numeral(element.textContent).value() || 0;
+        });
+
+        totalD.textContent = numeral(totalValue).format("0,0.00");
+    }
+
+    function highlightRow(prefix) {
+        const suffixes = ["A", "B", "C", "D", "E", "F", "G"];
+
+        let baseElement = null;
+        let baseValue = "";
+        let baseSuffix = null;
+
+        // Reset semua highlight terlebih dahulu
+        suffixes.forEach(suffix => {
+            const el = document.getElementById(prefix + suffix);
+
+            if (el) {
+                el.style.backgroundColor = "";
+            }
+        });
+
+        for (let i = 0; i < suffixes.length; i++) {
+            const suffix = suffixes[i];
+            const el = document.getElementById(prefix + suffix);
+
+            if (!el) continue;
+
+            const value = el.textContent.trim();
+
+            // Cek apakah kolom ini berwarna merah
+            const color = window.getComputedStyle(el).color;
+
+            // Jika warna merah, jadikan sebagai BASE baru
+            if (
+                color === "rgb(255, 0, 0)" ||
+                color === "red"
+            ) {
+                baseElement = el;
+                baseValue = value;
+                baseSuffix = suffix;
+
+                console.log(
+                    `${prefix}${suffix} menjadi BASE baru:`,
+                    baseValue
+                );
+
+                continue;
+            }
+
+            // Belum ada base merah
+            if (!baseElement) {
+                continue;
+            }
+
+            // Jika kosong, abaikan
+            if (value === "") {
+                continue;
+            }
+
+            // Bandingkan dengan BASE merah terakhir
+            if (value !== baseValue) {
+                console.log(
+                    `Beda: ${prefix}${baseSuffix} (${baseValue}) vs ${prefix}${suffix} (${value})`
+                );
+
+                // Base merah juga ikut kuning
+                baseElement.style.backgroundColor = "yellow";
+
+                // Kolom yang berbeda ikut kuning
+                el.style.backgroundColor = "yellow";
+            }
+        }
+    }
+
+    function highlightRowD(prefix) {
+        const pairs = [
+            ["A", "B"],
+            ["C", "D"],
+            ["E", "F"]
+        ];
+
+        // Reset semua highlight
+        pairs.forEach(([baseSuffix, compareSuffix]) => {
+            const baseElement = document.getElementById(prefix + baseSuffix + "D");
+            const compareElement = document.getElementById(prefix + compareSuffix + "D");
+
+            if (baseElement) {
+                baseElement.style.backgroundColor = "";
+            }
+
+            if (compareElement) {
+                compareElement.style.backgroundColor = "";
+            }
+        });
+
+        // Cek setiap pasangan
+        pairs.forEach(([baseSuffix, compareSuffix]) => {
+            const baseId = prefix + baseSuffix + "D";
+            const compareId = prefix + compareSuffix + "D";
+
+            const baseElement = document.getElementById(baseId);
+            const compareElement = document.getElementById(compareId);
+
+            if (!baseElement || !compareElement) {
+                console.log(
+                    "Element tidak ditemukan:",
+                    !baseElement ? baseId : compareId
+                );
+                return;
+            }
+
+            const baseValue = baseElement.textContent.trim();
+            const compareValue = compareElement.textContent.trim();
+
+            console.log(
+                `${baseId}: ${baseValue} | ${compareId}: ${compareValue}`
+            );
+
+            // Kalau kolom pembanding kosong, abaikan
+            if (compareValue === "") {
+                return;
+            }
+
+            // Kalau berbeda, keduanya kuning
+            if (baseValue !== compareValue) {
+                console.log(
+                    "Beda!",
+                    `${baseId} = ${baseValue}`,
+                    `${compareId} = ${compareValue}`
+                );
+
+                baseElement.style.backgroundColor = "yellow";
+                compareElement.style.backgroundColor = "yellow";
+            }
+        });
     }
 
     $("#" + slcLokasi.id).select2({
@@ -1094,42 +1273,6 @@ jQuery(function ($) {
         });
     });
 
-    function highlightRow(prefix) {
-        const suffixes = ["A", "B", "C", "D", "E", "F", "G"];
-
-        const baseElement = document.getElementById(prefix + "A");
-
-        console.log(baseElement);
-
-        const baseValue = baseElement.textContent.trim();
-        console.log("Base:", baseValue);
-
-        let isDifferent = false;
-
-        for (let i = 1; i < suffixes.length; i++) {
-            const el = document.getElementById(prefix + suffixes[i]);
-
-            const value = el.textContent.trim();
-
-            console.log(prefix + suffixes[i], value);
-
-            if (value === "") continue;
-
-            if (baseValue !== value) {
-                console.log("Beda!", baseValue, value);
-                isDifferent = true;
-                break;
-            }
-        }
-
-        console.log("isDifferent =", isDifferent);
-
-        suffixes.forEach(suffix => {
-            document.getElementById(prefix + suffix)
-                .style.backgroundColor = isDifferent ? "yellow" : "";
-        });
-    }
-
     let idLapKoreksi = null;
     $("#table_atas").on("click", ".link-idheader", function () {
         const id = $(this).data('id');
@@ -1200,24 +1343,34 @@ jQuery(function ($) {
                         btn_simpanKetD.disabled = false;
                     }
 
-                    if (data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
-
-                        let ttd = data.ttd.FotoTtd;
-
-                        // pastikan ada prefix base64
-                        if (!ttd.startsWith("data:image")) {
-                            ttd = "data:image/png;base64," + ttd;
-                        }
-
-                        /* ====== TAMPIL KE IMG ====== */
-                        $("#ttd_cogD")
-                            .attr("src", ttd)
+                    if (data.data && data.data.length > 0) {
+                        $("#ttd_qcD")
+                            .text(data.data[0].userVerified)
                             .show();
                     } else {
-                        $("#ttd_cogD")
-                            .attr("src", "")
-                            .show();
+                        $("#ttd_qcD")
+                            .text("")
+                            .hide();
                     }
+
+                    // if (data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
+
+                    //     let ttd = data.ttd.FotoTtd;
+
+                    //     // pastikan ada prefix base64
+                    //     if (!ttd.startsWith("data:image")) {
+                    //         ttd = "data:image/png;base64," + ttd;
+                    //     }
+                    //     // $("#ttd_cogD").val(data.data[0].user_input);
+                    //     /* ====== TAMPIL KE IMG ====== */
+                    //     $("#ttd_cogD")
+                    //         .attr("src", ttd)
+                    //         .show();
+                    // } else {
+                    //     $("#ttd_cogD")
+                    //         .attr("src", "")
+                    //         .show();
+                    // }
 
                     referensiD.textContent = data.data[0].referensi;
                     if (data.data[0].tanggal) {
@@ -1694,23 +1847,75 @@ jQuery(function ($) {
                     llCD.textContent = data.data[0].llC;
                     llDD.textContent = data.data[0].llD;
                     llFD.textContent = data.data[0].llF;
-                    bngMD.textContent = data.data[0].bngM;
-                    prongMD.textContent = data.data[0].prongM;
-                    silMD.textContent = data.data[0].silM;
-                    bngLD.textContent = data.data[0].bngL;
-                    prongLD.textContent = data.data[0].prongL;
-                    silLD.textContent = data.data[0].silL;
-                    bngMeD.textContent = data.data[0].bngMe;
-                    prongMeD.textContent = data.data[0].prongMe;
-                    silMeD.textContent = data.data[0].silMe;
-                    bngGBD.textContent = data.data[0].bngGB;
-                    prongGBD.textContent = data.data[0].prongGB;
-                    silGBD.textContent = data.data[0].silGB;
-                    bngLLD.textContent = data.data[0].bngLL;
-                    prongLLD.textContent = data.data[0].prongLL;
-                    silLLD.textContent = data.data[0].silLL;
-                    totalD.textContent = data.data[0].total;
+                    bngMD.textContent = data.data[0].bngM ?? numeral(0).format("0,0.00");
+                    prongMD.textContent = data.data[0].prongM ?? numeral(0).format("0,0.00");
+                    silMD.textContent = data.data[0].silM ?? numeral(0).format("0,0.00");
+                    bngLD.textContent = data.data[0].bngL ?? numeral(0).format("0,0.00");
+                    prongLD.textContent = data.data[0].prongL ?? numeral(0).format("0,0.00");
+                    silLD.textContent = data.data[0].silL ?? numeral(0).format("0,0.00");
+                    bngMeD.textContent = data.data[0].bngMe ?? numeral(0).format("0,0.00");
+                    prongMeD.textContent = data.data[0].prongMe ?? numeral(0).format("0,0.00");
+                    silMeD.textContent = data.data[0].silMe ?? numeral(0).format("0,0.00");
+                    bngGBD.textContent = data.data[0].bngGB ?? numeral(0).format("0,0.00");
+                    prongGBD.textContent = data.data[0].prongGB ?? numeral(0).format("0,0.00");
+                    silGBD.textContent = data.data[0].silGB ?? numeral(0).format("0,0.00");
+                    bngLLD.textContent = data.data[0].bngLL ?? numeral(0).format("0,0.00");
+                    prongLLD.textContent = data.data[0].prongLL ?? numeral(0).format("0,0.00");
+                    silLLD.textContent = data.data[0].silLL ?? numeral(0).format("0,0.00");
+                    // totalD.textContent = data.data[0].total;
+                    if (data.data[0].total != null && data.data[0].total !== "") {
+                        totalD.textContent = data.data[0].total;
+                    } else {
+                        hitungTotalD();
+                    }
                     document.getElementById("ketHeadD").textContent = "Keterangan"
+                    highlightRowD("bz1");
+                    highlightRowD("bz2");
+                    highlightRowD("bz3");
+                    highlightRowD("bz4");
+                    highlightRowD("bz5");
+                    highlightRowD("bz6");
+
+                    highlightRowD("sc");
+                    highlightRowD("mp");
+                    highlightRowD("ad1");
+                    highlightRowD("ad2");
+                    highlightRowD("wphe");
+                    highlightRowD("iphe");
+                    highlightRowD("mt");
+
+                    highlightRowD("dz1");
+                    highlightRowD("dz2");
+                    highlightRowD("dz3");
+                    highlightRowD("dz4");
+                    highlightRowD("dz5");
+
+                    highlightRowD("hao");
+                    highlightRowD("unit");
+
+                    highlightRowD("mp2");
+                    highlightRowD("ext");
+                    highlightRowD("nipr");
+                    highlightRowD("tr");
+                    highlightRowD("hu");
+                    highlightRowD("isu");
+                    highlightRowD("su");
+                    highlightRowD("pau");
+                    highlightRowD("au");
+                    highlightRowD("wg");
+                    highlightRowD("few");
+                    highlightRowD("noy");
+                    highlightRowD("sw");
+                    highlightRowD("totr");
+                    highlightRowD("relax");
+
+                    highlightRowD("tp2");
+                    highlightRowD("tp1");
+                    highlightRowD("tp3");
+                    highlightRowD("at1");
+                    highlightRowD("at2");
+                    highlightRowD("tf");
+                    highlightRowD("ld");
                     keteranganD.innerHTML = data.data[0].keterangan
                         ? data.data[0].keterangan.replace(/\n/g, "<br>")
                         : "<br><br><br><br><br>";
@@ -1738,24 +1943,33 @@ jQuery(function ($) {
                         btn_simpanKet.disabled = false;
                     }
 
-                    if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
-
-                        let ttd = data.ttd.FotoTtd;
-
-                        // pastikan ada prefix base64
-                        if (!ttd.startsWith("data:image")) {
-                            ttd = "data:image/png;base64," + ttd;
-                        }
-
-                        /* ====== TAMPIL KE IMG ====== */
+                    if (data.data && data.data.length > 0) {
                         $("#ttd_qc")
-                            .attr("src", ttd)
+                            .text(data.data[0].userVerified)
                             .show();
                     } else {
                         $("#ttd_qc")
-                            .attr("src", "")
-                            .show();
+                            .text("")
+                            .hide();
                     }
+                    // if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
+
+                    //     let ttd = data.ttd.FotoTtd;
+
+                    //     // pastikan ada prefix base64
+                    //     if (!ttd.startsWith("data:image")) {
+                    //         ttd = "data:image/png;base64," + ttd;
+                    //     }
+
+                    //     /* ====== TAMPIL KE IMG ====== */
+                    //     $("#ttd_qc")
+                    //         .attr("src", ttd)
+                    //         .show();
+                    // } else {
+                    //     $("#ttd_qc")
+                    //         .attr("src", "")
+                    //         .show();
+                    // }
                     const fieldsB = [
                         "timeB", "c1B", "c2B", "c3B", "c4B", "c5B", "c6B", "c7B", "c8B",
                         "flB", "scB", "jnB", "d1B", "d2B", "d3B", "d4B", "d5B", "d6B",
@@ -2329,8 +2543,8 @@ jQuery(function ($) {
                         if (jamMenit) document.getElementById("time6").textContent = jamMenit;
                     }
                     remark6.textContent = data.data[0].remark6;
-                    kwhM1.textContent = data.data[0].kwhM1;
-                    kwhM2.textContent = data.data[0].kwhM2;
+                    kwhM1.textContent = data.data[0].kwhM1 ?? 0;
+                    kwhM2.textContent = data.data[0].kwhM2 ?? 0;
                     if (data.data[0].jamProd) {
                         let jamMenit = "";
                         const date = new Date(data.data[0].jamProd);
@@ -2352,26 +2566,26 @@ jQuery(function ($) {
                     cacB.textContent = data.data[0].cacB;
                     cacC.textContent = data.data[0].cacC;
                     cacD.textContent = data.data[0].cacD;
-                    cacE.textContent = data.data[0].cacE;
+                    cacE.textContent = data.data[0].cacE ?? 0;
                     cacF.textContent = data.data[0].cacF;
                     mbA.textContent = data.data[0].mbA;
                     mbB.textContent = data.data[0].mbB;
                     mbC.textContent = data.data[0].mbC;
                     mbD.textContent = data.data[0].mbD;
-                    mbE.textContent = data.data[0].mbE;
-                    mbF.textContent = data.data[0].mbF;
+                    mbE.textContent = data.data[0].mbE ?? 0;
+                    mbF.textContent = data.data[0].mbF ?? 0;
                     uvA.textContent = data.data[0].uvA;
                     uvB.textContent = data.data[0].uvB;
                     uvC.textContent = data.data[0].uvC;
                     uvD.textContent = data.data[0].uvD;
-                    uvE.textContent = data.data[0].uvE;
-                    uvF.textContent = data.data[0].uvF;
+                    uvE.textContent = data.data[0].uvE ?? 0;
+                    uvF.textContent = data.data[0].uvF ?? 0;
                     asbA.textContent = data.data[0].asbA;
                     asbB.textContent = data.data[0].asbB;
                     asbC.textContent = data.data[0].asbC;
                     asbD.textContent = data.data[0].asbD;
-                    asbE.textContent = data.data[0].asbE;
-                    asbF.textContent = data.data[0].asbF;
+                    asbE.textContent = data.data[0].asbE ?? 0;
+                    asbF.textContent = data.data[0].asbF ?? 0;
                     llA.textContent = data.data[0].llA;
                     llB.textContent = data.data[0].llB;
                     llC.textContent = data.data[0].llC;
@@ -2393,67 +2607,71 @@ jQuery(function ($) {
                     uvAT.textContent = data.data[0].uvAT;
                     asbAT.textContent = data.data[0].asbAT;
                     llAT.textContent = data.data[0].llAT;
-                    bngM.textContent = data.data[0].bngM;
-                    prongM.textContent = data.data[0].prongM;
-                    silM.textContent = data.data[0].silM;
-                    bngL.textContent = data.data[0].bngL;
-                    prongL.textContent = data.data[0].prongL;
-                    silL.textContent = data.data[0].silL;
-                    bngMe.textContent = data.data[0].bngMe;
-                    prongMe.textContent = data.data[0].prongMe;
-                    silMe.textContent = data.data[0].silMe;
-                    bngGB.textContent = data.data[0].bngGB;
-                    prongGB.textContent = data.data[0].prongGB;
-                    silGB.textContent = data.data[0].silGB;
-                    bngLL.textContent = data.data[0].bngLL;
-                    prongLL.textContent = data.data[0].prongLL;
-                    silLL.textContent = data.data[0].silLL;
-                    total.textContent = data.data[0].total;
-                    // highlightRow("c1");
-                    // highlightRow("c2");
-                    // highlightRow("c3");
-                    // highlightRow("c4");
-                    // highlightRow("c5");
-                    // highlightRow("c6");
-                    // highlightRow("c7");
-                    // highlightRow("c8");
+                    bngM.textContent = data.data[0].bngM ?? numeral(0).format("0,0.00");
+                    prongM.textContent = data.data[0].prongM ?? numeral(0).format("0,0.00");
+                    silM.textContent = data.data[0].silM ?? numeral(0).format("0,0.00");
+                    bngL.textContent = data.data[0].bngL ?? numeral(0).format("0,0.00");
+                    prongL.textContent = data.data[0].prongL ?? numeral(0).format("0,0.00");
+                    silL.textContent = data.data[0].silL ?? numeral(0).format("0,0.00");
+                    bngMe.textContent = data.data[0].bngMe ?? numeral(0).format("0,0.00");
+                    prongMe.textContent = data.data[0].prongMe ?? numeral(0).format("0,0.00");
+                    silMe.textContent = data.data[0].silMe ?? numeral(0).format("0,0.00");
+                    bngGB.textContent = data.data[0].bngGB ?? numeral(0).format("0,0.00");
+                    prongGB.textContent = data.data[0].prongGB ?? numeral(0).format("0,0.00");
+                    silGB.textContent = data.data[0].silGB ?? numeral(0).format("0,0.00");
+                    bngLL.textContent = data.data[0].bngLL ?? numeral(0).format("0,0.00");
+                    prongLL.textContent = data.data[0].prongLL ?? numeral(0).format("0,0.00");
+                    silLL.textContent = data.data[0].silLL ?? numeral(0).format("0,0.00");
+                    if (data.data[0].total != null && data.data[0].total !== "") {
+                        total.textContent = data.data[0].total;
+                    } else {
+                        hitungTotal();
+                    }
+                    highlightRow("c1");
+                    highlightRow("c2");
+                    highlightRow("c3");
+                    highlightRow("c4");
+                    highlightRow("c5");
+                    highlightRow("c6");
+                    highlightRow("c7");
+                    highlightRow("c8");
 
-                    // highlightRow("fl");
-                    // highlightRow("sc");
-                    // highlightRow("jn");
+                    highlightRow("fl");
+                    highlightRow("sc");
+                    highlightRow("jn");
 
-                    // highlightRow("d1");
-                    // highlightRow("d2");
-                    // highlightRow("d3");
-                    // highlightRow("d4");
-                    // highlightRow("d5");
-                    // highlightRow("d6");
+                    highlightRow("d1");
+                    highlightRow("d2");
+                    highlightRow("d3");
+                    highlightRow("d4");
+                    highlightRow("d5");
+                    highlightRow("d6");
 
-                    // highlightRow("sr");
-                    // highlightRow("mr");
-                    // highlightRow("mv");
+                    highlightRow("sr");
+                    highlightRow("mr");
+                    highlightRow("mv");
 
-                    // highlightRow("mpp1");
-                    // highlightRow("mpp2");
+                    highlightRow("mpp1");
+                    highlightRow("mpp2");
 
-                    // highlightRow("qb");
-                    // highlightRow("few");
-                    // highlightRow("sw");
-                    // highlightRow("noy");
-                    // highlightRow("wg");
+                    highlightRow("qb");
+                    highlightRow("few");
+                    highlightRow("sw");
+                    highlightRow("noy");
+                    highlightRow("wg");
 
-                    // highlightRow("rs1");
-                    // highlightRow("rs2");
-                    // highlightRow("rs3");
+                    highlightRow("rs1");
+                    highlightRow("rs2");
+                    highlightRow("rs3");
 
-                    // highlightRow("str");
-                    // highlightRow("r");
-                    // highlightRow("uot");
-                    // highlightRow("lot");
+                    highlightRow("str");
+                    highlightRow("r");
+                    highlightRow("uot");
+                    highlightRow("lot");
 
-                    // highlightRow("at1");
-                    // highlightRow("at2");
-                    // highlightRow("at3");
+                    highlightRow("at1");
+                    highlightRow("at2");
+                    highlightRow("at3");
                     document.getElementById("ketHead").textContent = "Keterangan"
                     keterangan.innerHTML = data.data[0].keterangan
                         ? data.data[0].keterangan.replace(/\n/g, "<br>")
