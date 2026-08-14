@@ -218,7 +218,7 @@
                     <br><br>
 
                     <b>Delivery To:</b><br>
-                    PT. Kerta Rajasa Raya<br>
+                    PT. Kencana Rajasa Raya<br>
                     Jl. Raya Tropodo No. 1<br>
                     Waru - Sidoarjo 61256 East Java, Indonesia
                 </td>
