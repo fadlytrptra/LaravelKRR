@@ -40,11 +40,12 @@
                                             <label for="namaCustomer" style="margin-right: 10px;">Nama Customer</label>
                                         </div>
                                         <div class="col-md-5">
-                                            <input type="text" id="nama_customer" name="nama_customer" class="form-control"
-                                                style="width: 100%;">
+                                            <input type="text" id="nama_customer" name="nama_customer"
+                                                class="form-control" style="width: 100%;">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-default" id="btn_customer">Lihat Semua Customer</button>
+                                            <button type="button" class="btn btn-default" id="btn_customer">Lihat Semua
+                                                Customer</button>
                                         </div>
                                         <div class="col-md-1">
                                             <input type="text" id="idCustomer" name="idCustomer" class="form-control"
@@ -62,11 +63,12 @@
                                                 Penagihan</label>
                                         </div>
                                         <div class="col-md-5">
-                                            <input type="text" id="no_penagihan" name="no_penagihan" class="form-control"
-                                                style="width: 100%;">
+                                            <input type="text" id="no_penagihan" name="no_penagihan"
+                                                class="form-control" style="width: 100%;">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-default" id="btn_penagihan">...</button>
+                                            <button type="button" class="btn btn-default"
+                                                id="btn_penagihan">...</button>
                                         </div>
                                         <div class="col-md-1">
                                             <input type="text" id="IdPenagihan" name="IdPenagihan"
@@ -108,7 +110,8 @@
                                                 style="width: 100%;">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-default" id="btn_noSP">...</button>
+                                            <button type="button" class="btn btn-default"
+                                                id="btn_noSP">...</button>
                                         </div>
                                         <div class="col-md-1" style="display: none">
                                             <input type="text" id="noSP" name="noSP" class="form-control"
@@ -158,7 +161,8 @@
 
                                         </div>
                                         <div class="col-md-2">
-                                            <label for="penagihanPajak" style="margin-right: 10px; display: none">Syarat
+                                            <label for="penagihanPajak"
+                                                style="margin-right: 10px; display: none">Syarat
                                                 Pembayaran</label>
                                         </div>
                                         <div class="col-md-1">
@@ -166,7 +170,8 @@
                                                 class="form-control" style="width: 100%; display: none">
                                         </div>
                                         <div class="col-md-1">
-                                            <label for="penagihanPajak" style="margin-right: 10px; display: none">Hari</label>
+                                            <label for="penagihanPajak"
+                                                style="margin-right: 10px; display: none">Hari</label>
                                         </div>
                                     </div>
                                     <p>
@@ -180,7 +185,8 @@
                                                 class="form-control" style="width: 100%">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-default" id="btn_userPenagih">...</button>
+                                            <button type="button" class="btn btn-default"
+                                                id="btn_userPenagih">...</button>
                                         </div>
                                         <div class="col-md-1">
                                             <input type="text" id="idUserPenagih" name="idUserPenagih"
@@ -194,21 +200,23 @@
                                                 Pajak</label>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" id="nama_pajak" name="nama_pajak" class="form-control"
-                                                style="width: 100%">
+                                            <input type="text" id="nama_pajak" name="nama_pajak"
+                                                class="form-control" style="width: 100%">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-default" id="btn_pajak">...</button>
+                                            <button type="button" class="btn btn-default"
+                                                id="btn_pajak">...</button>
                                         </div>
                                         <div class="col-md-3" style="display: none">
-                                            <input type="text" id="jenis_pajak" name="jenis_pajak" class="form-control"
-                                                style="width: 100%; display: none">
+                                            <input type="text" id="jenis_pajak" name="jenis_pajak"
+                                                class="form-control" style="width: 100%; display: none">
                                         </div>
                                         <div class="col-md-1">
                                             <label for="PPN" style="margin-right: 10px;">PPN%</label>
                                         </div>
                                         <div class="col-md-1">
-                                            <select id="Ppn" name="Ppn" class="form-control" style="width: 100%;">
+                                            <select id="Ppn" name="Ppn" class="form-control"
+                                                style="width: 100%;">
                                                 <option value="12">12</option>
                                                 <option value="11">11</option>
                                                 <option value="10">10</option>
@@ -225,11 +233,12 @@
                                             <label for="dokumenSelect" style="margin-right: 10px;">Dokumen</label>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" id="dokumen" name="dokumen"
-                                                class="form-control" style="width: 100%;">
+                                            <input type="text" id="dokumen" name="dokumen" class="form-control"
+                                                style="width: 100%;">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-default" id="btn_dokumen">...</button>
+                                            <button type="button" class="btn btn-default"
+                                                id="btn_dokumen">...</button>
                                         </div>
                                         <div class="col-md-1">
                                             <input type="text" id="idJenisDokumen" name="idJenisDokumen"
@@ -239,7 +248,39 @@
                                     <br>
                                 </div>
                             </div>
-
+                            <div>
+                                <label for="" style="margin-right: 10px; font-weight: bold;">Tabel Surat Pesanan</label>
+                                <div style="overflow-y: auto;">
+                                    <table style="width: 100%;" id="table_bawah">
+                                        {{-- <colgroup>
+                                            <col style="width: 25%;">
+                                            <col style="width: 25%;">
+                                            <col style="width: 25%;">
+                                            <col style="width: 25%;">
+                                            <col style="width: 25%;">
+                                        </colgroup> --}}
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Surat Pesanan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="col-md-10" style="visibility: hidden">
+                                    <button type="button" class="btn btn-default d-flex ml-auto"
+                                        id="btn_lihatItemSP">Lihat Item</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-default d-flex ml-auto"
+                                        id="btn_hapusItemSP">Hapus Item</button>
+                                    {{-- <input type="submit" id="btnHapusItem" name="btnHapusItem"
+                                            value="Hapus Item" class="btn d-flex ml-auto"> --}}
+                                </div>
+                            </div>
                             <!--CARD 2-->
                             <br>
                             <div class="card">
@@ -266,7 +307,8 @@
                                 <p>
                                 <div class="d-flex">
                                     <div class="col-md-3">
-                                        <label for="nilaiSblmPPN" style="margin-right: 10px;">Nilai Sebelum PPN</label>
+                                        <label for="nilaiSblmPPN" style="margin-right: 10px;">Nilai Sebelum
+                                            PPN</label>
                                     </div>
                                     <div class="col-md-3">
                                         <input type="text" id="nilaiSblmPPN" name="nilaiSblmPPN"

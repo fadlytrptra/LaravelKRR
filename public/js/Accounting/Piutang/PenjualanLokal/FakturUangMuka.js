@@ -39,10 +39,14 @@ $(document).ready(function () {
     let Ppn = document.getElementById("Ppn");
     let idMataUang = document.getElementById("idMataUang");
     let nilaiKurs = document.getElementById("nilaiKurs");
+    let btn_hapusItemSP = document.getElementById("btn_hapusItemSP");
     let table_atas = $("#table_atas").DataTable({
         // columnDefs: [{ targets: [5, 6, 7], visible: false }],
     });
     let proses;
+    let table_bawah = $("#table_bawah").DataTable({
+        // columnDefs: [{ targets: [0, 7], visible: false }],
+    });
 
     $.ajaxSetup({
         beforeSend: function () {
@@ -141,6 +145,7 @@ $(document).ready(function () {
     btn_proses.addEventListener("click", async function (event) {
         event.preventDefault();
         btn_proses.disabled = true;
+        const allRowsDataBawah = table_bawah.rows().data().toArray();
         if (proses == 1) {
             $.ajax({
                 url: "FakturUangMuka",
@@ -161,6 +166,7 @@ $(document).ready(function () {
                     jenis_pajak: jenis_pajak.value,
                     Ppn: Ppn.value,
                     no_sp: no_sp.value,
+                    allRowsDataBawah: allRowsDataBawah,
                 },
                 success: function (response) {
                     console.log(response);
@@ -684,6 +690,7 @@ $(document).ready(function () {
         // console.log(selectedRow);
     });
 
+    let tableData = [];
     btn_noSP.addEventListener("click", async function (event) {
         event.preventDefault();
         try {
@@ -761,6 +768,23 @@ $(document).ready(function () {
                     const selectedRow = result.value;
                     no_sp.value = escapeHTML(selectedRow.IDSuratPesanan.trim());
                     // IdPenagihan.value = escapeHTML(selectedRow.Id_Penagihan.trim());
+                    const newRow = {
+                        no_sp: no_sp.value,
+                    };
+
+                    tableData.push(newRow);
+                    console.log(tableData);
+
+                    if ($.fn.DataTable.isDataTable("#table_bawah")) {
+                        var table_bawah = $("#table_bawah").DataTable();
+
+                        table_bawah.row
+                            .add([
+                                newRow.no_sp,
+                            ])
+                            .draw();
+                    }
+
                     $.ajax({
                         url: "FakturUangMuka/getPesananDetails",
                         type: "GET",
@@ -789,6 +813,50 @@ $(document).ready(function () {
             console.error("An error occurred:", error);
         }
         // console.log(selectedRow);
+    });
+
+    $("#table_bawah tbody").on("click", "tr", function () {
+        // Remove the 'selected' class from any previously selected row
+        $("#table_bawah tbody tr").removeClass("selected");
+
+        // Add the 'selected' class to the clicked row
+        $(this).addClass("selected");
+
+        // Get data from the clicked row
+        var data = table_bawah.row(this).data();
+        console.log(data);
+
+        // x_charge.value = data[1];
+        // change_amount.value = data[4];
+    });
+
+    btn_hapusItemSP.addEventListener("click", async function (event) {
+        event.preventDefault();
+
+        // Get the selected row
+        const selectedRow = $("#table_bawah tbody tr.selected");
+
+        if (selectedRow.length > 0) {
+            // Get DataTable instance
+            var table_bawah = $("#table_bawah").DataTable();
+
+            // Get data of the selected row
+            var rowData = table_bawah.row(selectedRow).data();
+
+            // Remove the row from DataTable
+            table_bawah.row(selectedRow).remove().draw();
+
+            // Remove the row from tableData array
+            tableData = tableData.filter((row) => row.no_sp !== rowData[0]);
+            console.log(tableData);
+        } else {
+            Swal.fire({
+                icon: "info",
+                title: "Info!",
+                text: "Pilih data terlebih dahulu!",
+                showConfirmButton: true,
+            });
+        }
     });
 
     btn_penagihan.addEventListener("click", async function (event) {

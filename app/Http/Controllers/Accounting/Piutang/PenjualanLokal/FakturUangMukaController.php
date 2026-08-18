@@ -98,6 +98,7 @@ class FakturUangMukaController extends Controller
             $saveData = false;
             $proses = $request->input('proses');
 
+
             if ($proses == 1) {
                 $penagihanResult = DB::connection('ConnAccounting')
                     ->statement('EXEC SP_1486_ACC_MAINT_PENAGIHAN_SJ @Kode = ?, @Tgl_Penagihan = ?, @Id_Customer = ?, @PO = ?, @id_Jenis_Dokumen = ?, @Nilai_Penagihan = ?, @Id_MataUang = ?, @Terbilang = ?, @UserInput = ?, @IdPenagih = ?, @TglFakturPajak = ?, @NilaiKurs = ?, @Jns_PPN = ?, @persenPPN = ?', [
@@ -130,12 +131,17 @@ class FakturUangMukaController extends Controller
                         ->value('Id_Penagihan');
 
                     // dd($Tid_Penagihan);
-                    DB::connection('ConnAccounting')
-                        ->statement('EXEC SP_1486_ACC_MAINT_DETAIL_TAGIHAN_DP @Kode = ?, @Id_Penagihan = ?, @SuratPesanan = ?', [
-                            1,
-                            $Tid_Penagihan,
-                            $request->input('no_sp')
-                        ]);
+                    if (!empty($request->allRowsDataBawah)) {
+                        foreach ($request->allRowsDataBawah as $item) {
+                            DB::connection('ConnAccounting')
+                                ->statement('EXEC SP_1486_ACC_MAINT_DETAIL_TAGIHAN_DP @Kode = ?, @Id_Penagihan = ?, @SuratPesanan = ?', [
+                                    1,
+                                    $Tid_Penagihan,
+                                    $item[0],
+                                ]);
+                        }
+                    }
+
 
                     $saveData = true;
                 }
