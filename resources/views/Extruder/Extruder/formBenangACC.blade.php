@@ -5,6 +5,30 @@
 @endsection
 
 @section('content')
+    <style>
+        table.cell-border {
+            border-collapse: collapse !important;
+            width: 100% !important;
+        }
+
+        table.cell-border,
+        table.cell-border th,
+        table.cell-border td {
+            border: 1px solid #555555;
+        }
+
+        table.cell-border tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.cell-border th {
+            background-color: #dddddd;
+        }
+
+        .dataTables_filter {
+            margin-bottom: 15px !important;
+        }
+    </style>
     <input type="hidden" id="hiddenKu">
     <input type="hidden" id="nama_gedung" value="{{ $formData['namaGedung'] }}">
 

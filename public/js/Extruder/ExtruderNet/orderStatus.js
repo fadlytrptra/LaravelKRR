@@ -95,7 +95,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -198,8 +226,32 @@ function renderLookupTable() {
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 let prevRow = this.previousElementSibling;
-                if (prevRow) prevRow.focus();
-                else document.getElementById("lookupSearch").focus();
+                if (prevRow) {
+                    prevRow.focus();
+                } else {
+                    document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
             }
         });
         tbody.appendChild(tr);
@@ -390,6 +442,7 @@ btnProses.addEventListener("click", async function () {
 
         // Loading state
         this.disabled = true;
+        btnKeluar.disabled = true;
         this.innerHTML =
             '<span class="spinner-border spinner-border-sm"></span> Memproses...';
 
@@ -421,6 +474,7 @@ btnProses.addEventListener("click", async function () {
         Swal.fire("Error", "Gagal memproses data: " + error.message, "error");
     } finally {
         this.disabled = false;
+        btnKeluar.disabled = false;
         this.innerHTML = "Proses";
     }
 });

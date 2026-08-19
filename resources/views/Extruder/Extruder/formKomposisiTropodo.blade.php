@@ -10,8 +10,31 @@
             font-size: 12px;
         }
 
+        table.cell-border,
+        table.cell-border th,
+        table.cell-border td {
+            border: 1px solid #555555;
+        }
+
+        table.cell-border tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.cell-border th {
+            background-color: #dddddd;
+        }
+
+        .dataTables_filter {
+            margin-bottom: 15px !important;
+        }
+
         .sorting {
             font-size: 12px;
+        }
+
+        #tableLookupGeneric.table-bordered th,
+        #tableLookupGeneric.table-bordered td {
+            border: 1px solid #555555
         }
 
         #tableLookupGeneric tbody tr:hover {
@@ -67,8 +90,8 @@
                 <div class="input-group rounded">
                     <input type="text" id="id_mesin" class="form-control" style="max-width: 150px; border-right: none;"
                         placeholder="ID" disabled>
-                    <input type="text" id="nama_mesin" class="form-control" style="border-left: none; padding-left: 10px;"
-                        placeholder="Pilih Mesin..." disabled>
+                    <input type="text" id="nama_mesin" class="form-control"
+                        style="border-left: none; padding-left: 10px;" placeholder="Pilih Mesin..." disabled>
                     <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_mesin" disabled> ...
                     </button>
                 </div>
@@ -77,7 +100,6 @@
 
         <div class="card mt-5">
             <div class="card-body">
-
                 <table id="table_komposisi" class="hover cell-border" tabindex="0">
                     <thead>
                         <tr>
@@ -120,7 +142,8 @@
                     <div class="col-md-4 form-group">
                         <label for="primer">Primer:</label>
                         <div class="input-group">
-                            <input type="number" id="primer" class="form-control" style="border-right: none" placeholder="0" disabled>
+                            <input type="number" id="primer" class="form-control" style="border-right: none"
+                                placeholder="0" disabled>
                             <input type="text" id="sat_primer" class="form-control" style="border-left: none" disabled>
                         </div>
                     </div>
@@ -133,8 +156,10 @@
                             <input type="text" id="id_kelut" class="form-control"
                                 style="max-width: 150px; border-right: none;" placeholder="ID">
                             <input type="text" id="nama_kelut" class="form-control"
-                                style="border-left: none; padding-left: 10px" placeholder="Pilih Kelompok Utama..." disabled>
-                            <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_kelut" disabled> ...
+                                style="border-left: none; padding-left: 10px" placeholder="Pilih Kelompok Utama..."
+                                disabled>
+                            <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_kelut" disabled>
+                                ...
                             </button>
                         </div>
                     </div>
@@ -142,8 +167,10 @@
                     <div class="col-md-4 form-group">
                         <label for="sekunder">Sekunder:</label>
                         <div class="input-group">
-                            <input type="number" id="sekunder" class="form-control" style="border-right: none" placeholder="0" disabled>
-                            <input type="text" id="sat_sekunder" class="form-control" style="border-left: none" disabled>
+                            <input type="number" id="sekunder" class="form-control" style="border-right: none"
+                                placeholder="0" disabled>
+                            <input type="text" id="sat_sekunder" class="form-control" style="border-left: none"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -166,8 +193,10 @@
                     <div class="col-md-4 form-group">
                         <label for="tritier">Tritier:</label>
                         <div class="input-group">
-                            <input type="number" id="tritier" class="form-control" style="border-right: none" placeholder="0" disabled>
-                            <input type="text" id="sat_tritier" class="form-control" style="border-left: none" disabled>
+                            <input type="number" id="tritier" class="form-control" style="border-right: none"
+                                placeholder="0" disabled>
+                            <input type="text" id="sat_tritier" class="form-control" style="border-left: none"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -289,7 +318,7 @@
                     </div>
 
                     <div class="table-responsive border rounded-3">
-                        <table class="table table-hover align-middle mb-0" id="tableLookupGeneric">
+                        <table class="table table-bordered table-hover align-middle mb-0" id="tableLookupGeneric">
                             <thead class="table-light text-muted">
                                 <tr id="lookupHeaders">
                                 </tr>

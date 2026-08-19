@@ -11,6 +11,29 @@
             font-size: 12px;
         }
 
+        table.cell-border {
+            border-collapse: collapse !important;
+            width: 100% !important;
+        }
+
+        table.cell-border,
+        table.cell-border th,
+        table.cell-border td {
+            border: 1px solid #555555;
+        }
+
+        table.cell-border tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.cell-border th {
+            background-color: #dddddd;
+        }
+
+        .dataTables_filter {
+            margin-bottom: 15px !important;
+        }
+
         #tableLookupGeneric tbody tr:hover {
             background-color: #f1f1f1;
         }

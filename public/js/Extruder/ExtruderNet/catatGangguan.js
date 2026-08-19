@@ -124,7 +124,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -232,6 +260,27 @@ function renderLookupTable() {
                 } else {
                     document.getElementById("lookupSearch").focus();
                 }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
             }
         });
 
@@ -313,6 +362,8 @@ btnLookupMesin.addEventListener("click", function () {
             }
 
             if (rdoLibur.checked) {
+                txtIdKomposisi.value = "";
+                txtNamaKomposisi.value = "";
                 btnLookupKomposisi.disabled = true;
                 txtShift.disabled = false;
                 txtShift.focus();
@@ -386,7 +437,8 @@ dateInput.addEventListener("keypress", function (event) {
 });
 
 timeShiftAwal.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
+        event.preventDefault();
         timeShiftAkhir.focus();
     }
 });
@@ -401,7 +453,10 @@ timeGangAkhir.addEventListener("keypress", function (event) {
 });
 
 timeShiftAkhir.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
+        event.preventDefault();
+
+        btnLookupGangguan.disabled = false;
         btnLookupGangguan.focus();
     }
 });
@@ -416,14 +471,14 @@ rdoMasuk.addEventListener("change", function () {
     txtNamaKomposisi.value = "";
 });
 
-btnOk.addEventListener("click", function () {
+btnOk.addEventListener("click", async function () {
     listGangguan.length = 0;
     clearTable_DataTable("table_gangguan", colGangguan.length, [
         "padding=250px",
         "Memuat data...",
     ]);
 
-    loadDataGangguanProdEXT();
+    await loadDataGangguanProdEXT();
 });
 
 btnIsi.addEventListener("click", function () {
@@ -457,41 +512,60 @@ btnHapus.addEventListener("click", function () {
     }
 });
 
-btnProses.addEventListener("click", function () {
-    if (modeProses == "isi") {
-        if (txtIdMesin.value == "") {
-            btnLookupMesin.focus();
-            Swal.fire(
-                "Perhatian",
-                "Data Mesin belum terisi dengan lengkap. Mohon periksa kembali!",
-                "warning",
-            );
-        } else if (txtIdKomposisi.value == "") {
-            btnLookupKomposisi.focus();
-            Swal.fire(
-                "Perhatian",
-                "Data Komposisi belum terisi dengan lengkap. Mohon periksa kembali!",
-                "warning",
-            );
-        } else if (txtIdGangguan.value == "") {
-            btnLookupGangguan.focus();
-            Swal.fire(
-                "Perhatian",
-                "Data Gangguan belum terisi dengan lengkap. Mohon periksa kembali!",
-                "warning",
-            );
-        } else if (txtKeterangan.value.trim() == "") {
-            txtKeterangan.focus();
-            Swal.fire(
-                "Perhatian",
-                "Keterangan belum terisi dengan lengkap. Mohon periksa kembali!",
-                "warning",
-            );
-        } else prosesIsi();
-    } else if (modeProses == "koreksi") {
-        prosesUpdate();
-    } else if (modeProses == "hapus") {
-        prosesDelete();
+btnProses.addEventListener("click", async function () {
+    this.disabled = true;
+    this.innerHTML =
+        '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    btnKeluar.disabled = true;
+
+    try {
+        console.log("rdoLibur.checked =", rdoLibur.checked);
+        console.log("rdoMasuk.checked =", rdoMasuk.checked);
+        console.log("txtIdKomposisi =", txtIdKomposisi.value);
+        if (modeProses == "isi") {
+            if (txtIdMesin.value == "") {
+                btnLookupMesin.focus();
+                Swal.fire(
+                    "Perhatian",
+                    "Data Mesin belum terisi dengan lengkap. Mohon periksa kembali!",
+                    "warning",
+                );
+                return;
+            } else if (!rdoLibur.checked && txtIdKomposisi.value == "") {
+                btnLookupKomposisi.focus();
+                Swal.fire(
+                    "Perhatian",
+                    "Data Komposisi belum terisi dengan lengkap. Mohon periksa kembali!",
+                    "warning",
+                );
+                return;
+            } else if (txtIdGangguan.value == "") {
+                btnLookupGangguan.focus();
+                Swal.fire(
+                    "Perhatian",
+                    "Data Gangguan belum terisi dengan lengkap. Mohon periksa kembali!",
+                    "warning",
+                );
+                return;
+            } else if (txtKeterangan.value.trim() == "") {
+                txtKeterangan.focus();
+                Swal.fire(
+                    "Perhatian",
+                    "Keterangan belum terisi dengan lengkap. Mohon periksa kembali!",
+                    "warning",
+                );
+                return;
+            }
+            await prosesIsi();
+        } else if (modeProses == "koreksi") {
+            await prosesUpdate();
+        } else if (modeProses == "hapus") {
+            await prosesDelete();
+        }
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
     }
 });
 
@@ -510,8 +584,14 @@ btnKeluar.addEventListener("click", function () {
 });
 
 txtShift.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
+        event.preventDefault();
+
         this.value = this.value.toUpperCase();
+
+        timeShiftAwal.disabled = false;
+        timeShiftAkhir.disabled = false;
+
         timeShiftAwal.focus();
     }
 });
@@ -538,11 +618,11 @@ function hitungWaktu() {
         txtJmlhMenit.value = timeDiff[1];
         txtKeterangan.focus();
     } else {
-        Swal.fire({
-            icon: "error",
-            title: "Waktu Tidak Valid",
-            text: "Akhir Gangguan tidak bisa lebih awal dibandingkan Awal Gangguan.",
-        }).then(() => {
+        Swal.fire(
+            "Waktu Tidak Valid",
+            "Akhir Gangguan tidak bisa lebih awal dibandingkan Awal Gangguan.",
+            "error",
+        ).then(() => {
             this.value = "";
             this.focus();
             timeGangAkhir.focus();
@@ -749,7 +829,7 @@ async function prosesIsi() {
             Swal.fire("Perhatian", "Data Mesin belum terisi.", "warning");
             return;
         }
-        if (txtIdKomposisi.value == "") {
+        if (!rdoLibur.checked && txtIdKomposisi.value == "") {
             btnLookupKomposisi.focus();
             Swal.fire("Perhatian", "Data Komposisi belum terisi.", "warning");
             return;

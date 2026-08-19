@@ -90,7 +90,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -132,7 +160,11 @@ async function openLookupModal(config) {
             renderPagination();
         };
     } catch (error) {
-        Swal.fire("Error System", error.message || error, "error");
+        Swal.fire(
+            "Error System",
+            error.message || "Gagal memuat data lookup.",
+            "error",
+        );
     }
 }
 
@@ -193,6 +225,27 @@ function renderLookupTable() {
                     prevRow.focus();
                 } else {
                     document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
                 }
             }
         });
@@ -532,6 +585,11 @@ btnHapus.addEventListener("click", function () {
 
 btnProses.addEventListener("click", async function () {
     try {
+        this.disabled = true;
+        this.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span> Processing...';
+        btnKeluar.disabled = true;
+
         if (txtIdMesin.value === "" || txtIdKonversi.value === "") {
             Swal.fire(
                 "Perhatian",
@@ -552,7 +610,7 @@ btnProses.addEventListener("click", async function () {
         let awalProduksi = "";
         let akhirProduksi = "";
 
-        if (    
+        if (
             (modeProses === "koreksi" || modeProses === "hapus") &&
             exactAwalUpdate !== ""
         ) {
@@ -637,6 +695,10 @@ btnProses.addEventListener("click", async function () {
     } catch (error) {
         console.error("btnProses error:", error);
         Swal.fire("Error", error.message || "Gagal memproses data.", "error");
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
     }
 });
 

@@ -121,10 +121,37 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
-
                 const rows = document.querySelectorAll("#lookupBody tr");
                 if (rows.length > 0) {
                     rows[selectedRowIndex].focus();
@@ -134,7 +161,6 @@ async function openLookupModal(config) {
 
             if (e.key === "Enter") {
                 e.preventDefault();
-
                 const rows = document.querySelectorAll("#lookupBody tr");
                 if (rows.length > 0) {
                     rows[selectedRowIndex].click();
@@ -173,7 +199,6 @@ async function openLookupModal(config) {
 
 function highlightSelectedRow() {
     const rows = document.querySelectorAll("#lookupBody tr");
-
     rows.forEach((row, index) => {
         if (index === selectedRowIndex) {
             row.classList.add("table-primary");
@@ -228,6 +253,27 @@ function renderLookupTable() {
                     prevRow.focus();
                 } else {
                     document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
                 }
             }
         });
@@ -458,28 +504,68 @@ btnLookupKelompok.addEventListener("click", function () {
                 fetchSelectAsync(
                     `/Master/getCekKelompokMesin/${safeUrlParam(idKelompok)}`,
                 ).then((data) => {
+                    // Test get mesin
+                    // console.log("=== CEK KELOMPOK MESIN ===");
+                    // console.log("Id Kelompok :", JSON.stringify(idKelompok));
+                    // console.log(
+                    //     "Id Mesin Form:",
+                    //     JSON.stringify(inputIdMesin.value),
+                    // );
+                    // console.log("Response SP :", data);
+                    // console.log("Type data :", typeof data);
+                    // console.log("Is Array :", Array.isArray(data));
+                    // console.log("JSON data :", JSON.stringify(data));
+                    // console.log("==========================");
+
                     const dataArray = Array.isArray(data) ? data : [];
-                    if (dataArray.length < 1) {
-                        Swal.fire("Error", "Mesin tidak ditemukan.", "error");
-                        clearInputGroup(inputIdKelompok, txtNamaKelompok);
-                    } else {
-                        let found = dataArray.some(
+                    // if (dataArray.length < 1) {
+                    //     Swal.fire("Error", "Mesin tidak ditemukan.", "error");
+                    //     clearInputGroup(inputIdKelompok, txtNamaKelompok);
+                    // } else {
+                    //     let found = dataArray.some(
+                    //         (d) =>
+                    //             String(d.IdMesin).trim() ===
+                    //             inputIdMesin.value.trim(),
+                    //     );
+                    //     if (!found) {
+                    //         Swal.fire(
+                    //             "Peringatan",
+                    //             "Mesin tidak sama.",
+                    //             "warning",
+                    //         );
+                    //         clearInputGroup(inputIdKelompok, txtNamaKelompok);
+                    //     } else {
+                    //         btnLookupSubkel.disabled = false;
+                    //         btnLookupSubkel.focus();
+                    //     }
+                    // }
+
+                    // Tidak ada data → lewati validasi, pakai yang atas bila perlu validasi
+                    // yang bawah sama seperti VB lama.
+                    if (dataArray.length > 0) {
+                        const found = dataArray.some(
                             (d) =>
                                 String(d.IdMesin).trim() ===
                                 inputIdMesin.value.trim(),
                         );
+
                         if (!found) {
                             Swal.fire(
                                 "Peringatan",
                                 "Mesin tidak sama.",
                                 "warning",
-                            );
-                            clearInputGroup(inputIdKelompok, txtNamaKelompok);
-                        } else {
-                            btnLookupSubkel.disabled = false;
-                            btnLookupSubkel.focus();
+                            ).then(() => {
+                                clearInputGroup(
+                                    inputIdKelompok,
+                                    txtNamaKelompok,
+                                );
+                                btnLookupKelompok.focus();
+                            });
+                            return;
                         }
                     }
+                    btnLookupSubkel.disabled = false;
+                    btnLookupSubkel.focus();
                 });
             } else {
                 btnLookupSubkel.disabled = false;
@@ -759,22 +845,6 @@ btnTambahDetail.addEventListener("click", function () {
         return;
     }
 
-    const primer = parseFloat(numPrimer.value) || 0;
-    const sekunder = parseFloat(numSekunder.value) || 0;
-    const tritier = parseFloat(numTritier.value) || 0;
-
-    if (primer === 0 && sekunder === 0 && tritier === 0) {
-        Swal.fire(
-            "Peringatan",
-            "Minimal salah datu nilai Primer, Sekunde, atau Tritier harus lebih dari 0.",
-            "warning",
-        ).then(() => {
-            this.disabled = false;
-            numPrimer.focus();
-        });
-        return;
-    }
-
     if (listKomposisi.some((k) => k.IdType === inputIdType.value)) {
         Swal.fire(
             "Error",
@@ -862,22 +932,6 @@ btnKoreksiDetail.addEventListener("click", function () {
             "Ada data yang belum terisi secara lengkap.",
             "warning",
         );
-    }
-
-    const primer = parseFloat(numPrimer.value) || 0;
-    const sekunder = parseFloat(numSekunder.value) || 0;
-    const tritier = parseFloat(numTritier.value) || 0;
-
-    if (primer === 0 && sekunder === 0 && tritier === 0) {
-        Swal.fire(
-            "Peringatan",
-            "Minimal salah datu nilai Primer, Sekunde, atau Tritier harus lebih dari 0.",
-            "warning",
-        ).then(() => {
-            this.disabled = false;
-            numPrimer.focus();
-        });
-        return;
     }
 
     let isDuplicate = listKomposisi.some((k, index) => {

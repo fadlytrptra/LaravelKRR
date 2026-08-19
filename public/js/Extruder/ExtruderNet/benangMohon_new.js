@@ -184,13 +184,37 @@ function renderLookupTable() {
                 this.click();
             } else if (e.key === "ArrowDown") {
                 e.preventDefault();
-                const next = this.nextElementSibling;
-                if (next) next.focus();
+                let nextRow = this.nextElementSibling;
+                if (nextRow) nextRow.focus();
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
-                const prev = this.previousElementSibling;
-                if (prev) prev.focus();
-                else document.getElementById("lookupSearch").focus();
+                let prevRow = this.previousElementSibling;
+                if (prevRow) {
+                    prevRow.focus();
+                } else {
+                    document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
             }
         });
         tbody.appendChild(tr);
@@ -513,6 +537,11 @@ btnHapus.addEventListener("click", function () {
 
 btnProses.addEventListener("click", async function () {
     try {
+        this.disabled = true;
+        this.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span> Processing...';
+        btnKeluar.disabled = true;
+
         if (window.modeProses === "isi") {
             if (listAsal.length <= 0 || listTujuan.length <= 0) {
                 Swal.fire(
@@ -560,6 +589,10 @@ btnProses.addEventListener("click", async function () {
         }
     } catch (error) {
         Swal.fire("Error System", error.message || error, "error");
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
     }
 });
 

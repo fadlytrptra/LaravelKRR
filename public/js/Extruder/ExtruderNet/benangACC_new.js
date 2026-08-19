@@ -108,13 +108,27 @@ btnOK.addEventListener("click", function () {
 });
 
 btnProses.addEventListener("click", function () {
-    if (idKonversiNG == -1) {
-        Swal.fire(
-            "Peringatan",
-            "Pilih dulu data konversi yang ingin di-ACC",
-            "warning",
-        );
-    } else cekPenyesuaianFetch();
+    this.disabled = true;
+    this.innerHTML =
+        '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    btnKeluar.disabled = true;
+
+    try {
+        if (idKonversiNG == -1) {
+            Swal.fire(
+                "Peringatan",
+                "Pilih dulu data konversi yang ingin di-ACC",
+                "warning",
+            );
+            return;
+        }
+
+        cekPenyesuaianFetch();
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
+    }
 });
 
 btnKeluar.addEventListener("click", function () {

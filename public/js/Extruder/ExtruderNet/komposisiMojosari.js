@@ -161,7 +161,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -268,6 +296,27 @@ function renderLookupTable() {
                     prevRow.focus();
                 } else {
                     document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
                 }
             }
         });
@@ -639,30 +688,69 @@ btnLookupKelompok.addEventListener("click", function () {
                 fetchSelectAsync(
                     `/Master/getCekKelompokMesin/${safeUrlParam(row.idkelompok.trim())}`,
                 ).then((data) => {
-                    let mesinValid = false;
-                    if (data.length > 0) {
-                        for (let i = 0; i < data.length; i++) {
-                            if (inputIdMesin.value == data[i].IdMesin) {
-                                mesinValid = true;
-                                break;
-                            }
+                    // TEST DEBUG
+                    // console.log("=== CEK KELOMPOK MESIN ===");
+                    // console.log("Id Kelompok :", JSON.stringify(idKelompok));
+                    // console.log(
+                    //     "Id Mesin Form:",
+                    //     JSON.stringify(inputIdMesin.value),
+                    // );
+                    // console.log("Response SP :", data);
+                    // console.log("Type data :", typeof data);
+                    // console.log("Is Array :", Array.isArray(data));
+                    // console.log("JSON data :", JSON.stringify(data));
+                    // console.log("==========================");
+
+                    // let mesinValid = false;
+                    // if (data.length > 0) {
+                    //     for (let i = 0; i < data.length; i++) {
+                    //         if (inputIdMesin.value == data[i].IdMesin) {
+                    //             mesinValid = true;
+                    //             break;
+                    //         }
+                    //     }
+                    // }
+
+                    // if (!mesinValid) {
+                    //     Swal.fire(
+                    //         "Peringatan",
+                    //         data.length > 0
+                    //             ? "Mesin tidak sama dengan data kelompok."
+                    //             : "Data mesin tidak ditemukan.",
+                    //         "warning",
+                    //     );
+                    //     clearInputGroup(inputIdKelompok, txtNamaKelompok);
+                    //     btnLookupKelompok.focus();
+                    // } else {
+                    //     btnLookupSubkel.disabled = false;
+                    //     btnLookupSubkel.focus();
+                    // }
+
+                    // uncomment yang atas jika perlu validasi
+
+                    const dataArray = Array.isArray(data) ? data : [];
+                    if (dataArray.length > 0) {
+                        const found = dataArray.some(
+                            (d) =>
+                                String(d.IdMesin).trim() ===
+                                inputIdMesin.value.trim(),
+                        );
+
+                        if (!found) {
+                            Swal.fire(
+                                "Peringatan",
+                                "Mesin tidak sama.",
+                                "warning",
+                            );
+
+                            clearInputGroup(inputIdKelompok, txtNamaKelompok);
+
+                            btnLookupKelompok.focus();
+                            return;
                         }
                     }
-
-                    if (!mesinValid) {
-                        Swal.fire(
-                            "Peringatan",
-                            data.length > 0
-                                ? "Mesin tidak sama dengan data kelompok."
-                                : "Data mesin tidak ditemukan.",
-                            "warning",
-                        );
-                        clearInputGroup(inputIdKelompok, txtNamaKelompok);
-                        btnLookupKelompok.focus();
-                    } else {
-                        btnLookupSubkel.disabled = false;
-                        btnLookupSubkel.focus();
-                    }
+                    btnLookupSubkel.disabled = false;
+                    btnLookupSubkel.focus();
                 });
             } else {
                 btnLookupSubkel.disabled = false;
@@ -720,6 +808,7 @@ btnLookupType.addEventListener("click", function () {
                 numPrimer.value = 0;
                 numSekunder.value = 0;
                 numTritier.value = 0;
+                numPersentase.value = 0;
 
                 if (txtSatPrimer.value.trim() != "Null") {
                     numPrimer.disabled = false;
@@ -995,10 +1084,7 @@ btnTambahDetail.addEventListener("click", function () {
         return;
     }
 
-    if (
-        numPersentase.value.trim() === "" ||
-        parseFloat(numPersentase.value) <= 0
-    ) {
+    if (numPersentase.value.trim() === "") {
         Swal.fire(
             "Peringatan",
             "Persentase harus diisi Terlebih Dahulu.",
@@ -1186,10 +1272,7 @@ btnCadanganDetail.addEventListener("click", function () {
         return;
     }
 
-    if (
-        numPersentase.value.trim() === "" ||
-        parseFloat(numPersentase.value) <= 0
-    ) {
+    if (numPersentase.value.trim() === "") {
         Swal.fire(
             "Peringatan",
             "Persentase harus diisi Terlebih Dahulu.",
@@ -1383,10 +1466,7 @@ btnKoreksiDetail.addEventListener("click", function () {
         numTritier.focus();
         return;
     }
-    if (
-        numPersentase.value.trim() === "" ||
-        parseFloat(numPersentase.value) <= 0
-    ) {
+    if (numPersentase.value.trim() === "") {
         Swal.fire(
             "Peringatan",
             "Persentase harus diisi Terlebih Dahulu.",

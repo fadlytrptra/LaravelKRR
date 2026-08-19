@@ -108,7 +108,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -211,8 +239,32 @@ function renderLookupTable() {
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 let prevRow = this.previousElementSibling;
-                if (prevRow) prevRow.focus();
-                else document.getElementById("lookupSearch").focus();
+                if (prevRow) {
+                    prevRow.focus();
+                } else {
+                    document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
             }
         });
         tbody.appendChild(tr);
@@ -395,22 +447,6 @@ btnDetail.addEventListener("click", function () {
         return;
     }
 
-    if (
-        txtPrimerQty.value == 0 &&
-        txtSekunderQty.value == 0 &&
-        txtTritierQty.value == 0
-    ) {
-        Swal.fire(
-            "Peringatan",
-            "Minimal salah datu nilai Primer, Sekunder, atau Tritier harus lebih dari 0.",
-            "warning",
-        ).then(() => {
-            this.disabled = false;
-            txtPrimerQty.focus();
-        });
-        return;
-    }
-
     let isEmpty = false;
     detailInputs.forEach((ele) => {
         if (ele.value.trim() === "") {
@@ -496,6 +532,7 @@ btnProses.addEventListener("click", async function () {
         }
 
         this.disabled = true;
+        btnKeluar.disabled = true;
         this.innerHTML =
             '<span class="spinner-border spinner-border-sm"></span> Memproses...';
 
@@ -540,6 +577,7 @@ btnProses.addEventListener("click", async function () {
         );
     } finally {
         this.disabled = false;
+        btnKeluar.disabled = false;
         this.innerHTML = "Proses";
     }
 });

@@ -200,6 +200,7 @@ btnProses.addEventListener("click", async function () {
         if (!confirm.isConfirmed) return;
 
         this.disabled = true;
+        btnKeluar.disabled = true;
         this.innerHTML =
             '<span class="spinner-border spinner-border-sm"></span> Memproses...';
 
@@ -222,6 +223,7 @@ btnProses.addEventListener("click", async function () {
         Swal.fire("Error", "Gagal memproses ACC: " + error.message, "error");
     } finally {
         this.disabled = false;
+        btnKeluar.disabled = false;
         this.innerHTML = "Proses";
     }
 });

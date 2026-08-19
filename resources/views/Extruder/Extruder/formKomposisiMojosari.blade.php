@@ -11,6 +11,24 @@
             font-size: 12px;
         }
 
+        table.cell-border,
+        table.cell-border th,
+        table.cell-border td {
+            border: 1px solid #555555;
+        }
+
+        table.cell-border tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.cell-border th {
+            background-color: #dddddd;
+        }
+
+        .dataTables_filter {
+            margin-bottom: 15px !important;
+        }
+
         .sorting {
             font-size: 12px;
         }
@@ -50,8 +68,10 @@
                 <div class="form-group">
                     <label>Komposisi:</label>
                     <div class="input-group rounded">
-                        <input type="text" id="id_komposisi" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
-                        <input type="text" id="nama_komposisi" class="form-control" style="border-left: none; padding-left: 10px"
+                        <input type="text" id="id_komposisi" class="form-control"
+                            style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
+                        <input type="text" id="nama_komposisi" class="form-control"
+                            style="border-left: none; padding-left: 10px"
                             placeholder="Pilih atau ketik nama komposisi baru..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_komposisi" disabled> ...
                         </button>
@@ -61,9 +81,10 @@
                 <div class="form-group mt-3">
                     <label>Mesin:</label>
                     <div class="input-group rounded">
-                        <input type="text" id="id_mesin" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
-                        <input type="text" id="nama_mesin" class="form-control" style="border-left: none; padding-left: 10px"
-                            placeholder="Pilih Mesin..." disabled>
+                        <input type="text" id="id_mesin" class="form-control"
+                            style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
+                        <input type="text" id="nama_mesin" class="form-control"
+                            style="border-left: none; padding-left: 10px" placeholder="Pilih Mesin..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_mesin" disabled> ...
                         </button>
                     </div>
@@ -72,9 +93,10 @@
                 <div class="form-group mt-3">
                     <label>Hasil Produksi:</label>
                     <div class="input-group rounded">
-                        <input type="text" id="id_hp" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
-                        <input type="text" id="nama_hp" class="form-control" style="border-left: none; padding-left: 10px"
-                            placeholder="Pilih Hasil Produksi..." disabled>
+                        <input type="text" id="id_hp" class="form-control"
+                            style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
+                        <input type="text" id="nama_hp" class="form-control"
+                            style="border-left: none; padding-left: 10px" placeholder="Pilih Hasil Produksi..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_hp" disabled> ...
                         </button>
                     </div>
@@ -83,9 +105,10 @@
                 <div class="form-group mt-3">
                     <label>Hasil Produksi NG:</label>
                     <div class="input-group rounded">
-                        <input type="text" id="id_ng" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
-                        <input type="text" id="nama_ng" class="form-control" style="border-left: none; padding-left: 10px"
-                            placeholder="Pilih Hasil Produksi NG..." disabled>
+                        <input type="text" id="id_ng" class="form-control"
+                            style="max-width: 150px; border-right: none;" placeholder="ID" disabled>
+                        <input type="text" id="nama_ng" class="form-control"
+                            style="border-left: none; padding-left: 10px" placeholder="Pilih Hasil Produksi NG..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_ng" disabled> ...
                         </button>
                     </div>
@@ -94,9 +117,10 @@
                 <div class="form-group mt-3">
                     <label>Afalan:</label>
                     <div class="input-group rounded">
-                        <input type="text" id="id_af" class="form-control" style="max-width: 150px; border-right: none" placeholder="ID" disabled>
-                        <input type="text" id="nama_af" class="form-control" style="border-left: none; padding-left: 10px"
-                            placeholder="Pilih Afalan..." disabled>
+                        <input type="text" id="id_af" class="form-control"
+                            style="max-width: 150px; border-right: none" placeholder="ID" disabled>
+                        <input type="text" id="nama_af" class="form-control"
+                            style="border-left: none; padding-left: 10px" placeholder="Pilih Afalan..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_af" disabled> ...
                         </button>
                     </div>
@@ -116,14 +140,16 @@
                         <div class="col-md-4 row d-flex align-items-center">
                             <div class="form-check" style="display: flex; justify-content: center;">
                                 <input class="form-check-input" type="radio" name="radio_jenis" id="radio_hp">
-                                <label class="form-check-label" for="radio_hp" style="padding-left: 7.5px"> Hasil Produksi
+                                <label class="form-check-label" for="radio_hp" style="padding-left: 7.5px"> Hasil
+                                    Produksi
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-4 row d-flex align-items-center">
                             <div class="form-check" style="display: flex; justify-content: center;">
                                 <input class="form-check-input" type="radio" name="radio_jenis" id="radio_af">
-                                <label class="form-check-label" for="radio_af" style="padding-left: 7.5px"> Afalan </label>
+                                <label class="form-check-label" for="radio_af" style="padding-left: 7.5px"> Afalan
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -183,9 +209,10 @@
                     <div class="col-md-7 form-group">
                         <label>Objek:</label>
                         <div class="input-group rounded">
-                            <input type="text" id="id_objek" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID">
-                            <input type="text" id="nama_objek" class="form-control" style="border-left: none; padding-left: 10px"
-                                placeholder="Pilih Objek..." disabled>
+                            <input type="text" id="id_objek" class="form-control"
+                                style="max-width: 150px; border-right: none;" placeholder="ID">
+                            <input type="text" id="nama_objek" class="form-control"
+                                style="border-left: none; padding-left: 10px" placeholder="Pilih Objek..." disabled>
                             <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_objek" disabled>
                                 ... </button>
                         </div>
@@ -194,9 +221,10 @@
                     <div class="col-md-4 form-group">
                         <label>Primer:</label>
                         <div class="input-group">
-                            <input type="number" min="0" id="primer" class="form-control" style="border-right: none" placeholder="0"
+                            <input type="number" min="0" id="primer" class="form-control"
+                                style="border-right: none" placeholder="0" disabled>
+                            <input type="text" id="sat_primer" class="form-control" style="border-left: none"
                                 disabled>
-                            <input type="text" id="sat_primer" class="form-control" style="border-left: none" disabled>
                         </div>
                     </div>
                 </div>
@@ -205,9 +233,11 @@
                     <div class="col-md-7 form-group">
                         <label>Kelompok Utama:</label>
                         <div class="input-group rounded">
-                            <input type="text" id="id_kelut" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID">
-                            <input type="text" id="nama_kelut" class="form-control" style="border-left: none; padding-left: 10px"
-                                placeholder="Pilih Kelompok Utama..." disabled>
+                            <input type="text" id="id_kelut" class="form-control"
+                                style="max-width: 150px; border-right: none;" placeholder="ID">
+                            <input type="text" id="nama_kelut" class="form-control"
+                                style="border-left: none; padding-left: 10px" placeholder="Pilih Kelompok Utama..."
+                                disabled>
                             <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_kelut" disabled>
                                 ... </button>
                         </div>
@@ -216,9 +246,10 @@
                     <div class="col-md-4 form-group">
                         <label>Sekunder:</label>
                         <div class="input-group">
-                            <input type="number" min="0" id="sekunder" class="form-control" style="border-right: none" placeholder="0"
+                            <input type="number" min="0" id="sekunder" class="form-control"
+                                style="border-right: none" placeholder="0" disabled>
+                            <input type="text" id="sat_sekunder" class="form-control" style="border-left: none"
                                 disabled>
-                            <input type="text" id="sat_sekunder" class="form-control" style="border-left: none" disabled>
                         </div>
                     </div>
                 </div>
@@ -227,9 +258,10 @@
                     <div class="col-md-7 form-group">
                         <label>Kelompok:</label>
                         <div class="input-group rounded">
-                            <input type="text" id="id_kelompok" class="form-control" style="max-width: 150px; border-right: none" placeholder="ID">
-                            <input type="text" id="nama_kelompok" class="form-control" style="border-left: none; padding-left: 10px"
-                                placeholder="Pilih Kelompok..." disabled>
+                            <input type="text" id="id_kelompok" class="form-control"
+                                style="max-width: 150px; border-right: none" placeholder="ID">
+                            <input type="text" id="nama_kelompok" class="form-control"
+                                style="border-left: none; padding-left: 10px" placeholder="Pilih Kelompok..." disabled>
                             <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_kelompok"
                                 disabled> ... </button>
                         </div>
@@ -238,9 +270,10 @@
                     <div class="col-md-4 form-group">
                         <label>Tritier:</label>
                         <div class="input-group">
-                            <input type="number" min="0" id="tritier" class="form-control" style="border-right: none" placeholder="0"
+                            <input type="number" min="0" id="tritier" class="form-control"
+                                style="border-right: none" placeholder="0" disabled>
+                            <input type="text" id="sat_tritier" class="form-control" style="border-left: none"
                                 disabled>
-                            <input type="text" id="sat_tritier" class="form-control" style="border-left: none" disabled>
                         </div>
                     </div>
                 </div>
@@ -249,9 +282,11 @@
                     <div class="col-md-7 form-group">
                         <label>Sub-kelompok:</label>
                         <div class="input-group rounded">
-                            <input type="text" id="id_subkel" class="form-control" style="max-width: 150px; border-right: none;" placeholder="ID">
-                            <input type="text" id="nama_subkel" class="form-control" style="border-left: none; padding-left: 10px"
-                                placeholder="Pilih Sub-kelompok..." disabled>
+                            <input type="text" id="id_subkel" class="form-control"
+                                style="max-width: 150px; border-right: none;" placeholder="ID">
+                            <input type="text" id="nama_subkel" class="form-control"
+                                style="border-left: none; padding-left: 10px" placeholder="Pilih Sub-kelompok..."
+                                disabled>
                             <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_subkel" disabled>
                                 ... </button>
                         </div>
@@ -271,9 +306,10 @@
                     <div class="col-md-7 form-group">
                         <label>Type:</label>
                         <div class="input-group rounded">
-                            <input type="text" id="id_type" class="form-control" style="max-width: 150px; border-right: none" placeholder="ID">
-                            <input type="text" id="nama_type" class="form-control" style="border-left: none; padding-left: 10px"
-                                placeholder="Pilih Type..." disabled>
+                            <input type="text" id="id_type" class="form-control"
+                                style="max-width: 150px; border-right: none" placeholder="ID">
+                            <input type="text" id="nama_type" class="form-control"
+                                style="border-left: none; padding-left: 10px" placeholder="Pilih Type..." disabled>
                             <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_type" disabled>
                                 ... </button>
                         </div>

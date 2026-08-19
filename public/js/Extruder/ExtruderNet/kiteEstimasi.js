@@ -76,7 +76,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -184,8 +212,32 @@ function renderLookupTable() {
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 let prevRow = this.previousElementSibling;
-                if (prevRow) prevRow.focus();
-                else document.getElementById("lookupSearch").focus();
+                if (prevRow) {
+                    prevRow.focus();
+                } else {
+                    document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
             }
         });
 
@@ -296,63 +348,69 @@ txtInputPP.addEventListener("keypress", function (event) {
     }
 });
 
-btnProses.addEventListener("click", function () {
-    // SP_1273_EXT_KITE
-    if (displayKodeBarang.value.trim() === "") {
-        Swal.fire(
-            "Peringatan",
-            "Pilih Kode Barang Fasilitas Terlebih Dahulu !",
-            "warning",
-        ).then(() => btnLookupKodeBarang.focus());
-        return;
-    }
+btnProses.addEventListener("click", async function () {
+    this.disabled = true;
+    this.innerHTML =
+        '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    btnKeluar.disabled = true;
 
-    if (txtHasilBenang.value.trim() === "") {
-        Swal.fire(
-            "Peringatan",
-            "Isi Bahan PP Terlebih Dahulu !",
-            "warning",
-        ).then(() => txtInputPP.focus());
-        return;
-    }
+    try {
+        // SP_1273_EXT_KITE
+        if (displayKodeBarang.value.trim() === "") {
+            Swal.fire(
+                "Peringatan",
+                "Pilih Kode Barang Fasilitas Terlebih Dahulu !",
+                "warning",
+            ).then(() => btnLookupKodeBarang.focus());
+            return;
+        }
 
-    // Eksekusi POST untuk KITE Kode 7
-    fetchPost("/Master/insKiteExtruder7", {
-        id_order: hidOrder.value,
-        tgl_start: dateEstimasi.value,
-        bahan_pp: txtInputPP.value,
-        caco3: txtCaco3.value,
-        benang: txtHasilBenang.value,
-    })
-        .then((res) => {
-            if (res && res.status === "success") {
-                Swal.fire(
-                    "Berhasil",
-                    "Data berhasil tersimpan.",
-                    "success",
-                ).then(() => {
-                    dateEstimasi.value = getCurrentDate();
-                    txtInputPP.value = "";
-                    txtCaco3.value = "";
-                    txtHasilBenang.value = "";
+        if (txtHasilBenang.value.trim() === "") {
+            Swal.fire(
+                "Peringatan",
+                "Isi Bahan PP Terlebih Dahulu !",
+                "warning",
+            ).then(() => txtInputPP.focus());
+            return;
+        }
 
-                    // Refresh data tabel
-                    processDataKiteEstimasi(
-                        dateStart.value,
-                        displayKodeBarang.value,
-                    );
-                });
-            } else {
-                Swal.fire("Error", "Data gagal tersimpan.", "error");
-            }
-        })
-        .catch((err) => {
-            Swal.fire({
-                icon: "error",
-                title: "Terjadi Kesalahan",
-                text: err.toString(),
-            });
+        // Eksekusi POST untuk KITE Kode 7
+        const res = await fetchPost("/Master/insKiteExtruder7", {
+            id_order: hidOrder.value,
+            tgl_start: dateEstimasi.value,
+            bahan_pp: txtInputPP.value,
+            caco3: txtCaco3.value,
+            benang: txtHasilBenang.value,
         });
+
+        if (res && res.status === "success") {
+            Swal.fire(
+                "Berhasil",
+                "Data berhasil tersimpan.",
+                "success",
+            ).then(() => {
+                dateEstimasi.value = getCurrentDate();
+                txtInputPP.value = "";
+                txtCaco3.value = "";
+                txtHasilBenang.value = "";
+
+                // Refresh data tabel
+                processDataKiteEstimasi(dateStart.value, displayKodeBarang.value);
+            });
+        } else {
+            Swal.fire("Error", "Data gagal tersimpan.", "error");
+        }
+    } catch (err) {
+        Swal.fire({
+            icon: "error",
+            title: "Terjadi Kesalahan",
+            text: err.toString(),
+        });
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
+    }
 });
 
 btnKeluar.addEventListener("click", function () {

@@ -172,7 +172,34 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -279,6 +306,27 @@ function renderLookupTable() {
                     prevRow.focus();
                 } else {
                     document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
                 }
             }
         });
@@ -702,22 +750,6 @@ btnTambahDetail.addEventListener("click", function () {
         }
     });
 
-    if (
-        numPrimer.value == 0 &&
-        numSekunder.value == 0 &&
-        numTritier.value == 0
-    ) {
-        Swal.fire(
-            "Peringatan",
-            "Minimal salah datu nilai Primer, Sekunder, atau Tritier harus lebih dari 0.",
-            "warning",
-        ).then(() => {
-            this.disabled = false;
-            numPrimer.focus();
-        });
-        return;
-    }
-
     if (!isEmpty) {
         if (
             findClickedRowInList(listKonversi, "IdType", txtIdProd.value) !== -1
@@ -872,6 +904,10 @@ btnHapusDetail.addEventListener("click", function () {
 
 btnProses.addEventListener("click", async function () {
     try {
+        this.disabled = true;
+        this.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span> Processing...';
+        btnKeluar.disabled = true;
         if (modeProses === "baru") {
             if (listKomposisi.length < 1) {
                 Swal.fire(
@@ -923,6 +959,10 @@ btnProses.addEventListener("click", async function () {
         }
     } catch (error) {
         Swal.fire("Error System", error.message || error, "error");
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
     }
 });
 //#endregion
@@ -1561,9 +1601,11 @@ function rowEventKomposisi(index, _, focus = false) {
                     `${data.NamaType} tidak dapat digunakan karena stok telah habis.`,
                     "warning",
                 );
-                clearSelection_DataTable("table_komposisi");
-                clearDataDetail();
-                return;
+                // Pada VB tetap bisa lanjut menskipun stok habis(0)
+                // commet 3 bari code dibawah agar sama seperti VB uncommet jika stok harus ada
+                // clearSelection_DataTable("table_komposisi");
+                // clearDataDetail();
+                // return;
             }
         }
 

@@ -98,7 +98,35 @@ async function openLookupModal(config) {
 
         const searchInput = document.getElementById("lookupSearch");
         searchInput.value = "";
+
+        searchInput.onkeydown = function (e) {
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                }
+                return;
+            }
+        };
+
         searchInput.onkeyup = function (e) {
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
@@ -202,6 +230,27 @@ function renderLookupTable() {
                 } else {
                     document.getElementById("lookupSearch").focus();
                 }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
             }
         });
 
@@ -297,14 +346,19 @@ txtCounter.addEventListener("keypress", function (event) {
                 if (data.length > 0) {
                     txtFaktor.value = data[0].FaktorKali;
                     btnProses.focus();
-                } else
-                    Swal.fire(
-                        "Error",
-                        "Faktor Kali untuk Mesin " +
-                            txtIdMesin.value +
-                            " tidak ditemukan.",
-                        "error",
-                    );
+                } else {
+                    txtFaktor.value = "";
+                    // Pakai atas agar mirip VB agar tidak error meskipun faktor kali tidak ditemukan
+                    // Uncomment kode SWAL dibawah jika mau lebih ketat dan hapus 1 baris code diatas serta btnProses.focus() dibawah
+                    // Swal.fire(
+                    //     "Error",
+                    //     "Faktor Kali untuk Mesin " +
+                    //         txtIdMesin.value +
+                    //         " tidak ditemukan.",
+                    //     "error",
+                    // );
+                }
+                btnProses.focus();
             },
         );
     }
@@ -346,17 +400,28 @@ btnHapus.addEventListener("click", function () {
         );
 });
 
-btnOk.addEventListener("click", function () {
-    loadDataKwahMesin();
+btnOk.addEventListener("click", async function () {
+    await loadDataKwahMesin();
 });
 
-btnProses.addEventListener("click", function () {
-    if (modeProses == "isi") {
-        prosesIsi();
-    } else if (modeProses == "koreksi") {
-        prosesUpdate();
-    } else if (modeProses == "hapus") {
-        prosesDelete();
+btnProses.addEventListener("click", async function () {
+    this.disabled = true;
+    this.innerHTML =
+        '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    btnKeluar.disabled = true;
+
+    try {
+        if (modeProses == "isi") {
+            await prosesIsi();
+        } else if (modeProses == "koreksi") {
+            await prosesUpdate();
+        } else if (modeProses == "hapus") {
+            await prosesDelete();
+        }
+    } finally {
+        this.disabled = false;
+        this.innerText = "Proses";
+        btnKeluar.disabled = false;
     }
 });
 
