@@ -28,10 +28,28 @@
         .dataTables_filter {
             margin-bottom: 15px !important;
         }
+
+        .card-body {
+            overflow-x: auto;
+        }
+
         #table_asal,
         #table_tujuan {
+            width: 100% !important;
+            min-width: 1300px;
+            table-layout: fixed;
             font-size: 12px;
         }
+
+        #table_asal th,
+        #table_asal td,
+        #table_tujuan th,
+        #table_tujuan td {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            vertical-align: middle;
+        }
+
 
         #tableLookupGeneric tbody tr:hover {
             background-color: #f1f1f1;
