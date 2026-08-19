@@ -507,6 +507,34 @@ jQuery(function ($) {
             div_afalanWKotorBR.style.display = "none";
             div_afalanKotorKG.style.display = "none";
             div_btnafalanKotorKG.style.display = "none";
+        } else {
+            div_afalanWALBR.style.display = "block";
+            div_afalanWAKG.style.display = "block";
+            div_btnafalanWAKG.style.display = "block";
+            div_afalanWELBR.style.display = "block";
+            div_afalanWEKG.style.display = "block";
+            div_btnafalanWEKG.style.display = "block";
+            div_afalanWLamiBR.style.display = "block";
+            div_afalanLamiKG.style.display = "block";
+            div_btnafalanLamiKG.style.display = "block";
+            div_afalanWTepiBR.style.display = "block";
+            div_afalanTepiKG.style.display = "block";
+            div_btnafalanTepiKG.style.display = "block";
+            div_afalanWSettingBR.style.display = "block";
+            div_afalanSettingKG.style.display = "block";
+            div_btnafalanSettingKG.style.display = "block";
+            div_afalanLamiSambunganLBR.style.display = "block";
+            div_afalanLamiSambunganKG.style.display = "block";
+            div_btnafalanLamiSambunganKG.style.display = "block";
+            div_afalanWLamiEkorBR.style.display = "block";
+            div_afalanLamiEkorKG.style.display = "block";
+            div_btnafalanLamiEkorKG.style.display = "block";
+            div_afalanWLamiLubangBR.style.display = "block";
+            div_afalanLamiLubangKG.style.display = "block";
+            div_btnafalanLamiLubangKG.style.display = "block";
+            div_afalanWKotorBR.style.display = "block";
+            div_afalanKotorKG.style.display = "block";
+            div_btnafalanKotorKG.style.display = "block";
         }
     }
 
@@ -523,14 +551,14 @@ jQuery(function ($) {
 
         afalan_totalKG.value = numeral(
             afalan_waKGValue +
-                afalan_weKGValue +
-                afalan_lamiKGValue +
-                afalan_tepiKGValue +
-                afalan_settingKGValue +
-                afalan_lamiSambunganKGValue +
-                afalan_lamiEkorKGValue +
-                afalan_lamiLubangKGValue +
-                afalan_kotorKGValue,
+            afalan_weKGValue +
+            afalan_lamiKGValue +
+            afalan_tepiKGValue +
+            afalan_settingKGValue +
+            afalan_lamiSambunganKGValue +
+            afalan_lamiEkorKGValue +
+            afalan_lamiLubangKGValue +
+            afalan_kotorKGValue,
         ).format("0.00");
     }
 
@@ -547,14 +575,14 @@ jQuery(function ($) {
 
         afalan_totalLBR.value = numeral(
             afalan_waLBRValue +
-                afalan_weLBRValue +
-                afalan_lamiLBRValue +
-                afalan_tepiLBRValue +
-                afalan_settingLBRValue +
-                afalan_lamiSambunganLBRValue +
-                afalan_lamiEkorLBRValue +
-                afalan_lamiLubangLBRValue +
-                afalan_kotorLBRValue,
+            afalan_weLBRValue +
+            afalan_lamiLBRValue +
+            afalan_tepiLBRValue +
+            afalan_settingLBRValue +
+            afalan_lamiSambunganLBRValue +
+            afalan_lamiEkorLBRValue +
+            afalan_lamiLubangLBRValue +
+            afalan_kotorLBRValue,
         ).format("0.00");
     }
 
@@ -807,8 +835,8 @@ jQuery(function ($) {
             this.classList.add("input-error");
             this.setCustomValidity(
                 "Hanya karakter " +
-                    shiftAllowedCharacters.join(", ") +
-                    " yang diperbolehkan",
+                shiftAllowedCharacters.join(", ") +
+                " yang diperbolehkan",
             );
         } else {
             this.classList.remove("input-error");
@@ -969,8 +997,8 @@ jQuery(function ($) {
             this.classList.add("input-error");
             this.setCustomValidity(
                 "Hanya karakter " +
-                    statusLamiAllowedCharacters.join(", ") +
-                    " yang diperbolehkan",
+                statusLamiAllowedCharacters.join(", ") +
+                " yang diperbolehkan",
             );
         } else {
             this.classList.remove("input-error");
@@ -986,7 +1014,7 @@ jQuery(function ($) {
                 this.classList.add("input-error");
                 this.setCustomValidity(
                     "Isilah dengan karakter " +
-                        statusLamiAllowedCharacters.join(" atau "),
+                    statusLamiAllowedCharacters.join(" atau "),
                 );
             } else {
                 this.classList.remove("input-error");
@@ -1019,7 +1047,7 @@ jQuery(function ($) {
                 this.classList.add("input-error");
                 this.setCustomValidity(
                     "Isilah dengan karakter " +
-                        statusReinforcedAllowedCharacters.join(" atau "),
+                    statusReinforcedAllowedCharacters.join(" atau "),
                 );
             } else {
                 this.classList.remove("input-error");
@@ -1048,8 +1076,8 @@ jQuery(function ($) {
             this.classList.add("input-error");
             this.setCustomValidity(
                 "Hanya karakter " +
-                    statusReinforcedAllowedCharacters.join(", ") +
-                    " yang diperbolehkan",
+                statusReinforcedAllowedCharacters.join(", ") +
+                " yang diperbolehkan",
             );
         } else {
             this.classList.remove("input-error");
@@ -1165,10 +1193,10 @@ jQuery(function ($) {
                     komponen_tableHit.append(
                         new Option(
                             item.Nama_Komponen +
-                                " Uk. " +
-                                numeral(item.Panjang_Potongan).value() +
-                                " X " +
-                                numeral(item.Lebar_Potongan).value(),
+                            " Uk. " +
+                            numeral(item.Panjang_Potongan).value() +
+                            " X " +
+                            numeral(item.Lebar_Potongan).value(),
                             item.Kode_Komponen,
                         ),
                     );
