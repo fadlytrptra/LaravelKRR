@@ -215,6 +215,17 @@ jQuery(function ($) {
         scrollCollapse: true,
     });
 
+    $.ajaxSetup({
+        beforeSend: function () {
+            // Show the loading screen before the AJAX request
+            $("#loading-screen").css("display", "flex");
+        },
+        complete: function () {
+            // Hide the loading screen after the AJAX request completes
+            $("#loading-screen").css("display", "none");
+        },
+    });
+
     tanggal_laporan.valueAsDate = new Date();
     const slcLokasi = document.getElementById("lokasi");
     const slcMesin = document.getElementById("mesin");
@@ -672,47 +683,60 @@ jQuery(function ($) {
                         .text("")
                         .hide();
                 }
-                if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
-                    let ttd = data.ttd.FotoTtd;
-
-                    // pastikan ada prefix base64
-                    if (!ttd.startsWith("data:image")) {
-                        ttd = "data:image/png;base64," + ttd;
-                    }
-
-                    /* ====== TAMPIL KE IMG ====== */
-                    // $("#ttd_qc")
-                    //     .attr("src", ttd)
-                    //     .show();
+                if (data.ttd && data.ttd.NamaUser && data.ttd.NamaUser !== "") {
                     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
                 } else {
-                    // $("#ttd_qc")
-                    //     .attr("src", "")
-                    //     .show();
                     document.getElementById("nama_qc").textContent = "";
                 }
 
-                if (data.ttd2 && data.ttd2.FotoTtd && data.ttd2.FotoTtd !== "") {
-
-                    let ttd2 = data.ttd2.FotoTtd;
-
-                    // pastikan ada prefix base64
-                    if (!ttd2.startsWith("data:image")) {
-                        ttd2 = "data:image/png;base64," + ttd2;
-                    }
-
-                    /* ====== TAMPIL KE IMG ====== */
-                    // $("#ttd_ext")
-                    //     .attr("src", ttd2)
-                    //     .show();
+                if (data.ttd2 && data.ttd2.NamaUser && data.ttd2.NamaUser !== "") {
                     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
                 } else {
-                    // $("#ttd_ext")
-                    //     .attr("src", "")
-                    //     .show();
                     document.getElementById("nama_ext").textContent = "";
                 }
+
+                // if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
+
+                //     let ttd = data.ttd.FotoTtd;
+
+                //     // pastikan ada prefix base64
+                //     if (!ttd.startsWith("data:image")) {
+                //         ttd = "data:image/png;base64," + ttd;
+                //     }
+
+                //     /* ====== TAMPIL KE IMG ====== */
+                //     // $("#ttd_qc")
+                //     //     .attr("src", ttd)
+                //     //     .show();
+                //     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
+                // } else {
+                //     // $("#ttd_qc")
+                //     //     .attr("src", "")
+                //     //     .show();
+                //     document.getElementById("nama_qc").textContent = "";
+                // }
+
+                // if (data.ttd2 && data.ttd2.FotoTtd && data.ttd2.FotoTtd !== "") {
+
+                //     let ttd2 = data.ttd2.FotoTtd;
+
+                //     // pastikan ada prefix base64
+                //     if (!ttd2.startsWith("data:image")) {
+                //         ttd2 = "data:image/png;base64," + ttd2;
+                //     }
+
+                //     /* ====== TAMPIL KE IMG ====== */
+                //     // $("#ttd_ext")
+                //     //     .attr("src", ttd2)
+                //     //     .show();
+                //     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
+                // } else {
+                //     // $("#ttd_ext")
+                //     //     .attr("src", "")
+                //     //     .show();
+                //     document.getElementById("nama_ext").textContent = "";
+                // }
 
                 referensi.textContent = data.data[0].referensi;
                 if (data.data[0].tanggal_laporan) {
@@ -776,37 +800,81 @@ jQuery(function ($) {
                         pos.setAttribute('contenteditable', 'false');
                     });
 
-                } else {
-                    pos1.textContent = data.data[0].pos1;
-                    pos2.textContent = data.data[0].pos2;
-                    pos3.textContent = data.data[0].pos3;
-                    pos4.textContent = data.data[0].pos4;
-                    pos5.textContent = data.data[0].pos5;
-                    pos6.textContent = data.data[0].pos6;
-                    pos7.textContent = data.data[0].pos7;
-                    pos8.textContent = data.data[0].pos8;
-                    pos9.textContent = data.data[0].pos9;
-                    pos10.textContent = data.data[0].pos10;
-                    pos11.textContent = data.data[0].pos11;
-                    pos12.textContent = data.data[0].pos12;
-                    pos13.textContent = data.data[0].pos13;
-                    pos14.textContent = data.data[0].pos14;
-                    pos15.textContent = data.data[0].pos15;
-                    pos16.textContent = data.data[0].pos16;
-                    pos17.textContent = data.data[0].pos17;
-                    pos18.textContent = data.data[0].pos18;
-                    pos19.textContent = data.data[0].pos19;
-                    pos20.textContent = data.data[0].pos20;
-                    pos21.textContent = data.data[0].pos21;
-                    pos22.textContent = data.data[0].pos22;
-                    pos23.textContent = data.data[0].pos23;
-                    pos24.textContent = data.data[0].pos24;
+                } else if ($("#" + slcLokasi.id).val() == 2) {
+                    // positions.forEach(pos => {
+                    //     pos.textContent = '';
+                    //     pos.setAttribute('contenteditable', 'true');
+                    // });
+                    const values = [
+                        'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                        'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                        'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                        'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                    ];
 
-                    // Bisa diedit
-                    for (let i = 1; i <= 24; i++) {
-                        window['pos' + i].setAttribute('contenteditable', 'true');
-                    }
+                    positions.forEach((pos, index) => {
+                        pos.textContent = values[index];
+                        pos.setAttribute('contenteditable', 'false');
+                    });
+
+                } else if ($("#" + slcLokasi.id).val() == 3) {
+                    const values = [
+                        'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                        'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                        'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                        'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                    ];
+
+                    positions.forEach((pos, index) => {
+                        pos.textContent = values[index];
+                        pos.setAttribute('contenteditable', 'false');
+                    });
                 }
+
+                // if ($("#" + slcLokasi.id).val() == 1) {
+                //     const values = [
+                //         'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                //         'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                //         'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                //         'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                //     ];
+
+                //     positions.forEach((pos, index) => {
+                //         pos.textContent = values[index];
+                //         pos.setAttribute('contenteditable', 'false');
+                //     });
+
+                // } else {
+                //     pos1.textContent = data.data[0].pos1;
+                //     pos2.textContent = data.data[0].pos2;
+                //     pos3.textContent = data.data[0].pos3;
+                //     pos4.textContent = data.data[0].pos4;
+                //     pos5.textContent = data.data[0].pos5;
+                //     pos6.textContent = data.data[0].pos6;
+                //     pos7.textContent = data.data[0].pos7;
+                //     pos8.textContent = data.data[0].pos8;
+                //     pos9.textContent = data.data[0].pos9;
+                //     pos10.textContent = data.data[0].pos10;
+                //     pos11.textContent = data.data[0].pos11;
+                //     pos12.textContent = data.data[0].pos12;
+                //     pos13.textContent = data.data[0].pos13;
+                //     pos14.textContent = data.data[0].pos14;
+                //     pos15.textContent = data.data[0].pos15;
+                //     pos16.textContent = data.data[0].pos16;
+                //     pos17.textContent = data.data[0].pos17;
+                //     pos18.textContent = data.data[0].pos18;
+                //     pos19.textContent = data.data[0].pos19;
+                //     pos20.textContent = data.data[0].pos20;
+                //     pos21.textContent = data.data[0].pos21;
+                //     pos22.textContent = data.data[0].pos22;
+                //     pos23.textContent = data.data[0].pos23;
+                //     pos24.textContent = data.data[0].pos24;
+
+                //     // Bisa diedit
+                //     for (let i = 1; i <= 24; i++) {
+                //         window['pos' + i].setAttribute('contenteditable', 'true');
+                //     }
+                // }
 
                 r12D.textContent = data.data[0].r12D;
                 r12G.textContent = formatPrint(data.data[0].r12G);
@@ -1018,47 +1086,60 @@ jQuery(function ($) {
                         .text("")
                         .hide();
                 }
-                if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
-                    let ttd = data.ttd.FotoTtd;
-
-                    // pastikan ada prefix base64
-                    if (!ttd.startsWith("data:image")) {
-                        ttd = "data:image/png;base64," + ttd;
-                    }
-
-                    /* ====== TAMPIL KE IMG ====== */
-                    // $("#ttd_qc")
-                    //     .attr("src", ttd)
-                    //     .show();
+                if (data.ttd && data.ttd.NamaUser && data.ttd.NamaUser !== "") {
                     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
                 } else {
-                    // $("#ttd_qc")
-                    //     .attr("src", "")
-                    //     .show();
                     document.getElementById("nama_qc").textContent = "";
                 }
 
-                if (data.ttd2 && data.ttd2.FotoTtd && data.ttd2.FotoTtd !== "") {
-
-                    let ttd2 = data.ttd2.FotoTtd;
-
-                    // pastikan ada prefix base64
-                    if (!ttd2.startsWith("data:image")) {
-                        ttd2 = "data:image/png;base64," + ttd2;
-                    }
-
-                    /* ====== TAMPIL KE IMG ====== */
-                    // $("#ttd_ext")
-                    //     .attr("src", ttd2)
-                    //     .show();
+                if (data.ttd2 && data.ttd2.NamaUser && data.ttd2.NamaUser !== "") {
                     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
                 } else {
-                    // $("#ttd_ext")
-                    //     .attr("src", "")
-                    //     .show();
                     document.getElementById("nama_ext").textContent = "";
                 }
+
+                // if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
+
+                //     let ttd = data.ttd.FotoTtd;
+
+                //     // pastikan ada prefix base64
+                //     if (!ttd.startsWith("data:image")) {
+                //         ttd = "data:image/png;base64," + ttd;
+                //     }
+
+                //     /* ====== TAMPIL KE IMG ====== */
+                //     // $("#ttd_qc")
+                //     //     .attr("src", ttd)
+                //     //     .show();
+                //     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
+                // } else {
+                //     // $("#ttd_qc")
+                //     //     .attr("src", "")
+                //     //     .show();
+                //     document.getElementById("nama_qc").textContent = "";
+                // }
+
+                // if (data.ttd2 && data.ttd2.FotoTtd && data.ttd2.FotoTtd !== "") {
+
+                //     let ttd2 = data.ttd2.FotoTtd;
+
+                //     // pastikan ada prefix base64
+                //     if (!ttd2.startsWith("data:image")) {
+                //         ttd2 = "data:image/png;base64," + ttd2;
+                //     }
+
+                //     /* ====== TAMPIL KE IMG ====== */
+                //     // $("#ttd_ext")
+                //     //     .attr("src", ttd2)
+                //     //     .show();
+                //     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
+                // } else {
+                //     // $("#ttd_ext")
+                //     //     .attr("src", "")
+                //     //     .show();
+                //     document.getElementById("nama_ext").textContent = "";
+                // }
 
                 referensi.textContent = data.data[0].referensi;
                 if (data.data[0].tanggal_laporan) {
@@ -1122,37 +1203,81 @@ jQuery(function ($) {
                         pos.setAttribute('contenteditable', 'false');
                     });
 
-                } else {
-                    pos1.textContent = data.data[0].pos1;
-                    pos2.textContent = data.data[0].pos2;
-                    pos3.textContent = data.data[0].pos3;
-                    pos4.textContent = data.data[0].pos4;
-                    pos5.textContent = data.data[0].pos5;
-                    pos6.textContent = data.data[0].pos6;
-                    pos7.textContent = data.data[0].pos7;
-                    pos8.textContent = data.data[0].pos8;
-                    pos9.textContent = data.data[0].pos9;
-                    pos10.textContent = data.data[0].pos10;
-                    pos11.textContent = data.data[0].pos11;
-                    pos12.textContent = data.data[0].pos12;
-                    pos13.textContent = data.data[0].pos13;
-                    pos14.textContent = data.data[0].pos14;
-                    pos15.textContent = data.data[0].pos15;
-                    pos16.textContent = data.data[0].pos16;
-                    pos17.textContent = data.data[0].pos17;
-                    pos18.textContent = data.data[0].pos18;
-                    pos19.textContent = data.data[0].pos19;
-                    pos20.textContent = data.data[0].pos20;
-                    pos21.textContent = data.data[0].pos21;
-                    pos22.textContent = data.data[0].pos22;
-                    pos23.textContent = data.data[0].pos23;
-                    pos24.textContent = data.data[0].pos24;
+                } else if ($("#" + slcLokasi.id).val() == 2) {
+                    // positions.forEach(pos => {
+                    //     pos.textContent = '';
+                    //     pos.setAttribute('contenteditable', 'true');
+                    // });
+                    const values = [
+                        'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                        'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                        'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                        'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                    ];
 
-                    // Bisa diedit
-                    for (let i = 1; i <= 24; i++) {
-                        window['pos' + i].setAttribute('contenteditable', 'true');
-                    }
+                    positions.forEach((pos, index) => {
+                        pos.textContent = values[index];
+                        pos.setAttribute('contenteditable', 'false');
+                    });
+
+                } else if ($("#" + slcLokasi.id).val() == 3) {
+                    const values = [
+                        'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                        'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                        'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                        'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                    ];
+
+                    positions.forEach((pos, index) => {
+                        pos.textContent = values[index];
+                        pos.setAttribute('contenteditable', 'false');
+                    });
                 }
+
+                // if ($("#" + slcLokasi.id).val() == 1) {
+                //     const values = [
+                //         'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                //         'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                //         'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                //         'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+                //     ];
+
+                //     positions.forEach((pos, index) => {
+                //         pos.textContent = values[index];
+                //         pos.setAttribute('contenteditable', 'false');
+                //     });
+
+                // } else {
+                //     pos1.textContent = data.data[0].pos1;
+                //     pos2.textContent = data.data[0].pos2;
+                //     pos3.textContent = data.data[0].pos3;
+                //     pos4.textContent = data.data[0].pos4;
+                //     pos5.textContent = data.data[0].pos5;
+                //     pos6.textContent = data.data[0].pos6;
+                //     pos7.textContent = data.data[0].pos7;
+                //     pos8.textContent = data.data[0].pos8;
+                //     pos9.textContent = data.data[0].pos9;
+                //     pos10.textContent = data.data[0].pos10;
+                //     pos11.textContent = data.data[0].pos11;
+                //     pos12.textContent = data.data[0].pos12;
+                //     pos13.textContent = data.data[0].pos13;
+                //     pos14.textContent = data.data[0].pos14;
+                //     pos15.textContent = data.data[0].pos15;
+                //     pos16.textContent = data.data[0].pos16;
+                //     pos17.textContent = data.data[0].pos17;
+                //     pos18.textContent = data.data[0].pos18;
+                //     pos19.textContent = data.data[0].pos19;
+                //     pos20.textContent = data.data[0].pos20;
+                //     pos21.textContent = data.data[0].pos21;
+                //     pos22.textContent = data.data[0].pos22;
+                //     pos23.textContent = data.data[0].pos23;
+                //     pos24.textContent = data.data[0].pos24;
+
+                //     // Bisa diedit
+                //     for (let i = 1; i <= 24; i++) {
+                //         window['pos' + i].setAttribute('contenteditable', 'true');
+                //     }
+                // }
 
                 r12D.textContent = data.data[0].r12D;
                 r12G.textContent = formatPrint(data.data[0].r12G);
@@ -1432,10 +1557,34 @@ jQuery(function ($) {
                 pos.setAttribute('contenteditable', 'false');
             });
 
-        } else {
-            positions.forEach(pos => {
-                pos.textContent = '';
-                pos.setAttribute('contenteditable', 'true');
+        } else if ($("#" + slcLokasi.id).val() == 2) {
+            // positions.forEach(pos => {
+            //     pos.textContent = '';
+            //     pos.setAttribute('contenteditable', 'true');
+            // });
+            const values = [
+                'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+            ];
+
+            positions.forEach((pos, index) => {
+                pos.textContent = values[index];
+                pos.setAttribute('contenteditable', 'false');
+            });
+
+        } else if ($("#" + slcLokasi.id).val() == 3) {
+            const values = [
+                'R12', 'R11', 'R10', 'R9', 'R8', 'R7',
+                'R6', 'R5', 'R4', 'R3', 'R2', 'R1',
+                'L1', 'L2', 'L3', 'L4', 'L5', 'L6',
+                'L7', 'L8', 'L9', 'L10', 'L11', 'L12'
+            ];
+
+            positions.forEach((pos, index) => {
+                pos.textContent = values[index];
+                pos.setAttribute('contenteditable', 'false');
             });
         }
     });
