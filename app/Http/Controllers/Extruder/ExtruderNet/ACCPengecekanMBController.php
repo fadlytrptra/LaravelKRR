@@ -208,7 +208,7 @@ class ACCPengecekanMBController extends Controller
         try {
             switch ($proses) {
                 case 1:
-                    // Delete
+                    // ACC
                     // dd($request->all());    
                     DB::connection('ConnTestQC')
                         ->statement(
@@ -219,6 +219,16 @@ class ACCPengecekanMBController extends Controller
                     return response()->json(['message' => 'Data berhasil diACC!']);
 
                 // return response()->json(['message' => 'Data berhasil dihapus!']);
+                 case 2:
+                    // Batal ACC
+                    // dd($request->all());    
+                    DB::connection('ConnTestQC')
+                        ->statement(
+                            'EXEC SP_4451_PengecekanMutuBenangEXT @kode = ?, @id_laporan = ?',
+                            [6, $id_laporan]
+                        );
+
+                    return response()->json(['message' => 'Data sudah dibatal ACC!']);
 
                 default:
                     return response()->json(['error', 'Proses tidak valid']);

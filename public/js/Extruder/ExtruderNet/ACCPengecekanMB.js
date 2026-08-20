@@ -460,17 +460,34 @@ jQuery(function ($) {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        // jika sudah ada user acc → sembunyikan tombol
+
+                        // Jika sudah ada user ACC
                         if (
                             row.user_acc !== null &&
                             row.user_acc !== ""
                         ) {
-                            return '<span style="color: green; font-weight: bold;">Sudah di ACC ' + row.user_acc + '</span>';
+                            return `
+                            <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
+                                <span style="color: green; font-weight: bold;">
+                                    Sudah di ACC ${row.user_acc}
+                                </span>
+
+                                <button 
+                                    class="btn btn-sm btn-danger btn-batal-acc"
+                                    style="width: 100px;"
+                                    data-id="${row.id_laporan}">
+                                    <i class="fa fa-times"></i> Batal ACC
+                                </button>
+                            </div>
+                        `;
                         }
 
-                        // jika belum acc → tampilkan tombol
+                        // Jika belum ACC
                         return `
-                            <button class="btn btn-sm btn-success btn-acc" style="width: 100px;" data-id="${row.id_laporan}">
+                            <button 
+                                class="btn btn-sm btn-success btn-acc"
+                                style="width: 100px;"
+                                data-id="${row.id_laporan}">
                                 <i class="fa fa-check"></i> ACC
                             </button>
                         `;
@@ -815,6 +832,59 @@ jQuery(function ($) {
                     data: {
                         _token: csrfToken,
                         proses: 1,
+                        id_laporan: id,
+                    },
+                    success: function (response) {
+                        console.log(response.message);
+                        if (response.message) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success!",
+                                text: response.message,
+                                showConfirmButton: true,
+                            }).then((result) => {
+                                $("#table_atas").DataTable().ajax.reload();
+                                console.log(result);
+                            });
+                        } else if (response.error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: response.error,
+                                showConfirmButton: false,
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var err = eval("(" + xhr.responseText + ")");
+                        alert(err.Message);
+                    },
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+            }
+        });
+    });
+
+    $('#table_atas').on('click', '.btn-batal-acc', function () {
+        const id = $(this).data('id');
+        console.log(id);
+        // idDetail = id;
+        Swal.fire({
+            title: 'Apakah anda yakin batal ACC?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "ACCPengecekanMB",
+                    dataType: "json",
+                    type: "POST",
+                    data: {
+                        _token: csrfToken,
+                        proses: 2,
                         id_laporan: id,
                     },
                     success: function (response) {
