@@ -102,6 +102,7 @@ class KirimSJController extends Controller
                     // $link = url('/surat-jalan/' . $idPengiriman); // change to your real route
                     // $encodedIdPengiriman = hash_hmac('sha256', $idPengiriman, env('QR_SHARED_SECRET'));
                     $link = 'https://mykrr.co.id/SuratJalan/' . $encryptedIdPengiriman; // change to your real route
+                    $linkWeb = 'https://mykrr.co.id/';
                     $message->to($emails)
                         ->subject("SJ Digital {$idPengiriman} Kerta Rajasa Raya")
                         ->html("<p>Dear Customer,</p>
@@ -140,6 +141,8 @@ class KirimSJController extends Controller
                         <p>
                             Silakan klik link berikut untuk mengakses halaman konfirmasi penerimaan barang:
                             <a href='{$link}' target='_blank'>Halaman Konfirmasi Penerimaan Barang</a>
+                            atau kunjungi
+                            <a href='{$linkWeb}' target='_blank'>mykrr.co.id</a>
                         </p>
 
                         <br>
@@ -249,6 +252,7 @@ class KirimSJController extends Controller
                     $encryptedId = urlencode($encrypter->encryptString((string) $idPengiriman));
 
                     $link = 'https://mykrr.co.id/SuratJalan/' . $encryptedId;
+                    $linkWeb = 'https://mykrr.co.id/';
 
                     // SUBJECT DINAMIS
                     $subject = "RESEND Ke-{$resendCount} SJ Digital {$idPengiriman}";
@@ -292,6 +296,8 @@ class KirimSJController extends Controller
                             <p>
                                 Silakan klik link berikut untuk mengakses halaman konfirmasi penerimaan barang:
                                 <a href='{$link}' target='_blank'>Halaman Konfirmasi Penerimaan Barang</a>
+                                atau kunjungi
+                                <a href='{$linkWeb}' target='_blank'>mykrr.co.id</a>
                             </p>
 
                             <br>
