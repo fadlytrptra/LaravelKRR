@@ -77,7 +77,9 @@
                             <input type="text" class="form-control font-weight-bold" id="skbm" name="skbm">
                         </div>
                         <div class="col-md-3 mb-2">
-
+                            <label for="kodehs" class="form-label font-weight-bold">Kode HS</label>
+                            <input type="text" class="form-control font-weight-bold" id="kodehs"
+                                name="kodehs">
                         </div>
                         <div class="col-md-3">
                             <label for="po" class="form-label">No. PO</label>
@@ -93,6 +95,11 @@
                             <label for="tglskbm" class="form-label">Tgl. SKBM</label>
                             <input type="date" class="form-control font-weight-bold" id="tglskbm"
                                 name="tglskbm" value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tgllob" class="form-label font-weight-bold">Tanggal Laden on Board</label>
+                            <input type="date" class="form-control font-weight-bold" id="tgllob"
+                                name="tgllob" value="{{ date('Y-m-d') }}">
                         </div>
                     </div>
                     <div class="mt-4">

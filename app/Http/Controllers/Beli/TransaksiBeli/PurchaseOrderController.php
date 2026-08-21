@@ -1207,10 +1207,12 @@ class PurchaseOrderController extends Controller
         $TglSKBM = Carbon::parse($request->input('TglSKBM'));
         $NoReg = $request->input('NoReg');
         $TglReg = Carbon::parse($request->input('TglReg'));
+        $KodeHS = $request->input('KodeHS');
+        $TglLoB = Carbon::parse($request->input('TglLoB'));
 
         if (($BTTB !== null)) {
             try {
-                $post = DB::connection('ConnPurchase')->statement('exec SP_5409_MAINT_PO @kd = ?,@tglDatang = ?, @SJ = ?, @NoPIB = ?, @BTTB = ?,@NoPIBExt = ?,@TglPIB = ?,@NoSPPBBC = ?,@TglSPPBBC = ?,@NoSKBM = ?,@TglSKBM = ?,@NoReg = ?,@TglReg = ?', [
+                $post = DB::connection('ConnPurchase')->statement('exec SP_5409_MAINT_PO @kd = ?,@tglDatang = ?, @SJ = ?, @NoPIB = ?, @BTTB = ?,@NoPIBExt = ?,@TglPIB = ?,@NoSPPBBC = ?,@TglSPPBBC = ?,@NoSKBM = ?,@TglSKBM = ?,@NoReg = ?,@TglReg = ?,@KodeHS = ?,@TglLoB = ?', [
                     $kd,
                     $tglDatang,
                     $SJ,
@@ -1223,7 +1225,9 @@ class PurchaseOrderController extends Controller
                     $NoSKBM,
                     $TglSKBM,
                     $NoReg,
-                    $TglReg
+                    $TglReg,
+                    $KodeHS,
+                    $TglLoB
                 ]);
                 return Response()->json(['message' => 'Data Berhasil Post', 'status' => $post]);
             } catch (\Throwable $Error) {

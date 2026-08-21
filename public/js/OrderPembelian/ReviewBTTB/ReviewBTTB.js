@@ -13,6 +13,8 @@ let nopibext = document.getElementById("nopibext");
 let skbm = document.getElementById("skbm");
 let tglpib = document.getElementById("tglpib");
 let tglskbm = document.getElementById("tglskbm");
+let kodehs = document.getElementById("kodehs");
+let tgllob = document.getElementById("tgllob");
 
 let post_btn = document.getElementById("post_btn");
 
@@ -312,6 +314,7 @@ post_btn.addEventListener("click", function (event) {
             const tglSPPBBCFormatted = formatDate(tglsppb.value);
             const tglSKBMFormatted = formatDate(tglskbm.value);
             const tglRegFormatted = formatDate(tglregis.value);
+            const tgllobFormatted = formatDate(tgllob.value);
 
             $.ajax({
                 url: "/OpenReviewBTTB/Print",
@@ -332,6 +335,8 @@ post_btn.addEventListener("click", function (event) {
                     TglSKBM: tglSKBMFormatted,
                     NoReg: registrasi.value.trim(),
                     TglReg: tglRegFormatted,
+                    KodeHS: kodehs.value,
+                    TglLoB: tgllobFormatted,
                 },
                 beforeSend: function () {
                     // Show loading screen
@@ -437,4 +442,6 @@ $(document).ready(function () {
     skbm.value = loadHeaderData[0].NoSKBM || "";
     tglpib.value = loadHeaderData[0].TglPIB.split(" ")[0];
     tglskbm.value = loadHeaderData[0].TglSKBM.split(" ")[0];
+    kodehs.value = loadHeaderData[0].KodeHS || "";
+    tgllob.value = loadHeaderData[0].TglLoB.split(" ")[0];
 });
