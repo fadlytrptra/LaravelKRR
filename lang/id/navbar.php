@@ -23,7 +23,7 @@ return [
                 perusahaan mulai mengekspor ke Jepang dan Singapura serta menjadi pemimpin pasar.',
     'about_card1' => 'Tahun Pengalaman dalam Industri Manufaktur Karung',
     'about_card2' => 'Ekspor ke Jepang & Singapura',
-    'about_card3' => 'Teknologi Produkti Canggi dari Austria',
+    'about_card3' => 'Teknologi Produksi yang terkenal dari Austria',
     'about_card4' => 'Kapasitas Produksi Karung Block Bottom Terbesar',
     'about_modal1' => '25+ Tahun Pengalaman',
     'about_modal2' => 'Ekspor Sejak 1985',

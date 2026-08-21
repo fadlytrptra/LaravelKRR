@@ -23,7 +23,7 @@ return [
                 the company began exporting to Japan and Singapore and became a market leader.',
     'about_card1' => 'Years of Experience in Sack Manufacturing Industry',
     'about_card2' => 'Export to Japan & Singapore',
-    'about_card3' => 'Advanced Production Technology from Austria',
+    'about_card3' => 'World famous Production Technology from Austria',
     'about_card4' => 'Largest Block Bottom Sack Production Capacity',
     'about_modal1' => '25+ Years of Experience',
     'about_modal2' => 'Exports Since 1985',
