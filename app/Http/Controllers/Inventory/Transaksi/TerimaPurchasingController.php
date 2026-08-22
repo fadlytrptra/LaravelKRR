@@ -126,6 +126,17 @@ class TerimaPurchasingController extends Controller
 
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Terima_Transfer_PerObjek
             @IdDivisi = ?, @IdObjek = ?', [$IdDivisi, $IdObjek]);
+            // $info = DB::connection('ConnInventory')->selectOne("
+            // SELECT
+            //         @@SERVERNAME AS ServerName,
+            //         DB_NAME() AS DatabaseName
+            // ");
+            //  dd([
+            //     'connection' => $info,
+            //     'IdDivisi' => $IdDivisi,
+            //     'IdObjek' => $IdObjek,
+            //     'data' => $objek
+            // ]);
             // dd($objek);
             $data_objek = [];
             foreach ($objek as $detail_objek) {

@@ -1,112 +1,99 @@
 @extends('layouts.appKencana')
 
-@section('title', 'Delivery Order')
-
 @section('content')
+@section('title', 'Kencana Billing')
 
-<link href="{{ asset('css/Kencana/permohonan-do.css') }}" rel="stylesheet">
-<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+@include('Kencana.Billing.DetailBilling')
 
 <script>
     $(document).ready(function() {
-        $('#table_DO').DataTable({
+        $('#table_Billing').DataTable({
             order: [
-                [0, 'desc']
+                [1, 'desc']
             ],
         });
     });
 </script>
 
+<link href="{{ asset('css/Kencana/billing.css') }}" rel="stylesheet">
+<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10 RDZMobilePaddingLR0">
 
-            @if (Session::has('success'))
-                <div class="alert alert-success">
-                    {{ Session::get('success') }}
-                </div>
-            @endif
-
-            {{-- Tambah DO --}}
             <button
                 class="acs-icon-btn acs-add-btn acs-float"
-                onclick="openNewWindow('{{ route('Kencana.DeliveryOrder.create') }}')"
+                onclick="openNewWindow('{{ route('Kencana.Billing.create') }}')"
             >
                 <div class="acs-add-icon"></div>
-                <div class="acs-btn-txt">Tambah DO</div>
+                <div class="acs-btn-txt">Tambah Billing</div>
             </button>
 
             <div class="card">
-                <div class="card-header">
-                    Delivery Order Belum ACC Manager
-                </div>
+                <div class="card-header">Billing</div>
 
                 <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                     <table
-                        id="table_DO"
-                        class="table table-bordered table-striped SP_datatable"
+                        id="table_Billing"
+                        class="table table-bordered table-striped"
                         style="width:100%"
                     >
-                        <thead class="thead-light">
+                        <thead class="thead-dark">
                             <tr>
-                                <th>Nomor DO</th>
-                                <th>Nama Type</th>
-                                <th>ID Surat Pesanan</th>
+                                <th>Id Billing</th>
+                                <th>Nama Billing</th>
+                                <th>Contact Person</th>
+                                <th>Negara</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach ($data as $item)
-
-                                @php
-                                    $uraian = $item->Uraian ?? '';
-
-                                    $posisiPipe = strrpos($uraian, '|');
-
-                                    if ($posisiPipe !== false) {
-                                        $NamaType = trim(substr($uraian, 0, $posisiPipe));
-                                        $IDSuratPesanan = trim(substr($uraian, $posisiPipe + 1));
-                                    } else {
-                                        $NamaType = trim($uraian);
-                                        $IDSuratPesanan = '';
-                                    }
-                                @endphp
-
                                 <tr>
                                     <td class="RDZPaddingTable RDZCenterTable">
-                                        {{ $item->IDDO }}
+                                        <a
+                                            class="DetailBilling"
+                                            data-id="{{ $item->IDBill }}"
+                                        >
+                                            {{ $item->IDBill }}
+                                        </a>
                                     </td>
 
                                     <td class="RDZPaddingTable RDZCenterTable">
-                                        {{ $NamaType }}
+                                        {{ $item->NamaBill }}
                                     </td>
 
                                     <td class="RDZPaddingTable RDZCenterTable">
-                                        {{ $IDSuratPesanan }}
+                                        {{ $item->ContactPerson }}
+                                    </td>
+
+                                    <td class="RDZPaddingTable RDZCenterTable">
+                                        {{ $item->Negara }}
                                     </td>
 
                                     <td class="acs-td-button">
 
-                                        {{-- Koreksi --}}
+                                        {{-- EDIT --}}
                                         <button
                                             type="button"
                                             class="btn btn-sm btn-primary"
-                                            onclick="openNewWindow('{{ url('/Kencana/DeliveryOrder/' . $item->IDDO . '/edit') }}')"
+                                            onclick="openNewWindow('{{ route('Kencana.Billing.edit', $item->IDBill) }}')"
                                         >
                                             <span>&#x270E;</span>
-                                            Koreksi
+                                            Edit
                                         </button>
 
-                                        {{-- Hapus --}}
+                                        {{-- DELETE --}}
                                         <form
-                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus Delivery Order ini?');"
-                                            action="{{ url('/Kencana/DeliveryOrder/' . $item->IDDO) }}"
+                                            onsubmit="return confirm('Apakah Anda Yakin ?');"
+                                            action="{{ route('Kencana.Billing.destroy', $item->IDBill) }}"
                                             method="POST"
-                                            style="display:inline;"
                                         >
                                             @csrf
+                                            @method('DELETE')
 
                                             <button
                                                 type="submit"
@@ -119,14 +106,12 @@
 
                                     </td>
                                 </tr>
-
                             @endforeach
                         </tbody>
                     </table>
 
                 </div>
             </div>
-
         </div>
     </div>
 </div>

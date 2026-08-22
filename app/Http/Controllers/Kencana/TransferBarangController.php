@@ -147,9 +147,15 @@ class TransferBarangController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
+            // dd([
+            //     'id_type' => $request->id_type,
+            //     'sub_kelompok' => $request->sub_kelompok,
+            //     'id_subkelompok' => $request->id_subkelompok,
+            //     'no_terima' => $request->no_terima,
+            //     'kd_barang' => $request->kd_barang,
+            // ]);
             // 1. Transfer dari Purchase
-            $transfer = DB::connection('ConnKCNPurchase')->selectOne(
+            $transfer = DB::connection('ConnKCNPurchase')->statement(
                 "EXEC SP_7775_PBL_TRANSFER_TMPTRANSAKSI
                     @IdType=?,
                     @MasukPrimer=?,
@@ -173,13 +179,19 @@ class TransferBarangController extends Controller
                     'Transfer Barang Dari Divisi Pembelian',
                     1,
                     now(),
-                    $request->no_pib ?? ''
+                    $request->no_pib ?? NULL
                 ]
             );
 
+            // dd([
+            //     'transfer' => $transfer,
+            // ]);
+
+            // dd($transfer->Identity);
             if (!$transfer || !isset($transfer->Identity)) {
                 throw new Exception('NoTempTransaksi tidak diperoleh dari proses transfer.');
             }
+
 
             $qtyTerima = (float) $request->qty;
             $qtyAsli = (float) $request->tritier;

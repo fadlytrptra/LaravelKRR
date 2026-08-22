@@ -106,42 +106,40 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             @php
-                                                // Filter the submenus for the current menu item
-                                                $filteredItemsMenu = $access['AccessMenu']->filter(function (
-                                                    $item,
-                                                ) use ($menuItem) {
+                                                // Filter submenu
+                                                $filteredItemsMenu = $access['AccessMenu']->filter(function ($item) use ($menuItem) {
                                                     return $item->Parent_IdMenu == $menuItem->IdMenu;
                                                 });
 
-                                                // Convert the filtered items to an array if needed
-                                                $filteredArrayMenu = $filteredItemsMenu->all();
-
-                                                $filteredItemsFitur = $access['AccessFitur']->filter(function (
-                                                    $item,
-                                                ) use ($menuItem) {
+                                                $filteredItemsFitur = $access['AccessFitur']->filter(function ($item) use ($menuItem) {
                                                     return $item->Id_Menu == $menuItem->IdMenu;
                                                 });
 
-                                                // Convert the filtered items to an array if needed
-                                                $filteredArrayFitur = $filteredItemsFitur->all();
-
                                                 $combinedArrayFiturMenu = [];
-                                                foreach ($filteredArrayFitur as $fitur) {
+
+                                                // Tambahkan Fitur
+                                                foreach ($filteredItemsFitur as $fitur) {
                                                     $combinedArrayFiturMenu[] = [
                                                         'Nama' => $fitur->NamaFitur,
                                                         'Route' => $fitur->Route,
                                                         'IdMenu' => null,
                                                         'NomorUrutDisplay' => $fitur->NomorUrutDisplay,
+                                                        'Tipe' => 'Fitur',
                                                     ];
                                                 }
 
-                                                foreach ($filteredArrayMenu as $menu) {
+                                                // Tambahkan Menu
+                                                foreach ($filteredItemsMenu as $menu) {
                                                     $combinedArrayFiturMenu[] = [
                                                         'Nama' => $menu->NamaMenu,
                                                         'Route' => null,
                                                         'IdMenu' => $menu->IdMenu,
+                                                        'NomorUrutDisplay' => $menu->NomorUrutDisplay,
+                                                        'Tipe' => 'Menu',
                                                     ];
                                                 }
+
+                                                // Urutkan berdasarkan NomorUrutDisplay
                                                 usort($combinedArrayFiturMenu, function ($a, $b) {
                                                     return ($a['NomorUrutDisplay'] ?? 9999)
                                                         <=> ($b['NomorUrutDisplay'] ?? 9999);

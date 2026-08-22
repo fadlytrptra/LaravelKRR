@@ -1,0 +1,537 @@
+.acs-form{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    gap: 5px;
+}
+.acs-form1{
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    height: 100%;
+}
+.acs-div-filter{
+    display: flex;
+    width: 75%;
+    flex-direction: column;
+    margin-bottom: 4px;
+}
+.acs-div-filter1{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+.billing-container {
+    width: 100%;
+    display: flex;
+    overflow: auto;
+    min-height: 100vh;
+    align-items: center;
+    flex-direction: column;
+}
+
+.billing-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.billing-container01 {
+    gap: 1%;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container02 {
+    gap: var(--dl-space-space-oneandhalfunits);
+    flex: 0 0 auto;
+    width: 13%;
+    height: 100%;
+    display: flex;
+    padding-top: 2%;
+    padding-left: 1%;
+    flex-direction: column;
+}
+
+.billing-container03 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container04 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container05 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 3%;
+}
+
+.billing-container06 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 3%;
+}
+
+.billing-container07 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 1%;
+}
+
+.billing-container08 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 1%;
+}
+
+.billing-container09 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container10 {
+    gap: var(--dl-space-space-halfunit);
+    flex: 0 0 auto;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    padding-top: 1%;
+    flex-direction: column;
+}
+
+.billing-container11 {
+    gap: 1%;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput {
+    width: 75%;
+}
+
+.billing-container12 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput01 {
+    width: 50%;
+    height: 100%;
+}
+
+.billing-container13 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput02 {
+    width: 80%;
+    height: 100%;
+}
+
+.billing-container14 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container15 {
+    flex: 0 0 auto;
+    width: 65%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput03 {
+    width: 100%;
+    height: 100%;
+}
+
+.billing-container16 {
+    flex: 0 0 auto;
+    width: 34%;
+    height: 100%;
+    display: flex;
+    margin-left: 1%;
+}
+
+.billing-text15 {
+    width: 30%;
+    align-self: center;
+}
+
+.billing-textinput04 {
+    width: 70%;
+    height: 100%;
+}
+
+.billing-container17 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput05 {
+    width: 50%;
+    height: 100%;
+}
+
+.billing-container18 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput06 {
+    width: 50%;
+    height: 100%;
+}
+
+.billing-container19 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-textinput07 {
+    width: 50%;
+    height: 100%;
+}
+
+.billing-container20 {
+    flex: 0 0 auto;
+    width: 100%;
+    border: 2px dashed rgba(120, 120, 120, 0.4);
+    height: 100%;
+    display: flex;
+    margin-top: 1%;
+    align-items: flex-start;
+    margin-bottom: 1%;
+}
+
+.billing-container21 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1%;
+}
+
+.billing-container22 {
+    gap: 20px;
+    flex: 0 0 auto;
+    width: 13%;
+    height: 100%;
+    display: flex;
+    padding-top: 1.5%;
+    padding-left: 1%;
+    flex-direction: column;
+}
+
+.billing-container23 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container24 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container25 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 3%;
+}
+
+.billing-container26 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 1%;
+}
+
+.billing-container27 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 4%;
+}
+
+.billing-container28 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-bottom: 5%;
+}
+
+.billing-container29 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container30 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.billing-container31 {
+    gap: var(--dl-space-space-halfunit);
+    flex: 0 0 auto;
+    width: 79%;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 1%;
+    flex-direction: column;
+}
+
+.billing-container32 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput08 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container33 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput09 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container34 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput10 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container35 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput11 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container36 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput12 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container37 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput13 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container38 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput14 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container39 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.billing-textinput15 {
+    width: 40%;
+    height: 100%;
+}
+
+.billing-container40 {
+    gap: var(--dl-space-space-halfunit);
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media(max-width: 479px) {
+    .billing-container02 {
+        gap: var(--dl-space-space-oneandhalfunits);
+        width: 26%;
+    }
+
+    .billing-container03 {
+        margin-bottom: 5%;
+    }
+
+    .billing-container04 {
+        margin-bottom: 5%;
+    }
+
+    .billing-container05 {
+        margin-bottom: 3%;
+    }
+
+    .billing-container06 {
+        margin-bottom: 30%;
+    }
+
+    .billing-container07 {
+        margin-bottom: 5%;
+    }
+
+    .billing-container14 {
+        flex-direction: column;
+    }
+
+    .billing-container16 {
+        width: 57%;
+        align-self: flex-end;
+    }
+
+    .billing-text15 {
+        width: 45%;
+    }
+
+    .billing-textinput04 {
+        width: 55%;
+    }
+
+    .billing-container21 {
+        margin-bottom: 3%;
+    }
+
+    .billing-container22 {
+        gap: 26px;
+        width: 23%;
+        padding-top: 3%;
+    }
+
+    .billing-container31 {
+        width: 69%;
+    }
+
+    .billing-textinput08 {
+        width: 55%;
+    }
+
+    .billing-textinput09 {
+        width: 55%;
+    }
+
+    .billing-textinput10 {
+        width: 55%;
+    }
+
+    .billing-textinput11 {
+        width: 55%;
+    }
+
+    .billing-textinput12 {
+        width: 55%;
+    }
+
+    .billing-textinput13 {
+        width: 55%;
+    }
+
+    .billing-textinput14 {
+        width: 55%;
+    }
+
+    .billing-textinput15 {
+        width: 55%;
+    }
+}

@@ -334,6 +334,21 @@ return [
             'trust_server_certificate' => true,
         ],
 
+        'ConnKCNSales' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_EIGHTTEENTH', '127.0.0.1'),
+            'port' => env('DB_PORT_EIGHTTEENTH', '1433'),
+            'database' => env('DB_DATABASE_EIGHTTEENTH', 'forge'),
+            'username' => env('DB_USERNAME_EIGHTTEENTH', 'forge'),
+            'password' => env('DB_PASSWORD_EIGHTTEENTH', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => 'yes',
+            'trust_server_certificate' => true,
+        ],
+
 
     ],
 

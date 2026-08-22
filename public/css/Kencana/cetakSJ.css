@@ -1,0 +1,288 @@
+.acs-div-filter {
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    margin: 4px 0;
+}
+.acs-div-filter1 {
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    margin: 4px 0;
+}
+.acs-div-filter2 {
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    margin: 4px 0;
+}
+.acs-div-container {
+    width: 21cm;
+    aspect-ratio: 17/21;
+    border: 2px;
+    border-style: solid;
+    position: relative;
+    background-color: white;
+}
+
+.span-nama_typeBarangKolom,
+.span-nomor_sjKolom,
+.span-tanggal_kirimKolom,
+.span-truk_nopolKolom,
+.span-no_spKolom,
+.span-nama_barangKolomNo_poKolom,
+.span-satuan_barangPrimerKolom,
+.span-jumlah_barangPrimerKolom,
+.span-satuan_barangSekunderKolom,
+.span-jumlah_barangSekunderKolom,
+.span-nama_customerKolomAlamat_kolom,
+.span-alamat_kirimKolom,
+.span-tanda_tanganKolom,
+.span-keterangan_tambahanKolom,
+.span-keterangan_SKBDNKolom {
+    position: absolute;
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: aqua;
+    font-size: 17px;
+}
+/* letak kolom untuk print sj */
+.span-nomor_sjKolom {
+    top: 3.5cm;
+    left: 0.7cm;
+}
+.span-tanggal_kirimKolom {
+    top: 5.6cm;
+    left: 15.3cm;
+}
+.span-truk_nopolKolom {
+    top: 6.8cm;
+    left: 15.3cm;
+}
+.span-no_spKolom {
+    top: 7.9cm;
+    left: 14cm;
+}
+.span-nama_customerKolomAlamat_kolom {
+    top: 5.8cm;
+    left: 0.7cm;
+    max-width: 9cm;
+    line-height: 1.2;
+}
+.span-nama_typeBarangKolom {
+    top: 10.6cm;
+    left: 0.7cm;
+}
+.span-nama_barangKolomNo_poKolom {
+    top: 11.9cm;
+    left: 0.7cm;
+    max-width: 13cm;
+    line-height: 1.2;
+    word-break: break-all;
+}
+.span-keterangan_tambahanKolom {
+    top: 16.9cm;
+    left: 0.7cm;
+    max-width: 13cm;
+}
+.span-keterangan_SKBDNKolom {
+    top: 16.9cm;
+    left: 0.7cm;
+    max-width: 13cm;
+}
+.span-satuan_barangPrimerKolom {
+    top: 12.9cm;
+    left: 17.2cm;
+}
+.span-jumlah_barangPrimerKolom {
+    top: 12.9cm;
+    left: 19.7cm;
+}
+.span-satuan_barangSekunderKolom {
+    top: 11.9cm;
+    left: 17.2cm;
+}
+.span-jumlah_barangSekunderKolom {
+    top: 11.9cm;
+    left: 19.7cm;
+}
+.span-alamat_kirimKolom {
+    top: 19.6cm;
+    left: 0.7cm;
+    max-width: 18cm;
+}
+.span-tanda_tanganKolom {
+    top: 26cm;
+    left: 1.2cm;
+}
+/*letak kolom untuk print sj*/
+
+.acs-div-printsjekspor-header1 {
+    text-align: center;
+}
+.acs-div-printsjekspor-header2 {
+    display: flex;
+    flex-direction: row;
+    gap: 2%;
+    width: 100%;
+    margin: 5px;
+}
+.acs-div-printsjekspor-header3 {
+    width: 45%;
+}
+.acs-div-printsjekspor-header4 {
+    width: 45%;
+}
+.acs-div-printsjekspor-subheader {
+    width: 100%;
+    border: 1px solid black;
+    padding-left: 5px;
+}
+.acs-div-printsjekspor-body {
+    padding: 5px;
+}
+#table_noBorder tr td {
+    border: none !important;
+}
+#table_barangEksport {
+    width: 100% !important;
+    border-top: 1px solid black;
+    border-bottom: none !important;
+}
+.cetak-sjpdf-container {
+    text-align: center;
+    margin-left: 1%;
+    margin-top: 1%;
+    width: 98%;
+}
+.cetak-sjpdf-container1 {
+    width: 98%;
+    margin-left: 1%;
+    display: flex;
+    gap: 3px;
+}
+.cetak-sjpdf-container2 {
+    border: 1px solid black;
+    flex: 1;
+    height: 100px;
+    font-size: smaller;
+}
+.cetak-sjpdf-container2 p {
+    margin-bottom: 0;
+    margin-left: 5px;
+}
+.cetak-sjpdf-container3 {
+    flex: 1;
+}
+.cetak-sjpdf-container4 {
+    border: 1px solid black;
+    width: 98%;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.cetak-sjpdf-container4 p {
+    margin-bottom: 0;
+    margin-left: 5px;
+}
+.cetak-sjpdf-container5 {
+    width: 98%;
+    margin-left: 1%;
+    display: flex;
+}
+.cetak-sjpdf-container6 {
+    flex: 1;
+    text-align: center;
+    padding: 5%;
+    font-size: small;
+}
+.cetak-sjpdf-container7 {
+    flex: 1;
+    padding: 5%;
+    font-size: smaller;
+}
+.cetak-sjpdf-tabel {
+    width: 98%;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+table tr td {
+    border-right: 1px solid black !important;
+    border-bottom: 1px solid black !important;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 0rem !important;
+}
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 0rem !important;
+}
+.second-column-width-90 {
+    width: 90%;
+}
+#table_barangEksport thead tr td {
+    text-align: center;
+    font-weight: bold;
+}
+#nama_tandaTanganKolom {
+    text-align: center;
+    font-weight: bold;
+    margin-left: 30px;
+}
+#jenis_barangEksportKolom {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.acs-div-printsjekspor-footer {
+    margin: 5px;
+    gap: 5px;
+}
+@media print {
+    .acs-div-form {
+        display: none;
+    }
+    .acs-div-container {
+        border: none;
+    }
+    #table_barangEksport tbody tr td:nth-child(2) {
+        width: 90%;
+    }
+    /*Customize Font Size every Column*/
+    .span-nomor_sjKolom {
+        font-size: 20px;
+    }
+    .span-nama_customerKolomAlamat_kolom {
+        font-size: 20px;
+    }
+    .span-tanggal_kirimKolom {
+        font-size: 23px;
+    }
+    .span-truk_nopolKolom {
+        font-size: 25px;
+    }
+    .span-no_spKolom {
+        font-size: 25px;
+    }
+    .span-nama_typeBarangKolom {
+        font-size: 20px;
+    }
+    .span-nama_barangKolomNo_poKolom {
+        font-size: 20px;
+    }
+    .span-satuan_barangPrimerKolom {
+        font-size: 20px;
+    }
+    .span-jumlah_barangPrimerKolom {
+        font-size: 20px;
+    }
+    .span-satuan_barangSekunderKolom {
+        font-size: 20px;
+    }
+    .span-jumlah_barangSekunderKolom {
+        font-size: 20px;
+    }
+    .span-alamat_kirimKolom {
+        font-size: 20px;
+    }
+    .span-tanda_tanganKolom {
+        font-size: 20px;
+    }
+}
