@@ -147,7 +147,6 @@ class PermohonanPembelianController extends Controller
 
     public function show(Request $request, $id)
     {
-
         if ($id == 'getDivisi') {
             // dd(DB::connection('ConnKCNPurchase')->getConfig());
             $divisi = DB::connection('ConnKCNPurchase')->select(
@@ -158,7 +157,6 @@ class PermohonanPembelianController extends Controller
             return response()->json($divisi);
 
         } else if ($id == 'getData') {
-
             $data = DB::connection('ConnKCNPurchase')->select(
                 'exec spSelect_Permohonan
                     @MinDate = ?,

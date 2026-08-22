@@ -24,33 +24,55 @@ class BatalSuratJalanController extends Controller
 
     public function store(Request $request)
     {
-        $idCust = $request->input('idCustomer');
-        $noSP = $request->input('surat_pesanan');
-        $ket = $request->input('alasan_batal');
-        $idUser = Auth::user()->NomorUser;
+        $idCust  = $request->input('idCustomer');
+        $noSP    = $request->input('surat_pesanan');
+        $ket     = $request->input('alasan_batal');
+        $idUser  = Auth::user()->NomorUser;
         $idJnsSJ = $request->input('idJenisSuratJalan');
-        $noSJ = $request->input('surat_jalan');
+        $noSJ    = str_pad(
+            (string) $request->input('surat_jalan'),
+            10,
+            '0',
+            STR_PAD_LEFT
+        );
+
         try {
-            DB::connection('ConnSales')->statement('exec SP_5409_SLS_BATAL_SJ @kode =?,
-	        @idCust =?,
-	        @noSP =?,
-	        @ket =?,
-	        @idUser =?,
-	        @idJnsSJ =?,
-	        @noSJ =?',
-                [
-                    1,
-                    $idCust,
-                    $noSP,
-                    $ket,
-                    $idUser,
-                    $idJnsSJ,
-                    $noSJ,
-                ]
-            );
-            return response()->json(['success' => 'Data dengan nomor SJ: ' . $noSJ . ' Sudah disimpan!']);
+
+            $query = DB::connection('ConnKCNSales')
+                ->table('T_HeaderPengiriman')
+                ->where('JnsIdPengiriman', $idJnsSJ)
+                ->where('IDPengiriman', $noSJ)
+                ->where('IDCust', $idCust);
+
+            $data = $query->first();
+
+            if (!$data) {
+                return response()->json([
+                    'error' => 'Surat Jalan ' . $noSJ . ' tidak ditemukan.'
+                ], 404);
+            }
+
+            if (!empty($data->BatalSJ)) {
+                return response()->json([
+                    'error' => 'Surat Jalan ' . $noSJ . ' sudah pernah dibatalkan.'
+                ], 422);
+            }
+
+            $query->update([
+                'AlasanSjDiganti' => $ket,
+                'BatalSJ'         => $idUser,
+                'NoSP'            => $noSP,
+            ]);
+
+            return response()->json([
+                'success' => 'Surat Jalan ' . $noSJ . ' berhasil dibatalkan!'
+            ]);
+
         } catch (Exception $ex) {
-            return response()->json(['error' => $ex->getMessage()]);
+
+            return response()->json([
+                'error' => $ex->getMessage()
+            ], 500);
         }
     }
 
