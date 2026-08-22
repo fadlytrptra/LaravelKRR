@@ -1142,20 +1142,37 @@ jQuery(function ($) {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        // jika sudah ada user acc → sembunyikan tombol
+
+                        // jika sudah ada user verified
                         if (
                             row.userVerified !== null &&
                             row.userVerified !== ""
                         ) {
-                            return '<span style="color: green; font-weight: bold;">Sudah diverifikasi ' + row.userVerified + '</span>';
+                            return `
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                                <span style="color: green; font-weight: bold;">
+                                    Sudah diverifikasi ${row.userVerified}
+                                </span>
+
+                                <button
+                                    class="btn btn-sm btn-danger btn-batal-verifikasi"
+                                    style="width: 130px;"
+                                    data-id="${row.idLaporan}">
+                                    <i class="fa fa-times"></i> Batal Verifikasi
+                                </button>
+                            </div>
+                        `;
                         }
 
-                        // jika belum acc → tampilkan tombol
+                        // jika belum diverifikasi
                         return `
-                            <button class="btn btn-sm btn-success btn-verifikasi" style="width: 100px;" data-id="${row.idLaporan}">
-                                <i class="fa fa-edit"></i> Verifikasi
-                            </button>
-                        `;
+                        <button
+                            class="btn btn-sm btn-success btn-verifikasi"
+                            style="width: 100px;"
+                            data-id="${row.idLaporan}">
+                            <i class="fa fa-edit"></i> Verifikasi
+                        </button>
+                    `;
                     },
                 },
             ],
@@ -1180,6 +1197,96 @@ jQuery(function ($) {
             paging: false,
             scrollY: "400px",
             scrollCollapse: true,
+        });
+    });
+
+    $("#table_atas").on("click", ".btn-batal-verifikasi", function () {
+        const id = $(this).data("id");
+        console.log(id);
+        Swal.fire({
+            title: "Apakah anda yakin ingin batal verifikasi id laporan " + id + "?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak",
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if ($("#" + slcLokasi.id).val() == "3") {
+                    $.ajax({
+                        url: "VerifikasiSM",
+                        dataType: "json",
+                        type: "POST",
+                        data: {
+                            _token: csrfToken,
+                            proses: 6,
+                            idLaporan: id,
+                        },
+                        success: function (response) {
+                            console.log(response.message);
+                            if (response.message) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success!",
+                                    text: response.message,
+                                    showConfirmButton: true,
+                                }).then((result) => {
+                                    $("#table_atas").DataTable().ajax.reload();
+                                    console.log(result);
+                                });
+                            } else if (response.error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error!",
+                                    text: response.error,
+                                    showConfirmButton: false,
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            var err = eval("(" + xhr.responseText + ")");
+                            alert(err.Message);
+                        },
+                    });
+                } else {
+                    $.ajax({
+                        url: "VerifikasiSM",
+                        dataType: "json",
+                        type: "POST",
+                        data: {
+                            _token: csrfToken,
+                            proses: 5,
+                            idLaporan: id,
+                        },
+                        success: function (response) {
+                            console.log(response.message);
+                            if (response.message) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success!",
+                                    text: response.message,
+                                    showConfirmButton: true,
+                                }).then((result) => {
+                                    $("#table_atas").DataTable().ajax.reload();
+                                    console.log(result);
+                                });
+                            } else if (response.error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error!",
+                                    text: response.error,
+                                    showConfirmButton: false,
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            var err = eval("(" + xhr.responseText + ")");
+                            alert(err.Message);
+                        },
+                    });
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+            }
         });
     });
 

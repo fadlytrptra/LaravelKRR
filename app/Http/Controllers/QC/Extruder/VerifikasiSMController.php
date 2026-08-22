@@ -99,7 +99,7 @@ class VerifikasiSMController extends Controller
                         );
 
                     return response()->json(['message' => 'Keterangan berhasil diupdate!']);
-                
+
                 case 4:
                     // Simpan
                     DB::connection('ConnExtruder')
@@ -116,6 +116,36 @@ class VerifikasiSMController extends Controller
                         );
 
                     return response()->json(['message' => 'Data berhasil diverifikasi!']);
+
+                case 5:
+                    // batal
+                    DB::connection('ConnExtruder')
+                        ->statement(
+                            'EXEC SP_4451_GetDataLaporanProduksiExtruder 
+                        @kode = ?,
+                        @idLaporan = ?',
+                            [
+                                9,
+                                $idLaporan,
+                            ]
+                        );
+
+                    return response()->json(['message' => 'Data berhasil dibatal verifikasi!']);
+
+                case 6:
+                    // batal D
+                    DB::connection('ConnExtruder')
+                        ->statement(
+                            'EXEC SP_4451_GetDataLaporanProduksiExtruder 
+                        @kode = ?,
+                        @idLaporan = ?',
+                            [
+                                10,
+                                $idLaporan,
+                            ]
+                        );
+
+                    return response()->json(['message' => 'Data berhasil dibatal verifikasi!']);
 
                 default:
                     return response()->json(['error', 'Proses tidak valid']);
