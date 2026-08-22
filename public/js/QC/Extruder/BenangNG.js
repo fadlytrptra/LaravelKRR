@@ -368,11 +368,11 @@ jQuery(function ($) {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        const canAdd = ["4451", "2736"].includes(row.user);
+                        const canAdd = ["4451", "2736", "2883"].includes(row.user);
 
                         let html = "";
 
-                        // Tombol Add selalu muncul jika user 4451 atau 2736
+                        // Tombol Add selalu muncul jika user 4451 atau 2736 atau 2883
                         if (canAdd) {
                             html += `
                                 <button class="btn btn-sm btn-primary btn-add" style="width: 150px;" data-id="${row.id_laporan}">
