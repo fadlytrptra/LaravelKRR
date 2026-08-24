@@ -13,6 +13,7 @@ jQuery(function ($) {
         "CLM",
         "NDL",
         "RBL",
+        "CLN"
     ];
     let kdDivisiOnlyTjahyo = ["BHM", "BHN"];
     let userDirektur = ["RUDY", "TJAHYO", "YUDI"];

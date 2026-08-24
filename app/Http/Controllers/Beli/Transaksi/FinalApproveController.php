@@ -53,6 +53,8 @@ class FinalApproveController extends Controller
                 "CLM",
                 "NDL",
                 "RBL",
+                "CLN"
+
             ];
 
             $kdDivisiOnlyTjahyo = [
@@ -160,6 +162,7 @@ class FinalApproveController extends Controller
                 "CLM",
                 "NDL",
                 "RBL",
+                "CLN"
             ];
             // dd($checked, $statusBeli, $kdDivisiChecked);
 
@@ -329,6 +332,7 @@ class FinalApproveController extends Controller
                 "CLM",
                 "NDL",
                 "RBL",
+                "CLN"
             ];
 
             $kdDivisiOnlyTjahyo = [
@@ -390,6 +394,7 @@ class FinalApproveController extends Controller
                 "CLM",
                 "NDL",
                 "RBL",
+                "CLN"
             ];
 
             $kdDivisiOnlyTjahyo = [
