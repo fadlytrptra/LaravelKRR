@@ -62,12 +62,12 @@ class DeliveryOrderManagerKencanaController extends Controller
             );
 
             // 2. Isi Dikeluarkan langsung dari Laravel
-            // DB::connection('ConnKCNSales')
-            //     ->table('T_DeliveryOrder')
-            //     ->where('IDDO', $nomorDO[$i])
-            //     ->update([
-            //         'Dikeluarkan' => $idManager . '-' . now()->format('m/d/Y')
-            //     ]);
+            DB::connection('ConnKCNSales')
+                ->table('T_DeliveryOrder')
+                ->where('IDDO', $nomorDO[$i])
+                ->update([
+                    'Dikeluarkan' => $idManager . '-' . now()->format('m/d/Y')
+                ]);
         }
 
         return redirect()->back()->with(
