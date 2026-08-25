@@ -240,17 +240,17 @@ $(function () {
                     table.row
                         .add([
                             "<a class='Detail_ListOrder' id='NoTrans' data-id='" +
-                                data.data[i].No_trans +
-                                "' href=''>" +
-                                data.data[i].No_trans +
-                                "</a>",
+                            data.data[i].No_trans +
+                            "' href=''>" +
+                            data.data[i].No_trans +
+                            "</a>",
                             $.format.date(data.data[i].Tgl_order, "MM-dd-yyyy"),
                             data.data[i].Kd_brg,
                             escapeHtml(data.data[i].NAMA_BRG) +
-                                "<label style='background-color:#00ff00;''> " +
-                                data.data[i].Qty +
-                                data.data[i].Nama_satuan +
-                                "</label>",
+                            "<label style='background-color:#00ff00;''> " +
+                            data.data[i].Qty +
+                            data.data[i].Nama_satuan +
+                            "</label>",
                             data.data[i].Status,
                             data.data[i].Nama,
                             data.data[i].Kd_div,
@@ -1040,6 +1040,30 @@ btn_delete.addEventListener("click", function (event) {
     });
 });
 
+const statusBeliRadio = document.querySelectorAll(
+    'input[name="status_beliRadioButton"]'
+);
+
+statusBeliRadio.forEach(function (radio) {
+    radio.addEventListener("change", function () {
+
+        // Reset divisi
+        select_divisi.selectedIndex = 0;
+        selectedDivisi.value = "";
+
+        // Reset golongan
+        clearOptions(select_golongan);
+        select_golongan.selectedIndex = 0;
+
+        // Reset mesin golongan
+        clearOptions(select_mesinGolongan);
+        select_mesinGolongan.selectedIndex = 0;
+
+        // Disable button save kembali
+        btn_save.disabled = true;
+    });
+});
+
 select_divisi.addEventListener("change", function (event) {
     if (select_divisi.selectedIndex != 0) {
         clearOptions(select_golongan);
@@ -1047,6 +1071,59 @@ select_divisi.addEventListener("change", function (event) {
         clearOptions(select_mesinGolongan);
         select_mesinGolongan.selectedIndex = 0;
         selectedDivisi.value = select_divisi.value;
+        let stBeli = document.getElementById("status_beliPengadaanPembelian")
+            .checked
+            ? 1
+            : 0;
+        console.log(selectedDivisi.value);
+        console.log(stBeli);
+
+        $.ajax({
+            url: "/MaintenanceOrderPembeliann/CekDivisiPembelian",
+            type: "GET",
+            data: {
+                selectedDivisi: selectedDivisi.value.trim(),
+                stBeli: stBeli,
+            },
+            success: function (response) {
+                console.log("Cek Divisi:", response);
+
+                if (response.allowed) {
+                    btn_save.disabled = false;
+                    btn_submit.disabled = false;
+                } else {
+                    btn_save.disabled = true;
+                    btn_submit.disabled = true;
+
+                    Swal.fire({
+                        icon: "info",
+                        title: "Informasi",
+                        html: response.message,
+                        confirmButtonText: "OK",
+                    });
+
+                    select_divisi.selectedIndex = 0;
+                    selectedDivisi.value = "";
+
+                    clearOptions(select_golongan);
+                    select_golongan.selectedIndex = 0;
+
+                    clearOptions(select_mesinGolongan);
+                    select_mesinGolongan.selectedIndex = 0;
+                }
+            },
+            error: function (error) {
+                console.error("Error Cek Divisi:", error);
+                btn_submit.disabled = true;
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Gagal melakukan pengecekan hak divisi.",
+                    confirmButtonText: "OK",
+                });
+            },
+        });
 
         $.ajax({
             url: "/MaintenanceOrderPembeliann/Golongan",
@@ -1273,7 +1350,7 @@ foto.addEventListener("click", function () {
 
 let scale = 1;
 
-previewFoto.addEventListener("wheel", function(e){
+previewFoto.addEventListener("wheel", function (e) {
     e.preventDefault();
     scale += e.deltaY * -0.001;
     scale = Math.min(Math.max(1, scale), 5);

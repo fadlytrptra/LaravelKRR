@@ -588,4 +588,56 @@ class MaintenanceOrderPembelianController extends Controller
         ]);
     }
 
+    public function cekDivisiPembelian(Request $request)
+    {
+        // dd($request->all());
+        try {
+            $selectedDivisi = trim($request->input('selectedDivisi'));
+            $stBeli = (int) $request->input('stBeli');
+
+            if (empty($selectedDivisi)) {
+                return response()->json([
+                    'allowed' => false,
+                    'message' => 'Divisi belum dipilih.'
+                ]);
+            }
+
+            // Jika status beli bukan 1, langsung diperbolehkan
+            if ($stBeli != 1) {
+                return response()->json([
+                    'allowed' => true
+                ]);
+            }
+
+            // Jika stBeli = 1, cek user yang memiliki hak divisi
+            $cek = DB::connection('ConnPurchase')
+                ->table('YUSER_DIVISI')
+                ->where('Kd_div', $selectedDivisi)
+                ->whereIn('kd_user', ['RUDY', 'TJAHYO'])
+                ->exists();
+
+            if ($cek) {
+                return response()->json([
+                    'allowed' => true
+                ]);
+            }
+
+            return response()->json([
+                'allowed' => false,
+                'message' => 'Divisi ' . $selectedDivisi . ' belum memiliki hak ACC. Hubungi EDP untuk:<br><br>
+                <ul style="text-align: left;">
+                    <li>Tambah YUSER_DIVISI</li>
+                    <li>Update Stored Procedure</li>
+                    <li>Update Laravel</li>
+                </ul>'
+            ]);
+
+        } catch (\Throwable $Error) {
+            return response()->json([
+                'allowed' => false,
+                'message' => $Error->getMessage()
+            ]);
+        }
+    }
+
 }
