@@ -240,13 +240,13 @@ function AllData(tglAwal, tglAkhir, idDivisi) {
 function AllDataUser(tglAwal, tglAkhir, idUser, idDivisi) {
     fetch(
         "/GatDataForUserOrderkerja/" +
-            tglAwal +
-            "/" +
-            tglAkhir +
-            "/" +
-            idUser +
-            "/" +
-            idDivisi
+        tglAwal +
+        "/" +
+        tglAkhir +
+        "/" +
+        idUser +
+        "/" +
+        idDivisi
     )
         .then((response) => response.json())
         .then((datas) => {
@@ -269,11 +269,11 @@ function AllDataUser(tglAwal, tglAkhir, idUser, idDivisi) {
                 //console.log("masuk ke == 0");
                 alert(
                     "Tidak ada Order, tgl " +
-                        tglAwal +
-                        " s/d tgl " +
-                        tglAkhir +
-                        " u/ User " +
-                        idUser
+                    tglAwal +
+                    " s/d tgl " +
+                    tglAkhir +
+                    " u/ User " +
+                    idUser
                 );
             } else {
                 table_data = $("#tableOrderKerja").DataTable({
@@ -406,14 +406,33 @@ function LoadData1(NoGambar) {
     fetch("/LoadData1/" + NoGambar)
         .then((response) => response.json())
         .then((datas) => {
-            //console.log(datas);
+            // console.log(datas);
+
             if (datas.length !== 0) {
                 NamaBarangModal.value = datas[0].NAMA_BRG;
                 Kdbarangmodal.value = datas[0].KD_BRG;
-                setSelectByText(SatuanModal, datas[0].Nama_satuan);
+
+                setSelectByText(
+                    SatuanModal,
+                    datas[0].Nama_satuan
+                );
+
                 LoadData2(Kdbarangmodal.value);
+
                 NomorSatuanModal.value = SatuanModal.value;
+
+                LoadData(Kdbarangmodal.value);
+            } else {
+                alert("Nomor Gambar tidak ditemukan");
+
+                NamaBarangModal.value = "";
+                Kdbarangmodal.value = "";
+                NamaSatuanModal.value = "";
+                NomorSatuanModal.value = "";
             }
+        })
+        .catch((error) => {
+            console.error("Error LoadData1:", error);
         });
 }
 
@@ -427,6 +446,7 @@ NomorGambarModal.addEventListener("keypress", function (event) {
             LoadData1(NomorGambarModal.value);
             console.log(SatuanModal.value);
             NomorSatuanModal.value = SatuanModal.value;
+            prosesKdBarang();
         } else {
             Kdbarangmodal.focus();
         }
