@@ -24,12 +24,6 @@ let syarat_bayarKolom = document.getElementById("syarat_bayarKolom");
 let keterangan_ppnKolom = document.getElementById("keterangan_ppnKolom");
 let keterangan_kolom = document.getElementById("keterangan_kolom");
 
-
-// ==========================================
-// TANDA TANGAN
-// HANYA 2
-// ==========================================
-
 let ttd_salesKolom = document.getElementById("ttd_salesKolom");
 let ttd_managerKolom = document.getElementById("ttd_managerKolom");
 
@@ -471,26 +465,14 @@ print_button.addEventListener(
                             {
                                 data: "JnsBarang",
 
-                                render:
-                                    function (
-                                        data,
-                                        type,
-                                        row
-                                    ) {
-
-                                        return (
-                                            "<b>" +
-                                            (
-                                                data ?? ""
-                                            ) +
-                                            "</b><br>" +
-                                            (
-                                                row.NamaType ??
-                                                ""
-                                            )
-                                        );
-
-                                    }
+                                render: function (data, type, row) {
+                                    return (
+                                        "<b>" +
+                                        (data ?? "") +
+                                        "</b><br>" +
+                                        (row.Uraian ?? "")
+                                    );
+                                }
                             },
 
 
