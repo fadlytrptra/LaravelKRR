@@ -24,7 +24,7 @@ class CetakDOKencanaController extends Controller
         $list_do = DB::connection('ConnKCNSales')->select(
             "
             SELECT *
-            FROM VW_PRG_1486_SLS_DO_INV1
+            FROM VW_PRG_4496_SLS_DO_INV1
             WHERE CAST(TglDO AS DATE) = ?
             ",
             [$tanggal]

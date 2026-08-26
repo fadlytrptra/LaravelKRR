@@ -115,12 +115,18 @@ class SuratJalanKencanaController extends Controller
                 'DO.IDDO',
                 DB::raw('DO.IdTransTmp AS NoTrans'),
                 DB::raw("
-                    T.NamaType
-                    + ' Qty Primer : ' + CONVERT(varchar(10), DO.QtyPrimer, 0)
-                    + '   Qty Sekunder : ' + CONVERT(varchar(10), DO.QtySekunder, 0)
-                    + '   Qty Tritier : ' + CONVERT(varchar(10), DO.QtyTritier, 0)
-                    + '  Tgl Keluar Gdg : ' + RIGHT(DO.Dikeluarkan, 10)
-                    AS Uraian
+                    CASE
+                        WHEN DO.Uraian IS NOT NULL
+                            AND LTRIM(RTRIM(DO.Uraian)) <> ''
+                        THEN DO.Uraian
+
+                        ELSE
+                            T.NamaType
+                            + ' Qty Primer : ' + CONVERT(varchar(10), DO.QtyPrimer, 0)
+                            + '   Qty Sekunder : ' + CONVERT(varchar(10), DO.QtySekunder, 0)
+                            + '   Qty Tritier : ' + CONVERT(varchar(10), DO.QtyTritier, 0)
+                            + '  Tgl Keluar Gdg : ' + RIGHT(DO.Dikeluarkan, 10)
+                    END AS Uraian
                 ")
             )
             ->orderByDesc('DO.IDDO')
@@ -153,10 +159,10 @@ class SuratJalanKencanaController extends Controller
 
             return response()->json($suratJalan);
 
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
 
             return response()->json([
-                'error' => 'Gagal mengambil data Surat Jalan.'
+                'error' => $ex->getMessage()
             ], 500);
         }
     }
@@ -218,16 +224,18 @@ class SuratJalanKencanaController extends Controller
                     'DPG.IDSuratPesanan as IDSuratPesanan',
 
                     DB::raw("
-                        T.NamaType
-                        + '   Qty Primer : '
-                        + CONVERT(varchar(10), DO.QtyPrimer)
-                        + '   Qty Sekunder : '
-                        + CONVERT(varchar(10), DO.QtySekunder)
-                        + '   Qty Tritier : '
-                        + CONVERT(varchar(10), DO.QtyTritier)
-                        + '  Tgl Keluar Gdg : '
-                        + RIGHT(DO.Dikeluarkan, 10)
-                        AS Uraian
+                        CASE
+                            WHEN DO.Uraian IS NOT NULL
+                                AND LTRIM(RTRIM(DO.Uraian)) <> ''
+                            THEN DO.Uraian
+
+                            ELSE
+                                T.NamaType
+                                + '   Qty Primer : ' + CONVERT(varchar(10), DO.QtyPrimer)
+                                + '   Qty Sekunder : ' + CONVERT(varchar(10), DO.QtySekunder)
+                                + '   Qty Tritier : ' + CONVERT(varchar(10), DO.QtyTritier)
+                                + '  Tgl Keluar Gdg : ' + RIGHT(DO.Dikeluarkan, 10)
+                        END AS Uraian
                     ")
                 ])
                 ->whereRaw('LEN(DP.IDBarang) = 20')
@@ -418,6 +426,17 @@ class SuratJalanKencanaController extends Controller
 
         } catch (\Throwable $e) {
             DB::connection('ConnKCNSales')->rollBack();
+
+            //  dd([
+            //     'message' => $e->getMessage(),
+            //     'code' => $e->getCode(),
+            //     'sql' => $e instanceof \Illuminate\Database\QueryException
+            //         ? $e->getSql()
+            //         : null,
+            //     'bindings' => $e instanceof \Illuminate\Database\QueryException
+            //         ? $e->getBindings()
+            //         : null,
+            // ]);
 
             $message = $e->getMessage();
 

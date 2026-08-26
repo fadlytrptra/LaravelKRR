@@ -81,9 +81,9 @@
         </tr>
         <tr>
             <td style="border: 1px solid black;padding:8px">{{ $items->NAMATYPEBARANG }} <br>
-                {{ $items->NamaType }}
+                {{ $items->Uraian ?? $items->NamaType }}
                 <br>
-                {{ $items->NO_PO }}
+                PO: {{ $items->NO_PO }}
                 @if (!empty($items->KetSKBDN))
                     <br>
                     <p style="font-size: small">{!! nl2br(e($items->KetSKBDN)) !!}</p>
@@ -160,7 +160,7 @@
                     {{-- Nama --}}
                     <tr>
                         <td style="text-align:center; font-size:15px; font-weight:normal; padding-bottom:15px;">
-                            PT. KENCANA RAJASA RAYA
+                            SUNYATA ICHWAN
                         </td>
 
                         <td style="text-align:center; font-size:15px; font-weight:normal; padding-bottom:15px;">

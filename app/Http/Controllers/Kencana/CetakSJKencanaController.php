@@ -56,22 +56,55 @@ class CetakSJKencanaController extends Controller
     }
 
     public function getDataCetakSuratJalan($tanggal, $nosj, $jenissj)
-    {
-        if (!in_array($jenissj, ['suratjalanppn', 'suratjalanexport'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Jenis SJ ' . $jenissj . ' belum disetting',
-                'data' => []
-            ], 400);
-        }
+{
+    \Log::info('=== CETAK SJ DEBUG ===');
 
-        $data = DB::connection('ConnKCNSales')
-            ->table('VW_PRG_4496_SLS_CETAK_SJ')
-            ->where('IDPengiriman', $nosj)
-            ->get();
+    \Log::info('Tanggal', [
+        'tanggal' => $tanggal
+    ]);
 
-        return response()->json($data);
+    \Log::info('No SJ', [
+        'nosj' => $nosj
+    ]);
+
+    \Log::info('Jenis SJ', [
+        'jenissj' => $jenissj
+    ]);
+
+    if (!in_array($jenissj, ['suratjalanppn', 'suratjalanexport'])) {
+
+        \Log::warning('Jenis SJ tidak valid', [
+            'jenissj' => $jenissj
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Jenis SJ ' . $jenissj . ' belum disetting',
+            'data' => []
+        ], 400);
     }
+
+    $connection = DB::connection('ConnKCNSales');
+
+    \Log::info('Database', [
+        'database' => $connection->getDatabaseName(),
+    ]);
+
+    $data = $connection
+        ->table('dbo.VW_PRG_4496_SLS_CETAK_SJ')
+        ->where('IDPengiriman', $nosj)
+        ->get();
+
+    \Log::info('Jumlah data view', [
+        'jumlah' => $data->count()
+    ]);
+
+    \Log::info('Data view', [
+        'data' => $data->toArray()
+    ]);
+
+    return response()->json($data);
+}
 
     public function downloadPdf($no_sj)
     {

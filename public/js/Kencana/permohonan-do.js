@@ -341,6 +341,8 @@ nomor_doSelect.addEventListener("change", function () {
     fetch(url)
         .then((response) => response.json())
         .then((data) => {
+            console.log("DATA EDIT DO:", data);
+            console.log("URAIAN DARI DATABASE:", data[0].Uraian);
             tgl_do.value = data[0].tanggal.substr(0, 10);
             for (let i = 0; i < customer.options.length; i++) {
                 if (customer.options[i].value == data[0].IDCust) {
@@ -408,9 +410,17 @@ nomor_doSelect.addEventListener("change", function () {
                             }
                         }
                         kode_barang.value = option.Uraian.slice(-9);
-                        uraian.value = option.Uraian.split("-")
-                            .slice(0, -1)
-                            .join("-");
+
+                        // Ambil Uraian yang tersimpan di T_DeliveryOrder
+                        if (data[0].Uraian !== null && data[0].Uraian !== undefined) {
+                            uraian.value = data[0].Uraian;
+                        } else {
+                            // Fallback jika data lama belum memiliki Uraian
+                            uraian.value = option.Uraian
+                                .split("-")
+                                .slice(0, -1)
+                                .join("-");
+                        }
                     });
                     fetch(
                         "/Kencana/options/kelompokutama/" +
@@ -648,7 +658,7 @@ id_pesananSelect.addEventListener("change", function () {
             console.log(data);
             // document.getElementById("id_pesanan").disabled = true;
             kode_barang.readOnly = true;
-            uraian.readOnly = true;
+            uraian.readOnly = false;
             // qty_kirim.readOnly = true;
             // qty_kirim.value = numeral(data[0].TerKirim).format("0,0");
             // qty_order.readOnly = true;

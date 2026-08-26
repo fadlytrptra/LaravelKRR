@@ -344,8 +344,6 @@ truk_nopol.addEventListener("change", function () {
 });
 //#endregion
 
-//#region enter-enter
-
 surat_pesanan.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -443,25 +441,36 @@ biaya.addEventListener("keypress", function (event) {
 //         surat_pesanan.focus();
 //     }
 // });
-//#endregion
 
 //#region Table-table
 
 add_item.addEventListener("click", function () {
-    if (uraian.value === "" || nomor_do.selectedIndex === 0) {
-        alert("Isi DO dulu!");
-    } else {
-        const selectedDO = nomor_do.options[nomor_do.selectedIndex];
-        const arraydata = [
-            nomor_do.options[nomor_do.selectedIndex].value,
-            uraian.value,
-            selectedDO.dataset.notrans || "",
-            surat_pesanan.options[surat_pesanan.selectedIndex].text,
-        ];
-        funcInsertRow(arraydata);
-        funcClearDataInput();
+
+    if (
+        uraian.value === "" ||
+        nomor_do.selectedIndex === 0 ||
+        surat_pesanan.selectedIndex === 0
+    ) {
+        alert("Isi Surat Pesanan dan DO dulu!");
+        return;
     }
+
+    const selectedDO = nomor_do.options[nomor_do.selectedIndex];
+    const selectedSP = surat_pesanan.options[surat_pesanan.selectedIndex];
+
+    const arraydata = [
+        selectedDO.value,
+        uraian.value,
+        selectedDO.dataset.notrans || "",
+        selectedSP.value
+    ];
+
+    funcInsertRow(arraydata);
+
+    funcClearDataInput();
+
     const confirmation = confirm("Apakah mau menambah DO lagi?");
+
     if (confirmation === true) {
         surat_pesanan.focus();
     } else {
@@ -523,6 +532,46 @@ function funcClearDataInput() {
     uraian.value = "";
 }
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    const oldBarang0 = window.oldBarang0 || [];
+    const oldBarang1 = window.oldBarang1 || [];
+    const oldBarang2 = window.oldBarang2 || [];
+    const oldBarang3 = window.oldBarang3 || [];
+
+    if (oldBarang0.length === 0) {
+        return;
+    }
+
+    const table = document.getElementById("list_view");
+
+    if (!table) {
+        return;
+    }
+
+    // Bersihkan detail
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+    // Restore detail
+    for (let i = 0; i < oldBarang0.length; i++) {
+
+        const arrayData = [
+            oldBarang0[i] || "",
+            oldBarang1[i] || "",
+            oldBarang2[i] || "",
+            oldBarang3[i] || ""
+        ];
+
+        funcInsertRow(arrayData);
+    }
+
+    console.log("Detail berhasil direstore setelah validation error.");
+
+});
+
+
 remove_item.addEventListener("click", function (event) {
     event.preventDefault();
     const table = document.getElementById("list_view");
@@ -534,48 +583,255 @@ remove_item.addEventListener("click", function (event) {
         alert("Tidak ada data yang dihapus");
     }
 });
+
+//#region Validasi Form
+
+function validasiFormSuratJalan() {
+
+    // Jenis Pengiriman
+    if (!jenis_pengiriman.value) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Jenis Pengiriman belum dipilih.",
+            confirmButtonText: "OK"
+        });
+        jenis_pengiriman.focus();
+        return false;
+    }
+
+    // Nomor Surat Jalan
+    if (!surat_jalan.value.trim()) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Nomor Surat Jalan belum diisi.",
+            confirmButtonText: "OK"
+        });
+        surat_jalan.focus();
+        return false;
+    }
+
+    // Expeditor
+    if (!expeditor.value) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Expeditor belum dipilih.",
+            confirmButtonText: "OK"
+        });
+        expeditor.focus();
+        return false;
+    }
+
+    // Customer
+    if (!customer.value) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Customer belum dipilih.",
+            confirmButtonText: "OK"
+        });
+        customer.focus();
+        return false;
+    }
+
+    // Tanggal
+    if (!tanggal.value) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Tanggal belum diisi.",
+            confirmButtonText: "OK"
+        });
+        tanggal.focus();
+        return false;
+    }
+
+    // Tanggal Actual
+    if (!tanggal_actual.value) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Tanggal Actual belum diisi.",
+            confirmButtonText: "OK"
+        });
+        tanggal_actual.focus();
+        return false;
+    }
+
+    // Detail DO
+    const table = document.getElementById("list_view");
+
+    if (!table || table.rows.length <= 1) {
+        Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Minimal harus ada 1 data DO.",
+            confirmButtonText: "OK"
+        });
+        surat_pesanan.focus();
+        return false;
+    }
+
+    // Pastikan setiap detail memiliki data lengkap
+    const rows = table.querySelectorAll("tbody tr");
+
+    for (let i = 0; i < rows.length; i++) {
+
+        const inputs = rows[i].querySelectorAll("input");
+
+        if (inputs.length < 4) {
+            Swal.fire({
+                icon: "warning",
+                title: "Data Belum Lengkap",
+                text: "Data detail DO belum lengkap.",
+                confirmButtonText: "OK"
+            });
+            return false;
+        }
+
+        const idDO = inputs[0].value.trim();
+        const uraianDetail = inputs[1].value.trim();
+        const noTrans = inputs[2].value.trim();
+        const idSP = inputs[3].value.trim();
+
+        if (!idDO) {
+            Swal.fire({
+                icon: "warning",
+                title: "Data Belum Lengkap",
+                text: "No. DO belum diisi pada detail.",
+                confirmButtonText: "OK"
+            });
+            return false;
+        }
+
+        if (!uraianDetail) {
+            Swal.fire({
+                icon: "warning",
+                title: "Data Belum Lengkap",
+                text: "Uraian belum diisi pada detail.",
+                confirmButtonText: "OK"
+            });
+            return false;
+        }
+
+        if (!idSP) {
+            Swal.fire({
+                icon: "warning",
+                title: "Data Belum Lengkap",
+                text: "Surat Pesanan belum dipilih pada detail.",
+                confirmButtonText: "OK"
+            });
+            return false;
+        }
+    }
+
+    return true;
+}
+
 //#endregion
 
 //#region Button-button
 
 isi_button.addEventListener("click", function (event) {
+
     event.preventDefault();
+
+    // ==========================================
+    // AWAL -> MASUK MODE ISI
+    // ==========================================
     if (proses == 0) {
+
         proses = 1;
+
         this.innerHTML = "Proses";
         edit_button.innerHTML = "Batal";
         hapus_button.style.display = "none";
+
+        div_suratJalan.classList.toggle("disabled");
+
         jenis_pengiriman.focus();
-    } else if (proses == 1) {
+
+        return;
+    }
+
+    // ==========================================
+    // MODE ISI -> PROSES / SUBMIT
+    // ==========================================
+    if (proses == 1) {
+
+        // BARU DI SINI VALIDASI DILAKUKAN
+        if (!validasiFormSuratJalan()) {
+            return;
+        }
+
         form_suratJalan.submit();
+
         proses = 0;
+
         this.innerHTML = "Isi";
         edit_button.innerHTML = "Koreksi";
         hapus_button.style.display = "block";
-    } else if (proses == 2) {
+
+        return;
+    }
+
+    // ==========================================
+    // MODE KOREKSI
+    // ==========================================
+    if (proses == 2) {
+
+        if (!validasiFormSuratJalan()) {
+            return;
+        }
+
         proses = 0;
+
         this.innerHTML = "Isi";
         edit_button.innerHTML = "Koreksi";
         hapus_button.style.display = "block";
-        form_suratJalan.action = "/Kencana/SuratJalan/" + id_kirimText.value;
-        let methodInput = form_suratJalan.querySelector('input[name="_method"]');
+
+        form_suratJalan.action =
+            "/Kencana/SuratJalan/" + id_kirimText.value;
+
+        let methodInput =
+            form_suratJalan.querySelector('input[name="_method"]');
+
         if (!methodInput) {
             methodInput = document.createElement("input");
             methodInput.type = "hidden";
             methodInput.name = "_method";
             form_suratJalan.appendChild(methodInput);
         }
+
         methodInput.value = "PUT";
+
         form_suratJalan.submit();
-    } else if (proses == 3) {
+
+        return;
+    }
+
+    // ==========================================
+    // MODE HAPUS
+    // ==========================================
+    if (proses == 3) {
+
         proses = 0;
+
         this.innerHTML = "Isi";
         edit_button.innerHTML = "Koreksi";
         hapus_button.style.display = "block";
-        form_suratJalan.action = "/Kencana/SuratJalan/" + id_kirimText.value;
+
+        form_suratJalan.action =
+            "/Kencana/SuratJalan/" + id_kirimText.value;
+
         form_suratJalan.submit();
+
+        div_suratJalan.classList.toggle("disabled");
+
+        return;
     }
-    div_suratJalan.classList.toggle("disabled");
 });
 
 edit_button.addEventListener("click", function (event) {

@@ -164,6 +164,7 @@ class DeliveryOrderKencanaController extends Controller
         $AlamatKirim = $request->input('alamat_kirim');
         $KotaKirim = $request->input('kota_kirim');
         $IdType = $request->input('id_typeBarang');
+        $Uraian = $request->input('uraian');
 
         // Cek IDPesanan sebelum masuk SP
         if (empty($IDPesanan)) {
@@ -185,7 +186,8 @@ class DeliveryOrderKencanaController extends Controller
                 @MinKirim = ?,
                 @AlamatKirim = ?,
                 @KotaKirim = ?,
-                @IdType = ?',
+                @IdType = ?,
+                @Uraian = ?',
             [
                 $MyType,
                 $Tanggal,
@@ -197,7 +199,8 @@ class DeliveryOrderKencanaController extends Controller
                 $MinKirim,
                 $AlamatKirim,
                 $KotaKirim,
-                $IdType
+                $IdType,
+                $Uraian
             ]
         );
 
@@ -243,6 +246,7 @@ class DeliveryOrderKencanaController extends Controller
         $AlamatKirim = $request->alamat_kirim;
         $KotaKirim = $request->kota_kirim;
         $IdType = $request->id_typeBarang;
+        $Uraian = $request->uraian;
         $IdDO = $id;
         DB::connection('ConnKCNSales')->statement('exec SP_1273_PRG_MAINT_DO1 @MyType = ?,
         @IdDO = ?,
@@ -255,7 +259,8 @@ class DeliveryOrderKencanaController extends Controller
         @MinKirim = ?,
         @AlamatKirim = ?,
         @KotaKirim = ?,
-        @IdType = ?',
+        @IdType = ?,
+        @Uraian = ?',
             [
                 $MyType,
                 $IdDO,
@@ -268,7 +273,8 @@ class DeliveryOrderKencanaController extends Controller
                 $MinKirim,
                 $AlamatKirim,
                 $KotaKirim,
-                $IdType
+                $IdType,
+                $Uraian
             ]
         );
         // echo "<script type='text/javascript'>alert('Data Berhasil diubah') ;</script>";

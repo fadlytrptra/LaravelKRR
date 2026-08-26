@@ -19,328 +19,1144 @@ let count_do = document.getElementById("count_do");
 let div_cetakDOSudahACC = document.getElementById("div_cetakDOSudahACC");
 let div_cetakDOBelumACC = document.getElementById("div_cetakDOBelumACC");
 
-//#region Load Form
+// ============================================================
+// HELPER
+// ============================================================
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatAddress(value) {
+    return escapeHtml(value)
+        .replace(/\r\n/g, "<br>")
+        .replace(/\n/g, "<br>")
+        .replace(/\r/g, "<br>");
+}
+
+function formatNumber(value, decimals = 2) {
+    if (value === null || value === undefined || value === "") {
+        return "";
+    }
+
+    const number = Number(value);
+
+    if (Number.isNaN(number)) {
+        return escapeHtml(value);
+    }
+
+    return number.toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+    });
+}
+
+// ============================================================
+// CSS TEMPLATE PRINT
+// ============================================================
+
+function injectPrintTemplateStyle() {
+    if (document.getElementById("do-print-template-style")) {
+        return;
+    }
+
+    const style = document.createElement("style");
+
+    style.id = "do-print-template-style";
+
+    style.innerHTML = `
+        /* =====================================================
+           CONTAINER SETIAP DO
+        ===================================================== */
+
+        .do-print-card {
+            width: 100%;
+            box-sizing: border-box;
+
+            border: 1px solid #222;
+
+            background: #fff;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            font-size: 10px;
+
+            line-height: 1.25;
+
+            color: #111;
+
+            margin: 0 0 7px 0;
+
+            padding: 7px 9px 5px 9px;
+
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .do-print-card * {
+            box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+           BAGIAN ATAS
+           KIRI : CUSTOMER
+           KANAN: SPESIFIKASI
+        ===================================================== */
+
+        .do-print-top {
+            display: grid;
+
+            grid-template-columns:
+                57%
+                43%;
+
+            column-gap: 8px;
+
+            align-items: start;
+        }
+
+        .do-print-left,
+        .do-print-right {
+            min-width: 0;
+        }
+
+
+        /* =====================================================
+           BARIS INFORMASI
+        ===================================================== */
+
+        .do-print-row {
+            display: grid;
+
+            grid-template-columns:
+                82px
+                1fr;
+
+            min-height: 17px;
+
+            align-items: start;
+        }
+
+        .do-print-right .do-print-row {
+            grid-template-columns:
+                65px
+                1fr;
+        }
+
+
+        /* =====================================================
+           LABEL
+        ===================================================== */
+
+        .do-print-label {
+            font-weight: 700;
+
+            white-space: nowrap;
+
+            padding-right: 4px;
+        }
+
+
+        /* =====================================================
+           VALUE
+        ===================================================== */
+
+        .do-print-value {
+            overflow-wrap: anywhere;
+
+            word-break: break-word;
+        }
+
+
+        /* =====================================================
+           SPESIFIKASI
+        ===================================================== */
+
+        .do-print-spec {
+            font-weight: 700;
+
+            line-height: 1.2;
+        }
+
+        .do-print-spec-item {
+            font-weight: 400;
+
+            margin-top: 1px;
+        }
+
+
+        /* =====================================================
+           JUMLAH
+        ===================================================== */
+
+        .do-print-quantity {
+            display: grid;
+
+            grid-template-columns:
+                30px
+                78px
+                1fr;
+
+            align-items: start;
+
+            min-height: 17px;
+        }
+
+        .do-print-quantity .qty-label {
+            font-weight: 400;
+        }
+
+        .do-print-quantity .qty-value {
+            text-align: left;
+
+            white-space: nowrap;
+        }
+
+        .do-print-quantity .qty-unit {
+            padding-left: 3px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           KETERANGAN
+        ===================================================== */
+
+        .do-print-note {
+            display: grid;
+
+            grid-template-columns:
+                82px
+                1fr;
+
+            margin-top: 5px;
+
+            padding-top: 3px;
+
+            min-height: 30px;
+        }
+
+        .do-print-note-label {
+            font-weight: 700;
+        }
+
+        .do-print-note-value {
+            text-align: left;
+
+            overflow-wrap: anywhere;
+
+            word-break: break-word;
+        }
+
+
+        /* =====================================================
+           NOMOR URUT
+        ===================================================== */
+
+        .do-print-page {
+            text-align: right;
+
+            font-size: 9px;
+
+            margin-top: 3px;
+        }
+
+
+        /* =====================================================
+           CONTAINER UTAMA
+        ===================================================== */
+
+        #div_cetakDOBelumACC,
+        #div_cetakDOSudahACC {
+            width: 100%;
+        }
+
+
+        /* =====================================================
+           PRINT
+        ===================================================== */
+
+        @media print {
+
+            .do-print-card {
+                margin-bottom: 5px;
+
+                padding:
+                    6px
+                    8px
+                    4px
+                    8px;
+
+                font-size: 9.5px;
+            }
+
+            .do-print-row {
+                grid-template-columns:
+                    78px
+                    1fr;
+
+                min-height: 16px;
+            }
+
+            .do-print-right .do-print-row {
+                grid-template-columns:
+                    62px
+                    1fr;
+            }
+
+            .do-print-note {
+                grid-template-columns:
+                    78px
+                    1fr;
+
+                margin-top: 4px;
+
+                min-height: 25px;
+            }
+
+            .do-print-page {
+                font-size: 8px;
+
+                margin-top: 2px;
+            }
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
+
+// ============================================================
+// TEMPLATE DO
+// ============================================================
+
+function renderDOTemplate(
+    option,
+    index,
+    minKirimSekunderValue,
+    keterangan
+) {
+    const satuanJual = escapeHtml(
+        (option.SatuanJual || "").trim()
+    );
+
+    const satuanTritier = escapeHtml(
+        (
+            option.SatuanTritier ||
+            option.satTritier ||
+            ""
+        ).trim()
+    );
+
+    const namaKelompok = escapeHtml(
+        option.NamaKelompok
+    );
+
+    const namaBarang = escapeHtml(
+        option.NamaBarang
+    );
+
+    const corak = escapeHtml(
+        option.Corak
+    );
+
+    const namaCust = escapeHtml(
+        option.NamaCust
+    );
+
+    const alamatKirim = formatAddress(
+        option.AlamatKirim
+    );
+
+    const idSuratPesanan = escapeHtml(
+        option.IDSuratPesanan
+    );
+
+    const noPo = escapeHtml(
+        option.NO_PO
+    );
+
+    const alamatKantor = formatAddress(
+        option.Alamat
+    );
+
+    const jenisCustomer = escapeHtml(
+        option.JnsCust
+    );
+
+    const minKirim = formatNumber(
+        option.MinKirimDO
+    );
+
+    const maxKirim = formatNumber(
+        option.MaxKirimDO
+    );
+
+    const minSekunder = formatNumber(
+        minKirimSekunderValue
+    );
+
+
+    return `
+        <div class="do-print-card">
+
+            <!-- =================================================
+                 BAGIAN ATAS
+            ================================================== -->
+
+            <div class="do-print-top">
+
+
+                <!-- =============================================
+                     KIRI
+                ============================================== -->
+
+                <div class="do-print-left">
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            Pelanggan:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${namaCust}
+                        </div>
+
+                    </div>
+
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            Alamat Kirim:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${alamatKirim}
+                        </div>
+
+                    </div>
+
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            No. SP:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${idSuratPesanan}
+                        </div>
+
+                    </div>
+
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            No. PO:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${noPo}
+                        </div>
+
+                    </div>
+
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            Alamat Kantor:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${alamatKantor}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     KANAN
+                ============================================== -->
+
+                <div class="do-print-right">
+
+
+                    <!-- SPESIFIKASI -->
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            Spesifikasi:
+                        </div>
+
+                        <div class="do-print-value do-print-spec">
+
+                            Ukuran:
+                            ${namaKelompok}
+
+                            <div class="do-print-spec-item">
+                                ${namaBarang}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CORAK -->
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            Corak:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${corak}
+                        </div>
+
+                    </div>
+
+
+                    <!-- MIN -->
+
+                    <div class="do-print-quantity">
+
+                        <div></div>
+
+                        <div class="qty-label">
+                            Min:
+                        </div>
+
+                        <div class="qty-value">
+
+                            ${minKirim}
+
+                            <span class="qty-unit">
+                                ${satuanJual}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MAX -->
+
+                    <div class="do-print-quantity">
+
+                        <div></div>
+
+                        <div class="qty-label">
+                            Max:
+                        </div>
+
+                        <div class="qty-value">
+
+                            ${maxKirim}
+
+                            <span class="qty-unit">
+                                ${satuanJual}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BERAT -->
+
+                    <div class="do-print-quantity">
+
+                        <div></div>
+
+                        <div></div>
+
+                        <div class="qty-value">
+
+                            ${minSekunder}
+
+                            <span class="qty-unit">
+                                ${satuanTritier}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- JENIS CUSTOMER -->
+
+                    <div class="do-print-row">
+
+                        <div class="do-print-label">
+                            Jenis Customer:
+                        </div>
+
+                        <div class="do-print-value">
+                            ${jenisCustomer}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 KETERANGAN
+            ================================================== -->
+
+            <div class="do-print-note">
+
+                <div class="do-print-note-label">
+                    Keterangan:
+                </div>
+
+                <div class="do-print-note-value">
+                    ${formatAddress(keterangan)}
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 NOMOR URUT
+            ================================================== -->
+
+            <div class="do-print-page">
+                ${index + 1}
+            </div>
+
+        </div>
+    `;
+}
+
+
+// ============================================================
+// LOAD FORM
+// ============================================================
 
 tanggal_do.valueAsDate = new Date();
+
 cetak_sudahACC.checked = true;
+
 contoh_print.style.display = "none";
+
 contoh_printDiv.style.display = "none";
+
 export_pdf.style.display = "none";
+
 print_pdf.style.display = "none";
 
-//#endregion
+injectPrintTemplateStyle();
 
-//#region Add event listener
 
-print_button.addEventListener("click", function (event) {
-    event.preventDefault();
-    $("#loading-screen").css("display", "flex");
-    if (nomor_referensi.value == "") {
-        alert("Isi kolom nomor referensi terlebih dahulu!");
-        nomor_referensi.focus();
-        $("#loading-screen").css("display", "none");
-    } else {
-        export_pdf.style.display = "inline-block";
-        print_pdf.style.display = "inline-block";
-        contoh_printDiv.style.display = "block";
-        contoh_print.style.display = "inline-block";
+// ============================================================
+// PRINT BUTTON
+// ============================================================
+
+print_button.addEventListener(
+    "click",
+    function (event) {
+
+        event.preventDefault();
+
+        $("#loading-screen").css(
+            "display",
+            "flex"
+        );
+
+
+        // ====================================================
+        // VALIDASI NOMOR REFERENSI
+        // ====================================================
+
+        if (nomor_referensi.value == "") {
+
+            alert(
+                "Isi kolom nomor referensi terlebih dahulu!"
+            );
+
+            nomor_referensi.focus();
+
+            $("#loading-screen").css(
+                "display",
+                "none"
+            );
+
+            return;
+        }
+
+
+        // ====================================================
+        // TAMPILKAN BUTTON PRINT
+        // ====================================================
+
+        export_pdf.style.display =
+            "inline-block";
+
+        print_pdf.style.display =
+            "inline-block";
+
+        contoh_printDiv.style.display =
+            "block";
+
+        contoh_print.style.display =
+            "inline-block";
+
+
+        // ====================================================
+        // BELUM ACC
+        // ====================================================
 
         if (cetak_belumACC.checked == true) {
-            fetch("/Kencana/dobelumacc/" + tanggal_do.value)
-                .then((response) => response.json())
-                .then((options) => {
-                    nomor_referensiKolom.innerHTML = nomor_referensi.value;
-                    div_cetakDOSudahACC.innerHTML = "";
-                    div_cetakDOBelumACC.innerHTML = "";
-                    const date = new Date(tanggal_do.value);
-                    const formattedDate = date.toLocaleDateString("en-US", {
-                        month: "2-digit",
-                        day: "2-digit",
-                        year: "numeric",
-                    });
-                    tanggal_kirimKolom.innerHTML = formattedDate;
-                    console.log(options);
-                    options.forEach((option, index) => {
-                        console.log(option);
-                        for (let prop in option) {
-                            if (option[prop] === null) {
-                                option[prop] = ""; // Change null value to an empty string
-                            }
-                        }
-                        let min_kirimSekunderValue = 0;
-                        const body_deliveryOrderBelumACC =
-                            document.createElement("div");
-                        body_deliveryOrderBelumACC.classList.add(
-                            "cetak-dopdf-container05"
-                        );
-                        if (option.SatuanJual.trim() == "KGM") {
-                            if (typeof option.MinKirimDO === "number") {
-                                min_kirimSekunderValue =
-                                    option.MinKirimDO.toFixed(2);
-                            } else if (typeof option.MinKirimDO !== "number") {
-                                let minKirimDO = parseFloat(
-                                    option.MinKirimDO
-                                ).toFixed(2);
-                                min_kirimSekunderValue = minKirimDO;
-                            }
-                        } else if (option.SatuanJual.trim() !== "KGM") {
-                            min_kirimSekunderValue = (
-                                (option.BERAT_TOTAL * option.MinKirimDO) /
-                                1000
-                            ).toFixed(2);
-                        }
-                        const formattedText = option.AlamatKirimDO.replace(
-                            /\r\n/g,
-                            "<br>"
-                        );
-                        body_deliveryOrderBelumACC.innerHTML = `
-                        <div class="acs-dopdf-container03">
-                            <div class="cetak-dopdf-container03">
-                                <div style=width:100%>
-                                    <table style="text-align: start">
-                                        <tr>
-                                            <td>Pelanggan: </td>
-                                            <td id="nama_customerKolom">${
-                                                option.NamaCust
-                                            }</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="white-space: nowrap;vertical-align:top">Alamat Kirim: </td>
-                                            <td id="alamat_kirimKolom">${
-                                                option.AlamatKirim
-                                            }</td>
-                                        </tr>
-                                        <tr>
-                                            <td>No. SP: </td>
-                                            <td id="no_spKolom">${
-                                                option.IDSuratPesanan
-                                            }</td>
-                                        </tr>
-                                        <tr>
-                                            <td>No. PO: </td>
-                                            <td id="no_poKolom">${
-                                                option.NO_PO
-                                            }</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="white-space: nowrap;vertical-align:top">Alamat Kantor: </td>
-                                            <td id="keterangan_kolom">${
-                                                option.Alamat ?? ""
-                                            }</td>
-                                        </tr>
-                                    </table>
 
-                                </div>
-                                <div class="cetak-dopdf-container04">
-                                    <table>
-                                        <tr>
-                                            <td style="vertical-align: top;white-space: nowrap;">Spesifikasi:&nbsp;</td>
-                                            <td><span id="nama_kelompokKolom">Ukuran: ${
-                                                option.NamaKelompok
-                                            }</span> <br> <span
-                                                    id="nama_barangKolom">${
-                                                        option.NamaBarang
-                                                    }</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td style="vertical-align: top;overflow-wrap: break-word;                                            ">Corak: ${
-                                                option.Corak
-                                            }</td>
-                                        </tr>
-                                    </table>
-                                    <table>
-                                        <tr>
-                                            <td style="vertical-align: top">Jumlah:&nbsp;</td>
-                                            <td>Min: </td>
-                                            <td id="min_kirimKolom">${
+            fetch(
+                "/Kencana/dobelumacc/" +
+                tanggal_do.value
+            )
+
+                .then(
+                    (response) =>
+                        response.json()
+                )
+
+                .then(
+                    (options) => {
+
+                        nomor_referensiKolom.innerHTML =
+                            nomor_referensi.value;
+
+                        div_cetakDOSudahACC.innerHTML =
+                            "";
+
+                        div_cetakDOBelumACC.innerHTML =
+                            "";
+
+
+                        // ==================================
+                        // TANGGAL
+                        // ==================================
+
+                        const date =
+                            new Date(
+                                tanggal_do.value
+                            );
+
+                        const formattedDate =
+                            date.toLocaleDateString(
+                                "en-US",
+                                {
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                    year: "numeric",
+                                }
+                            );
+
+                        tanggal_kirimKolom.innerHTML =
+                            formattedDate;
+
+
+                        console.log(options);
+
+
+                        // ==================================
+                        // LOOP DATA
+                        // ==================================
+
+                        options.forEach(
+                            (
+                                option,
+                                index
+                            ) => {
+
+                                console.log(
+                                    option
+                                );
+
+
+                                // ==============================
+                                // NULL -> EMPTY STRING
+                                // ==============================
+
+                                for (
+                                    let prop in option
+                                ) {
+
+                                    if (
+                                        option[prop] ===
+                                        null
+                                    ) {
+
+                                        option[prop] =
+                                            "";
+                                    }
+                                }
+
+
+                                // ==============================
+                                // HITUNG BERAT
+                                // ==============================
+
+                                let min_kirimSekunderValue =
+                                    0;
+
+
+                                if (
+                                    (
+                                        option.SatuanJual ||
+                                        ""
+                                    )
+                                        .trim() ==
+                                    "KGM"
+                                ) {
+
+                                    if (
+                                        typeof option.MinKirimDO ===
+                                        "number"
+                                    ) {
+
+                                        min_kirimSekunderValue =
+                                            option.MinKirimDO.toFixed(
+                                                2
+                                            );
+
+                                    } else {
+
+                                        let minKirimDO =
+                                            parseFloat(
                                                 option.MinKirimDO
-                                            }&nbsp;</td>
-                                            <td>${option.SatuanJual.trim()}&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>Max:&nbsp;</td>
-                                            <td id="max_kirimKolom">${
-                                                option.MaxKirimDO
-                                            }</td>
-                                            <td>${option.SatuanJual.trim()}&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td id="min_kirimSekunderKolom">${min_kirimSekunderValue}&nbsp;</td>
-                                            <td>${option.SatuanTritier.trim()}&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="white-space: nowrap">Jenis Customer:&nbsp;</td>
-                                            <td>${option.JnsCust}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div style="display:flex; flex-direction:row;margin:3px;gap:5px">
-                                        <p style="white-space: nowrap">
-                                            Keterangan:
-                                        </p>
-                                        <p style="text-align:justify">
-                                            ${formattedText}
-                                        </p>
-                                </div>
-                                <span style="margin-right: 5px;display:flex;justify-content:right;">${
-                                    index + 1
-                                }</span>
-                        </div>
-                        `;
-                        div_cetakDOBelumACC.appendChild(
-                            body_deliveryOrderBelumACC
+                                            ).toFixed(
+                                                2
+                                            );
+
+                                        min_kirimSekunderValue =
+                                            minKirimDO;
+                                    }
+
+                                } else {
+
+                                    min_kirimSekunderValue =
+                                        (
+                                            (
+                                                Number(
+                                                    option.BERAT_TOTAL
+                                                ) *
+                                                Number(
+                                                    option.MinKirimDO
+                                                )
+                                            ) /
+                                            1000
+                                        ).toFixed(
+                                            2
+                                        );
+                                }
+
+
+                                // ==============================
+                                // CONTAINER
+                                // ==============================
+
+                                const body =
+                                    document.createElement(
+                                        "div"
+                                    );
+
+                                body.classList.add(
+                                    "cetak-dopdf-container05"
+                                );
+
+
+                                // ==============================
+                                // RENDER
+                                // ==============================
+
+                                body.innerHTML =
+                                    renderDOTemplate(
+                                        option,
+                                        index,
+                                        min_kirimSekunderValue,
+                                        option.Keterangan ||
+                                            ""
+                                    );
+
+
+                                // ==============================
+                                // APPEND
+                                // ==============================
+
+                                div_cetakDOBelumACC.appendChild(
+                                    body
+                                );
+                            }
                         );
-                    });
-                })
-                .finally(() => {
-                    $("#loading-screen").css("display", "none");
-                });
-        } else if (cetak_sudahACC.checked == true) {
-            // INI TIDAK DIPAKAI TAPI TIDAK DIHAPUS UNTUK JAGA-JAGA
-            fetch("/Kencana/dosudahacc/" + tanggal_do.value)
-                .then((response) => response.json())
-                .then((options) => {
-                    nomor_referensiKolom.innerHTML = nomor_referensi.value;
-                    div_cetakDOSudahACC.innerHTML = "";
-                    div_cetakDOBelumACC.innerHTML = "";
-                    const date = new Date(tanggal_do.value);
-                    const formattedDate = date.toLocaleDateString("en-US", {
-                        month: "2-digit",
-                        day: "2-digit",
-                        year: "numeric",
-                    });
-                    tanggal_kirimKolom.innerHTML = formattedDate;
-                    // count_do.innerHTML = options.count();
-                    console.log(options);
-                    options.forEach((option, index) => {
-                        console.log(option);
-                        let min_kirimSekunderValue = 0;
-                        min_kirimSekunderValue = (
-                            option.BERAT_TOTAL * option.MinKirimDO
-                        ).toFixed(3);
-                        const body_deliveryOrderSudahACC =
-                            document.createElement("div");
-                        body_deliveryOrderSudahACC.classList.add(
-                            "cetak-dopdf-container05"
+                    }
+                )
+
+                .catch(
+                    (error) => {
+
+                        console.error(
+                            "Gagal mengambil data DO:",
+                            error
                         );
-                        // body_deliveryOrderSudahACC.classList.add("body-cetak");
-                        body_deliveryOrderSudahACC.innerHTML = `
-                        <div class="cetak-dopdf-container03">
-                            <div style=width:45%>
-                                <table style="text-align: start">
-                                    <tr>
-                                        <td>Pelanggan: </td>
-                                        <td id="nama_customerKolom">${
-                                            option.NamaCust
-                                        }</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="vertical-align:top;white-space: nowrap">Alamat Kirim: </td>
-                                        <td id="alamat_kirimKolom">${
-                                            option.AlamatKirim
-                                        }</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. SP: </td>
-                                        <td id="no_spKolom">${
-                                            option.IDSuratPesanan
-                                        }</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. PO: </td>
-                                        <td id="no_poKolom">${option.NO_PO}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Keterangan: </td>
-                                        <td id="keterangan_kolom">${
-                                            option.Keterangan
-                                        }</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="cetak-dopdf-container04">
-                                <table>
-                                    <tr>
-                                        <td style="vertical-align: top;">Spesifikasi:&nbsp;</td>
-                                        <td style="max-width: 200px"><span id="nama_kelompokKolom">Ukuran: ${
-                                            option.NamaKelompok
-                                        }</span> <br> <span
-                                                id="nama_barangKolom">${
-                                                    option.NamaBarang
-                                                }</span></td>
-                                        <td></td>
-                                        <td style="vertical-align: top">Corak</td>
-                                    </tr>
-                                </table>
-                                <table>
-                                    <tr>
-                                        <td style="vertical-align: top;text-align: right">Jumlah:&nbsp;</td>
-                                        <td>Min: </td>
-                                        <td id="min_kirimKolom">${
+
+                        alert(
+                            "Terjadi kesalahan saat mengambil data DO."
+                        );
+                    }
+                )
+
+                .finally(
+                    () => {
+
+                        $("#loading-screen").css(
+                            "display",
+                            "none"
+                        );
+                    }
+                );
+
+
+        // ====================================================
+        // SUDAH ACC
+        // ====================================================
+
+        } else if (
+            cetak_sudahACC.checked == true
+        ) {
+
+            fetch(
+                "/Kencana/dosudahacc/" +
+                tanggal_do.value
+            )
+
+                .then(
+                    (response) =>
+                        response.json()
+                )
+
+                .then(
+                    (options) => {
+
+                        nomor_referensiKolom.innerHTML =
+                            nomor_referensi.value;
+
+                        div_cetakDOSudahACC.innerHTML =
+                            "";
+
+                        div_cetakDOBelumACC.innerHTML =
+                            "";
+
+
+                        // ==================================
+                        // TANGGAL
+                        // ==================================
+
+                        const date =
+                            new Date(
+                                tanggal_do.value
+                            );
+
+                        const formattedDate =
+                            date.toLocaleDateString(
+                                "en-US",
+                                {
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                    year: "numeric",
+                                }
+                            );
+
+                        tanggal_kirimKolom.innerHTML =
+                            formattedDate;
+
+
+                        console.log(options);
+
+
+                        // ==================================
+                        // LOOP DATA
+                        // ==================================
+
+                        options.forEach(
+                            (
+                                option,
+                                index
+                            ) => {
+
+                                console.log(
+                                    option
+                                );
+
+
+                                // ==============================
+                                // HITUNG BERAT
+                                // ==============================
+
+                                let min_kirimSekunderValue =
+                                    (
+                                        Number(
+                                            option.BERAT_TOTAL
+                                        ) *
+                                        Number(
                                             option.MinKirimDO
-                                        }&nbsp;</td>
-                                        <td>${option.SatuanJual}&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>Max:&nbsp;</td>
-                                        <td id="max_kirimKolom">${
-                                            option.MaxKirimDO
-                                        }</td>
-                                        <td>${option.SatuanJual}&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td id="min_kirimSekunderKolom">${min_kirimSekunderValue}&nbsp;</td>
-                                        <td>${option.satTritier}&nbsp;</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <span style="margin-right: 5px;align-self: end;">${
-                                index + 1
-                            }</span>
-                        </div>
-                        `;
-                        div_cetakDOSudahACC.appendChild(
-                            body_deliveryOrderSudahACC
+                                        )
+                                    ).toFixed(
+                                        3
+                                    );
+
+
+                                // ==============================
+                                // CONTAINER
+                                // ==============================
+
+                                const body =
+                                    document.createElement(
+                                        "div"
+                                    );
+
+                                body.classList.add(
+                                    "cetak-dopdf-container05"
+                                );
+
+
+                                // ==============================
+                                // RENDER
+                                // ==============================
+
+                                body.innerHTML =
+                                    renderDOTemplate(
+                                        option,
+                                        index,
+                                        min_kirimSekunderValue,
+                                        option.Keterangan ||
+                                            ""
+                                    );
+
+
+                                // ==============================
+                                // APPEND
+                                // ==============================
+
+                                div_cetakDOSudahACC.appendChild(
+                                    body
+                                );
+                            }
                         );
-                    });
-                })
-                .finally(() => {
-                    $("#loading-screen").css("display", "none");
-                });
+                    }
+                )
+
+                .catch(
+                    (error) => {
+
+                        console.error(
+                            "Gagal mengambil data DO:",
+                            error
+                        );
+
+                        alert(
+                            "Terjadi kesalahan saat mengambil data DO."
+                        );
+                    }
+                )
+
+                .finally(
+                    () => {
+
+                        $("#loading-screen").css(
+                            "display",
+                            "none"
+                        );
+                    }
+                );
+
+
+        // ====================================================
+        // BELUM PILIH
+        // ====================================================
+
         } else {
-            alert("Pilih status DO sudah ACC atau belum ACC dulu!");
+
+            alert(
+                "Pilih status DO sudah ACC atau belum ACC dulu!"
+            );
+
             cetak_belumACC.focus();
         }
     }
-});
+);
 
-nomor_referensi.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
-        event.preventDefault();
-        if (nomor_referensi.value == "") {
-            alert("Isi kolom nomor referensi terlebih dahulu!");
-            nomor_referensi.focus();
-        } else {
-            print_button.focus();
+
+// ============================================================
+// ENTER NOMOR REFERENSI
+// ============================================================
+
+nomor_referensi.addEventListener(
+    "keypress",
+    function (event) {
+
+        if (event.key == "Enter") {
+
+            event.preventDefault();
+
+
+            if (
+                nomor_referensi.value == ""
+            ) {
+
+                alert(
+                    "Isi kolom nomor referensi terlebih dahulu!"
+                );
+
+                nomor_referensi.focus();
+
+            } else {
+
+                print_button.focus();
+            }
         }
     }
-});
+);
 
-print_pdf.addEventListener("click", function (event) {
-    event.preventDefault();
-    window.print();
-});
 
-//#endregion
+// ============================================================
+// PRINT
+// ============================================================
 
-//#region function mantap-mantap
+print_pdf.addEventListener(
+    "click",
+    function (event) {
 
-//#endregion
+        event.preventDefault();
+
+        window.print();
+    }
+);
+
+
+// ============================================================
+// END
+// ============================================================

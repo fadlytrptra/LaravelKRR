@@ -38,7 +38,7 @@
             <button id="print_pdf" class="btn btn-success"><span>&#128438;</span> Print Surat Pesanan</button>
             <hr>
             <label for="contoh_print" id="contoh_print">Contoh Print:</label>
-            
+
             <div class="acs-div-container" id="contoh_printDiv" style="display: none">
                 <div class="cetak-sppdf-container">
                     <div class="cetak-sppdf-container01">
@@ -172,10 +172,8 @@
                             <table style="margin-left: 8px;width:100%">
                                 <tbody>
                                     <tr>
-                                        <td style="text-align: center; white-space: nowrap">WIRANIAGA LOKAL</td>
+                                        <td style="text-align: center; white-space: nowrap">Penerima Order</td>
                                         <td style="text-align: center">MANAGER</td>
-                                        <td style="text-align: center">DIREKTUR</td>
-                                        <td style="text-align: center">PPIC</td>
                                         <td>Lembar Ke:</td>
                                     </tr>
                                     <tr>
@@ -185,10 +183,6 @@
                                         <td style="text-align: center;min-width:100px;">
                                             <img id="ttd_managerKolom" style="width:75px; height:auto;">
                                         </td>
-                                        <td style="text-align: center;min-width:100px;">
-                                            <img id="ttd_direkturKolom" style="width:75px; height:auto;">
-                                        </td>
-                                        <td style="min-width:100px;"></td>
                                         <td style="border: none !important;">1. Putih - Produksi <br>
                                             2. Merah - QC <br>
                                             3. Kuning - Adm. Piutang <br>
@@ -204,11 +198,6 @@
                                             id="nama_managerKolom">
                                             X
                                         </th>
-                                        <th style="border: none !important;text-align: center;text-decoration: underline;vertical-align:bottom;white-space: nowrap"
-                                            id="nama_direkturKolom">
-                                            X
-                                        </th>
-                                        <th style="border: none !important;text-align: center;vertical-align:bottom;">
                                         </th>
                                         <td style="border: none !important;">&nbsp; &nbsp;</td>
                                     </tr>

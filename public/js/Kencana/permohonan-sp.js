@@ -8,8 +8,8 @@ $(document).ready(function () {
     let div_tabelSuratPesanan = document.getElementById("div_tabelSuratPesanan"); // prettier-ignore
     let edit_button = document.getElementById("edit_button");
     let enter_kodeBarang = document.getElementById("enter_kodeBarang");
-    let faktur_pjkBiasa = document.getElementById("faktur_pjkBiasa");
-    let faktur_pjkSederhana = document.getElementById("faktur_pjkSederhana");
+    // let faktur_pjkBiasa = document.getElementById("faktur_pjkBiasa");
+    // let faktur_pjkSederhana = document.getElementById("faktur_pjkSederhana");
     let form_suratPesanan = document.getElementById("form_suratPesanan");
     let hapus_button = document.getElementById("hapus_button");
     let harga_satuan = document.getElementById("harga_satuan");
@@ -155,23 +155,23 @@ $(document).ready(function () {
     syarat_bayar.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            faktur_pjkBiasa.focus();
-        }
-    });
-
-    faktur_pjkBiasa.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
             keterangan.focus();
         }
     });
 
-    faktur_pjkSederhana.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            keterangan.focus();
-        }
-    });
+    // faktur_pjkBiasa.addEventListener("keypress", function (event) {
+    //     if (event.key === "Enter") {
+    //         event.preventDefault();
+    //         keterangan.focus();
+    //     }
+    // });
+
+    // faktur_pjkSederhana.addEventListener("keypress", function (event) {
+    //     if (event.key === "Enter") {
+    //         event.preventDefault();
+    //         keterangan.focus();
+    //     }
+    // });
 
     qty_pesan.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
@@ -362,11 +362,11 @@ $(document).ready(function () {
                     jenis_bayar.value = response[0].IDPembayaran;
                     syarat_bayar.value = response[0].SyaratBayar;
                     keterangan.value = response[0].Ket;
-                    if (response[0].JnsFakturPjk == "0") {
-                        faktur_pjkBiasa.value = response[0].JnsFakturPjk;
-                    } else {
-                        faktur_pjkSederhana.value = response[0].JnsFakturPjk;
-                    }
+                    // if (response[0].JnsFakturPjk == "0") {
+                    //     faktur_pjkBiasa.value = response[0].JnsFakturPjk;
+                    // } else {
+                    //     faktur_pjkSederhana.value = response[0].JnsFakturPjk;
+                    // }
 
                     $.ajax({
                         url: "/Kencana/SuratPesanan/CopyDetails?no_sp=" + no_spValue,
@@ -750,42 +750,79 @@ $(document).ready(function () {
     });
 
     sub_kategori.addEventListener("change", function () {
-        // Code to retrieve options for the second select input based on the selected value of the first select input
-        let subKategori = this.value; // Use the value of the first select input as the firstValue variable
-        nama_barang.focus();
-        if (
-            jenis_sp.options[jenis_sp.selectedIndex].text.trim() !== "SP EXPORT"
-        ) {
-            fetch("/Kencana/options/namaBarang/" + subKategori)
-                .then((response) => response.json())
-                .then((options) => {
-                    console.log(options);
-                    nama_barang.innerHTML =
-                        "<option disabled selected value>-- Pilih Nama Barang --</option>";
-                    options.forEach((option) => {
-                        let optionTag = document.createElement("option");
-                        optionTag.value = option.KD_BRG;
-                        optionTag.text = option.NAMA_BRG;
-                        nama_barang.appendChild(optionTag);
-                    });
+        const subKategori = this.value;
+        console.log("SUB KATEGORI:", subKategori);
+
+        const isExport =
+            jenis_sp.options[jenis_sp.selectedIndex]
+                .text
+                .trim() === "SP EXPORT";
+
+        const url = isExport
+            ? "/Kencana/options/namaBarangExport/" + encodeURIComponent(subKategori)
+            : "/Kencana/options/namaBarang/" + encodeURIComponent(subKategori);
+
+        console.log("REQUEST:", url);
+
+        // Bersihkan dropdown
+        nama_barang.innerHTML =
+            '<option value="" disabled selected>-- Pilih Nama Barang --</option>';
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            cache: false,
+
+            success: function (options) {
+
+                console.log("RESPONSE:", options);
+                console.log("JUMLAH RESPONSE:", options.length);
+
+                // Pastikan dropdown dikosongkan lagi
+                nama_barang.innerHTML =
+                    '<option value="" disabled selected>-- Pilih Nama Barang --</option>';
+
+                options.forEach(function (option) {
+
+                    const optionTag =
+                        document.createElement("option");
+
+                    optionTag.value = option.KD_BRG;
+                    optionTag.textContent = option.NAMA_BRG;
+
+                    nama_barang.appendChild(optionTag);
                 });
-        } else if (
-            jenis_sp.options[jenis_sp.selectedIndex].text.trim() == "SP EXPORT"
-        ) {
-            fetch("/Kencana/options/namaBarangExport/" + subKategori)
-                .then((response) => response.json())
-                .then((options) => {
-                    console.log(options);
-                    nama_barang.innerHTML =
-                        "<option disabled selected value>-- Pilih Nama Barang --</option>";
-                    options.forEach((option) => {
-                        let optionTag = document.createElement("option");
-                        optionTag.value = option.KD_BRG;
-                        optionTag.text = option.NAMA_BRG;
-                        nama_barang.appendChild(optionTag);
-                    });
-                });
-        }
+
+                console.log(
+                    "JUMLAH OPTION:",
+                    nama_barang.options.length
+                );
+
+                const ppmfPutih =
+                    Array.from(nama_barang.options)
+                        .find(function (option) {
+                            return option.textContent.trim()
+                                .toUpperCase() === "BENANG PPMF PUTIH";
+                        });
+
+                console.log(
+                    "BENANG PPMF PUTIH DI DOM:",
+                    ppmfPutih
+                );
+            },
+
+            error: function (xhr) {
+
+                console.error(
+                    "Gagal mengambil nama barang:",
+                    xhr.responseText
+                );
+
+                nama_barang.innerHTML =
+                    '<option value="" disabled selected>-- Gagal memuat barang --</option>';
+            }
+        });
     });
 
     nama_barang.addEventListener("change", function () {
@@ -1090,7 +1127,7 @@ $(document).ready(function () {
         mata_uang.value = "";
         jenis_bayar.selectedIndex = 0;
         syarat_bayar.value = "";
-        faktur_pjkBiasa.checked = true;
+        // faktur_pjkBiasa.checked = true;
         keterangan.value = "";
     }
 
@@ -1125,8 +1162,8 @@ $(document).ready(function () {
         jenis_bayar.disabled = bool;
         syarat_bayar.readOnly = bool;
         keterangan.readOnly = bool;
-        faktur_pjkBiasa.disabled = bool;
-        faktur_pjkSederhana.disabled = bool;
+        // faktur_pjkBiasa.disabled = bool;
+        // faktur_pjkSederhana.disabled = bool;
     }
 
     function generateNoSP() {

@@ -508,13 +508,6 @@
 
                             </div>
 
-
-                            {{-- ===================================================== --}}
-                            {{-- PENTING:
-                                 PERTAHANKAN DATA DETAIL SETELAH ERROR
-                            --}}
-                            {{-- ===================================================== --}}
-
                             <div id="old_detail_container">
 
                                 @if (old('barang0'))
@@ -529,6 +522,18 @@
 
                                         <input
                                             type="hidden"
+                                            name="barang1[]"
+                                            value="{{ old('barang1.' . $index) }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="barang2[]"
+                                            value="{{ old('barang2.' . $index) }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
                                             name="barang3[]"
                                             value="{{ old('barang3.' . $index) }}"
                                         >
@@ -538,30 +543,18 @@
                                 @endif
 
                             </div>
-
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
 
-
-{{-- ===================================================== --}}
-{{-- SWEETALERT VALIDATION ERROR --}}
-{{-- ===================================================== --}}
-
 @if (session('validation_error'))
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
-
     Swal.fire({
         icon: 'error',
         title: 'Data Tidak Dapat Disimpan',
@@ -569,24 +562,15 @@ document.addEventListener('DOMContentLoaded', function () {
         confirmButtonText: 'OK',
         allowOutsideClick: false
     });
-
 });
-
 </script>
 
 @endif
 
-
-{{-- ===================================================== --}}
-{{-- SWEETALERT SUCCESS --}}
-{{-- ===================================================== --}}
-
 @if (session('success'))
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
-
     Swal.fire({
         icon: 'success',
         title: 'Berhasil',
@@ -594,24 +578,14 @@ document.addEventListener('DOMContentLoaded', function () {
         confirmButtonText: 'OK',
         allowOutsideClick: false
     });
-
 });
-
 </script>
 
 @endif
-
-
-{{-- ===================================================== --}}
-{{-- SWEETALERT ERROR --}}
-{{-- ===================================================== --}}
-
 @if (session('error'))
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
-
     Swal.fire({
         icon: 'error',
         title: 'Gagal',
@@ -619,56 +593,26 @@ document.addEventListener('DOMContentLoaded', function () {
         confirmButtonText: 'OK',
         allowOutsideClick: false
     });
-
 });
 
 </script>
 
 @endif
-
-
-{{-- ===================================================== --}}
-{{-- RESTORE DATA DETAIL SETELAH REDIRECT --}}
-{{-- ===================================================== --}}
-
 @if (old('barang0'))
 
 <script>
+    window.oldBarang0 = @json(old('barang0', []));
+    window.oldBarang1 = @json(old('barang1', []));
+    window.oldBarang2 = @json(old('barang2', []));
+    window.oldBarang3 = @json(old('barang3', []));
 
-document.addEventListener('DOMContentLoaded', function () {
-
-    /*
-    |--------------------------------------------------------------------------
-    | Data lama dari controller
-    |--------------------------------------------------------------------------
-    */
-
-    const oldBarang0 = @json(old('barang0', []));
-    const oldBarang3 = @json(old('barang3', []));
-
-    console.log('Old Barang0:', oldBarang0);
-    console.log('Old Barang3:', oldBarang3);
-
-    /*
-    |--------------------------------------------------------------------------
-    | Jika JavaScript utama mempunyai fungsi untuk restore data,
-    | gunakan data ini.
-    |--------------------------------------------------------------------------
-    */
-
-    window.oldBarang0 = oldBarang0;
-    window.oldBarang3 = oldBarang3;
-
-});
-
+    console.log('Old Barang0:', window.oldBarang0);
+    console.log('Old Barang1:', window.oldBarang1);
+    console.log('Old Barang2:', window.oldBarang2);
+    console.log('Old Barang3:', window.oldBarang3);
 </script>
 
 @endif
-
-
-{{-- ===================================================== --}}
-{{-- JAVASCRIPT UTAMA --}}
-{{-- ===================================================== --}}
 
 <script
     type="text/javascript"

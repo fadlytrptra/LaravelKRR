@@ -29,7 +29,7 @@ $(document).on("click", ".DetailKirim", function (e) {
         success: function (response) {
             console.log(response);
             if (response.message) {
-                Uraian.value = response.message[0].NamaType; // prettier-ignore
+                Uraian.value = response.message[0].Uraian; // prettier-ignore
                 QtyPrimer.value = numeral(response.message[0].QtyPrimer).format('0,0'); // prettier-ignore
                 QtySekunder.value = numeral(response.message[0].QtySekunder).format('0,0'); // prettier-ignore
                 QtyTritier.value = numeral(response.message[0].QtyTritier).format('0,0'); // prettier-ignore

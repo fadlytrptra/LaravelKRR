@@ -143,6 +143,25 @@ jQuery(function ($) {
                 return response.json();
             })
             .then((data) => {
+                console.log("=== DEBUG CETAK SJ ===");
+                console.log("Tanggal:", tanggal_sj.value);
+                console.log("Nomor SJ:", no_sjText.value);
+                console.log("Response:", data);
+                console.log("Array?", Array.isArray(data));
+                console.log("Length:", data?.length);
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    console.error("Data SJ kosong:", data);
+
+                    alert(
+                        "Data Surat Jalan tidak ditemukan.\n" +
+                        "Tanggal: " + tanggal_sj.value + "\n" +
+                        "Nomor SJ: " + no_sjText.value
+                    );
+
+                    return;
+                }
+
                 numeral.locale("id");
                 moment.locale("id");
 
@@ -156,7 +175,7 @@ jQuery(function ($) {
                 nomor_sjKolom.innerHTML = "sj: " + no_sjText.value;
 
                 nama_typeBarangKolom.innerHTML = data[0].NAMATYPEBARANG;
-                nama_barangKolomNo_poKolom.innerHTML = data[0].NamaType;
+                nama_barangKolomNo_poKolom.innerHTML = data[0].Uraian;
 
                 tanggal_kirimKolom.innerHTML = moment(
                     tanggal_sj.value,

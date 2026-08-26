@@ -34,13 +34,23 @@ class SuratJalanManagerKencanaController extends Controller
     //Display the specified resource.
     public function show($id, Request $request)
     {
-        if ($id == 'getDataHeader') {
-            $IdHeaderKirim = $request->IdHeaderKirim;
-            $data = db::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_DETAILKIRIM_BLMACC @IDHeaderKirim = ?', [$IdHeaderKirim]);
-            return response()->json(['message' => $data]);
-        } else if ($id == '') {
+        if ($id === 'getDataHeader') {
 
+            $IdHeaderKirim = $request->IdHeaderKirim;
+
+            $data = DB::connection('ConnKCNSales')->select(
+                'EXEC SP_1273_PRG_LIST_DETAILKIRIM_BLMACC @IDHeaderKirim = ?',
+                [$IdHeaderKirim]
+            );
+
+            return response()->json([
+                'message' => $data
+            ]);
         }
+
+        return response()->json([
+            'message' => []
+        ]);
     }
 
     //Show the form for editing the specified resource.

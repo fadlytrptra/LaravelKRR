@@ -181,13 +181,12 @@ class SuratPesananKencanaController extends Controller
 
     public function getNamaBarang($subKategori)
     {
-        $fourthOptions = DB::connection('ConnKCNPurchase')
-            ->select(
-                'exec SP_1273_PRG_BARANG @NoSubKategori = ?, @Eksport = ?',
-                [$subKategori, 'N']
-            );
+        $data = DB::connection('ConnKCNPurchase')->select(
+            'EXEC SP_1273_PRG_BARANG @NoSubKategori = ?, @Eksport = ?',
+            [$subKategori, 'N']
+        );
 
-        return response()->json($fourthOptions);
+        return response()->json($data);
     }
 
     public function getNamaBarangExport($subKategori)
