@@ -134,7 +134,6 @@ class CustomerKencanaController extends Controller
                     $ContactPerson,
                     $AlamatKirim,
                     $Alamat,
-                    $Alamat,
                     $Kota,
                     $Propinsi,
                     $Negara,
