@@ -543,6 +543,7 @@ btn_namaBarang.addEventListener("click", function (event) {
         responsive: true,
         processing: true,
         serverSide: true,
+        destroy: true,
         ajax: {
             url: "/Maintenance/CekNamaBarang",
             type: "GET",
