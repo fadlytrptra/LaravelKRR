@@ -153,7 +153,17 @@ class SuratPesananKencanaController extends Controller
     public function create()
     {
         $jenis_sp = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_SP @Kode = ?', [1]);
-        $list_customer = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_ALL_CUSTOMER @Kode = ?', [1]);
+        $list_customer = DB::connection('ConnKCNSales')
+            ->table('T_CUSTOMER')
+            ->select(
+                DB::raw("NAMACUST + ' (' + KotaKirim + ')' AS NamaCust"),
+                DB::raw("JNSCUST + ' -' + IDCUST AS IDCust")
+            )
+            ->whereNotNull('NAMACUST')
+            ->where('IsActive', 1)
+            ->orderBy('NAMACUST')
+            ->orderBy('JNSCUST')
+            ->get();
         $list_sales = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_SALES');
         $jenis_bayar = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_JNSBAYAR');
         $jenis_brg = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_JNSBRG');
@@ -164,6 +174,7 @@ class SuratPesananKencanaController extends Controller
         // dd($list_customer);
         return view('Kencana.SuratPesanan.Create', compact('access', 'jenis_sp', 'list_customer', 'list_sales', 'jenis_bayar', 'jenis_brg', 'kategori_utama', 'list_satuan', 'list_sp'));
     }
+
     public function getKategori($kategoriUtama)
     {
         $secondOptions = DB::connection('ConnKCNPurchase')->select('exec SP_1273_PRG_KATEGORI @NoKatUtama = ?', [$kategoriUtama]);

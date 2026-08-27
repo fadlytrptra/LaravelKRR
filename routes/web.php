@@ -1850,6 +1850,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('Kencana/Billing', App\Http\Controllers\Kencana\BillingKencanaController::class)->names('Kencana.Billing');
     Route::resource('Kencana/Customer', App\Http\Controllers\Kencana\CustomerKencanaController::class)->names('Kencana.Customer');
     Route::resource('Kencana/Expeditor', App\Http\Controllers\Kencana\ExpeditorKencanaController::class)->names('Kencana.Expeditor');
+    Route::resource('Kencana/DaftarHarga', App\Http\Controllers\Kencana\DaftarHargaKencanaController::class)->names('Kencana.DaftarHarga');
     Route::post('/Kencana/DeliveryOrder/{id}', 'App\Http\Controllers\Kencana\DeliveryOrderKencanaController@destroy')->name('deliveryorder.destroy');
     Route::post('/Kencana/DeliveryOrder/{id}/up', 'App\Http\Controllers\Kencana\DeliveryOrderKencanaController@update')->name('deliveryorder.update');
     Route::get('/Kencana/options/nomorsp/{customer}', 'App\Http\Controllers\Kencana\DeliveryOrderKencanaController@getSuratPesanan');

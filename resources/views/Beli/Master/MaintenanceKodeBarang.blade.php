@@ -157,8 +157,8 @@
                                                     </div>
                                                     <div class="col-md-8" id="labelExport">
                                                         <p>KALO YANG MINTA KODE BARANG BARU DIVISI EXIM, HARUS DITANYA
-                                                            APAKAH HASIL PRODUKSI" & _
-                                                            " INI UNTUK EXPORT. KALO IYA, CHECK BOX BARANG EXPORT HARUS
+                                                            APAKAH HASIL PRODUKSI
+                                                            INI UNTUK EXPORT. KALO IYA, CHECK BOX BARANG EXPORT HARUS
                                                             DICENTANG.</p>
                                                     </div>
                                                 </div>

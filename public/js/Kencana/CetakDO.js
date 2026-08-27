@@ -395,7 +395,7 @@ function renderDOTemplate(
     );
 
     const jenisCustomer = escapeHtml(
-        option.JnsCust
+        option.JenisCustomer
     );
 
     const minKirim = formatNumber(
@@ -583,40 +583,16 @@ function renderDOTemplate(
 
                     </div>
 
-
-                    <!-- BERAT -->
-
-                    <div class="do-print-quantity">
-
-                        <div></div>
-
-                        <div></div>
-
-                        <div class="qty-value">
-
-                            ${minSekunder}
-
-                            <span class="qty-unit">
-                                ${satuanTritier}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
                     <!-- JENIS CUSTOMER -->
 
-                    <div class="do-print-row">
-
-                        <div class="do-print-label">
+                   <div style="display: flex; align-items: flex-start;">
+                        <div style="width: 65px; font-weight: 700;">
                             Jenis Customer:
                         </div>
 
-                        <div class="do-print-value">
-                            ${jenisCustomer}
+                        <div>
+                            ${jenisCustomer || ""}
                         </div>
-
                     </div>
 
                 </div>

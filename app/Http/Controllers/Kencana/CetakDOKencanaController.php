@@ -21,14 +21,15 @@ class CetakDOKencanaController extends Controller
 
     public function getDeliveryOrderSudahACC($tanggal)
     {
-        $list_do = DB::connection('ConnKCNSales')->select(
-            "
-            SELECT *
-            FROM VW_PRG_4496_SLS_DO_INV1
-            WHERE CAST(TglDO AS DATE) = ?
-            ",
-            [$tanggal]
-        );
+        $list_do = DB::connection('ConnKCNSales')
+            ->table('VW_PRG_4496_SLS_DO_INV1 as V')
+            ->leftJoin('T_Customer as C', 'V.NamaCust', '=', 'C.NamaCust')
+            ->whereDate('V.TglDO', $tanggal)
+            ->select(
+                'V.*',
+                'C.JnsCust as JenisCustomer'
+            )
+            ->get();
 
         return response()->json($list_do);
     }
