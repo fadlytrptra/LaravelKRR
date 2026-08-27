@@ -627,7 +627,7 @@ class MaintenanceOrderPembelianController extends Controller
                 'message' => 'Divisi ' . $selectedDivisi . ' belum memiliki hak ACC. Hubungi EDP untuk:<br><br>
                 <ul style="text-align: left;">
                     <li>Tambah YUSER_DIVISI</li>
-                    <li>Update Stored Procedure</li>
+                    <li>Update Stored Procedure SP_5409_LIST_ORDER Kode 4</li>
                     <li>Update Laravel</li>
                 </ul>'
             ]);
