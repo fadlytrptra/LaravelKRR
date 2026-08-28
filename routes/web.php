@@ -1853,6 +1853,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post( '/Kencana/CetakPembelian/sendEmailSupplier', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'sendEmailSupplier'] )->name('Kencana.CetakPembelian.sendEmailSupplier');
     Route::get('/Kencana/CetakPembelian/getData', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'getData'])->name('Kencana.CetakPembelian.getData');
     Route::resource('Kencana/Cetak', App\Http\Controllers\Kencana\CetakPembelianKencanaController::class);
+    Route::resource('Kencana/Supplier', App\Http\Controllers\Kencana\SupplierKencanaController::class);
     
 
     #region Kencana Sales
