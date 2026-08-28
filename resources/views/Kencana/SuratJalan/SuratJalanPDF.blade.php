@@ -45,7 +45,7 @@
                         <td>Tanggal</td>
                         <td>: </td>
                         <td>
-                            {{ \Carbon\Carbon::parse($items->TglKirim)->locale('id')->translatedFormat('d-F-Y') }}
+                            {{ \Carbon\Carbon::parse($items->TanggalActual)->locale('id')->translatedFormat('d-F-Y') }}
                         </td>
                     </tr>
                     <tr>

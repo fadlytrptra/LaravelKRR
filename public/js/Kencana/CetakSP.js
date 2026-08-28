@@ -26,9 +26,11 @@ let keterangan_kolom = document.getElementById("keterangan_kolom");
 
 let ttd_salesKolom = document.getElementById("ttd_salesKolom");
 let ttd_managerKolom = document.getElementById("ttd_managerKolom");
+let ttd_direkturKolom = document.getElementById("ttd_direkturKolom");
 
 let nama_salesKolom = document.getElementById("nama_salesKolom");
 let nama_managerKolom = document.getElementById("nama_managerKolom");
+let nama_direkturKolom = document.getElementById("nama_direkturKolom");
 
 
 let lihat_sp = document.getElementById("lihat_sp");
@@ -315,12 +317,20 @@ print_button.addEventListener(
             ttd_managerKolom.src = "";
         }
 
+        if (ttd_direkturKolom) {
+            ttd_direkturKolom.src = "";
+        }
+
         if (nama_salesKolom) {
             nama_salesKolom.innerHTML = "";
         }
 
         if (nama_managerKolom) {
             nama_managerKolom.innerHTML = "";
+        }
+
+        if (nama_direkturKolom) {
+            nama_direkturKolom.innerHTML = "";
         }
 
 
@@ -629,20 +639,15 @@ print_button.addEventListener(
                 // TANDA TANGAN SALES
                 // ==========================================
 
-                console.log(
-                    "TtdSales:",
-                    item.TtdSales
-                );
+                console.log("TtdSales:", item.TtdSales);
 
                 if (
                     ttd_salesKolom &&
                     item.TtdSales
                 ) {
-
                     ttd_salesKolom.src =
                         "data:image/png;base64," +
                         item.TtdSales;
-
                 }
 
 
@@ -650,20 +655,36 @@ print_button.addEventListener(
                 // TANDA TANGAN MANAGER
                 // ==========================================
 
-                console.log(
-                    "TtdManager:",
-                    item.TtdManager
-                );
+                console.log("TtdManager:", item.TtdManager);
 
                 if (
                     ttd_managerKolom &&
                     item.TtdManager
                 ) {
-
                     ttd_managerKolom.src =
                         "data:image/png;base64," +
                         item.TtdManager;
+                }
 
+
+                // ==========================================
+                // TANDA TANGAN DIREKTUR
+                // BERDASARKAN ACCDIREKTUR + TGLACCDIREKTUR
+                // ==========================================
+
+                console.log("AccDirektur:", item.AccDirektur);
+                console.log("TglAccDirektur:", item.TglAccDirektur);
+                console.log("TtdDirektur:", item.TtdDirektur);
+
+                if (
+                    ttd_direkturKolom &&
+                    item.AccDirektur &&
+                    item.TglAccDirektur &&
+                    item.TtdDirektur
+                ) {
+                    ttd_direkturKolom.src =
+                        "data:image/png;base64," +
+                        item.TtdDirektur;
                 }
 
 
@@ -672,10 +693,8 @@ print_button.addEventListener(
                 // ==========================================
 
                 if (nama_salesKolom) {
-
                     nama_salesKolom.innerHTML =
                         item.Sales ?? "";
-
                 }
 
 
@@ -684,10 +703,23 @@ print_button.addEventListener(
                 // ==========================================
 
                 if (nama_managerKolom) {
-
                     nama_managerKolom.innerHTML =
                         item.Manager ?? "";
+                }
 
+
+                // ==========================================
+                // NAMA DIREKTUR
+                // BERDASARKAN ACCDIREKTUR + TGLACCDIREKTUR
+                // ==========================================
+
+                if (
+                    nama_direkturKolom &&
+                    item.AccDirektur &&
+                    item.TglAccDirektur
+                ) {
+                    nama_direkturKolom.innerHTML =
+                        item.Direktur ?? "";
                 }
 
 

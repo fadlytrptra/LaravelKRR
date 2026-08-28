@@ -56,7 +56,7 @@
                 <label for="contoh_print" id="contoh_print">Contoh print:</label>
             </div>
             <div class="acs-div-container" id="contoh_printDiv" style="display: none">
-                <span id="nomor_sjKolom" class="span-nomor_sjKolom" contenteditable="true">sj: 0000101861</span>
+                {{-- <span id="nomor_sjKolom" class="span-nomor_sjKolom" contenteditable="true">sj: 0000101861</span> --}}
                 <span id="tanggal_kirimKolom" class="span-tanggal_kirimKolom"
                     contenteditable="true">16-August-2023</span>
                 <span id="truk_nopolKolom" class="span-truk_nopolKolom" contenteditable="true">L 8169 UM/RODA JY</span>

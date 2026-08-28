@@ -172,7 +172,7 @@ jQuery(function ($) {
                 contoh_printSjEksportDiv.style.width = "21cm";
 
                 no_spKolom.innerHTML = data[0].SuratPesanan;
-                nomor_sjKolom.innerHTML = "sj: " + no_sjText.value;
+                // nomor_sjKolom.innerHTML = "sj: " + no_sjText.value;
 
                 nama_typeBarangKolom.innerHTML = data[0].NAMATYPEBARANG;
                 nama_barangKolomNo_poKolom.innerHTML = data[0].Uraian;

@@ -56,117 +56,82 @@ class CetakSJKencanaController extends Controller
     }
 
     public function getDataCetakSuratJalan($tanggal, $nosj, $jenissj)
-{
-    \Log::info('=== CETAK SJ DEBUG ===');
+    {
+        \Log::info('=== CETAK SJ DEBUG ===');
 
-    \Log::info('Tanggal', [
-        'tanggal' => $tanggal
-    ]);
+        \Log::info('Tanggal', [
+            'tanggal' => $tanggal
+        ]);
 
-    \Log::info('No SJ', [
-        'nosj' => $nosj
-    ]);
+        \Log::info('No SJ', [
+            'nosj' => $nosj
+        ]);
 
-    \Log::info('Jenis SJ', [
-        'jenissj' => $jenissj
-    ]);
-
-    if (!in_array($jenissj, ['suratjalanppn', 'suratjalanexport'])) {
-
-        \Log::warning('Jenis SJ tidak valid', [
+        \Log::info('Jenis SJ', [
             'jenissj' => $jenissj
         ]);
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Jenis SJ ' . $jenissj . ' belum disetting',
-            'data' => []
-        ], 400);
+        if (!in_array($jenissj, ['suratjalanppn', 'suratjalanexport'])) {
+
+            \Log::warning('Jenis SJ tidak valid', [
+                'jenissj' => $jenissj
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Jenis SJ ' . $jenissj . ' belum disetting',
+                'data' => []
+            ], 400);
+        }
+
+        $connection = DB::connection('ConnKCNSales');
+
+        \Log::info('Database', [
+            'database' => $connection->getDatabaseName(),
+        ]);
+
+        $data = $connection
+            ->table('dbo.VW_PRG_4496_SLS_CETAK_SJ')
+            ->where('IDPengiriman', $nosj)
+            ->get();
+
+        \Log::info('Jumlah data view', [
+            'jumlah' => $data->count()
+        ]);
+
+        \Log::info('Data view', [
+            'data' => $data->toArray()
+        ]);
+
+        return response()->json($data);
     }
-
-    $connection = DB::connection('ConnKCNSales');
-
-    \Log::info('Database', [
-        'database' => $connection->getDatabaseName(),
-    ]);
-
-    $data = $connection
-        ->table('dbo.VW_PRG_4496_SLS_CETAK_SJ')
-        ->where('IDPengiriman', $nosj)
-        ->get();
-
-    \Log::info('Jumlah data view', [
-        'jumlah' => $data->count()
-    ]);
-
-    \Log::info('Data view', [
-        'data' => $data->toArray()
-    ]);
-
-    return response()->json($data);
-}
 
     public function downloadPdf($no_sj)
     {
         $items = DB::connection('ConnKCNSales')
-            ->table('VW_PRG_4496_SLS_CETAK_SJ')
-            ->where('VW_PRG_4496_SLS_CETAK_SJ.IDPengiriman', $no_sj)
+            ->table('VW_PRG_4496_SLS_CETAK_SJ as V')
+            ->join(
+                'T_HeaderPengiriman as H',
+                'V.IDPengiriman',
+                '=',
+                'H.IDPengiriman'
+            )
+            ->where('V.IDPengiriman', $no_sj)
+            ->select(
+                'V.*',
+                'H.TanggalActual'
+            )
             ->first();
 
         if (!$items) {
-            abort(404, 'Data PO tidak ditemukan');
+            abort(404, 'Data Surat Jalan tidak ditemukan');
         }
 
-        /* ===============================
-         * AMBIL TTD
-         * =============================== */
-        // $ttdBinary1 = null;
-
-        // if (!empty($items->AccMrg)) {
-        //     $ttdBinary1 = DB::connection('ConnEDP')
-        //         ->table('dbo.UserMaster')
-        //         ->where('NomorUser', $items->AccMrg)
-        //         ->value('FotoTtd');
-        // }
-
-        // $convertToBase64 = function ($fotoTtd) {
-        //     if (empty($fotoTtd)) {
-        //         return null;
-        //     }
-
-        //     if (str_starts_with($fotoTtd, 'data:image')) {
-        //         return $fotoTtd;
-        //     }
-
-        //     return 'data:image/png;base64,' . $fotoTtd;
-        // };
-
-        // $ttdBase64_1 = $convertToBase64($ttdBinary1);
-
-        /* ===============================
-         * GENERATE QR CODE
-         * =============================== */
-
-        // $url = url("dokumen/$no_sj");
-
-        // $ttdBase64_1 = base64_encode(
-        //     QrCode::format('png')
-        //         ->size(150)
-        //         ->margin(1)
-        //         ->generate($url)
-        // );
-
-        // $ttdBase64_1 = 'data:image/png;base64,' . $ttdBase64_1;
         $pdf = Pdf::loadView('Kencana.SuratJalan.SuratJalanPDF', [
             'items' => $items,
-            // 'ttdBase64_1' => $ttdBase64_1,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream("{$no_sj}.pdf");
-        // return view('Sales.Report.SuratJalanPDF', [
-        //     'items' => $items,
-        //     'ttdBase64_1' => $ttdBase64_1,
-        // ]);
     }
 
     //Show the form for creating a new resource.

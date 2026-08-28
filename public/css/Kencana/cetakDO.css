@@ -1,0 +1,8 @@
+@media print {
+
+    /* Jangan cetak form bagian atas */
+    .acs-div-form {
+        display: none !important;
+    }
+
+}

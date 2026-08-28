@@ -412,80 +412,144 @@ function renderDOTemplate(
 
 
     return `
-        <div class="do-print-card">
-
-            <!-- =================================================
-                 BAGIAN ATAS
-            ================================================== -->
+        <div class="do-print-card"
+            style="
+                font-size: 14px;
+                line-height: 1.15;
+            ">
 
             <div class="do-print-top">
 
-
-                <!-- =============================================
-                     KIRI
-                ============================================== -->
+                <!-- =========================
+                    KIRI
+                ========================== -->
 
                 <div class="do-print-left">
 
-                    <div class="do-print-row">
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 105px 1fr;
+                            min-height: 18px;
+                        ">
 
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             Pelanggan:
                         </div>
 
-                        <div class="do-print-value">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
                             ${namaCust}
                         </div>
 
                     </div>
 
 
-                    <div class="do-print-row">
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 105px 1fr;
+                            min-height: 18px;
+                        ">
 
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             Alamat Kirim:
                         </div>
 
-                        <div class="do-print-value">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
                             ${alamatKirim}
                         </div>
 
                     </div>
 
 
-                    <div class="do-print-row">
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 105px 1fr;
+                            min-height: 18px;
+                        ">
 
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             No. SP:
                         </div>
 
-                        <div class="do-print-value">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
                             ${idSuratPesanan}
                         </div>
 
                     </div>
 
 
-                    <div class="do-print-row">
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 105px 1fr;
+                            min-height: 18px;
+                        ">
 
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             No. PO:
                         </div>
 
-                        <div class="do-print-value">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
                             ${noPo}
                         </div>
 
                     </div>
 
 
-                    <div class="do-print-row">
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 105px 1fr;
+                            min-height: 18px;
+                        ">
 
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             Alamat Kantor:
                         </div>
 
-                        <div class="do-print-value">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
                             ${alamatKantor}
                         </div>
 
@@ -494,27 +558,45 @@ function renderDOTemplate(
                 </div>
 
 
-                <!-- =============================================
-                     KANAN
-                ============================================== -->
+                <!-- =========================
+                    KANAN
+                ========================== -->
 
                 <div class="do-print-right">
 
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 90px 1fr;
+                            min-height: 18px;
+                        ">
 
-                    <!-- SPESIFIKASI -->
-
-                    <div class="do-print-row">
-
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             Spesifikasi:
                         </div>
 
-                        <div class="do-print-value do-print-spec">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
 
-                            Ukuran:
-                            ${namaKelompok}
+                            <span style="
+                                font-size: 14px;
+                                font-weight: 700;
+                            ">
+                                Ukuran: ${namaKelompok}
+                            </span>
 
-                            <div class="do-print-spec-item">
+                            <div style="
+                                font-size: 14px;
+                                font-weight: 400;
+                                margin-top: 1px;
+                            ">
                                 ${namaBarang}
                             </div>
 
@@ -525,13 +607,26 @@ function renderDOTemplate(
 
                     <!-- CORAK -->
 
-                    <div class="do-print-row">
+                    <div class="do-print-row"
+                        style="
+                            font-size: 14px;
+                            grid-template-columns: 90px 1fr;
+                            min-height: 18px;
+                        ">
 
-                        <div class="do-print-label">
+                        <div class="do-print-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                            ">
                             Corak:
                         </div>
 
-                        <div class="do-print-value">
+                        <div class="do-print-value"
+                            style="
+                                font-size: 14px;
+                            ">
                             ${corak}
                         </div>
 
@@ -540,22 +635,35 @@ function renderDOTemplate(
 
                     <!-- MIN -->
 
-                    <div class="do-print-quantity">
+                    <div class="do-print-quantity"
+                        style="
+                            font-size: 14px;
+                            min-height: 18px;
+                        ">
 
                         <div></div>
 
-                        <div class="qty-label">
+                        <div class="qty-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 400;
+                            ">
                             Min:
                         </div>
 
-                        <div class="qty-value">
-
+                        <div class="qty-value"
+                            style="
+                                font-size: 14px;
+                                white-space: nowrap;
+                            ">
                             ${minKirim}
 
-                            <span class="qty-unit">
+                            <span style="
+                                font-size: 14px;
+                                padding-left: 3px;
+                            ">
                                 ${satuanJual}
                             </span>
-
                         </div>
 
                     </div>
@@ -563,36 +671,68 @@ function renderDOTemplate(
 
                     <!-- MAX -->
 
-                    <div class="do-print-quantity">
+                    <div class="do-print-quantity"
+                        style="
+                            font-size: 14px;
+                            min-height: 18px;
+                        ">
 
                         <div></div>
 
-                        <div class="qty-label">
+                        <div class="qty-label"
+                            style="
+                                font-size: 14px;
+                                font-weight: 400;
+                            ">
                             Max:
                         </div>
 
-                        <div class="qty-value">
-
+                        <div class="qty-value"
+                            style="
+                                font-size: 14px;
+                                white-space: nowrap;
+                            ">
                             ${maxKirim}
 
-                            <span class="qty-unit">
+                            <span style="
+                                font-size: 14px;
+                                padding-left: 3px;
+                            ">
                                 ${satuanJual}
                             </span>
-
                         </div>
 
                     </div>
 
+
                     <!-- JENIS CUSTOMER -->
 
-                   <div style="display: flex; align-items: flex-start;">
-                        <div style="width: 65px; font-weight: 700;">
+                    <div style="
+                        display: grid;
+                        grid-template-columns: 110px 1fr;
+                        align-items: start;
+                        font-size: 14px;
+                        min-height: 18px;
+                    ">
+
+                        <div style="
+                            width: 110px;
+                            min-width: 110px;
+                            font-size: 14px;
+                            font-weight: 700;
+                            white-space: nowrap;
+                        ">
                             Jenis Customer:
                         </div>
 
-                        <div>
+                        <div style="
+                            font-size: 14px;
+                            white-space: nowrap;
+                            padding-left: 8px;
+                        ">
                             ${jenisCustomer || ""}
                         </div>
+
                     </div>
 
                 </div>
@@ -600,28 +740,46 @@ function renderDOTemplate(
             </div>
 
 
-            <!-- =================================================
-                 KETERANGAN
-            ================================================== -->
+            <!-- =========================
+                KETERANGAN
+            ========================== -->
 
-            <div class="do-print-note">
+            <div class="do-print-note"
+                style="
+                    font-size: 14px;
+                    grid-template-columns: 105px 1fr;
+                    margin-top: 5px;
+                ">
 
-                <div class="do-print-note-label">
+                <div class="do-print-note-label"
+                    style="
+                        font-size: 14px;
+                        font-weight: 700;
+                        white-space: nowrap;
+                    ">
                     Keterangan:
                 </div>
 
-                <div class="do-print-note-value">
+                <div class="do-print-note-value"
+                    style="
+                        font-size: 14px;
+                        line-height: 1.2;
+                    ">
                     ${formatAddress(keterangan)}
                 </div>
 
             </div>
 
 
-            <!-- =================================================
-                 NOMOR URUT
-            ================================================== -->
+            <!-- =========================
+                NOMOR URUT
+            ========================== -->
 
-            <div class="do-print-page">
+            <div class="do-print-page"
+                style="
+                    font-size: 10px;
+                    margin-top: 2px;
+                ">
                 ${index + 1}
             </div>
 
