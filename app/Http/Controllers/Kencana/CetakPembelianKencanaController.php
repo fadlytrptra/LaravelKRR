@@ -900,7 +900,7 @@ class CetakPembelianKencanaController extends Controller
             // EMAIL TAMBAHAN UNTUK TESTING
             // =====================================================
             $emails[] =
-                'christoromeo2@gmail.com';
+                'admin@kencanarajasa.co.id';
 
             \Log::info(
                 'SPPB EMAIL - MULAI MAIL',
