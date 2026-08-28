@@ -184,24 +184,21 @@ class SppbPembelianController extends Controller
                 return response()->json($data);
 
             case 'getData':
-                $mode   = $request->Mode;
-                $kdDiv  = $request->KdDiv;
-                $noSPPB = $request->NoSPPB;
+                $kdDiv = $request->KdDiv;
 
                 $data = DB::connection('ConnKCNPurchase')
                     ->select(
                         'EXEC SP_7775_PBL_LIST_DETAIL_SPPB
                             @MyType = ?,
                             @KdDiv = ?,
-                            @NoSPPB = ?',
+                            @NoSPPB = NULL',
                         [
-                            $mode,
-                            $kdDiv,
-                            $noSPPB
+                            3,
+                            $kdDiv
                         ]
                     );
 
-                // Ambil No Trans dari hasil SP
+                // Ambil No Trans
                 $noTrans = collect($data)
                     ->pluck('No_trans')
                     ->filter()
@@ -261,41 +258,41 @@ class SppbPembelianController extends Controller
                     );
                 return response()->json($data);
 
-            case 'prosesCetak':
-                $kdDiv  = $request->KdDiv;
-                $noSPPB = $request->NoSPPB;
+            // case 'prosesCetak':
+            //     $kdDiv  = $request->KdDiv;
+            //     $noSPPB = $request->NoSPPB;
 
-                $cek = DB::connection('ConnKCNPurchase')
-                    ->select(
-                        "EXEC SP_7775_PBL_PROSES_CETAK_PO
-                            @Kode=?,
-                            @KdDiv=?,
-                            @NoSppb=?",
-                        [
-                            2,
-                            $kdDiv,
-                            $noSPPB
-                        ]
-                    );
+            //     $cek = DB::connection('ConnKCNPurchase')
+            //         ->select(
+            //             "EXEC SP_7775_PBL_PROSES_CETAK_PO
+            //                 @Kode=?,
+            //                 @KdDiv=?,
+            //                 @NoSppb=?",
+            //             [
+            //                 2,
+            //                 $kdDiv,
+            //                 $noSPPB
+            //             ]
+            //         );
 
-                if ($cek[0]->Ada == 0) {
-                    DB::connection('ConnKCNPurchase')
-                        ->statement(
-                            "EXEC SP_7775_PBL_PROSES_CETAK_PO
-                                @Kode=?,
-                                @KdDiv=?,
-                                @NoSppb=?",
-                            [
-                                1,
-                                $kdDiv,
-                                $noSPPB
-                            ]
-                        );
-                }
+            //     if ($cek[0]->Ada == 0) {
+            //         DB::connection('ConnKCNPurchase')
+            //             ->statement(
+            //                 "EXEC SP_7775_PBL_PROSES_CETAK_PO
+            //                     @Kode=?,
+            //                     @KdDiv=?,
+            //                     @NoSppb=?",
+            //                 [
+            //                     1,
+            //                     $kdDiv,
+            //                     $noSPPB
+            //                 ]
+            //             );
+            //     }
 
-                return response()->json([
-                    'success' => true
-                ]);
+            //     return response()->json([
+            //         'success' => true
+            //     ]);
 
             case 'getHistoryHarga':
                 $kdBarang = $request->KdBarang;
@@ -542,510 +539,510 @@ class SppbPembelianController extends Controller
         );
     }
 
-    public function sendEmailSupplier(Request $request)
-    {
-        $request->validate([
-            'KdDiv'  => 'required',
-            'NoSPPB' => 'required',
-            'email'  => 'nullable|string',
-        ]);
-
-        try {
-            $kdDiv  = $request->KdDiv;
-            $noSPPB = $request->NoSPPB;
-
-            \Log::info('SPPB EMAIL - START', [
-                'KdDiv'  => $kdDiv,
-                'NoSPPB' => $noSPPB,
-            ]);
-
-            $detail = DB::connection('ConnKCNPurchase')
-                ->select(
-                    "EXEC SP_7775_PBL_LIST_DETAIL_SPPB
-                        @MyType=?,
-                        @KdDiv=?,
-                        @NoSPPB=?",
-                    [
-                        2,
-                        $kdDiv,
-                        $noSPPB
-                    ]
-                );
-
-            \Log::info('SPPB EMAIL - DETAIL', [
-                'count' => count($detail)
-            ]);
-
-            if (count($detail) == 0) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data SPPB tidak ditemukan.'
-                ]);
-            }
-
-            $noTrans = collect($detail)
-                ->pluck('No_trans')
-                ->filter()
-                ->unique()
-                ->values()
-                ->toArray();
-
-            $hargaTransaksi = DB::connection('ConnKCNPurchase')
-                ->table('YTRANSBL as T')
-                ->leftJoin('PPN as P', 'T.IdPPN', '=', 'P.IdPPN')
-                ->select([
-                    'T.No_trans',
-                    'T.PriceUnit',
-                    'T.disc',
-                    'T.IdPPN',
-                    'P.JumPPN',
-                ])
-                ->whereIn('T.No_trans', $noTrans)
-                ->get()
-                ->keyBy('No_trans');
-
-            $divisi = DB::connection('ConnKCNPurchase')
-                ->table('YDIVISI')
-                ->select([
-                    'KD_DIV',
-                    'NM_DIV'
-                ])
-                ->where('KD_DIV', $kdDiv)
-                ->first();
-
-            $transaksi = DB::connection('ConnKCNPurchase')
-                ->table('YTRANSBL')
-                ->select([
-                    'Supplier',
-                    'Pay_Term',
-                    'Direktur'
-                ])
-                ->where('No_sppb', $noSPPB)
-                ->first();
-
-            if (!$transaksi) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data transaksi SPPB tidak ditemukan.'
-                ]);
-            }
-
-            \Log::info('SPPB EMAIL - TRANSAKSI', [
-                'Supplier' => $transaksi->Supplier,
-                'Pay_Term' => $transaksi->Pay_Term,
-                'Direktur' => $transaksi->Direktur,
-            ]);
-
-            // =====================================================
-            // DOKUMENTASI FILE
-            // =====================================================
-            $dokumentasiRows = DB::connection('ConnKCNPurchase')
-                ->table('YTRANSBL')
-                ->select([
-                    'No_trans',
-                    'DokumentasiFile'
-                ])
-                ->where('No_sppb', $noSPPB)
-                ->whereNotNull('DokumentasiFile')
-                ->whereRaw('DATALENGTH(DokumentasiFile) > 0')
-                ->get();
-
-            $dokumentasiFiles = [];
-
-            foreach ($dokumentasiRows as $row) {
-
-                if (empty($row->DokumentasiFile)) {
-                    continue;
-                }
-
-                $binary = $row->DokumentasiFile;
-
-                // Jika driver database mengembalikan resource
-                if (is_resource($binary)) {
-                    $binary = stream_get_contents($binary);
-                }
-
-                // DokumentasiFile berisi JSON dalam bentuk VARBINARY
-                $json = $binary;
-
-                // Decode JSON
-                $files = json_decode($json, true);
-
-                if (!is_array($files)) {
-
-                    \Log::warning('SPPB EMAIL - JSON DOKUMENTASI INVALID', [
-                        'No_trans'   => $row->No_trans,
-                        'json_error' => json_last_error_msg(),
-                    ]);
-
-                    continue;
-                }
-
-                // =================================================
-                // AMBIL SEMUA FILE DALAM JSON
-                // =================================================
-                foreach ($files as $file) {
-
-                    if (
-                        empty($file['nama']) ||
-                        empty($file['mime']) ||
-                        empty($file['data'])
-                    ) {
-                        continue;
-                    }
-
-                    // Decode BASE64 menjadi binary file asli
-                    $fileData = base64_decode(
-                        $file['data'],
-                        true
-                    );
-
-                    if ($fileData === false) {
-
-                        \Log::warning('SPPB EMAIL - BASE64 INVALID', [
-                            'nama'     => $file['nama'],
-                            'No_trans' => $row->No_trans,
-                        ]);
-
-                        continue;
-                    }
-
-                    $dokumentasiFiles[] = [
-                        'nama' => $file['nama'],
-                        'mime' => $file['mime'],
-                        'data' => $fileData,
-                    ];
-                }
-            }
-
-            \Log::info('SPPB EMAIL - DOKUMENTASI', [
-                'jumlah_file' => count($dokumentasiFiles),
-                'files' => collect($dokumentasiFiles)
-                    ->pluck('nama')
-                    ->toArray(),
-            ]);
-
-            $supplier = null;
-
-            if (!empty($transaksi->Supplier)) {
-                $supplier = DB::connection('ConnKCNPurchase')
-                    ->table('YSUPPLIER')
-                    ->select([
-                        'NO_SUP',
-                        'NM_SUP',
-                        'ALAMAT1',
-                        'KOTA1',
-                        'NEGARA1',
-                        'TELEX1',
-                        'TELEX2'
-                    ])
-                    ->where('NO_SUP', $transaksi->Supplier)
-                    ->first();
-            }
-
-            if (!$supplier) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data supplier tidak ditemukan.'
-                ]);
-            }
-
-            \Log::info('SPPB EMAIL - SUPPLIER', [
-                'NO_SUP' => $supplier->NO_SUP,
-                'NM_SUP' => $supplier->NM_SUP,
-                'TELEX1' => $supplier->TELEX1,
-                'TELEX2' => $supplier->TELEX2,
-            ]);
-
-            $paymentTerm = null;
-            if (!empty($transaksi->Pay_Term)) {
-                $paymentTerm = DB::connection('ConnKCNPurchase')
-                    ->table('PAYMENT_TERM')
-                    ->select([
-                        'Kode',
-                        'Pembayaran',
-                        'Hari'
-                    ])
-                    ->where('Kode', $transaksi->Pay_Term)
-                    ->first();
-            }
-
-            $ttdDirektur = null;
-
-            if (!empty($transaksi->Direktur)) {
-
-                $ttdDirektur = DB::connection('ConnEDP')
-                    ->table('UserMaster')
-                    ->select([
-                        'NomorUser',
-                        'NamaUser',
-                        'FotoTtd'
-                    ])
-                    ->where('NomorUser', $transaksi->Direktur)
-                    ->first();
-            }
-
-            \Log::info('SPPB EMAIL - TTD', [
-                'ada'  => !empty($ttdDirektur),
-                'nama' => $ttdDirektur->NamaUser ?? null,
-                'foto' => !empty($ttdDirektur?->FotoTtd),
-            ]);
-
-            $header = (object)[
-                'Kd_div'   => $kdDiv,
-                'Nm_div'   => $divisi->NM_DIV ?? null,
-                'No_sppb'  => $noSPPB,
-                'Tgl_sppb' => $detail[0]->Tgl_sppb ?? null,
-                'Pemesan'  => $detail[0]->Pemesan ?? null,
-                'NO_SUP'   => $supplier->NO_SUP ?? null,
-                'NM_SUP'   => $supplier->NM_SUP ?? null,
-                'ALAMAT1'  => $supplier->ALAMAT1 ?? null,
-                'KOTA1'    => $supplier->KOTA1 ?? null,
-                'NEGARA1'  => $supplier->NEGARA1 ?? null,
-                'Pay_Term' => $paymentTerm->Pembayaran ?? null,
-            ];
-
-            // =====================================================
-            // HITUNG TOTAL
-            // =====================================================
-            $sumAmount = 0;
-            $sumDisc   = 0;
-            $subTotal  = 0;
-            $ppnTotal  = 0;
-            $total     = 0;
-
-            foreach ($detail as $row) {
-                $trans = $hargaTransaksi->get($row->No_trans);
-                $row->PriceUnit = (float) ($trans->PriceUnit ?? 0);
-                $row->disc      = (float) ($trans->disc ?? 0);
-                $row->IdPPN     = $trans->IdPPN ?? null;
-                $row->JumPPN    = (float) ($trans->JumPPN ?? 0);
-                $qty = (float) ($row->Qty ?? 0);
-                $row->Amount = $qty * $row->PriceUnit;
-                $row->DiscAmount = $row->Amount * $row->disc / 100;
-                $row->SubTotal = $row->Amount - $row->DiscAmount;
-                $row->PPNAmount = $row->SubTotal * $row->JumPPN / 100;
-                $row->Total = $row->SubTotal + $row->PPNAmount;
-                $sumAmount += $row->Amount;
-                $sumDisc   += $row->DiscAmount;
-                $subTotal  += $row->SubTotal;
-                $ppnTotal  += $row->PPNAmount;
-                $total     += $row->Total;
-            }
-
-            // =====================================================
-            // EMAIL SUPPLIER
-            // =====================================================
-            $emailString = trim($request->email ?? '');
-
-            if (empty($emailString)) {
-                $emailString = collect([
-                    trim($supplier->TELEX1 ?? ''),
-                    trim($supplier->TELEX2 ?? '')
-                ])
-                    ->filter()
-                    ->implode(',');
-            }
-
-            if (empty($emailString)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Email supplier tidak ditemukan.'
-                ]);
-            }
-
-            // =====================================================
-            // VALIDASI EMAIL
-            // =====================================================
-            $emails = collect(
-                preg_split('/[,;]+/', $emailString)
-            )
-                ->map(fn($email) => trim($email))
-                ->filter()
-                ->unique()
-                ->values()
-                ->toArray();
-
-            $invalidEmails = [];
-
-            foreach ($emails as $email) {
-
-                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $invalidEmails[] = $email;
-                }
-            }
-
-            if (!empty($invalidEmails)) {
-
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Email tidak valid: '
-                        . implode(', ', $invalidEmails)
-                ]);
-            }
-
-            \Log::info('SPPB EMAIL - EMAIL VALID', [
-                'emails' => $emails
-            ]);
-
-            // =====================================================
-            // LOGO
-            // =====================================================
-            $logoPath = public_path(
-                'images/logo_kencana2.png'
-            );
-
-            if (!file_exists($logoPath)) {
-
-                return response()->json([
-                    'success' => false,
-                    'message' => 'File logo tidak ditemukan.'
-                ]);
-            }
-
-            $logo = 'data:image/png;base64,' .
-                base64_encode(
-                    file_get_contents($logoPath)
-                );
-
-            // =====================================================
-            // GENERATE PDF
-            // =====================================================
-            \Log::info(
-                'SPPB EMAIL - MULAI GENERATE PDF'
-            );
-
-            $pdf = Pdf::loadView(
-                'Kencana.SppbPembelian.cetak',
-                [
-                    'header'      => $header,
-                    'detail'      => $detail,
-                    'logo'        => $logo,
-                    'sumAmount'   => $sumAmount,
-                    'sumDisc'     => $sumDisc,
-                    'subTotal'    => $subTotal,
-                    'ppnTotal'    => $ppnTotal,
-                    'total'       => $total,
-                    'ttdDirektur' => $ttdDirektur,
-                    'forEmail'    => true,
-                ]
-            )->setPaper('A4', 'portrait');
-
-            \Log::info(
-                'SPPB EMAIL - PDF BERHASIL'
-            );
-
-            // =====================================================
-            // EMAIL TAMBAHAN UNTUK TESTING
-            // =====================================================
-            $emails[] =
-                'admin@kencanarajasa.co.id';
-
-            \Log::info(
-                'SPPB EMAIL - MULAI MAIL',
-                ['emails' => $emails]
-            );
-
-            // =====================================================
-            // KIRIM EMAIL
-            // =====================================================
-            Mail::mailer('gmail')->send(
-                [],
-                [],
-                function ($message) use (
-                    $emails,
-                    $noSPPB,
-                    $pdf,
-                    $dokumentasiFiles
-                ) {
-
-                    $message->from(
-                        env('GMAIL_USERNAME'),
-                        env(
-                            'MAIL_FROM_NAME',
-                            'Kencana Rajasa Raya'
-                        )
-                    );
-
-                    $message->to($emails)
-                        ->subject(
-                            "SPPB Kencana Rajasa Raya {$noSPPB}"
-                        )
-                        ->html(
-                            "Berikut adalah SPPB dengan nomor "
-                            . "<b>{$noSPPB}</b>."
-                            . "<br><br>"
-                            . "Silakan cek SPPB pada file PDF "
-                            . "yang terlampir."
-                        )
-
-                        // =================================================
-                        // ATTACH PDF SPPB
-                        // =================================================
-                        ->attachData(
-                            $pdf->output(),
-                            "{$noSPPB}.pdf",
-                            [
-                                'mime' => 'application/pdf'
-                            ]
-                        );
-
-                    // =====================================================
-                    // ATTACH SEMUA DOKUMENTASI
-                    // =====================================================
-                    foreach ($dokumentasiFiles as $file) {
-                        $message->attachData(
-                            $file['data'],
-                            $file['nama'],
-                            [
-                                'mime' => $file['mime']
-                            ]
-                        );
-
-                        \Log::info(
-                            'SPPB EMAIL - ATTACH DOKUMENTASI',
-                            [
-                                'nama' => $file['nama'],
-                                'mime' => $file['mime'],
-                                'size' => strlen($file['data'])
-                            ]
-                        );
-                    }
-                }
-            );
-
-            \Log::info(
-                'SPPB EMAIL - MAIL BERHASIL'
-            );
-
-            // =====================================================
-            // RESPONSE
-            // =====================================================
-            return response()->json([
-                'success' => true,
-                'message' => 'Email berhasil dikirim ke '
-                    . implode(', ', $emails)
-                    . '.'
-            ]);
-
-        } catch (\Throwable $e) {
-
-            \Log::error(
-                'SPPB EMAIL - ERROR',
-                [
-                    'message' => $e->getMessage(),
-                    'file'    => $e->getFile(),
-                    'line'    => $e->getLine(),
-                ]
-            );
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengirim email: '
-                    . $e->getMessage()
-            ], 500);
-        }
-    }
+    // public function sendEmailSupplier(Request $request)
+    // {
+    //     $request->validate([
+    //         'KdDiv'  => 'required',
+    //         'NoSPPB' => 'required',
+    //         'email'  => 'nullable|string',
+    //     ]);
+
+    //     try {
+    //         $kdDiv  = $request->KdDiv;
+    //         $noSPPB = $request->NoSPPB;
+
+    //         \Log::info('SPPB EMAIL - START', [
+    //             'KdDiv'  => $kdDiv,
+    //             'NoSPPB' => $noSPPB,
+    //         ]);
+
+    //         $detail = DB::connection('ConnKCNPurchase')
+    //             ->select(
+    //                 "EXEC SP_7775_PBL_LIST_DETAIL_SPPB
+    //                     @MyType=?,
+    //                     @KdDiv=?,
+    //                     @NoSPPB=?",
+    //                 [
+    //                     2,
+    //                     $kdDiv,
+    //                     $noSPPB
+    //                 ]
+    //             );
+
+    //         \Log::info('SPPB EMAIL - DETAIL', [
+    //             'count' => count($detail)
+    //         ]);
+
+    //         if (count($detail) == 0) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Data SPPB tidak ditemukan.'
+    //             ]);
+    //         }
+
+    //         $noTrans = collect($detail)
+    //             ->pluck('No_trans')
+    //             ->filter()
+    //             ->unique()
+    //             ->values()
+    //             ->toArray();
+
+    //         $hargaTransaksi = DB::connection('ConnKCNPurchase')
+    //             ->table('YTRANSBL as T')
+    //             ->leftJoin('PPN as P', 'T.IdPPN', '=', 'P.IdPPN')
+    //             ->select([
+    //                 'T.No_trans',
+    //                 'T.PriceUnit',
+    //                 'T.disc',
+    //                 'T.IdPPN',
+    //                 'P.JumPPN',
+    //             ])
+    //             ->whereIn('T.No_trans', $noTrans)
+    //             ->get()
+    //             ->keyBy('No_trans');
+
+    //         $divisi = DB::connection('ConnKCNPurchase')
+    //             ->table('YDIVISI')
+    //             ->select([
+    //                 'KD_DIV',
+    //                 'NM_DIV'
+    //             ])
+    //             ->where('KD_DIV', $kdDiv)
+    //             ->first();
+
+    //         $transaksi = DB::connection('ConnKCNPurchase')
+    //             ->table('YTRANSBL')
+    //             ->select([
+    //                 'Supplier',
+    //                 'Pay_Term',
+    //                 'Direktur'
+    //             ])
+    //             ->where('No_sppb', $noSPPB)
+    //             ->first();
+
+    //         if (!$transaksi) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Data transaksi SPPB tidak ditemukan.'
+    //             ]);
+    //         }
+
+    //         \Log::info('SPPB EMAIL - TRANSAKSI', [
+    //             'Supplier' => $transaksi->Supplier,
+    //             'Pay_Term' => $transaksi->Pay_Term,
+    //             'Direktur' => $transaksi->Direktur,
+    //         ]);
+
+    //         // =====================================================
+    //         // DOKUMENTASI FILE
+    //         // =====================================================
+    //         $dokumentasiRows = DB::connection('ConnKCNPurchase')
+    //             ->table('YTRANSBL')
+    //             ->select([
+    //                 'No_trans',
+    //                 'DokumentasiFile'
+    //             ])
+    //             ->where('No_sppb', $noSPPB)
+    //             ->whereNotNull('DokumentasiFile')
+    //             ->whereRaw('DATALENGTH(DokumentasiFile) > 0')
+    //             ->get();
+
+    //         $dokumentasiFiles = [];
+
+    //         foreach ($dokumentasiRows as $row) {
+
+    //             if (empty($row->DokumentasiFile)) {
+    //                 continue;
+    //             }
+
+    //             $binary = $row->DokumentasiFile;
+
+    //             // Jika driver database mengembalikan resource
+    //             if (is_resource($binary)) {
+    //                 $binary = stream_get_contents($binary);
+    //             }
+
+    //             // DokumentasiFile berisi JSON dalam bentuk VARBINARY
+    //             $json = $binary;
+
+    //             // Decode JSON
+    //             $files = json_decode($json, true);
+
+    //             if (!is_array($files)) {
+
+    //                 \Log::warning('SPPB EMAIL - JSON DOKUMENTASI INVALID', [
+    //                     'No_trans'   => $row->No_trans,
+    //                     'json_error' => json_last_error_msg(),
+    //                 ]);
+
+    //                 continue;
+    //             }
+
+    //             // =================================================
+    //             // AMBIL SEMUA FILE DALAM JSON
+    //             // =================================================
+    //             foreach ($files as $file) {
+
+    //                 if (
+    //                     empty($file['nama']) ||
+    //                     empty($file['mime']) ||
+    //                     empty($file['data'])
+    //                 ) {
+    //                     continue;
+    //                 }
+
+    //                 // Decode BASE64 menjadi binary file asli
+    //                 $fileData = base64_decode(
+    //                     $file['data'],
+    //                     true
+    //                 );
+
+    //                 if ($fileData === false) {
+
+    //                     \Log::warning('SPPB EMAIL - BASE64 INVALID', [
+    //                         'nama'     => $file['nama'],
+    //                         'No_trans' => $row->No_trans,
+    //                     ]);
+
+    //                     continue;
+    //                 }
+
+    //                 $dokumentasiFiles[] = [
+    //                     'nama' => $file['nama'],
+    //                     'mime' => $file['mime'],
+    //                     'data' => $fileData,
+    //                 ];
+    //             }
+    //         }
+
+    //         \Log::info('SPPB EMAIL - DOKUMENTASI', [
+    //             'jumlah_file' => count($dokumentasiFiles),
+    //             'files' => collect($dokumentasiFiles)
+    //                 ->pluck('nama')
+    //                 ->toArray(),
+    //         ]);
+
+    //         $supplier = null;
+
+    //         if (!empty($transaksi->Supplier)) {
+    //             $supplier = DB::connection('ConnKCNPurchase')
+    //                 ->table('YSUPPLIER')
+    //                 ->select([
+    //                     'NO_SUP',
+    //                     'NM_SUP',
+    //                     'ALAMAT1',
+    //                     'KOTA1',
+    //                     'NEGARA1',
+    //                     'TELEX1',
+    //                     'TELEX2'
+    //                 ])
+    //                 ->where('NO_SUP', $transaksi->Supplier)
+    //                 ->first();
+    //         }
+
+    //         if (!$supplier) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Data supplier tidak ditemukan.'
+    //             ]);
+    //         }
+
+    //         \Log::info('SPPB EMAIL - SUPPLIER', [
+    //             'NO_SUP' => $supplier->NO_SUP,
+    //             'NM_SUP' => $supplier->NM_SUP,
+    //             'TELEX1' => $supplier->TELEX1,
+    //             'TELEX2' => $supplier->TELEX2,
+    //         ]);
+
+    //         $paymentTerm = null;
+    //         if (!empty($transaksi->Pay_Term)) {
+    //             $paymentTerm = DB::connection('ConnKCNPurchase')
+    //                 ->table('PAYMENT_TERM')
+    //                 ->select([
+    //                     'Kode',
+    //                     'Pembayaran',
+    //                     'Hari'
+    //                 ])
+    //                 ->where('Kode', $transaksi->Pay_Term)
+    //                 ->first();
+    //         }
+
+    //         $ttdDirektur = null;
+
+    //         if (!empty($transaksi->Direktur)) {
+
+    //             $ttdDirektur = DB::connection('ConnEDP')
+    //                 ->table('UserMaster')
+    //                 ->select([
+    //                     'NomorUser',
+    //                     'NamaUser',
+    //                     'FotoTtd'
+    //                 ])
+    //                 ->where('NomorUser', $transaksi->Direktur)
+    //                 ->first();
+    //         }
+
+    //         \Log::info('SPPB EMAIL - TTD', [
+    //             'ada'  => !empty($ttdDirektur),
+    //             'nama' => $ttdDirektur->NamaUser ?? null,
+    //             'foto' => !empty($ttdDirektur?->FotoTtd),
+    //         ]);
+
+    //         $header = (object)[
+    //             'Kd_div'   => $kdDiv,
+    //             'Nm_div'   => $divisi->NM_DIV ?? null,
+    //             'No_sppb'  => $noSPPB,
+    //             'Tgl_sppb' => $detail[0]->Tgl_sppb ?? null,
+    //             'Pemesan'  => $detail[0]->Pemesan ?? null,
+    //             'NO_SUP'   => $supplier->NO_SUP ?? null,
+    //             'NM_SUP'   => $supplier->NM_SUP ?? null,
+    //             'ALAMAT1'  => $supplier->ALAMAT1 ?? null,
+    //             'KOTA1'    => $supplier->KOTA1 ?? null,
+    //             'NEGARA1'  => $supplier->NEGARA1 ?? null,
+    //             'Pay_Term' => $paymentTerm->Pembayaran ?? null,
+    //         ];
+
+    //         // =====================================================
+    //         // HITUNG TOTAL
+    //         // =====================================================
+    //         $sumAmount = 0;
+    //         $sumDisc   = 0;
+    //         $subTotal  = 0;
+    //         $ppnTotal  = 0;
+    //         $total     = 0;
+
+    //         foreach ($detail as $row) {
+    //             $trans = $hargaTransaksi->get($row->No_trans);
+    //             $row->PriceUnit = (float) ($trans->PriceUnit ?? 0);
+    //             $row->disc      = (float) ($trans->disc ?? 0);
+    //             $row->IdPPN     = $trans->IdPPN ?? null;
+    //             $row->JumPPN    = (float) ($trans->JumPPN ?? 0);
+    //             $qty = (float) ($row->Qty ?? 0);
+    //             $row->Amount = $qty * $row->PriceUnit;
+    //             $row->DiscAmount = $row->Amount * $row->disc / 100;
+    //             $row->SubTotal = $row->Amount - $row->DiscAmount;
+    //             $row->PPNAmount = $row->SubTotal * $row->JumPPN / 100;
+    //             $row->Total = $row->SubTotal + $row->PPNAmount;
+    //             $sumAmount += $row->Amount;
+    //             $sumDisc   += $row->DiscAmount;
+    //             $subTotal  += $row->SubTotal;
+    //             $ppnTotal  += $row->PPNAmount;
+    //             $total     += $row->Total;
+    //         }
+
+    //         // =====================================================
+    //         // EMAIL SUPPLIER
+    //         // =====================================================
+    //         $emailString = trim($request->email ?? '');
+
+    //         if (empty($emailString)) {
+    //             $emailString = collect([
+    //                 trim($supplier->TELEX1 ?? ''),
+    //                 trim($supplier->TELEX2 ?? '')
+    //             ])
+    //                 ->filter()
+    //                 ->implode(',');
+    //         }
+
+    //         if (empty($emailString)) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Email supplier tidak ditemukan.'
+    //             ]);
+    //         }
+
+    //         // =====================================================
+    //         // VALIDASI EMAIL
+    //         // =====================================================
+    //         $emails = collect(
+    //             preg_split('/[,;]+/', $emailString)
+    //         )
+    //             ->map(fn($email) => trim($email))
+    //             ->filter()
+    //             ->unique()
+    //             ->values()
+    //             ->toArray();
+
+    //         $invalidEmails = [];
+
+    //         foreach ($emails as $email) {
+
+    //             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    //                 $invalidEmails[] = $email;
+    //             }
+    //         }
+
+    //         if (!empty($invalidEmails)) {
+
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Email tidak valid: '
+    //                     . implode(', ', $invalidEmails)
+    //             ]);
+    //         }
+
+    //         \Log::info('SPPB EMAIL - EMAIL VALID', [
+    //             'emails' => $emails
+    //         ]);
+
+    //         // =====================================================
+    //         // LOGO
+    //         // =====================================================
+    //         $logoPath = public_path(
+    //             'images/logo_kencana2.png'
+    //         );
+
+    //         if (!file_exists($logoPath)) {
+
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'File logo tidak ditemukan.'
+    //             ]);
+    //         }
+
+    //         $logo = 'data:image/png;base64,' .
+    //             base64_encode(
+    //                 file_get_contents($logoPath)
+    //             );
+
+    //         // =====================================================
+    //         // GENERATE PDF
+    //         // =====================================================
+    //         \Log::info(
+    //             'SPPB EMAIL - MULAI GENERATE PDF'
+    //         );
+
+    //         $pdf = Pdf::loadView(
+    //             'Kencana.SppbPembelian.cetak',
+    //             [
+    //                 'header'      => $header,
+    //                 'detail'      => $detail,
+    //                 'logo'        => $logo,
+    //                 'sumAmount'   => $sumAmount,
+    //                 'sumDisc'     => $sumDisc,
+    //                 'subTotal'    => $subTotal,
+    //                 'ppnTotal'    => $ppnTotal,
+    //                 'total'       => $total,
+    //                 'ttdDirektur' => $ttdDirektur,
+    //                 'forEmail'    => true,
+    //             ]
+    //         )->setPaper('A4', 'portrait');
+
+    //         \Log::info(
+    //             'SPPB EMAIL - PDF BERHASIL'
+    //         );
+
+    //         // =====================================================
+    //         // EMAIL TAMBAHAN UNTUK TESTING
+    //         // =====================================================
+    //         $emails[] =
+    //             'admin@kencanarajasa.co.id';
+
+    //         \Log::info(
+    //             'SPPB EMAIL - MULAI MAIL',
+    //             ['emails' => $emails]
+    //         );
+
+    //         // =====================================================
+    //         // KIRIM EMAIL
+    //         // =====================================================
+    //         Mail::mailer('gmail')->send(
+    //             [],
+    //             [],
+    //             function ($message) use (
+    //                 $emails,
+    //                 $noSPPB,
+    //                 $pdf,
+    //                 $dokumentasiFiles
+    //             ) {
+
+    //                 $message->from(
+    //                     env('GMAIL_USERNAME'),
+    //                     env(
+    //                         'MAIL_FROM_NAME',
+    //                         'Kencana Rajasa Raya'
+    //                     )
+    //                 );
+
+    //                 $message->to($emails)
+    //                     ->subject(
+    //                         "SPPB Kencana Rajasa Raya {$noSPPB}"
+    //                     )
+    //                     ->html(
+    //                         "Berikut adalah SPPB dengan nomor "
+    //                         . "<b>{$noSPPB}</b>."
+    //                         . "<br><br>"
+    //                         . "Silakan cek SPPB pada file PDF "
+    //                         . "yang terlampir."
+    //                     )
+
+    //                     // =================================================
+    //                     // ATTACH PDF SPPB
+    //                     // =================================================
+    //                     ->attachData(
+    //                         $pdf->output(),
+    //                         "{$noSPPB}.pdf",
+    //                         [
+    //                             'mime' => 'application/pdf'
+    //                         ]
+    //                     );
+
+    //                 // =====================================================
+    //                 // ATTACH SEMUA DOKUMENTASI
+    //                 // =====================================================
+    //                 foreach ($dokumentasiFiles as $file) {
+    //                     $message->attachData(
+    //                         $file['data'],
+    //                         $file['nama'],
+    //                         [
+    //                             'mime' => $file['mime']
+    //                         ]
+    //                     );
+
+    //                     \Log::info(
+    //                         'SPPB EMAIL - ATTACH DOKUMENTASI',
+    //                         [
+    //                             'nama' => $file['nama'],
+    //                             'mime' => $file['mime'],
+    //                             'size' => strlen($file['data'])
+    //                         ]
+    //                     );
+    //                 }
+    //             }
+    //         );
+
+    //         \Log::info(
+    //             'SPPB EMAIL - MAIL BERHASIL'
+    //         );
+
+    //         // =====================================================
+    //         // RESPONSE
+    //         // =====================================================
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Email berhasil dikirim ke '
+    //                 . implode(', ', $emails)
+    //                 . '.'
+    //         ]);
+
+    //     } catch (\Throwable $e) {
+
+    //         \Log::error(
+    //             'SPPB EMAIL - ERROR',
+    //             [
+    //                 'message' => $e->getMessage(),
+    //                 'file'    => $e->getFile(),
+    //                 'line'    => $e->getLine(),
+    //             ]
+    //         );
+
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Gagal mengirim email: '
+    //                 . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
 
     public function edit($id)
     {

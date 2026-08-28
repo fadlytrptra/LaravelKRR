@@ -359,10 +359,6 @@
                         <button id="btnHarga" type="button" class="btn btn-outline-primary w-50 mb-3">
                             Lihat Daftar Harga
                         </button>
-
-                        <button id="btnKirimSupplier" type="button" class="btn btn-primary w-50">
-                            KIRIM KE SUPPLIER
-                        </button>
                     </div>
                 </div>
             </form>
@@ -372,18 +368,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Tombol Kiri -->
                 <div class="d-flex gap-2">
-                    <button id="btnCetak" type="button" class="btn btn-outline-primary">
-                        CETAK SPPB
-                    </button>
 
-                    {{--
-                    <button id="btnBatalSPPB" type="button" class="btn btn-outline-secondary">
-                        BATAL SPPB
-                    </button>
-
-                    <button id="btnHapusSPPB" type="button" class="btn btn-outline-danger">
-                        HAPUS SPPB
-                    </button> --}}
                 </div>
 
                 <!-- Tombol Kanan -->

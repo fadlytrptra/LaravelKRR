@@ -1,9 +1,9 @@
 //#region Variable
 let mode = 0;
-let btnCetak = $('#btnCetak');
+// let btnCetak = $('#btnCetak');
 let btnBatalSPPB = $('#btnBatalSPPB');
 let btnHapusSPPB = $('#btnHapusSPPB');
-let btnKirimSupplier = $('#btnKirimSupplier');
+// let btnKirimSupplier = $('#btnKirimSupplier');
 let btnIsi = $('#btnIsi');
 let btnLihat = $('#btnLihat');
 let btnProses = $('#btnProses');
@@ -188,21 +188,13 @@ function loadTable(data) {
 
 function setModeAwal() {
     mode = 0;
-
-    formSPPB.find('input, select, textarea, button').not('#btnCetak,#btnIsi').prop('disabled', true);
-
-    btnCetak.prop('disabled', true);
-    btnBatalSPPB.prop('disabled', false);
-    btnHapusSPPB.prop('disabled', false);
+    formSPPB.find('input, select, textarea, button').not('#btnIsi').prop('disabled', true);
     btnIsi.prop('disabled', false);
-
     btnLihat.prop('disabled', false);
     btnProses.prop('disabled', true);
     btnBatal.prop('disabled', true);
     clearForm();
-
     $('#checkAll').prop('checked', false);
-
 }
 
 function setModeIsi() {
@@ -213,7 +205,6 @@ function setModeIsi() {
     $('#Disc').prop('disabled', false).prop('readonly', false);
     $('#PPN').prop('disabled', false).prop('readonly', false);
 
-    btnCetak.prop('disabled', true);
     btnBatalSPPB.prop('disabled', true);
     btnHapusSPPB.prop('disabled', true);
     btnIsi.prop('disabled', true);
@@ -252,7 +243,6 @@ function setModeLihat() {
     // =====================================
 
     btnIsi.prop('disabled', true);
-    btnCetak.prop('disabled', false);
     btnHapusSPPB.prop('disabled', true);
     btnBatalSPPB.prop('disabled', true);
     btnLihat.prop('disabled', true);
@@ -818,37 +808,17 @@ function proses() {
         },
 
         success: function (response) {
+
             $('#NoSPPB').val(response.NoSPPB);
 
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil',
-                text: response.message
+                text: response.message,
+                confirmButtonText: 'OK'
             }).then(() => {
 
-                Swal.fire({
-                    title: 'Cetak SPPB',
-                    text: 'Apakah akan mencetak SPPB?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak'
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-
-                        prosesCetak(
-                            response.KdDiv,
-                            response.NoSPPB,
-                            true
-                        );
-
-                    } else {
-
-                        setModeAwal();
-
-                    }
-                });
+                setModeAwal();
 
             });
         },
@@ -872,44 +842,44 @@ function proses() {
     });
 }
 
-function prosesCetak(kdDiv, noSPPB, langsungCetak = false) {
+// function prosesCetak(kdDiv, noSPPB, langsungCetak = false) {
 
-    $.ajax({
-        url: '/Kencana/SppbPembelian/prosesCetak',
-        type: 'GET',
-        data: {
-            KdDiv: kdDiv,
-            NoSPPB: noSPPB
-        },
+//     $.ajax({
+//         url: '/Kencana/SppbPembelian/prosesCetak',
+//         type: 'GET',
+//         data: {
+//             KdDiv: kdDiv,
+//             NoSPPB: noSPPB
+//         },
 
-        success: function () {
+//         success: function () {
 
-            if (langsungCetak) {
+//             if (langsungCetak) {
 
-                // Langsung buka halaman cetak
-                dataPrint(kdDiv, noSPPB);
+//                 // Langsung buka halaman cetak
+//                 dataPrint(kdDiv, noSPPB);
 
-                // Kembali ke mode awal
-                setModeAwal();
+//                 // Kembali ke mode awal
+//                 setModeAwal();
 
-            } else {
+//             } else {
 
-                setModeAwal();
+//                 setModeAwal();
 
-            }
-        },
+//             }
+//         },
 
-        error: function () {
+//         error: function () {
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Gagal memproses cetak.'
-            });
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error',
+//                 text: 'Gagal memproses cetak.'
+//             });
 
-        }
-    });
-}
+//         }
+//     });
+// }
 
 function loadHistoryHarga() {
     let kdBarang = $('#KdBarang').val();
@@ -1155,10 +1125,9 @@ function formatNumber(value) {
 
 function hitungHarga() {
 
-    // =====================================================
-    // DataTable belum dibuat
-    // Bisa terjadi saat clearForm()
-    // =====================================================
+    // ==========================================
+    // Pastikan DataTable tersedia
+    // ==========================================
     if (
         tableSPPB === null ||
         !$.fn.DataTable.isDataTable('#tableSPPB')
@@ -1169,6 +1138,40 @@ function hitungHarga() {
     }
 
 
+    // ==========================================
+    // HARGA SATUAN
+    // ==========================================
+    let hargaSatuan = parseFloat(
+        String($('#HargaSatuan').val() || '')
+            .replace(/\./g, '')
+            .replace(',', '.')
+    ) || 0;
+
+
+    // ==========================================
+    // DISCOUNT
+    // ==========================================
+    let disc = parseFloat(
+        String($('#Disc').val() || '')
+            .replace(',', '.')
+    ) || 0;
+
+
+    // ==========================================
+    // PPN
+    // ==========================================
+    let ppn = parseFloat(
+        $('#PPN option:selected').attr('data-jumlah')
+    ) || 0;
+
+
+    console.log('=== HITUNG HARGA ===');
+    console.log('Mode       :', mode);
+    console.log('Harga      :', hargaSatuan);
+    console.log('Disc       :', disc);
+    console.log('PPN        :', ppn);
+
+
     let totalAmount = 0;
     let totalDisc = 0;
     let totalPPN = 0;
@@ -1176,70 +1179,99 @@ function hitungHarga() {
 
 
     // =====================================================
-    // FUNCTION HITUNG PER TRANSAKSI
-    // =====================================================
-    function hitungPerRow(row) {
-        if (!row)
-            return;
-
-        let qty = parseFloat(row.Qty) || 0;
-        let priceUnit = parseFloat(row.PriceUnit) || 0;
-        let disc = parseFloat(row.disc) || 0;
-
-        // PPN ambil dari dropdown PPN
-        let ppn = parseFloat(
-            $('#PPN option:selected').data('jumlah')
-        ) || 0;
-
-
-        // Amount
-        let amount = qty * priceUnit;
-
-
-        // Discount
-        let nilaiDisc = amount * disc / 100;
-
-
-        // Subtotal
-        let subtotal = amount - nilaiDisc;
-
-
-        // PPN
-        let nilaiPPN = subtotal * ppn / 100;
-
-
-        // Total
-        let total = subtotal + nilaiPPN;
-
-
-        // Akumulasi
-        totalAmount += amount;
-        totalDisc += nilaiDisc;
-        totalPPN += nilaiPPN;
-        totalHarga += total;
-    }
-
-
-    // =====================================================
     // MODE ISI
-    // Hanya transaksi yang dicentang
+    // Hanya row yang dicentang
     // =====================================================
     if (mode == 1) {
 
-        $('#tableSPPB tbody .check-item:checked').each(function () {
+        tableSPPB.rows().every(function () {
 
-            let row = tableSPPB
-                .row($(this).closest('tr'))
-                .data();
+            let row = this.data();
 
-            hitungPerRow(row);
+            if (!row)
+                return;
+
+
+            // Ambil checkbox langsung dari row DataTable
+            let checkbox = $(this.node())
+                .find('.check-item');
+
+
+            let checked = checkbox.is(':checked');
+
+
+            // Backup menggunakan property selected
+            if (row.selected === true) {
+                checked = true;
+            }
+
+
+            if (!checked)
+                return;
+
+
+            // ==========================================
+            // QTY
+            // ==========================================
+            let qty = parseFloat(row.Qty) || 0;
+
+
+            // ==========================================
+            // AMOUNT
+            // ==========================================
+            let amount = qty * hargaSatuan;
+
+
+            // ==========================================
+            // DISCOUNT
+            // ==========================================
+            let nilaiDisc = amount * disc / 100;
+
+
+            // ==========================================
+            // SUBTOTAL
+            // ==========================================
+            let subtotal = amount - nilaiDisc;
+
+
+            // ==========================================
+            // PPN
+            // ==========================================
+            let nilaiPPN = subtotal * ppn / 100;
+
+
+            // ==========================================
+            // TOTAL
+            // ==========================================
+            let total = subtotal + nilaiPPN;
+
+
+            console.log('Row:', {
+                NoTrans: row.No_trans,
+                Qty: qty,
+                Harga: hargaSatuan,
+                Disc: disc,
+                PPN: ppn,
+                Amount: amount,
+                Subtotal: subtotal,
+                Total: total
+            });
+
+
+            // ==========================================
+            // AKUMULASI
+            // ==========================================
+            totalAmount += amount;
+            totalDisc += nilaiDisc;
+            totalPPN += nilaiPPN;
+            totalHarga += total;
+
         });
     }
 
 
     // =====================================================
     // MODE LIHAT
-    // Semua transaksi dalam No SPPB
     // =====================================================
     else if (mode == 2) {
 
@@ -1247,7 +1279,50 @@ function hitungHarga() {
 
             let row = this.data();
 
-            hitungPerRow(row);
+            if (!row)
+                return;
+
+
+            let qty = parseFloat(row.Qty) || 0;
+
+            let rowPrice =
+                parseFloat(row.PriceUnit) || 0;
+
+            let rowDisc =
+                parseFloat(row.disc) || 0;
+
+
+            let rowPPN = parseFloat(
+                $('#PPN option[value="' + row.IdPPN + '"]')
+                    .attr('data-jumlah')
+            ) || 0;
+
+
+            let amount =
+                qty * rowPrice;
+
+
+            let nilaiDisc =
+                amount * rowDisc / 100;
+
+
+            let subtotal =
+                amount - nilaiDisc;
+
+
+            let nilaiPPN =
+                subtotal * rowPPN / 100;
+
+
+            let total =
+                subtotal + nilaiPPN;
+
+
+            totalAmount += amount;
+            totalDisc += nilaiDisc;
+            totalPPN += nilaiPPN;
+            totalHarga += total;
+
         });
     }
 
@@ -1255,20 +1330,30 @@ function hitungHarga() {
     // =====================================================
     // SUBTOTAL
     // =====================================================
-    let subtotalHarga = totalAmount - totalDisc;
+    let subtotalHarga =
+        totalAmount - totalDisc;
 
 
+    // =====================================================
+    // TAMPILKAN SUBTOTAL
+    // =====================================================
     $('#SubTotalHarga').val(
         formatNumber(subtotalHarga)
     );
 
 
     // =====================================================
-    // TOTAL
+    // TAMPILKAN TOTAL
     // =====================================================
     $('#TotalHarga').val(
         formatNumber(totalHarga)
     );
+
+
+    console.log('=== HASIL ===');
+    console.log('Subtotal :', subtotalHarga);
+    console.log('PPN      :', totalPPN);
+    console.log('Total    :', totalHarga);
 }
 
 function loadPPN(selectedPPN = '') {
@@ -1334,25 +1419,24 @@ function updateHargaRow() {
         return;
 
     let hargaSatuan = parseFloat(
-        $('#HargaSatuan')
-            .val()
+        ($('#HargaSatuan').val() || '')
             .replace(/\./g, '')
             .replace(',', '.')
     ) || 0;
 
-    let disc = parseFloat($('#Disc').val()) || 0;
+    let disc = parseFloat(
+        ($('#Disc').val() || '')
+            .replace(',', '.')
+    ) || 0;
 
     let idPPN = $('#PPN').val();
 
-    // Update object row
     row.PriceUnit = hargaSatuan;
     row.disc = disc;
     row.IdPPN = idPPN;
 
-    // Tidak perlu draw
     rowApi.data(row);
 }
-
 function setTanggalHariIni() {
     const today = new Date();
     const year = today.getFullYear();
@@ -1505,55 +1589,55 @@ txtNoSPPB.on('keypress', function (e) {
     }
 });
 
-btnCetak.on('click', function () {
+// btnCetak.on('click', function () {
 
-    if (mode != 2)
-        return;
+//     if (mode != 2)
+//         return;
 
-    let kdDiv = txtKdDiv.val();
-    let noSPPB = txtNoSPPB.val();
+//     let kdDiv = txtKdDiv.val();
+//     let noSPPB = txtNoSPPB.val();
 
-    if (!kdDiv || !noSPPB) {
+//     if (!kdDiv || !noSPPB) {
 
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'Kd Divisi dan No SPPB harus tersedia.'
-        });
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Peringatan',
+//             text: 'Kd Divisi dan No SPPB harus tersedia.'
+//         });
 
-        return;
-    }
+//         return;
+//     }
 
-    $.ajax({
-        url: '/Kencana/SppbPembelian/prosesCetak',
-        type: 'GET',
-        data: {
-            KdDiv: kdDiv,
-            NoSPPB: noSPPB
-        },
+//     $.ajax({
+//         url: '/Kencana/SppbPembelian/prosesCetak',
+//         type: 'GET',
+//         data: {
+//             KdDiv: kdDiv,
+//             NoSPPB: noSPPB
+//         },
 
-        success: function () {
+//         success: function () {
 
-            dataPrint(
-                kdDiv,
-                noSPPB
-            );
+//             dataPrint(
+//                 kdDiv,
+//                 noSPPB
+//             );
 
-        },
+//         },
 
-        error: function (xhr) {
+//         error: function (xhr) {
 
-            console.error(xhr);
+//             console.error(xhr);
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Gagal memproses cetak.'
-            });
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error',
+//                 text: 'Gagal memproses cetak.'
+//             });
 
-        }
-    });
-});
+//         }
+//     });
+// });
 
 $('#HargaSatuan, #Disc, #PPN').on('input change', function () {
     updateHargaRow();
@@ -1561,130 +1645,130 @@ $('#HargaSatuan, #Disc, #PPN').on('input change', function () {
 });
 
 
-btnKirimSupplier.on('click', function (e) {
+// btnKirimSupplier.on('click', function (e) {
 
-    e.preventDefault();
+//     e.preventDefault();
 
-    let kdDiv = txtKdDiv.val();
-    let noSPPB = txtNoSPPB.val();
+//     let kdDiv = txtKdDiv.val();
+//     let noSPPB = txtNoSPPB.val();
 
-    console.log('=== KIRIM EMAIL SPPB ===');
-    console.log('KdDiv:', kdDiv);
-    console.log('NoSPPB:', noSPPB);
+//     console.log('=== KIRIM EMAIL SPPB ===');
+//     console.log('KdDiv:', kdDiv);
+//     console.log('NoSPPB:', noSPPB);
 
-    if (mode != 2) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'SPPB harus dalam mode Lihat.'
-        });
-        return;
-    }
+//     if (mode != 2) {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Peringatan',
+//             text: 'SPPB harus dalam mode Lihat.'
+//         });
+//         return;
+//     }
 
-    if (!kdDiv || !noSPPB) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'Kd Divisi dan No SPPB harus tersedia.'
-        });
-        return;
-    }
+//     if (!kdDiv || !noSPPB) {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Peringatan',
+//             text: 'Kd Divisi dan No SPPB harus tersedia.'
+//         });
+//         return;
+//     }
 
-    Swal.fire({
-        title: 'Kirim SPPB ke Supplier?',
-        text: 'PDF SPPB akan dikirim ke email supplier.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Kirim',
-        cancelButtonText: 'Batal'
-    }).then(function (result) {
+//     Swal.fire({
+//         title: 'Kirim SPPB ke Supplier?',
+//         text: 'PDF SPPB akan dikirim ke email supplier.',
+//         icon: 'question',
+//         showCancelButton: true,
+//         confirmButtonText: 'Ya, Kirim',
+//         cancelButtonText: 'Batal'
+//     }).then(function (result) {
 
-        if (!result.isConfirmed) {
-            return;
-        }
+//         if (!result.isConfirmed) {
+//             return;
+//         }
 
-        console.log('Mulai AJAX sendEmailSupplier');
+//         console.log('Mulai AJAX sendEmailSupplier');
 
-        $.ajax({
-            url: '/Kencana/SppbPembelian/sendEmailSupplier',
-            type: 'POST',
+//         $.ajax({
+//             url: '/Kencana/SppbPembelian/sendEmailSupplier',
+//             type: 'POST',
 
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
 
-            data: {
-                KdDiv: kdDiv,
-                NoSPPB: noSPPB
-            },
+//             data: {
+//                 KdDiv: kdDiv,
+//                 NoSPPB: noSPPB
+//             },
 
-            timeout: 120000,
+//             timeout: 120000,
 
-            beforeSend: function () {
+//             beforeSend: function () {
 
-                console.log('AJAX beforeSend');
+//                 console.log('AJAX beforeSend');
 
-                btnKirimSupplier
-                    .prop('disabled', true)
-                    .text('MENGIRIM...');
-            },
+//                 btnKirimSupplier
+//                     .prop('disabled', true)
+//                     .text('MENGIRIM...');
+//             },
 
-            success: function (response) {
+//             success: function (response) {
 
-                console.log('AJAX SUCCESS:', response);
+//                 console.log('AJAX SUCCESS:', response);
 
-                if (response.success) {
+//                 if (response.success) {
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: response.message
-                    });
+//                     Swal.fire({
+//                         icon: 'success',
+//                         title: 'Berhasil',
+//                         text: response.message
+//                     });
 
-                } else {
+//                 } else {
 
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Peringatan',
-                        text: response.message
-                    });
-                }
-            },
+//                     Swal.fire({
+//                         icon: 'warning',
+//                         title: 'Peringatan',
+//                         text: response.message
+//                     });
+//                 }
+//             },
 
-            error: function (xhr, status, error) {
+//             error: function (xhr, status, error) {
 
-                console.error('AJAX ERROR');
-                console.error('status:', status);
-                console.error('error:', error);
-                console.error('HTTP:', xhr.status);
-                console.error('response:', xhr.responseText);
+//                 console.error('AJAX ERROR');
+//                 console.error('status:', status);
+//                 console.error('error:', error);
+//                 console.error('HTTP:', xhr.status);
+//                 console.error('response:', xhr.responseText);
 
-                let pesan = 'Gagal mengirim email.';
+//                 let pesan = 'Gagal mengirim email.';
 
-                if (xhr.responseJSON?.message) {
-                    pesan = xhr.responseJSON.message;
-                }
+//                 if (xhr.responseJSON?.message) {
+//                     pesan = xhr.responseJSON.message;
+//                 }
 
-                if (status === 'timeout') {
-                    pesan = 'Server terlalu lama merespons. Proses pengiriman email kemungkinan masih berjalan atau macet.';
-                }
+//                 if (status === 'timeout') {
+//                     pesan = 'Server terlalu lama merespons. Proses pengiriman email kemungkinan masih berjalan atau macet.';
+//                 }
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: pesan
-                });
-            },
+//                 Swal.fire({
+//                     icon: 'error',
+//                     title: 'Error',
+//                     text: pesan
+//                 });
+//             },
 
-            complete: function () {
+//             complete: function () {
 
-                console.log('AJAX COMPLETE');
+//                 console.log('AJAX COMPLETE');
 
-                btnKirimSupplier
-                    .prop('disabled', false)
-                    .text('KIRIM KE SUPPLIER');
-            }
-        });
-    });
-});
+//                 btnKirimSupplier
+//                     .prop('disabled', false)
+//                     .text('KIRIM KE SUPPLIER');
+//             }
+//         });
+//     });
+// });
 //#endregion

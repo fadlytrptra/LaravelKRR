@@ -1,5 +1,6 @@
 @extends('layouts.appKencana')
-@section('title', 'Acc Pembelian')
+
+@section('title', 'Final Approve Kencana')
 
 @section('content')
 
@@ -10,13 +11,13 @@
         <div class="card-header bg-light">
             <h5 class="mb-0">
                 <i class=""></i>
-                ACC Pembelian
+                Final Approve Kencana
             </h5>
         </div>
 
         <div class="card-body">
             <div class="table-responsive">
-                <table id="tblAccPembelian" class="table table-bordered table-hover table-sm nowrap" width="100%">
+                <table id="tblFinalApprove" class="table table-bordered table-hover table-sm nowrap" width="100%">
                     <thead class="thead-light">
                     <tr>
                         <th width="40">
@@ -41,13 +42,13 @@
             </div>
 
             <div class="mt-3">
-                {{-- <button
+                <button
                     type="button"
                     class="btn btn-success mr-2"
                     id="btnProses">
                     <i class="fa fa-check"></i>
                     Proses Setuju
-                </button> --}}
+                </button>
 
                 {{-- <button
                     type="button"
@@ -62,6 +63,6 @@
     </div>
 </div>
 
-<script src="{{ asset('js/Kencana/AccPembelian.js') }}"></script>
+<script src="{{ asset('js/Kencana/FinalApprove.js') }}"></script>
 
 @endsection

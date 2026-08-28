@@ -1834,7 +1834,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('InputSumberAir', App\Http\Controllers\PDAM\InputSumberAirController::class);
     #endregion
 
-    #region Kencana
+    #region Kencana Beli
     Route::get('Kencana', 'App\Http\Controllers\HomeController@Kencana')->name('Kencana.Home');
     Route::put('/Kencana/BttbPembelian/updateFlag',[App\Http\Controllers\Kencana\BttbPembelianController::class, 'updateFlag']);
     Route::resource('Kencana/PermohonanPembelian', App\Http\Controllers\Kencana\PermohonanPembelianController::class);
@@ -1847,6 +1847,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('Kencana/SppbPembelian', App\Http\Controllers\Kencana\SppbPembelianController::class);
     Route::resource('Kencana/BttbPembelian', App\Http\Controllers\Kencana\BttbPembelianController::class);
     Route::resource('Kencana/TransferBarang', App\Http\Controllers\Kencana\TransferBarangController::class);
+    Route::get('/Kencana/FinalApproveKencana/dokumentasi/{noTrans}', [App\Http\Controllers\Kencana\FinalApproveKencanaController::class, 'downloadDokumentasi'])->name('FinalApprove.downloadDokumentasi');
+    Route::resource('Kencana/FinalApprove', App\Http\Controllers\Kencana\FinalApproveKencanaController::class);
+    Route::get( '/Kencana/CetakPembelian/print', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'print'] )->name('Kencana.CetakPembelian.print'); 
+    Route::post( '/Kencana/CetakPembelian/sendEmailSupplier', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'sendEmailSupplier'] )->name('Kencana.CetakPembelian.sendEmailSupplier');
+    Route::get('/Kencana/CetakPembelian/getData', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'getData'])->name('Kencana.CetakPembelian.getData');
+    Route::resource('Kencana/Cetak', App\Http\Controllers\Kencana\CetakPembelianKencanaController::class);
+    
+
+    #region Kencana Sales
     Route::resource('Kencana/Billing', App\Http\Controllers\Kencana\BillingKencanaController::class)->names('Kencana.Billing');
     Route::resource('Kencana/Customer', App\Http\Controllers\Kencana\CustomerKencanaController::class)->names('Kencana.Customer');
     Route::resource('Kencana/Expeditor', App\Http\Controllers\Kencana\ExpeditorKencanaController::class)->names('Kencana.Expeditor');
