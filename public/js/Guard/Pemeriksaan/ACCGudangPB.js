@@ -18,8 +18,8 @@ jQuery(function ($) {
         scrollX: "150px",
         scrollCollapse: true,
     });
-    tgl_awal.valueAsDate = new Date();
-    // tgl_awal.valueAsDate = new Date(2025, 11, 25);
+    // tgl_awal.valueAsDate = new Date();
+    tgl_awal.valueAsDate = new Date(2026, 7, 25);
     tgl_akhir.valueAsDate = new Date();
 
     // checkbox_all.addEventListener("change", function () {
@@ -43,6 +43,21 @@ jQuery(function ($) {
     btn_print.style.display = "none";
 
     //#region Function
+    $(document).ready(function () {
+
+        // Default: ACC terpilih
+        $("#status_acc").prop("checked", true);
+        $("#status_batal_acc").prop("checked", false);
+
+        // Saat awal load langsung Redisplay
+        btn_redisplay.click();
+
+        // Saat radio berubah, Redisplay
+        $('input[name="status_acc"]').on("change", function () {
+            btn_redisplay.click();
+        });
+
+    });
 
     function initPrint(data, customer) {
         console.log(data, customer);
@@ -536,6 +551,7 @@ jQuery(function ($) {
                         _token: csrfToken,
                         tgl_awal: tgl_awal.value,
                         tgl_akhir: tgl_akhir.value,
+                        status_acc: $('input[name="status_acc"]:checked').val(),
                     });
                 },
             },
@@ -604,6 +620,7 @@ jQuery(function ($) {
             data: {
                 _token: csrfToken,
                 checkedRows: checkedRows,
+                status_acc: $('input[name="status_acc"]:checked').val(),
             },
             success: function (response) {
                 console.log(response.message);

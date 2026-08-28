@@ -10,6 +10,26 @@
                 <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                     <div class="form-container col-md-12">
                         @csrf
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status_acc" id="status_acc"
+                                        value="ACC">
+                                    <label class="form-check-label font-weight-bold" for="status_acc">
+                                        ACC
+                                    </label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status_acc"
+                                        id="status_batal_acc" value="Batal ACC">
+                                    <label class="form-check-label font-weight-bold" for="status_batal_acc">
+                                        Batal ACC
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
                         <div class="row">
                             <div class="col-5">
                                 <label for="radiobutton" class="form-check-label" id="labelRedisplay">Tanggal
