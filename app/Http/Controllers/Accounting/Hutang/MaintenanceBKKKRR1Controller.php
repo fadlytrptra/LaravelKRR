@@ -59,6 +59,7 @@ class MaintenanceBKKKRR1Controller extends Controller
                             $latestPayment = DB::connection('ConnAccounting')
                                 ->table('T_Pembayaran_Tagihan')
                                 ->select('Id_Pembayaran')
+                                ->where('User_Input', $user_id)
                                 ->orderBy('Tgl_Input', 'desc')
                                 ->first();
 
@@ -106,6 +107,7 @@ class MaintenanceBKKKRR1Controller extends Controller
                         $results = DB::connection('ConnAccounting')
                             ->table('T_PEMBAYARAN_TAGIHAN')
                             ->select('Id_Pembayaran', 'Id_Penagihan')
+                            ->where('User_Input', $user_id)
                             ->orderBy('Tgl_Input', 'desc')
                             ->first();
                         // dd($results);
