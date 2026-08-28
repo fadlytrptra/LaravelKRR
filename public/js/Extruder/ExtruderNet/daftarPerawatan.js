@@ -57,7 +57,6 @@ RW_btnConfirm.addEventListener("click", function () {
 //#region Functions
 function RW_showData() {
     // SP_5298_EXT_DATA_PERAWATAN
-    // PERBAIKAN: Gunakan koma (,) untuk memisahkan URL dan fungsi callback
     fetchSelectAsync(`/Catat/getDataPerawatan/${safeUrlParam(RW_tanggal)}`, (data) => {
         let pushedData = [];
         for (let i = 0; i < data.length; i++) {

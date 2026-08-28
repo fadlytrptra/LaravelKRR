@@ -132,7 +132,7 @@ btnProses.addEventListener("click", function () {
 });
 
 btnKeluar.addEventListener("click", function () {
-    window.location.href = "/Extruder/ExtruderNet";
+    window.location.href = '/Extruder/Extruder';
 });
 //#endregion
 

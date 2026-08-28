@@ -123,267 +123,7 @@ let modeProses = "";
 let pilKomposisi = -1;
 let pilKonversi = -1;
 let jumlah = 0;
-//#endregion
-
-//#region Generic Modal Lookup System
-let currentLookupData = [];
-let filteredLookupData = [];
-let currentPage = 1;
-let itemsPerPage = 10;
-let currentLookupConfig = {};
-let selectedRowIndex = 0;
-
-async function openLookupModal(config) {
-    try {
-        currentLookupConfig = config;
-        currentPage = 1;
-
-        const showPageSelect = document.getElementById("showPerPage");
-        itemsPerPage = parseInt(showPageSelect.value) || 10;
-
-        document.getElementById("lookupTitle").innerHTML =
-            `<i class="bi bi-view-list text-primary me-2"></i>${config.title}`;
-
-        const trHeader = document.getElementById("lookupHeaders");
-        trHeader.innerHTML = config.headers
-            .map((h) => `<th>${h}</th>`)
-            .join("");
-
-        const tbody = document.getElementById("lookupBody");
-        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center">Memuat data...</td></tr>`;
-        document.getElementById("paginationControls").innerHTML = "";
-
-        const modalEl = document.getElementById("modalLookupGeneric");
-        const modalInstance = new bootstrap.Modal(modalEl);
-        modalInstance.show();
-
-        const data = await fetchSelectAsync(config.url);
-        currentLookupData = data;
-        filteredLookupData = data;
-        renderLookupTable();
-        renderPagination();
-
-        selectedRowIndex = 0;
-
-        setTimeout(() => {
-            document.getElementById("lookupSearch").focus();
-            highlightSelectedRow();
-        }, 150);
-
-        const searchInput = document.getElementById("lookupSearch");
-        searchInput.value = "";
-
-        searchInput.onkeydown = function (e) {
-            if (e.key === "ArrowLeft") {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderLookupTable();
-                    renderPagination();
-                }
-                return;
-            }
-
-            if (e.key === "ArrowRight") {
-                e.preventDefault();
-                const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage,
-                );
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderLookupTable();
-                    renderPagination();
-                }
-                return;
-            }
-        };
-
-        searchInput.onkeyup = function (e) {
-            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
-            if (e.key === "ArrowDown") {
-                e.preventDefault();
-
-                const rows = document.querySelectorAll("#lookupBody tr");
-                if (rows.length > 0) {
-                    rows[selectedRowIndex].focus();
-                }
-                return;
-            }
-
-            if (e.key === "Enter") {
-                e.preventDefault();
-
-                const rows = document.querySelectorAll("#lookupBody tr");
-                if (rows.length > 0) {
-                    rows[selectedRowIndex].click();
-                }
-                return;
-            }
-
-            const keyword = this.value.toLowerCase();
-            filteredLookupData = currentLookupData.filter((row) => {
-                return config.columns.some((col) =>
-                    String(row[col] || "")
-                        .toLowerCase()
-                        .includes(keyword),
-                );
-            });
-
-            currentPage = 1;
-            renderLookupTable();
-            renderPagination();
-        };
-
-        showPageSelect.onchange = function () {
-            itemsPerPage = parseInt(this.value);
-            currentPage = 1;
-            renderLookupTable();
-            renderPagination();
-        };
-    } catch (error) {
-        Swal.fire(
-            "Error",
-            error.message || "Gagal memuat data lookup.",
-            "error",
-        );
-    }
-}
-
-function highlightSelectedRow() {
-    const rows = document.querySelectorAll("#lookupBody tr");
-
-    rows.forEach((row, index) => {
-        if (index === selectedRowIndex) {
-            row.classList.add("table-primary");
-        }
-    });
-}
-
-function renderLookupTable() {
-    const tbody = document.getElementById("lookupBody");
-    const config = currentLookupConfig;
-    tbody.innerHTML = "";
-
-    if (filteredLookupData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center text-danger">Data tidak ditemukan</td></tr>`;
-        return;
-    }
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedData = filteredLookupData.slice(startIndex, endIndex);
-
-    paginatedData.forEach((row) => {
-        const tr = document.createElement("tr");
-        tr.style.cursor = "pointer";
-        tr.tabIndex = 0;
-
-        config.columns.forEach((col) => {
-            const td = document.createElement("td");
-            td.textContent = row[col] || "-";
-            tr.appendChild(td);
-        });
-
-        tr.addEventListener("click", () => {
-            const modalEl = document.getElementById("modalLookupGeneric");
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
-            config.onSelect(row);
-        });
-
-        tr.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                this.click();
-            } else if (e.key === "ArrowDown") {
-                e.preventDefault();
-                let nextRow = this.nextElementSibling;
-                if (nextRow) nextRow.focus();
-            } else if (e.key === "ArrowUp") {
-                e.preventDefault();
-                let prevRow = this.previousElementSibling;
-                if (prevRow) {
-                    prevRow.focus();
-                } else {
-                    document.getElementById("lookupSearch").focus();
-                }
-            } else if (e.key === "ArrowLeft") {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderLookupTable();
-                    renderPagination();
-                    const firstRow = document.querySelector("#lookupBody tr");
-                    if (firstRow) firstRow.focus();
-                }
-            } else if (e.key === "ArrowRight") {
-                e.preventDefault();
-                const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage,
-                );
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderLookupTable();
-                    renderPagination();
-                    const firstRow = document.querySelector("#lookupBody tr");
-                    if (firstRow) firstRow.focus();
-                }
-            }
-        });
-        tbody.appendChild(tr);
-    });
-    highlightSelectedRow();
-}
-
-function renderPagination() {
-    const paginationEl = document.getElementById("paginationControls");
-    paginationEl.innerHTML = "";
-
-    const totalPages = Math.ceil(filteredLookupData.length / itemsPerPage);
-    if (totalPages <= 1) return;
-
-    const prevLi = document.createElement("li");
-    prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
-    prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous">&laquo;</a>`;
-    prevLi.onclick = (e) => {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            renderLookupTable();
-            renderPagination();
-        }
-    };
-    paginationEl.appendChild(prevLi);
-
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
-
-    for (let i = startPage; i <= endPage; i++) {
-        const pageLi = document.createElement("li");
-        pageLi.className = `page-item ${currentPage === i ? "active" : ""}`;
-        pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-        pageLi.onclick = (e) => {
-            e.preventDefault();
-            currentPage = i;
-            renderLookupTable();
-            renderPagination();
-        };
-        paginationEl.appendChild(pageLi);
-    }
-
-    const nextLi = document.createElement("li");
-    nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
-    nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next">&raquo;</a>`;
-    nextLi.onclick = (e) => {
-        e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderLookupTable();
-            renderPagination();
-        }
-    };
-    paginationEl.appendChild(nextLi);
-}
+let suppressSelectionReset = false;
 //#endregion
 
 //#region Lookup Triggers (Events)
@@ -628,43 +368,106 @@ timeSelesai.addEventListener("keydown", function (event) {
     }
 });
 
-numPrimer.addEventListener("keypress", function (event) {
+function debugDetailState(label = "detail state") {
+    const state = {
+        label,
+        modeProses,
+        pilKomposisi,
+        pilKonversi,
+        txtIdProd: txtIdProd.value,
+        txtNamaProd: txtNamaProd.value,
+        txtJenis: txtJenis.value,
+        numPrimer: numPrimer.value,
+        numSekunder: numSekunder.value,
+        numTritier: numTritier.value,
+        disabled: {
+            primer: numPrimer.disabled,
+            sekunder: numSekunder.disabled,
+            tritier: numTritier.disabled,
+        },
+        detailFields: [...listOfDetailInputs].map((ele) => ({
+            id: ele.id || ele.name || "anon",
+            value: ele.value,
+            disabled: ele.disabled,
+            type: ele.type,
+        })),
+    };
+    console.log("[DEBUG detail]", state);
+}
+
+numPrimer.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
-        if (this.value === "") this.value = 0;
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.value.trim() === "") this.value = "0";
+
+        numSekunder.value =
+            numSekunder.value.trim() === "" ? "0" : numSekunder.value;
         numSekunder.disabled = false;
-        numSekunder.select();
+        console.log("[DEBUG detail] numPrimer Enter", {
+            primer: this.value,
+            sekunderBeforeFocus: numSekunder.value,
+            sekunderDisabled: numSekunder.disabled,
+        });
+        setTimeout(() => {
+            numSekunder.focus();
+            numSekunder.select();
+        }, 0);
     }
 });
 
-numSekunder.addEventListener("keypress", function (event) {
+numSekunder.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
-        if (this.value === "") this.value = 0;
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.value.trim() === "") this.value = "0";
+
+        numTritier.value =
+            numTritier.value.trim() === "" ? "0" : numTritier.value;
         numTritier.disabled = false;
-        numTritier.select();
+        console.log("[DEBUG detail] numSekunder Enter", {
+            sekunder: this.value,
+            tritierBeforeFocus: numTritier.value,
+            tritierDisabled: numTritier.disabled,
+        });
+        setTimeout(() => {
+            numTritier.focus();
+            numTritier.select();
+        }, 0);
     }
 });
 
-numTritier.addEventListener("keypress", function (event) {
+numTritier.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
-        if (this.value === "") this.value = 0;
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.value.trim() === "") this.value = "0";
 
         if (txtJenis.value.trim() === "BB" || txtJenis.value.trim() === "BP") {
             numSekunder.value = Math.round(parseFloat(numTritier.value) / 25);
         }
 
-        if (modeProses === "koreksi") {
-            if (pilKonversi !== -1) {
-                btnKoreksiDetail.disabled = false;
-                btnHapusDetail.disabled = false;
-                btnKoreksiDetail.focus();
+        console.log("[DEBUG detail] numTritier Enter", {
+            tritier: this.value,
+            sekunderAfterAutoFill: numSekunder.value,
+            jenis: txtJenis.value,
+        });
+
+        setTimeout(() => {
+            if (modeProses === "koreksi") {
+                if (pilKonversi !== -1) {
+                    btnKoreksiDetail.disabled = false;
+                    btnHapusDetail.disabled = false;
+                    btnKoreksiDetail.focus();
+                } else {
+                    btnTambahDetail.disabled = false;
+                    btnTambahDetail.focus();
+                }
             } else {
                 btnTambahDetail.disabled = false;
                 btnTambahDetail.focus();
             }
-        } else {
-            btnTambahDetail.disabled = false;
-            btnTambahDetail.focus();
-        }
+        }, 0);
     }
 });
 
@@ -716,7 +519,7 @@ btnHapusMaster.addEventListener("click", function () {
 
 btnKeluar.addEventListener("click", function () {
     if (this.textContent === "Keluar") {
-        window.location.href = "/Extruder/ExtruderNet";
+        window.location.href = "/Extruder/Extruder";
     } else {
         toggleButtons(1);
         clearDataMaster();
@@ -735,9 +538,29 @@ btnKeluar.addEventListener("click", function () {
 // Detail Buttons
 btnTambahDetail.addEventListener("click", function () {
     this.disabled = true;
+    suppressSelectionReset = true;
+    debugDetailState("before save");
+
+    console.log("[DEBUG detail] save click start", {
+        suppressSelectionReset,
+        pilKomposisi,
+        primer: numPrimer.value,
+        sekunder: numSekunder.value,
+        tritier: numTritier.value,
+        activeElement:
+            document.activeElement?.id || document.activeElement?.tagName,
+    });
+
     let isEmpty = false;
     listOfDetailInputs.forEach((ele) => {
+        if (ele.disabled || ele.type === "hidden") return;
         if (ele.value.trim() === "") {
+            console.log("[DEBUG detail] field empty before save", {
+                id: ele.id || ele.name || "anon",
+                value: ele.value,
+                disabled: ele.disabled,
+                type: ele.type,
+            });
             if (!isEmpty) {
                 ele.focus();
                 Swal.fire(
@@ -754,11 +577,16 @@ btnTambahDetail.addEventListener("click", function () {
         if (
             findClickedRowInList(listKonversi, "IdType", txtIdProd.value) !== -1
         ) {
+            suppressSelectionReset = false;
             Swal.fire(
                 "Error",
                 "Sudah ada data yang sama dalam tabel konversi.",
                 "error",
-            );
+            ).then(() => {
+                clearSelection_DataTable("table_komposisi");
+                clearDataDetail();
+            });
+            return;
         } else {
             listKonversi.push({
                 Type: txtNamaProd.value,
@@ -794,14 +622,26 @@ btnTambahDetail.addEventListener("click", function () {
                 confirmButtonText: "Ya",
                 cancelButtonText: "Tidak",
             }).then((result) => {
+                suppressSelectionReset = false;
                 if (result.isConfirmed) {
                     $(window).scrollTop($(document).height());
-                    this.disabled = false;
+                    btnTambahDetail.disabled = false;
+
+                    document
+                        .querySelectorAll("#table_komposisi tbody tr")
+                        .forEach((row) => {
+                            row.classList.remove(
+                                "selected",
+                                "keyboard-selected",
+                            );
+                        });
+
                     let tableRows = document.querySelectorAll(
                         "#table_komposisi .odd, #table_komposisi .even",
                     );
-                    if (tableRows[pilKomposisi])
+                    if (tableRows[pilKomposisi]) {
                         tableRows[pilKomposisi].click();
+                    }
                     document.getElementById("table_komposisi").focus();
                 } else {
                     btnProses.focus();
@@ -810,6 +650,7 @@ btnTambahDetail.addEventListener("click", function () {
             });
         }
     } else {
+        suppressSelectionReset = false;
         this.disabled = false;
     }
 });
@@ -850,7 +691,10 @@ btnKoreksiDetail.addEventListener("click", function () {
                 "Berhasil",
                 `Data konversi ${listKonversi[pilKonversi].Type} berhasil dikoreksi!`,
                 "success",
-            );
+            ).then(() => {
+                btnProses.focus();
+            });
+            return;
         }
     });
 });
@@ -968,57 +812,96 @@ btnProses.addEventListener("click", async function () {
 //#endregion
 
 //#region Utility & Helper Functions
+function getKomposisiRows() {
+    return [...document.querySelectorAll("#table_komposisi tbody tr")].filter(
+        (row) =>
+            !row.textContent.includes("Tabel masih kosong") &&
+            !row.textContent.includes("Memuat data"),
+    );
+}
+
+function setKomposisiSelection(index, shouldFocus = true) {
+    const rows = getKomposisiRows();
+    if (!rows.length || index < 0 || index >= rows.length) return null;
+
+    rows.forEach((row) => {
+        row.classList.remove("keyboard-selected", "selected", "table-primary");
+    });
+
+    const targetRow = rows[index];
+    targetRow.classList.add("keyboard-selected", "selected", "table-primary");
+
+    if (shouldFocus) {
+        targetRow.focus();
+        targetRow.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+
+    return targetRow;
+}
+
 document
     .getElementById("table_komposisi")
     .addEventListener("keydown", function (event) {
-        const rows = [...this.querySelectorAll("tbody tr")];
-
+        const rows = getKomposisiRows();
         if (!rows.length) return;
 
-        const row = event.target.closest("tr");
+        const activeRow = event.target.closest("tr");
+        const currentIndex = activeRow
+            ? rows.indexOf(activeRow)
+            : rows.findIndex(
+                  (row) =>
+                      row.classList.contains("keyboard-selected") ||
+                      row.classList.contains("selected") ||
+                      row.classList.contains("table-primary"),
+              );
 
-        if (!row) return;
+        const startIndex = currentIndex >= 0 ? currentIndex : 0;
+        let nextIndex = startIndex;
 
-        const index = rows.indexOf(row);
+        switch (event.key) {
+            case "ArrowDown":
+                event.preventDefault();
+                nextIndex = Math.min(startIndex + 1, rows.length - 1);
+                break;
 
-        if (event.key === "ArrowDown") {
-            event.preventDefault();
+            case "ArrowUp":
+                event.preventDefault();
+                nextIndex = Math.max(startIndex - 1, 0);
+                break;
 
-            if (index < rows.length - 1) {
-                rows.forEach((row) =>
-                    row.classList.remove("keyboard-selected"),
-                );
+            case "PageDown":
+                event.preventDefault();
+                nextIndex = Math.min(startIndex + 5, rows.length - 1);
+                break;
 
-                const nextRow = rows[index + 1];
+            case "PageUp":
+                event.preventDefault();
+                nextIndex = Math.max(startIndex - 5, 0);
+                break;
 
-                nextRow.classList.add("keyboard-selected");
-                nextRow.focus();
+            case "Home":
+                event.preventDefault();
+                nextIndex = 0;
+                break;
 
-                rowEventKomposisi(index + 1, null, false);
-            }
+            case "End":
+                event.preventDefault();
+                nextIndex = rows.length - 1;
+                break;
+
+            case "Enter":
+                event.preventDefault();
+                event.stopPropagation();
+                rowEventKomposisi(startIndex, null, true);
+                return;
+
+            default:
+                return;
         }
 
-        if (event.key === "ArrowUp") {
-            event.preventDefault();
-
-            if (index > 0) {
-                rows.forEach((row) =>
-                    row.classList.remove("keyboard-selected"),
-                );
-
-                const prevRow = rows[index - 1];
-
-                prevRow.classList.add("keyboard-selected");
-                prevRow.focus();
-
-                rowEventKomposisi(index - 1, null, false);
-            }
-        }
-
-        if (event.key === "Enter") {
-            event.preventDefault();
-
-            rowEventKomposisi(index, null, true);
+        if (nextIndex !== startIndex) {
+            setKomposisiSelection(nextIndex, true);
+            rowEventKomposisi(nextIndex, null, false);
         }
     });
 
@@ -1577,35 +1460,82 @@ async function prosesHapusFetch(id_konversi_ext) {
 }
 
 function rowEventKomposisi(index, _, focus = false) {
+    if (index < 0 || !listKomposisi[index]) {
+        console.log("[DEBUG detail] rowEventKomposisi skipped invalid row", {
+            index,
+            suppressSelectionReset,
+            modeProses,
+        });
+        return;
+    }
+
+    const rows = document.querySelectorAll("#table_komposisi tbody tr");
+    rows.forEach((row, i) => {
+        if (i === index) {
+            row.classList.add("selected");
+        } else {
+            row.classList.remove(
+                "selected",
+                "keyboard-selected",
+                "table-primary",
+            );
+        }
+    });
+
     pilKomposisi = index;
     let data = listKomposisi[index];
+
+    const hasCurrentDetailInput = [numPrimer, numSekunder, numTritier].some(
+        (input) => {
+            const value = (input.value || "").trim();
+            return value !== "" && parseFloat(value) !== 0;
+        },
+    );
 
     txtIdProd.value = data.IdType;
     txtNamaProd.value = data.NamaType;
     spnSatPrimer.textContent = data.SatuanPrimer || "NULL";
     spnSatSekunder.textContent = data.SatuanSekunder || "NULL";
     spnSatTritier.textContent = data.SatuanTritier || "NULL";
-    numPrimer.value = "";
-    numSekunder.value = "";
-    numTritier.value = "";
     txtJenis.value = data.StatusType;
+
+    if (!hasCurrentDetailInput && !suppressSelectionReset) {
+        numPrimer.value = "0";
+        numSekunder.value = "0";
+        numTritier.value = "0";
+    }
+
+    console.log("[DEBUG detail] rowEventKomposisi", {
+        index,
+        statusType: data.StatusType,
+        idType: data.IdType,
+        selectedName: data.NamaType,
+        primerValue: numPrimer.value,
+        sekunderValue: numSekunder.value,
+        tritierValue: numTritier.value,
+        modeProses,
+        suppressSelectionReset,
+        focus,
+        hasCurrentDetailInput,
+    });
 
     getSaldoFetch(data.IdType, () => {
         if (
             data.StatusType.trim() === "BB" ||
             data.StatusType.trim() === "BP"
         ) {
-            if (parseFloat(numStokTritier.value) === 0) {
-                Swal.fire(
-                    "Peringatan",
-                    `${data.NamaType} tidak dapat digunakan karena stok telah habis.`,
-                    "warning",
-                );
-                // Pada VB tetap bisa lanjut menskipun stok habis(0)
-                // commet 3 bari code dibawah agar sama seperti VB uncommet jika stok harus ada
-                // clearSelection_DataTable("table_komposisi");
-                // clearDataDetail();
-                // return;
+            let stokTritier = parseFloat(numStokTritier.value) || 0;
+            if (stokTritier <= 0) {
+                if (focus && !suppressSelectionReset) {
+                    Swal.fire(
+                        "Peringatan",
+                        `${data.NamaType} tidak dapat digunakan karena stok telah habis.`,
+                        "warning",
+                    );
+                    clearSelection_DataTable("table_komposisi");
+                    clearDataDetail();
+                }
+                return;
             }
         }
 
@@ -1617,9 +1547,11 @@ function rowEventKomposisi(index, _, focus = false) {
             btnKoreksiDetail.disabled = true;
             btnHapusDetail.disabled = true;
 
-            if (focus) {
-                numPrimer.focus();
-                numPrimer.select();
+            if (focus && !suppressSelectionReset && !hasCurrentDetailInput) {
+                setTimeout(() => {
+                    numPrimer.focus();
+                    numPrimer.select();
+                }, 0);
             }
         }
     });
@@ -1661,20 +1593,20 @@ function rowEventKonversi(index, _, focus = false) {
 //#region Initialization
 function init() {
     tableKonversi = $("#table_konversi").DataTable({
-        responsive: true,
+        responsive: false,
         paging: false,
         scrollY: "350px",
-        scrollX: "1000000px",
+        scrollX: true,
         columns: colKonversi,
         searching: false,
         info: false,
     });
 
     tableKomposisi = $("#table_komposisi").DataTable({
-        responsive: true,
+        responsive: false,
         paging: false,
         scrollY: "300px",
-        scrollX: "1000000px",
+        scrollX: true,
         columns: colKomposisi,
         searching: false,
         info: false,

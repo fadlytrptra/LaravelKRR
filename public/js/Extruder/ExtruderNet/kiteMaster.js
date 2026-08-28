@@ -23,281 +23,6 @@ const btnKeluar = document.getElementById("btn_keluar");
 const listOfTxt = document.querySelectorAll("input[type='text']");
 //#endregion
 
-//#region Generic Modal Lookup System
-let currentLookupData = [];
-let filteredLookupData = [];
-let currentPage = 1;
-let itemsPerPage = 10;
-let currentLookupConfig = {};
-let selectedRowIndex = 0;
-
-async function openLookupModal(config) {
-    try {
-        currentLookupConfig = config;
-        currentPage = 1;
-
-        const showPageSelect = document.getElementById("showPerPage");
-        itemsPerPage = parseInt(showPageSelect.value) || 10;
-
-        document.getElementById("lookupTitle").innerHTML =
-            `<i class="bi bi-view-list text-primary me-2"></i>${config.title}`;
-        const trHeader = document.getElementById("lookupHeaders");
-        trHeader.innerHTML = config.headers
-            .map((h) => `<th>${h}</th>`)
-            .join("");
-
-        const tbody = document.getElementById("lookupBody");
-        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center"><div class="spinner-border spinner-border-sm"></div> Memuat data...</td></tr>`;
-        document.getElementById("paginationControls").innerHTML = "";
-
-        const modalEl = document.getElementById("modalLookupGeneric");
-        const modalInstance = new bootstrap.Modal(modalEl);
-        modalInstance.show();
-
-        const processData = (data) => {
-            currentLookupData = data;
-            filteredLookupData = data;
-            renderLookupTable();
-            renderPagination();
-
-            selectedRowIndex = 0;
-
-            setTimeout(() => {
-                document.getElementById("lookupSearch").focus();
-                highlightSelectedRow();
-            }, 500);
-        };
-
-        if (config.url) {
-            const data = await fetchSelectAsync(config.url, (data) =>
-                processData(data),
-            );
-        } else if (config.data) {
-            processData(config.data);
-        }
-
-        const searchInput = document.getElementById("lookupSearch");
-        searchInput.value = "";
-
-        searchInput.onkeydown = function (e) {
-            if (e.key === "ArrowLeft") {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderLookupTable();
-                    renderPagination();
-                }
-                return;
-            }
-
-            if (e.key === "ArrowRight") {
-                e.preventDefault();
-                const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage,
-                );
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderLookupTable();
-                    renderPagination();
-                }
-                return;
-            }
-        };
-
-        searchInput.onkeyup = function (e) {
-            if (["ArrowLeft", "ArrowRight"].includes(e.key)) return;
-
-            if (e.key === "ArrowDown") {
-                e.preventDefault();
-
-                const rows = document.querySelectorAll("#lookupBody tr");
-                if (rows.length > 0) {
-                    rows[selectedRowIndex].focus();
-                }
-                return;
-            }
-
-            if (e.key === "Enter") {
-                e.preventDefault();
-
-                const rows = document.querySelectorAll("#lookupBody tr");
-                if (rows.length > 0) {
-                    rows[selectedRowIndex].click();
-                }
-                return;
-            }
-
-            const keyword = this.value.toLowerCase();
-            filteredLookupData = currentLookupData.filter((row) => {
-                return config.columns.some((col) =>
-                    String(row[col] || "")
-                        .toLowerCase()
-                        .includes(keyword),
-                );
-            });
-
-            currentPage = 1;
-            renderLookupTable();
-            renderPagination();
-        };
-
-        showPageSelect.onchange = function () {
-            itemsPerPage = parseInt(this.value);
-            currentPage = 1;
-            renderLookupTable();
-            renderPagination();
-        };
-    } catch (error) {
-        Swal.fire(
-            "Error",
-            error.message || "Gagal memuat data lookup.",
-            "error",
-        );
-    }
-}
-
-function highlightSelectedRow() {
-    const rows = document.querySelectorAll("#lookupBody tr");
-
-    rows.forEach((row, index) => {
-        if (index === selectedRowIndex) {
-            row.classList.add("table-primary");
-        }
-    });
-}
-
-function renderLookupTable() {
-    const tbody = document.getElementById("lookupBody");
-    const config = currentLookupConfig;
-    tbody.innerHTML = "";
-
-    if (filteredLookupData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center text-danger">Data tidak ditemukan</td></tr>`;
-        return;
-    }
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedData = filteredLookupData.slice(startIndex, endIndex);
-
-    paginatedData.forEach((row) => {
-        const tr = document.createElement("tr");
-        tr.style.cursor = "pointer";
-        tr.tabIndex = 0;
-
-        config.columns.forEach((col) => {
-            const td = document.createElement("td");
-            let cellData = row[col];
-            if (col === "TglStart" && cellData && cellData.includes("T")) {
-                cellData = cellData.split("T")[0];
-            }
-            td.textContent = cellData || "-";
-            tr.appendChild(td);
-        });
-
-        tr.addEventListener("click", () => {
-            const modalEl = document.getElementById("modalLookupGeneric");
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
-            config.onSelect(row);
-        });
-
-        tr.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                this.click();
-            } else if (e.key === "ArrowDown") {
-                e.preventDefault();
-                let nextRow = this.nextElementSibling;
-                if (nextRow) nextRow.focus();
-            } else if (e.key === "ArrowUp") {
-                e.preventDefault();
-                let prevRow = this.previousElementSibling;
-                if (prevRow) {
-                    prevRow.focus();
-                } else {
-                    document.getElementById("lookupSearch").focus();
-                }
-            } else if (e.key === "ArrowLeft") {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderLookupTable();
-                    renderPagination();
-                    const firstRow = document.querySelector("#lookupBody tr");
-                    if (firstRow) firstRow.focus();
-                }
-            } else if (e.key === "ArrowRight") {
-                e.preventDefault();
-                const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage,
-                );
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderLookupTable();
-                    renderPagination();
-                    const firstRow = document.querySelector("#lookupBody tr");
-                    if (firstRow) firstRow.focus();
-                }
-            }
-        });
-
-        tbody.appendChild(tr);
-    });
-    highlightSelectedRow();
-}
-
-function renderPagination() {
-    const paginationEl = document.getElementById("paginationControls");
-    paginationEl.innerHTML = "";
-
-    const totalPages = Math.ceil(filteredLookupData.length / itemsPerPage);
-    if (totalPages <= 1) return;
-
-    const prevLi = document.createElement("li");
-    prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
-    prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous">&laquo;</a>`;
-    prevLi.onclick = (e) => {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            renderLookupTable();
-            renderPagination();
-        }
-    };
-    paginationEl.appendChild(prevLi);
-
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
-
-    for (let i = startPage; i <= endPage; i++) {
-        const pageLi = document.createElement("li");
-        pageLi.className = `page-item ${currentPage === i ? "active" : ""}`;
-        pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-        pageLi.onclick = (e) => {
-            e.preventDefault();
-            currentPage = i;
-            renderLookupTable();
-            renderPagination();
-        };
-        paginationEl.appendChild(pageLi);
-    }
-
-    const nextLi = document.createElement("li");
-    nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
-    nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next">&raquo;</a>`;
-    nextLi.onclick = (e) => {
-        e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderLookupTable();
-            renderPagination();
-        }
-    };
-    paginationEl.appendChild(nextLi);
-}
-//#endregion
-
 //#region Events
 rdoPembebasan.addEventListener("change", function () {
     clearAll();
@@ -311,39 +36,26 @@ btnLookupKodeBarang.addEventListener("click", function () {
     let kode = rdoPembebasan.checked ? 1 : 2;
 
     // SP_1273_EXT_Cek_Bahan_KITE
-    fetchSelectAsync(
-        `/Master/getCekBahanKite/${safeUrlParam(kode)}`,
-        (data) => {
-            if (data.length > 0) {
-                openLookupModal({
-                    title: "Pilih Kode Barang KITE",
-                    data: data,
-                    headers: ["Kode Barang", "Nama Type"],
-                    columns: ["KodeBarang", "NamaType"],
-                    onSelect: function (selectedRow) {
-                        displayKodeBarang.value = selectedRow.KodeBarang;
-                        txtNamaBarang.value = selectedRow.NamaType;
+    openLookupModal({
+        title: "Pilih Kode Barang KITE",
+        url: `/Master/getCekBahanKite/${safeUrlParam(kode)}`,
+        headers: ["Kode Barang", "Nama Type"],
+        columns: ["KodeBarang", "NamaType"],
+        onSelect: (row) => {
+            displayKodeBarang.value = row.KodeBarang;
+            txtNamaBarang.value = row.NamaType;
 
-                        txtBenang.value = "";
-                        txtBahanPP.value = "";
-                        hidMeter.value = "";
-                        hidRoll.value = "";
-                        txtHasil.value = "";
-                        txtSisa.value = "";
-                        btnSimpan.disabled = false;
+            txtBenang.value = "";
+            txtBahanPP.value = "";
+            hidMeter.value = "";
+            hidRoll.value = "";
+            txtHasil.value = "";
+            txtSisa.value = "";
+            btnSimpan.disabled = false;
 
-                        txtBahanPP.focus();
-                    },
-                });
-            } else {
-                Swal.fire({
-                    icon: "info",
-                    title: "Informasi",
-                    text: "Data kode barang tidak ditemukan.",
-                });
-            }
+            txtBahanPP.focus();
         },
-    );
+    });
 });
 
 txtBahanPP.addEventListener("keypress", function (event) {
@@ -442,35 +154,27 @@ btnSimpan.addEventListener("click", function () {
 });
 
 btnCekKode.addEventListener("click", function () {
-    // SP_1273_EXT_KITE
     const kode = rdoPembebasan.checked ? 2 : 3;
-    const url = `/Master/getKiteExtruder/${safeUrlParam(kode)}`;
 
-    fetchSelectAsync(url, (data) => {
-        if (data.length === 1) {
-            processCekData(data[0].KodeBarang, data[0].TglStart);
-            return;
-        }
+    // SP_1273_EXT_KITE
+    openLookupModal({
+        title: "Cek Data KITE",
+        url: `/Master/getKiteExtruder/${safeUrlParam(kode)}`,
+        headers: ["Tanggal Start", "Kode Barang"],
+        columns: ["TglStart", "KodeBarang"],
+        onSelect: (row) => {
+            let tglStart = row.TglStart;
+            if (tglStart && tglStart.includes("T")) {
+                tglStart = tglStart.split("T")[0];
+            }
 
-        const formattedData = data.map((row) => ({
-            ...row,
-            TglStart: row.TglStart.substring(0, 10),
-        }));
-
-        openLookupModal({
-            title: "Cek Data KITE",
-            data: formattedData,
-            headers: ["Tanggal Start", "Kode Barang"],
-            columns: ["TglStart", "KodeBarang"],
-            onSelect: function (selectedRow) {
-                processCekData(selectedRow.KodeBarang, selectedRow.TglStart);
-            },
-        });
+            processCekData(row.KodeBarang, tglStart);
+        },
     });
 });
 
 btnKeluar.addEventListener("click", function () {
-    window.location.href = "/Extruder/ExtruderNet";
+    window.location.href = '/Extruder/Extruder';
 });
 //#endregion
 

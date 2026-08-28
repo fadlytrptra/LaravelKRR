@@ -408,7 +408,7 @@ btnProses.addEventListener("click", async function () {
 });
 
 btnKeluar.addEventListener("click", function () {
-    window.location.href = "/Extruder/ExtruderNet";
+    window.location.href = '/Extruder/Extruder';
 });
 
 async function cekPenyesuaian() {

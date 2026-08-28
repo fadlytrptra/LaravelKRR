@@ -401,3 +401,85 @@ a:hover {
 .btn-light {
     border: 1px black solid;
 }
+
+/* ===== MOVED_TABLE_STYLES_20260826 ===== */
+
+.extruder_root table {
+    font-size: 14px;
+}
+
+.extruder_root table.cell-border {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+.extruder_root table.cell-border th,
+.extruder_root table.cell-border td {
+    border: 1px solid #555555;
+    white-space: nowrap;
+}
+
+.extruder_root table.cell-border tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.extruder_root table.cell-border th {
+    background-color: #dddddd;
+}
+
+.extruder_root .dataTables_filter {
+    margin-bottom: 15px !important;
+}
+
+.extruder_root .sorting {
+    font-size: 14px;
+}
+
+.extruder_root .card-body {
+    overflow-x: auto;
+}
+
+#tableLookupGeneric tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+#tableLookupGeneric tbody tr:focus {
+    outline: none;
+}
+
+#tableLookupGeneric tbody tr:focus td {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.extruder_root .input-group > .form-control,
+.extruder_root .input-group > .btn,
+.extruder_root .input-group > .input-group-text {
+    height: 38px !important;
+    display: flex;
+    align-items: center;
+}
+
+.extruder_root input[type="number"].form-control {
+    display: block;
+}
+
+.extruder_root .hidden {
+    display: none !important;
+}
+
+.extruder_root .unclickable {
+    pointer-events: none;
+    background-color: #e9ecef;
+}
+
+.extruder_root #table_komposisi tbody tr.keyboard-selected {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.extruder_root #table_komposisi tbody tr.keyboard-selected td {
+    color: white !important;
+}
+
+/* ===== END MOVED_TABLE_STYLES_20260826 ===== */

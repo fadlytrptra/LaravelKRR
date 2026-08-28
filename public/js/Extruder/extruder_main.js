@@ -87,13 +87,20 @@ function addTable_DataTable(
         }));
     }
 
+    let dtConfig = {
+        responsive: false,
+        paging: false,
+        scrollY: tHeight != null ? tHeight : "250px",
+        scrollX: true,
+        autoWidth: true,
+        columns: colObject,
+        data: listData
+    };
+
     if (extra === "table_only") {
         let table1 = tableElement.DataTable({
-            responsive: true,
-            paging: false,
-            scrollY: tHeight != null ? tHeight : "250px",
-            scrollX: colWidth != null ? "1000000px" : "",
-            columns: colObject,
+            ...dtConfig,
+            data: null,
             searching: false,
             info: false,
             ordering: false,
@@ -126,14 +133,9 @@ function addTable_DataTable(
         });
     } else if (extra === "dom_empty") {
         tableElement.DataTable({
-            responsive: true,
-            paging: false,
-            scrollY: tHeight != null ? tHeight : "250px",
-            scrollX: colWidth != null ? "1000000px" : "",
-            data: listData,
-            columns: colObject,
+            ...dtConfig,
             language: {
-                searchPlaceholder: ` Tabel ${tableId.replace("table_", "").replace("_", " ")}...`,
+                searchPlaceholder: ` Cari di tabel...`,
                 search: "",
                 info: "Menampilkan _TOTAL_ data",
             },
@@ -151,15 +153,10 @@ function addTable_DataTable(
         addSearchBar_DataTable(tableId);
     } else if (extra[0] === "colored_row") {
         tableElement.DataTable({
-            responsive: true,
-            paging: false,
-            scrollY: tHeight != null ? tHeight : "250px",
-            scrollX: colWidth != null ? "1000000px" : "",
-            data: listData,
-            columns: colObject,
+            ...dtConfig,
             dom: '<"row"<"col-sm-6"i><"col-sm-6"f>><"row"<"col-sm-12"tr>>',
             language: {
-                searchPlaceholder: ` Tabel ${tableId.replace("table_", "").replace("_", " ")}...`,
+                searchPlaceholder: ` Cari di tabel...`,
                 search: "",
                 info: "Menampilkan _TOTAL_ data",
             },
@@ -174,14 +171,10 @@ function addTable_DataTable(
         addSearchBar_DataTable(tableId);
     } else if (extra === "add_paging") {
         tableElement.DataTable({
-            responsive: true,
+            ...dtConfig,
             paging: true,
-            scrollY: tHeight != null ? tHeight : "250px",
-            scrollX: colWidth != null ? "1000000px" : "",
-            data: listData,
-            columns: colObject,
             language: {
-                searchPlaceholder: ` Tabel ${tableId.replace("table_", "").replace("_", " ")}...`,
+                searchPlaceholder: ` Cari di tabel...`,
                 search: "",
                 info: "Menampilkan _TOTAL_ data",
             },
@@ -189,15 +182,10 @@ function addTable_DataTable(
         addSearchBar_DataTable(tableId);
     } else {
         tableElement.DataTable({
-            responsive: true,
-            paging: false,
-            scrollY: tHeight != null ? tHeight : "250px",
-            scrollX: colWidth != null ? "1000000px" : "",
-            data: listData,
-            columns: colObject,
+            ...dtConfig,
             dom: '<"row"<"col-sm-6"i><"col-sm-6"f>><"row"<"col-sm-12"tr>>',
             language: {
-                searchPlaceholder: ` Tabel ${tableId.replace("table_", "").replace("_", " ")}...`,
+                searchPlaceholder: ` Cari di tabel...`,
                 search: "",
                 info: "Menampilkan _TOTAL_ data",
             },
@@ -404,9 +392,9 @@ function clearOptions(selectEle, selectLbl = "") {
     const selectHead =
         selectLbl === ""
             ? "Pilih " +
-              snakeCaseToTitleCase(
-                  selectEle.getAttribute("id").replace("select_", ""),
-              )
+            snakeCaseToTitleCase(
+                selectEle.getAttribute("id").replace("select_", ""),
+            )
             : selectLbl;
 
     selectEle.innerHTML = `<option selected disabled>-- ${selectHead} --</option>`;
@@ -697,5 +685,405 @@ function formCursor(cursor_str) {
             ele.style.cursor = cursor_str;
         }
     });
+}
+//#endregion
+
+// #region Generic Modal Lookup System
+let currentLookupData = [];
+let filteredLookupData = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+let currentLookupConfig = {};
+let selectedRowIndex = 0;
+
+async function openLookupModal(config) {
+    try {
+        currentLookupConfig = config;
+        currentPage = 1;
+
+        const showPageSelect = document.getElementById("showPerPage");
+        itemsPerPage = parseInt(showPageSelect.value) || 10;
+
+        document.getElementById("lookupTitle").innerHTML =
+            `<i class="bi bi-view-list text-primary me-2"></i>${config.title}`;
+
+        const trHeader = document.getElementById("lookupHeaders");
+
+        trHeader.innerHTML = config.headers
+            .map((h) => `<th>${h}</th>`)
+            .join("");
+
+        const tbody = document.getElementById("lookupBody");
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="${config.headers.length}" class="text-center">
+                    <div class="spinner-border spinner-border-sm"></div>
+                    Memuat data...
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("paginationControls").innerHTML = "";
+
+        const modalEl = document.getElementById("modalLookupGeneric");
+
+        const modalInstance =
+            bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        const searchInput =
+            document.getElementById("lookupSearch");
+
+        // Reset search
+        searchInput.value = "";
+
+        let modalShown = false;
+        let dataRendered = false;
+
+        function focusLookupSearch() {
+            if (!modalShown || !dataRendered) {
+                return;
+            }
+
+            requestAnimationFrame(() => {
+                const input =
+                    document.getElementById("lookupSearch");
+
+                if (!input) {
+                    return;
+                }
+
+                // Pastikan modal masih terbuka
+                if (!modalEl.classList.contains("show")) {
+                    return;
+                }
+
+                input.focus();
+                input.select();
+
+                highlightSelectedRow();
+            });
+        }
+
+        modalEl.addEventListener(
+            "shown.bs.modal",
+            function () {
+                modalShown = true;
+
+                focusLookupSearch();
+            },
+            { once: true }
+        );
+
+        modalInstance.show();
+
+        const data = await fetchSelectAsync(config.url);
+
+        currentLookupData = data;
+        filteredLookupData = data;
+
+        renderLookupTable();
+
+        renderPagination();
+
+        selectedRowIndex = 0;
+
+        dataRendered = true;
+
+        focusLookupSearch();
+
+        searchInput.onkeydown = function (e) {
+
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+
+                if (currentPage > 1) {
+                    currentPage--;
+
+                    selectedRowIndex = 0;
+
+                    renderLookupTable();
+                    renderPagination();
+
+                    // Kembalikan focus ke search
+                    requestAnimationFrame(() => {
+                        searchInput.focus();
+                    });
+                }
+
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage
+                );
+
+                if (currentPage < totalPages) {
+                    currentPage++;
+
+                    selectedRowIndex = 0;
+
+                    renderLookupTable();
+                    renderPagination();
+
+                    // Kembalikan focus ke search
+                    requestAnimationFrame(() => {
+                        searchInput.focus();
+                    });
+                }
+
+                return;
+            }
+        };
+
+        searchInput.onkeyup = function (e) {
+
+            // ArrowLeft / ArrowRight
+            if (
+                e.key === "ArrowLeft" ||
+                e.key === "ArrowRight"
+            ) {
+                return;
+            }
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+
+                const rows =
+                    document.querySelectorAll("#lookupBody tr");
+
+                if (rows.length > 0) {
+
+                    // Pastikan index tidak melebihi jumlah row
+                    if (
+                        selectedRowIndex >= rows.length
+                    ) {
+                        selectedRowIndex =
+                            rows.length - 1;
+                    }
+
+                    rows[selectedRowIndex].focus();
+
+                    highlightSelectedRow();
+                }
+
+                return;
+            }
+
+            if (e.key === "Enter") {
+                e.preventDefault();
+
+                const rows =
+                    document.querySelectorAll("#lookupBody tr");
+
+                if (rows.length > 0) {
+
+                    if (
+                        selectedRowIndex >= rows.length
+                    ) {
+                        selectedRowIndex =
+                            rows.length - 1;
+                    }
+
+                    rows[selectedRowIndex].click();
+                }
+
+                return;
+            }
+
+            const keyword =
+                this.value.toLowerCase().trim();
+
+            filteredLookupData =
+                currentLookupData.filter((row) => {
+
+                    return config.columns.some((col) => {
+
+                        return String(row[col] || "")
+                            .toLowerCase()
+                            .includes(keyword);
+                    });
+                });
+
+            // Reset halaman
+            currentPage = 1;
+
+            // Reset selected row
+            selectedRowIndex = 0;
+
+            // Render ulang
+            renderLookupTable();
+            renderPagination();
+
+            // Tetap focus di search
+            requestAnimationFrame(() => {
+                searchInput.focus();
+            });
+        };
+
+        showPageSelect.onchange = function () {
+
+            itemsPerPage =
+                parseInt(this.value) || 10;
+
+            currentPage = 1;
+
+            selectedRowIndex = 0;
+
+            renderLookupTable();
+            renderPagination();
+
+            requestAnimationFrame(() => {
+                searchInput.focus();
+            });
+        };
+
+    } catch (error) {
+
+        Swal.fire(
+            "Error",
+            error.message ||
+            "Gagal memuat data lookup.",
+            "error"
+        );
+    }
+}
+
+function highlightSelectedRow() {
+    const rows = document.querySelectorAll("#lookupBody tr");
+    rows.forEach((row, index) => {
+        if (index === selectedRowIndex) {
+            row.classList.add("table-primary");
+        }
+    });
+}
+
+function renderLookupTable() {
+    const tbody = document.getElementById("lookupBody");
+    const config = currentLookupConfig;
+    tbody.innerHTML = "";
+
+    if (filteredLookupData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center text-danger">Data tidak ditemukan</td></tr>`;
+        return;
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedData = filteredLookupData.slice(startIndex, endIndex);
+
+    paginatedData.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.style.cursor = "pointer";
+        tr.tabIndex = 0;
+
+        config.columns.forEach((col) => {
+            const td = document.createElement("td");
+            td.textContent = row[col] || "-";
+            tr.appendChild(td);
+        });
+
+        tr.addEventListener("click", () => {
+            const modalEl = document.getElementById("modalLookupGeneric");
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+            config.onSelect(row);
+        });
+
+        tr.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                this.click();
+            } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                let nextRow = this.nextElementSibling;
+                if (nextRow) nextRow.focus();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                let prevRow = this.previousElementSibling;
+                if (prevRow) {
+                    prevRow.focus();
+                } else {
+                    document.getElementById("lookupSearch").focus();
+                }
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                const totalPages = Math.ceil(
+                    filteredLookupData.length / itemsPerPage,
+                );
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderLookupTable();
+                    renderPagination();
+                    const firstRow = document.querySelector("#lookupBody tr");
+                    if (firstRow) firstRow.focus();
+                }
+            }
+        });
+
+        tbody.appendChild(tr);
+    });
+    highlightSelectedRow();
+}
+
+function renderPagination() {
+    const paginationEl = document.getElementById("paginationControls");
+    paginationEl.innerHTML = "";
+    const totalPages = Math.ceil(filteredLookupData.length / itemsPerPage);
+    if (totalPages <= 1) return;
+
+    const prevLi = document.createElement("li");
+    prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+    prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous">&laquo;</a>`;
+    prevLi.onclick = (e) => {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            renderLookupTable();
+            renderPagination();
+        }
+    };
+    paginationEl.appendChild(prevLi);
+
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    for (let i = startPage; i <= endPage; i++) {
+        const pageLi = document.createElement("li");
+        pageLi.className = `page-item ${currentPage === i ? "active" : ""}`;
+        pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        pageLi.onclick = (e) => {
+            e.preventDefault();
+            currentPage = i;
+            renderLookupTable();
+            renderPagination();
+        };
+        paginationEl.appendChild(pageLi);
+    }
+
+    const nextLi = document.createElement("li");
+    nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+    nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next">&raquo;</a>`;
+    nextLi.onclick = (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderLookupTable();
+            renderPagination();
+        }
+    };
+    paginationEl.appendChild(nextLi);
 }
 //#endregion
