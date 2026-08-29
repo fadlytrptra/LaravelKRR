@@ -41,72 +41,49 @@ class CetakPembelianKencanaController extends Controller
             // =====================================================
             $query = DB::connection('ConnKCNPurchase')
                 ->table('YTRANSBL as T')
-
-                // =================================================
-                // JOIN SUPPLIER
-                // =================================================
                 ->leftJoin(
                     'YSUPPLIER as S',
                     'T.Supplier',
                     '=',
                     'S.NO_SUP'
                 )
-
-                // =================================================
-                // JOIN DIVISI
-                // =================================================
                 ->leftJoin(
                     'YDIVISI as D',
                     'T.Kd_div',
                     '=',
                     'D.KD_DIV'
                 )
-
                 ->select([
                     'T.No_sppb',
                     'T.Kd_div',
                     'D.NM_DIV',
-
                     'T.Tgl_sppb',
-
                     'T.Supplier',
                     'S.NO_SUP',
                     'S.NM_SUP',
-
                     'T.Direktur',
                     'T.Dir_Agree',
                     'T.Tgl_Direktur',
                 ])
 
-                // =================================================
-                // HANYA DATA YANG SUDAH ACC DIREKTUR
-                // =================================================
                 ->whereNotNull(
                     'T.Direktur'
                 )
-
                 ->whereRaw(
                     "LTRIM(RTRIM(T.Direktur)) <> ''"
                 )
-
                 ->where(
                     'T.Dir_Agree',
                     1
                 )
-
                 ->whereNotNull(
                     'T.Tgl_Direktur'
                 )
-
-                // =================================================
-                // FILTER TANGGAL SPPB
-                // =================================================
                 ->where(
                     'T.Tgl_sppb',
                     '>=',
                     $tanggalMulai . ' 00:00:00'
                 )
-
                 ->where(
                     'T.Tgl_sppb',
                     '<',
@@ -115,10 +92,6 @@ class CetakPembelianKencanaController extends Controller
                         strtotime($tanggalSelesai . ' +1 day')
                     ) . ' 00:00:00'
                 )
-
-                // =================================================
-                // URUTKAN
-                // =================================================
                 ->orderByDesc(
                     'T.Tgl_Direktur'
                 );
@@ -129,25 +102,41 @@ class CetakPembelianKencanaController extends Controller
             // =====================================================
             $data = $query->get();
 
+            $nomorUserDirektur = $data
+                ->pluck('Direktur')
+                ->filter()
+                ->map(function ($value) {
+                    return trim($value);
+                })
+                ->unique()
+                ->values()
+                ->toArray();
 
-            // =====================================================
-            // SATU No SPPB = SATU BARIS
-            // =====================================================
+            $namaDirektur = DB::connection('ConnEDP')
+                ->table('UserMaster')
+                ->select([
+                    'NomorUser',
+                    'NamaUser'
+                ])
+                ->whereIn('NomorUser', $nomorUserDirektur)
+                ->get()
+                ->keyBy(function ($item) {
+                    return trim($item->NomorUser);
+                });
+
             $data = $data
                 ->unique(function ($item) {
-
                     return trim(
                         $item->No_sppb
                     );
-
                 })
                 ->values();
 
+            $data = $data->map(function ($item) use ($namaDirektur) {
 
-            // =====================================================
-            // FORMAT DATA
-            // =====================================================
-            $data = $data->map(function ($item) {
+                $nomorUser = trim($item->Direktur ?? '');
+
+                $user = $namaDirektur->get($nomorUser);
 
                 return [
 
@@ -184,10 +173,12 @@ class CetakPembelianKencanaController extends Controller
                             $item->NM_SUP ?? ''
                         ),
 
-                    'Direktur' =>
-                        trim(
-                            $item->Direktur ?? ''
-                        ),
+                     'Direktur' =>
+                        $nomorUser,
+
+                    // Nama direktur untuk ditampilkan
+                    'NamaDirektur' =>
+                        trim($user->NamaUser ?? ''),
 
                     'Dir_Agree' =>
                         (bool) $item->Dir_Agree,

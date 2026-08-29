@@ -588,28 +588,18 @@ $(document).ready(function () {
                         // DIREKTUR
                         // =================================================
                         {
-                            data:
-                                'Direktur',
+                            data: 'NamaDirektur',
+                            defaultContent: '-',
+                            className: 'text-center',
 
-                            defaultContent:
-                                '-',
+                            render: function (data) {
 
-                            className:
-                                'text-center',
-
-                            render:
-                                function (
-                                    data
-                                ) {
-
-                                    if (!data) {
-                                        return '-';
-                                    }
-
-                                    return String(
-                                        data
-                                    ).trim();
+                                if (!data) {
+                                    return '-';
                                 }
+
+                                return String(data).trim();
+                            }
                         },
 
 
