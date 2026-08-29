@@ -152,7 +152,7 @@ class UpdateDetailBKMController extends Controller
             $responseBiaya = [];
             $k = 0;
             foreach ($biayaResults as $row) {
-                if ($row->biaya != 0) {
+                if ($row->Biaya != 0) {
                     $k++;
                     $responseBiaya[] = [
                         'Keterangan' => $row->Keterangan ?? '',
