@@ -97,12 +97,22 @@ setInputFilter(
     "Tidak boleh character, harus angka"
 );
 
-kd_barang.addEventListener("input", function (event) {
-    if (kd_barang.value != "") {
-        btn_proses.disabled = false;
+function updateTombolProses() {
+    let kodeBarang = kd_barang.value.trim();
+
+    if (btnActive === "isi") {
+        if (check_barangSama.checked) {
+            btn_proses.disabled = kodeBarang === "";
+        } else {
+            btn_proses.disabled = false;
+        }
     } else {
-        btn_proses.disabled = true;
+        btn_proses.disabled = kodeBarang === "";
     }
+}
+
+kd_barang.addEventListener("input", function () {
+    updateTombolProses();
 });
 
 kd_barang.addEventListener("keypress", function (event) {
@@ -173,6 +183,7 @@ check_barangSama.addEventListener("click", function (event) {
             select_subKategori.disabled = false;
         }
     }
+    updateTombolProses();
 });
 
 btn_isi.addEventListener("click", function () {
@@ -182,6 +193,8 @@ btn_isi.addEventListener("click", function () {
     btn_isi.disabled = true;
     btn_koreksi.disabled = true;
     btn_hapus.disabled = true;
+    updateTombolProses();
+
     kd_barang.focus();
 });
 
