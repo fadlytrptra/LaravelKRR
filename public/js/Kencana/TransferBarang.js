@@ -68,7 +68,7 @@ jQuery(function ($) {
 
     function getDivisi() {
         $.ajax({
-            url: "/Kencana/TransferBarang/divisi",
+            url: "/Kencana/TransferBarang/action/divisi",
             type: "GET",
             data: {
                 _token: csrfToken,
@@ -154,7 +154,7 @@ jQuery(function ($) {
             kd_div: select_divisi.val()
         });
         $.ajax({
-            url: "/Kencana/TransferBarang/load",
+            url: "/Kencana/TransferBarang/action/load",
             type: "GET",
             data: {
                 tgl_awal: tgl_awal.value,
@@ -319,7 +319,7 @@ jQuery(function ($) {
 
     function cekKonversi(noSatTerima) {
         $.ajax({
-            url: "/Kencana/TransferBarang/konversi",
+            url: "/Kencana/TransferBarang/action/konversi",
             type: "GET",
             data: {
                 kd_barang: terima_kodeBarang.value,
@@ -599,7 +599,7 @@ jQuery(function ($) {
         console.log("rowData[3]:", rowData[3]);
         console.log("typeof:", typeof rowData[3]);
         $.ajax({
-            url: "/Kencana/TransferBarang/detail",
+            url: "/Kencana/TransferBarang/action/detail",
             type: "GET",
             data: {
                 kd_barang: rowData[3],

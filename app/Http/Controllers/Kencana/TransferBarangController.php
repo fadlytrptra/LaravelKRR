@@ -30,6 +30,12 @@ class TransferBarangController extends Controller
 
     public function show(Request $request, $action)
     {
+        \Log::info('TransferBarang SHOW', [
+            'action' => $action,
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
+            'request' => $request->all(),
+        ]);
         switch ($action) {
             case 'divisi':
                 $data = DB::connection('ConnKCNPurchase')->select(
@@ -126,8 +132,8 @@ class TransferBarangController extends Controller
                 );
 
                 return response()->json([
-                    'status'=>true,
-                    'data'=>$data
+                    'status' => true,
+                    'data' => $data
                 ]);
 
             default:
@@ -147,15 +153,9 @@ class TransferBarangController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // dd([
-            //     'id_type' => $request->id_type,
-            //     'sub_kelompok' => $request->sub_kelompok,
-            //     'id_subkelompok' => $request->id_subkelompok,
-            //     'no_terima' => $request->no_terima,
-            //     'kd_barang' => $request->kd_barang,
-            // ]);
+
             // 1. Transfer dari Purchase
-            $transfer = DB::connection('ConnKCNPurchase')->statement(
+            $transfer = DB::connection('ConnKCNPurchase')->select(
                 "EXEC SP_7775_PBL_TRANSFER_TMPTRANSAKSI
                     @IdType=?,
                     @MasukPrimer=?,
@@ -179,22 +179,29 @@ class TransferBarangController extends Controller
                     'Transfer Barang Dari Divisi Pembelian',
                     1,
                     now(),
-                    $request->no_pib ?? NULL
+                    $request->no_pib ?? null
                 ]
             );
 
-            // dd([
-            //     'transfer' => $transfer,
-            // ]);
-
-            // dd($transfer->Identity);
-            if (!$transfer || !isset($transfer->Identity)) {
-                throw new Exception('NoTempTransaksi tidak diperoleh dari proses transfer.');
+            // Ambil Identity dari hasil SP
+            if (empty($transfer)) {
+                throw new Exception(
+                    'NoTempTransaksi tidak diperoleh dari proses transfer.'
+                );
             }
 
+            $identity = $transfer[0]->Identity ?? null;
 
+            if ($identity === null) {
+                throw new Exception(
+                    'Identity tidak diperoleh dari proses transfer.'
+                );
+            }
+
+            // 2. Hitung quantity
             $qtyTerima = (float) $request->qty;
             $qtyAsli = (float) $request->tritier;
+
             $satuan = trim($request->satuan ?? '');
 
             if ($qtyAsli == 0) {
@@ -202,7 +209,7 @@ class TransferBarangController extends Controller
                 $satuan = trim($request->satuan_terima ?? '');
             }
 
-            // 3. Sama seperti VB6
+            // 3. Hitung harga
             $currencyPrice =
                 ((float) $request->hrg_trm * $qtyTerima)
                 / $qtyAsli;
@@ -226,12 +233,12 @@ class TransferBarangController extends Controller
                     @ExchangeRate=?,
                     @IdMataUang=?",
                 [
-                    $transfer->Identity,
+                    $identity,
                     $request->kd_barang,
                     $request->id_type,
                     $request->no_terima,
                     $qtyAsli,
-                    $request->satuan,
+                    $satuan,
                     $actualPrice,
                     $currencyPrice,
                     $exchangeRate,
@@ -242,7 +249,7 @@ class TransferBarangController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Transfer berhasil',
-                'identity' => $transfer->Identity
+                'identity' => $identity
             ]);
 
         } catch (Exception $e) {
