@@ -291,7 +291,6 @@ function updateTitle(menuName) {
 }
 
 function convertNumberToWordsRupiah(num) {
-    // Arrays to hold number words
     const ones = [
         "",
         "SATU",
@@ -304,6 +303,7 @@ function convertNumberToWordsRupiah(num) {
         "DELAPAN",
         "SEMBILAN",
     ];
+
     const tens = [
         "",
         "",
@@ -316,6 +316,7 @@ function convertNumberToWordsRupiah(num) {
         "DELAPAN PULUH",
         "SEMBILAN PULUH",
     ];
+
     const teens = [
         "SEPULUH",
         "SEBELAS",
@@ -328,6 +329,19 @@ function convertNumberToWordsRupiah(num) {
         "DELAPAN BELAS",
         "SEMBILAN BELAS",
     ];
+
+    // Pastikan num adalah angka
+    num = Number(num);
+
+    if (isNaN(num)) {
+        return "";
+    }
+
+    // Cek apakah angka negatif
+    const isNegative = num < 0;
+
+    // Gunakan nilai absolut agar proses konversi tidak error
+    num = Math.abs(num);
 
     function convertWholePart(num) {
         if (num === 0) return "NOL RUPIAH";
@@ -401,47 +415,67 @@ function convertNumberToWordsRupiah(num) {
         };
 
         const convertTens = (num) => {
-            if (num < 10) return ones[num];
-            else if (num >= 10 && num < 20) return teens[num - 10];
-            else {
-                return tens[Math.floor(num / 10)] + " " + ones[num % 10];
+            if (num < 10) {
+                return ones[num];
+            } else if (num >= 10 && num < 20) {
+                return teens[num - 10];
+            } else {
+                return (
+                    tens[Math.floor(num / 10)] +
+                    " " +
+                    ones[num % 10]
+                );
             }
         };
 
         let result = convertTrillions(num).trim();
+
         result = result.replace(/\s{2,}/g, " ");
+
         return result + " RUPIAH";
     }
 
     function convertFractionalPart(fraction) {
-        // If there are no cents or it's zero, return an empty string
         if (fraction === 0 || fraction === null) {
             return "";
         }
 
-        const cents = Math.round(fraction * 100); // Get the fractional part as an integer representing cents
+        const cents = Math.round(fraction * 100);
+
         if (cents === 0) {
             return "";
         }
 
         const convertCents = (num) => {
-            return convertWholePart(num).replace("RUPIAH", "") + "SEN";
+            return (
+                convertWholePart(num)
+                    .replace("RUPIAH", "")
+                    .trim() +
+                " SEN"
+            );
         };
 
         return convertCents(cents);
     }
 
     function convert(num) {
-        const wholePart = Math.floor(num); // The integer part
-        const fractionalPart = num % 1; // The decimal part (fraction)
+        const wholePart = Math.floor(num);
+        const fractionalPart = num % 1;
 
         const wholePartWords = convertWholePart(wholePart);
-        const fractionalPartWords = convertFractionalPart(fractionalPart);
+        const fractionalPartWords =
+            convertFractionalPart(fractionalPart);
 
-        // If there is a fractional part, add it as "sen"
-        return fractionalPartWords
+        let result = fractionalPartWords
             ? wholePartWords + " " + fractionalPartWords
             : wholePartWords;
+
+        // Tambahkan MINUS jika nilai awal negatif
+        if (isNegative) {
+            result = "MINUS " + result;
+        }
+
+        return result;
     }
 
     return convert(num);
