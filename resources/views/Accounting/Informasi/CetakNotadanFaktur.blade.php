@@ -332,6 +332,16 @@
                             <p>
                             <div class="d-flex">
                                 <div class="col-md-4">
+                                    <label for="item_halaman">Item Halaman</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="number" id="item_halaman" class="form-control"
+                                        style="width: 100%" value="3">
+                                </div>
+                            </div>
+                            <p>
+                            <div class="d-flex">
+                                <div class="col-md-4">
                                     <label for="customer">Customer</label>
                                 </div>
                                 <div class="col-md-7">

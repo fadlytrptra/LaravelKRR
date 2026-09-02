@@ -12,6 +12,7 @@ var btnBrowse = document.getElementById("btnBrowse");
 var idPenagihan = document.getElementById("idPenagihan");
 var bankSelect = document.getElementById("bankSelect");
 var ttdSelect = document.getElementById("ttdSelect");
+var item_halaman = document.getElementById("item_halaman");
 // var radioPilihan = document.querySelectorAll('input[name="pilihan"]');
 
 // var formatLabel = document.getElementById("formatLabel");
@@ -1454,7 +1455,7 @@ function rpt_cetakNotaFaktur(result) {
                                 count += 1;
 
                                 // Tampilkan item kelima dan seterusnya
-                                if (index >= 4) {
+                                if (index >= parseInt(item_halaman.value)) {
                                     row.style.display = "none"; // Sembunyikan item sebelum yang kelima
                                 }
 
@@ -1552,7 +1553,7 @@ function rpt_cetakNotaFaktur(result) {
                                     "small-font"
                                 );
 
-                                if (index >= 4) {
+                                if (index >= parseInt(item_halaman.value)) {
                                     additionalRow.style.display = "none";
                                 }
 
@@ -2076,7 +2077,7 @@ function rpt_cetakNotaFaktur(result) {
                                 count += 1;
 
                                 // Tampilkan hanya item pertama sampai ketiga
-                                if (index >= 3) {
+                                if (index >= parseInt(item_halaman.value)) {
                                     row.style.display = "none"; // Sembunyikan item setelah yang ketiga
                                 }
 
@@ -2174,7 +2175,7 @@ function rpt_cetakNotaFaktur(result) {
                                     "small-font"
                                 );
 
-                                if (index >= 3) {
+                                if (index >= parseInt(item_halaman.value)) {
                                     additionalRow.style.display = "none";
                                 }
 
@@ -2385,7 +2386,7 @@ function rpt_cetakNotaFaktur(result) {
                     }
 
                     // print faktur2
-                    if (result.length > 3) {
+                    if (result.length > parseInt(item_halaman.value)) {
                         //     // print faktur2
                         var faktur_beneficiary2 = document.getElementById(
                             "faktur_beneficiary2"
@@ -2675,7 +2676,7 @@ function rpt_cetakNotaFaktur(result) {
                                 count += 1;
 
                                 // Tampilkan item kelima dan seterusnya
-                                if (index < 3) {
+                                if (index < parseInt(item_halaman.value)) {
                                     row.style.display = "none"; // Sembunyikan item sebelum yang kelima
                                 }
 
@@ -2773,7 +2774,7 @@ function rpt_cetakNotaFaktur(result) {
                                     "small-font"
                                 );
 
-                                if (index < 3) {
+                                if (index < parseInt(item_halaman.value)) {
                                     additionalRow.style.display = "none";
                                 }
 
@@ -3987,7 +3988,7 @@ function rpt_cetakNotaTunai(result) {
                     count += 1;
 
                     // Tampilkan item kelima dan seterusnya
-                    if (index >= 4) {
+                    if (index >= parseInt(item_halaman.value)) {
                         row.style.display = "none"; // Sembunyikan item sebelum yang kelima
                     }
 
@@ -4090,7 +4091,7 @@ function rpt_cetakNotaTunai(result) {
                         "small-font"
                     );
 
-                    if (index >= 4) {
+                    if (index >= parseInt(item_halaman.value)) {
                         additionalRow.style.display = "none";
                     }
 
@@ -4533,7 +4534,7 @@ function rpt_cetakNotaTunai(result) {
                     count += 1;
 
                     // Tampilkan hanya item pertama sampai ketiga
-                    if (index >= 3) {
+                    if (index >= parseInt(item_halaman.value)) {
                         row.style.display = "none"; // Sembunyikan item setelah yang ketiga
                     }
 
@@ -4615,7 +4616,7 @@ function rpt_cetakNotaTunai(result) {
                     var additionalRow = document.createElement("div");
                     additionalRow.classList.add("row", "small-font");
 
-                    if (index >= 3) {
+                    if (index >= parseInt(item_halaman.value)) {
                         additionalRow.style.display = "none";
                     }
 
@@ -5015,7 +5016,7 @@ function rpt_cetakNotaTunai(result) {
                         count += 1;
 
                         // Tampilkan hanya item pertama sampai ketiga
-                        if (index < 3) {
+                        if (index < parseInt(item_halaman.value)) {
                             row.style.display = "none"; // Sembunyikan item setelah yang ketiga
                         }
 
@@ -5097,7 +5098,7 @@ function rpt_cetakNotaTunai(result) {
                         var additionalRow = document.createElement("div");
                         additionalRow.classList.add("row", "small-font");
 
-                        if (index < 3) {
+                        if (index < parseInt(item_halaman.value)) {
                             additionalRow.style.display = "none";
                         }
 
@@ -5923,7 +5924,7 @@ function rpt_CetakFakturUM(result) {
                     count += 1;
 
                     // Tampilkan item kelima dan seterusnya
-                    if (index >= 4) {
+                    if (index >= parseInt(item_halaman.value)) {
                         row.style.display = "none"; // Sembunyikan item sebelum yang kelima
                     }
 
@@ -6030,7 +6031,7 @@ function rpt_CetakFakturUM(result) {
                         "small-font"
                     );
 
-                    if (index >= 4) {
+                    if (index >= parseInt(item_halaman.value)) {
                         additionalRow.style.display = "none";
                     }
 
@@ -6468,7 +6469,7 @@ function rpt_CetakFakturUM(result) {
                     row.classList.add("row", "small-font");
                     count += 1;
 
-                    if (index >= 3) {
+                    if (index >= parseInt(item_halaman.value)) {
                         row.style.display = "none"; // Sembunyikan item setelah yang ketiga
                     }
 
@@ -6555,7 +6556,7 @@ function rpt_CetakFakturUM(result) {
                     var additionalRow = document.createElement("div");
                     additionalRow.classList.add("row", "small-font");
 
-                    if (index >= 3) {
+                    if (index >= parseInt(item_halaman.value)) {
                         additionalRow.style.display = "none";
                     }
 
@@ -6956,7 +6957,7 @@ function rpt_CetakFakturUM(result) {
                         row.classList.add("row", "small-font");
                         count += 1;
 
-                        if (index < 3) {
+                        if (index < parseInt(item_halaman.value)) {
                             row.style.display = "none"; // Sembunyikan item setelah yang ketiga
                         }
 
@@ -7043,7 +7044,7 @@ function rpt_CetakFakturUM(result) {
                         var additionalRow = document.createElement("div");
                         additionalRow.classList.add("row", "small-font");
 
-                        if (index < 3) {
+                        if (index < parseInt(item_halaman.value)) {
                             additionalRow.style.display = "none";
                         }
 
@@ -7517,7 +7518,7 @@ function rpt_CetakFakturPajakUM(result) {
                     count += 1;
 
                     // Tampilkan item kelima dan seterusnya
-                    if (index >= 4) {
+                    if (index >= parseInt(item_halaman.value)) {
                         row.style.display = "none"; // Sembunyikan item sebelum yang kelima
                     }
 
@@ -7620,7 +7621,7 @@ function rpt_CetakFakturPajakUM(result) {
                         "small-font"
                     );
 
-                    if (index >= 4) {
+                    if (index >= parseInt(item_halaman.value)) {
                         additionalRow.style.display = "none";
                     }
 
