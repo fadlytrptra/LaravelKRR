@@ -2076,7 +2076,7 @@ function rpt_cetakNotaFaktur(result) {
                                 count += 1;
 
                                 // Tampilkan hanya item pertama sampai ketiga
-                                if (index >= 2) {
+                                if (index >= 3) {
                                     row.style.display = "none"; // Sembunyikan item setelah yang ketiga
                                 }
 
@@ -2174,7 +2174,7 @@ function rpt_cetakNotaFaktur(result) {
                                     "small-font"
                                 );
 
-                                if (index >= 2) {
+                                if (index >= 3) {
                                     additionalRow.style.display = "none";
                                 }
 
@@ -2385,7 +2385,7 @@ function rpt_cetakNotaFaktur(result) {
                     }
 
                     // print faktur2
-                    if (result.length > 2) {
+                    if (result.length > 3) {
                         //     // print faktur2
                         var faktur_beneficiary2 = document.getElementById(
                             "faktur_beneficiary2"
@@ -2675,7 +2675,7 @@ function rpt_cetakNotaFaktur(result) {
                                 count += 1;
 
                                 // Tampilkan item kelima dan seterusnya
-                                if (index < 2) {
+                                if (index < 3) {
                                     row.style.display = "none"; // Sembunyikan item sebelum yang kelima
                                 }
 
@@ -2773,7 +2773,7 @@ function rpt_cetakNotaFaktur(result) {
                                     "small-font"
                                 );
 
-                                if (index < 2) {
+                                if (index < 3) {
                                     additionalRow.style.display = "none";
                                 }
 
