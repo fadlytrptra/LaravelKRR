@@ -7,7 +7,11 @@
 @endif
 <link href="{{ asset('css/IsiSupplierHarga.css') }}" rel="stylesheet">
 <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
+<style>
+    .select2-results__options {
+        max-height: 400px !important;
+    }
+</style>
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10 RDZMobilePaddingLR0">
