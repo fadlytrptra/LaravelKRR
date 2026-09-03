@@ -2,8 +2,8 @@ $(document).ready(function () {
 
     $('#table_SJ').DataTable({
         processing: true,
-        responsive: true,
-        scrollX: true,
+        responsive: false,
+        scrollX: false,
         autoWidth: false,
         serverSide: true,
         order: [],
@@ -11,6 +11,10 @@ $(document).ready(function () {
         ajax: {
             url: '/KirimSJACCCustomer/getDataSJACC',
             type: 'GET',
+            data: function (d) {
+                d.tanggal_mulai = $('#tanggal_mulai').val();
+                d.tanggal_akhir = $('#tanggal_akhir').val();
+            },
             beforeSend: function () {
                 $("#loading-screen").css("display", "flex");
             },
@@ -48,7 +52,7 @@ $(document).ready(function () {
                     let parts = data.split(" ");
 
                     let qty = parts[0];
-                    let satuan = parts.slice(1).join(" ").trim();;
+                    let satuan = parts.slice(1).join(" ").trim();
 
                     return `${qty} ${formatSatuan(satuan)}`;
                 }
@@ -81,10 +85,25 @@ $(document).ready(function () {
                     `;
                 }
             }
-        ]
+        ],
+
+        // Setelah DataTable selesai dibuat
+        initComplete: function () {
+
+            setTimeout(function () {
+
+                $('#table_SJ').colResizable({
+                    liveDrag: true,
+                    resizeMode: 'overflow',
+                    minWidth: 60
+                });
+
+            }, 300);
+        }
     });
 
 });
+
 
 function formatSatuan(satuan) {
 
@@ -137,4 +156,35 @@ $(document).on('click', '.btnDownload', function () {
 
             window.URL.revokeObjectURL(url);
         });
+});
+
+$('#btnFilterTanggal').on('click', function () {
+
+    let tanggalMulai = $('#tanggal_mulai').val();
+    let tanggalAkhir = $('#tanggal_akhir').val();
+
+    if (tanggalMulai && tanggalAkhir) {
+
+        if (tanggalMulai > tanggalAkhir) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Tanggal mulai tidak boleh lebih besar dari tanggal akhir.'
+            });
+
+            return;
+        }
+    }
+
+    $('#table_SJ').DataTable().ajax.reload();
+});
+
+
+$('#btnResetTanggal').on('click', function () {
+
+    $('#tanggal_mulai').val('');
+    $('#tanggal_akhir').val('');
+
+    $('#table_SJ').DataTable().ajax.reload();
 });

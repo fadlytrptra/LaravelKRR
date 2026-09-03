@@ -4,18 +4,54 @@
 
 <style>
     .table-responsive {
-        overflow-x: auto;
         width: 100%;
+        overflow-x: auto;
     }
 
     #table_SJ {
-        min-width: 1400px;
+        min-width: 1400px !important;
     }
 
-    #table_SJ td,
-    #table_SJ th {
-        white-space: nowrap;
-        vertical-align: middle;
+    #table_SJ th,
+    #table_SJ td {
+        white-space: normal !important;
+        vertical-align: middle !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+    }
+
+    #table_SJ td {
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    .dataTables_scrollHead th {
+        position: relative;
+        white-space: normal !important;
+        vertical-align: middle !important;
+    }
+
+    .column-resizer {
+        position: absolute;
+        top: 0;
+        right: -3px;
+        width: 7px;
+        height: 100%;
+        cursor: col-resize;
+        z-index: 100;
+    }
+
+    .column-resizer:hover {
+        background: rgba(0, 123, 255, 0.35);
+    }
+
+    body.resizing-column {
+        cursor: col-resize !important;
+        user-select: none !important;
+    }
+
+    body.resizing-column * {
+        cursor: col-resize !important;
     }
 </style>
 
@@ -26,8 +62,8 @@
                 <div class="card-header">List Surat Jalan untuk Kirim ke Customer </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="table_SJ" class="table table-bordered table-striped w-100">
-                            <thead class="thead-light text-nowrap">
+                        <table id="table_SJ" class="table table-bordered table-striped">
+                            <thead class="thead-light">
                                 <tr>
                                     <th>Tanggal SJ</th>
                                     <th>Nomor SJ</th>
@@ -51,5 +87,6 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/colresizable/colResizable-1.6.min.js"></script>
 <script type="text/javascript" src="{{ asset('js/Sales/KirimSJ.js') }}"></script>
 @endsection

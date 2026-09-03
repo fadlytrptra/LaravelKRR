@@ -32,6 +32,33 @@ class KirimSJACCCustomerController extends Controller
                     [9]
                 );
 
+            $tanggalMulai = $request->tanggal_mulai;
+            $tanggalAkhir = $request->tanggal_akhir;
+
+            if ($tanggalMulai || $tanggalAkhir) {
+
+                $dataSuratJalan = collect($dataSuratJalan)
+                    ->filter(function ($row) use ($tanggalMulai, $tanggalAkhir) {
+
+                        if (empty($row->Tanggal)) {
+                            return false;
+                        }
+
+                        $tanggalSJ = substr($row->Tanggal, 0, 10);
+
+                        if ($tanggalMulai && $tanggalSJ < $tanggalMulai) {
+                            return false;
+                        }
+
+                        if ($tanggalAkhir && $tanggalSJ > $tanggalAkhir) {
+                            return false;
+                        }
+
+                        return true;
+                    })
+                    ->values();
+            }
+
             foreach ($dataSuratJalan as $row) {
 
                 $row->HasAttachment = DB::connection('ConnPublicWeb')
@@ -39,7 +66,6 @@ class KirimSJACCCustomerController extends Controller
                     ->where('IdSuratJalan', $row->IdSuratJalan)
                     ->exists();
             }
-
 
             return datatables($dataSuratJalan)->make(true);
         }

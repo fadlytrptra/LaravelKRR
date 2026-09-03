@@ -4,13 +4,68 @@ jQuery(function ($) {
 
     let table_SJ = $("#table_SJ").DataTable({
         processing: true,
-        responsive: true,
+        responsive: false,
         scrollX: true,
         autoWidth: false,
         serverSide: true,
         order: [0, "desc"],
         orderFixed: [[12, "asc"]],
-        columnDefs: [{ targets: 11, orderable: false }],
+        columnDefs: [
+            {
+                targets: 0,
+                width: "100px"
+            },
+            {
+                targets: 1,
+                width: "110px"
+            },
+            {
+                targets: 2,
+                width: "200px"
+            },
+            {
+                targets: 3,
+                width: "110px"
+            },
+            {
+                targets: 4,
+                width: "160px"
+            },
+            {
+                targets: 5,
+                width: "350px"
+            },
+            {
+                targets: 6,
+                width: "120px"
+            },
+            {
+                targets: 7,
+                width: "280px"
+            },
+            {
+                targets: 8,
+                width: "160px"
+            },
+            {
+                targets: 9,
+                width: "150px"
+            },
+            {
+                targets: 10,
+                width: "180px"
+            },
+            {
+                targets: 11,
+                width: "230px",
+                orderable: false
+            },
+            {
+                targets: 12,
+                visible: false,
+                searchable: false
+            }
+        ],
         ajax: {
             url: "/KirimSJ/getDataSJ",
             type: "GET",
@@ -41,7 +96,6 @@ jQuery(function ($) {
                     }
 
                     let parts = data.split(" ");
-
                     let qty = parts[0];
                     let satuan = parts.slice(1).join(" ");
 
@@ -135,6 +189,11 @@ jQuery(function ($) {
             },
             { data: "StatusOrder", visible: false, searchable: false },
         ],
+        initComplete: function () {
+            setTimeout(function () {
+                initColumnResize();
+            }, 100);
+        }
     });
     //#endregion
 
@@ -149,6 +208,134 @@ jQuery(function ($) {
             $("#loading-screen").css("display", "none");
         },
     });
+
+    function initColumnResize() {
+
+        const headerTable = $(".dataTables_scrollHead table");
+        const bodyTable = $(".dataTables_scrollBody table");
+
+        if (!headerTable.length || !bodyTable.length) {
+            return;
+        }
+
+        // Hapus resizer lama jika DataTable redraw
+        headerTable.find(".column-resizer").remove();
+
+        headerTable.find("thead th").each(function (index) {
+
+            // Jangan pasang resize pada kolom hidden
+            if ($(this).is(":hidden")) {
+                return;
+            }
+
+            const th = $(this);
+
+            // Buat area drag
+            const resizer = $("<div>")
+                .addClass("column-resizer")
+                .attr("data-column", index);
+
+            th.append(resizer);
+
+            let startX = 0;
+            let startWidth = 0;
+
+            resizer.on("mousedown", function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                startX = e.pageX;
+                startWidth = th.outerWidth();
+
+                $("body").addClass("resizing-column");
+
+                $(document).on(
+                    "mousemove.columnResize",
+                    function (e) {
+
+                        const diff = e.pageX - startX;
+
+                        let newWidth = startWidth + diff;
+
+                        // Minimum width
+                        if (newWidth < 60) {
+                            newWidth = 60;
+                        }
+
+                        setColumnWidth(index, newWidth);
+                    }
+                );
+
+                $(document).on(
+                    "mouseup.columnResize",
+                    function () {
+
+                        $("body").removeClass("resizing-column");
+
+                        $(document).off(
+                            "mousemove.columnResize"
+                        );
+
+                        $(document).off(
+                            "mouseup.columnResize"
+                        );
+                    }
+                );
+            });
+        });
+    }
+
+    function setColumnWidth(index, width) {
+        const headerTable = $(".dataTables_scrollHead table");
+        const bodyTable = $(".dataTables_scrollBody table");
+
+        const widthPx = width + "px";
+
+        // HEADER
+        headerTable.find("thead tr").each(function () {
+
+            $(this)
+                .find("th")
+                .eq(index)
+                .css({
+                    width: widthPx,
+                    minWidth: widthPx,
+                    maxWidth: widthPx
+                });
+        });
+
+        // BODY
+        bodyTable.find("tbody tr").each(function () {
+
+            $(this)
+                .find("td")
+                .eq(index)
+                .css({
+                    width: widthPx,
+                    minWidth: widthPx,
+                    maxWidth: widthPx
+                });
+        });
+
+        // COLGROUP header
+        headerTable.find("colgroup col")
+            .eq(index)
+            .css({
+                width: widthPx,
+                minWidth: widthPx,
+                maxWidth: widthPx
+            });
+
+        // COLGROUP body
+        bodyTable.find("colgroup col")
+            .eq(index)
+            .css({
+                width: widthPx,
+                minWidth: widthPx,
+                maxWidth: widthPx
+            });
+    }
 
     function formatSatuan(satuan) {
         let mapping = {
