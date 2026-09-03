@@ -66,12 +66,19 @@ jQuery(function ($) {
                 searchable: false
             }
         ],
-        ajax: {
+       ajax: {
             url: "/KirimSJ/getDataSJ",
             type: "GET",
+
+            data: function (d) {
+                d.tanggal_mulai = $("#tanggal_mulai").val();
+                d.tanggal_akhir = $("#tanggal_akhir").val();
+            },
+
             beforeSend: function () {
                 $("#loading-screen").css("display", "flex");
             },
+
             complete: function () {
                 $("#loading-screen").css("display", "none");
             },
@@ -980,6 +987,26 @@ jQuery(function ($) {
                 });
             }
         });
+    });
+
+    $("#btnFilterTanggal").on("click", function () {
+
+        let tanggalMulai = $("#tanggal_mulai").val();
+        let tanggalAkhir = $("#tanggal_akhir").val();
+
+        if (tanggalMulai && tanggalAkhir) {
+            if (tanggalMulai > tanggalAkhir) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Tanggal tidak valid",
+                    text: "Tanggal mulai tidak boleh lebih besar dari tanggal akhir."
+                });
+
+                return;
+            }
+        }
+
+        table_SJ.ajax.reload();
     });
     //#endregion
 });

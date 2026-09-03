@@ -61,6 +61,35 @@
             <div class="card">
                 <div class="card-header">List Surat Jalan untuk Kirim ke Customer </div>
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="tanggal_mulai">Tanggal Mulai</label>
+                            <input type="date"
+                                id="tanggal_mulai"
+                                class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="tanggal_akhir">Tanggal Akhir</label>
+                            <input type="date"
+                                id="tanggal_akhir"
+                                class="form-control">
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="button"
+                                    id="btnFilterTanggal"
+                                    class="btn btn-primary mr-2">
+                                Filter
+                            </button>
+
+                            <button type="button"
+                                    id="btnResetTanggal"
+                                    class="btn btn-secondary">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table id="table_SJ" class="table table-bordered table-striped">
                             <thead class="thead-light">

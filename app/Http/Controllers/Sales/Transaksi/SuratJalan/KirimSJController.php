@@ -409,6 +409,7 @@ class KirimSJController extends Controller
                     // $link = url('/surat-jalan/' . $idPengiriman); // change to your real route
                     // $encodedIdPengiriman = hash_hmac('sha256', $idPengiriman, env('QR_SHARED_SECRET'));
                     $link = 'https://mykrr.co.id/PascaKirim/' . $encryptedIdPengiriman; // change to your real route
+                    $linkWeb = 'https://mykrr.co.id/';
                     $message->to($emails)
                         ->subject("Pasca Kirim SJ Digital {$idPengiriman} Kerta Rajasa Raya")
                         ->html("<p>Dear Customer,</p>
@@ -447,6 +448,8 @@ class KirimSJController extends Controller
                         <p>
                             Silakan klik link berikut untuk mengakses halaman konfirmasi Pasca Kirim:
                             <a href='{$link}' target='_blank'>Halaman Konfirmasi Pasca Kirim</a>
+                            atau kunjungi
+                            <a href='{$linkWeb}' target='_blank'>mykrr.co.id</a>
                         </p>
 
                         <br>
@@ -557,6 +560,7 @@ class KirimSJController extends Controller
                     $encryptedId = urlencode($encrypter->encryptString((string) $idPengiriman));
 
                     $link = 'https://mykrr.co.id/PascaKirim/' . $encryptedId;
+                    $linkWeb = 'https://mykrr.co.id/';
 
                     // SUBJECT DINAMIS
                     $subject = "RESEND Ke-{$resendCount} Pasca Kirim SJ Digital {$idPengiriman}";
@@ -600,6 +604,8 @@ class KirimSJController extends Controller
                             <p>
                                 Silakan klik link berikut untuk mengakses halaman konfirmasi Pasca Kirim:
                                 <a href='{$link}' target='_blank'>Halaman Konfirmasi Pasca Kirim</a>
+                                atau kunjungi
+                                <a href='{$linkWeb}' target='_blank'>mykrr.co.id</a>
                             </p>
 
                             <br>
@@ -866,8 +872,32 @@ class KirimSJController extends Controller
     public function show(Request $request, $id)
     {
         if ($id == 'getDataSJ') {
-            $dataSuratJalan = DB::connection('ConnSales')->select('exec SP_4384_SLS_KIRIM_SJ @XKode = ?', [4]);
-            return datatables($dataSuratJalan)->make(true);
+            $tanggalMulai = $request->tanggal_mulai;
+            $tanggalAkhir = $request->tanggal_akhir;
+
+            $dataSuratJalan = DB::connection('ConnSales')
+                ->select(
+                    'exec SP_4384_SLS_KIRIM_SJ @XKode = ?',
+                    [4]
+                );
+
+            $dataSuratJalan = collect($dataSuratJalan);
+
+            // Filter tanggal mulai
+            if (!empty($tanggalMulai)) {
+                $dataSuratJalan = $dataSuratJalan->filter(function ($item) use ($tanggalMulai) {
+                    return \Carbon\Carbon::parse($item->Tanggal)->format('Y-m-d') >= $tanggalMulai;
+                });
+            }
+
+            // Filter tanggal akhir
+            if (!empty($tanggalAkhir)) {
+                $dataSuratJalan = $dataSuratJalan->filter(function ($item) use ($tanggalAkhir) {
+                    return \Carbon\Carbon::parse($item->Tanggal)->format('Y-m-d') <= $tanggalAkhir;
+                });
+            }
+
+            return datatables($dataSuratJalan->values())->make(true);
         } else if ($id == 'preparePasca') {
             $idPengiriman = $request->idPengiriman;
             $dataSuratJalanTerkirim = DB::connection('ConnSales')
