@@ -300,11 +300,13 @@
                                 <td class="center">{{ number_format($item->AfalanWA_LBR) }}</td>
                                 <td class="center">{{ number_format($item->AfalanWA_KG) }}</td>
                                 <td class="center">
-                                    {{ number_format(($item->AfalanWA_KG / $item->BahanBaku_Kg) * 100, 2) }}</td>
+                                    {{ $item->BahanBaku_Kg != 0 ? number_format(($item->AfalanWA_KG / $item->BahanBaku_Kg) * 100, 2) : '0.00' }}
+                                </td>
                                 <td class="center">{{ number_format($item->AfalanWE_LBR) }}</td>
                                 <td class="center">{{ number_format($item->AfalanWE_KG) }}</td>
                                 <td class="center">
-                                    {{ number_format(($item->AfalanWE_KG / $item->BahanBaku_Kg) * 100, 2) }}</td>
+                                    {{ $item->BahanBaku_Kg != 0 ? number_format(($item->AfalanWA_KG / $item->BahanBaku_Kg) * 100, 2) : '0.00' }}
+                                </td>
                             </tr>
                         @endforeach
                         <tr>
