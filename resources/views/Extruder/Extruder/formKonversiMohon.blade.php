@@ -24,7 +24,7 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <label for="txt_order">No. Order:</label>
                     <div class="input-group rounded">
                         <input type="text" id="id_order" class="form-control"
@@ -35,13 +35,13 @@
                             disabled>...</button>
                     </div>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-2">
                     <label for="lot">Lot:</label>
                     <input type="number" id="lot" class="form-control" placeholder="0" min="0" step="1"
                         disabled>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-4">
                     <label for="tanggal">Tanggal:</label>
                     <input type="date" id="tanggal" class="form-control" disabled>
@@ -49,7 +49,7 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <label for="txt_spek">Spek:</label>
                     <div class="input-group rounded">
                         <input type="hidden" id="id_spek">
@@ -59,13 +59,13 @@
                             disabled>...</button>
                     </div>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-2">
                     <label for="ukuran">Ukuran:</label>
                     <input type="number" id="ukuran" class="form-control" placeholder="0" step="0.01" min="0"
                         disabled>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-4">
                     <label for="shift">Shift:</label>
                     <div class="input-group rounded">
@@ -80,7 +80,7 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <label for="txt_mesin">Mesin:</label>
                     <div class="input-group rounded">
                         <input type="text" id="id_mesin" class="form-control"
@@ -91,13 +91,13 @@
                             disabled>...</button>
                     </div>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-2">
                     <label for="denier">Denier:</label>
                     <input type="number" id="denier" class="form-control" placeholder="0" step="1"
                         min="0" disabled>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-2">
                     <label for="waktu_mulai">Mulai:</label>
                     <input type="time" id="waktu_mulai" class="form-control" value="00:00">
@@ -105,7 +105,7 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <label for="txt_komposisi">Komposisi:</label>
                     <div class="input-group rounded">
                         <input type="text" id="id_komposisi" class="form-control"
@@ -116,12 +116,12 @@
                             disabled>...</button>
                     </div>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-2">
                     <label for="warna">Warna:</label>
                     <input type="text" id="warna" class="form-control" placeholder="....." disabled>
                 </div>
-                <div class="col-lg-1"></div>
+                <div class="col-lg-auto" style="width: 4.16%;"></div>
                 <div class="col-lg-2">
                     <label for="waktu_selesai">Selesai:</label>
                     <input type="time" id="waktu_selesai" class="form-control" value="00:00">

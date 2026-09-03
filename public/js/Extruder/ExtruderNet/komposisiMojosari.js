@@ -1458,7 +1458,7 @@ btnProses.addEventListener("click", async function () {
                     0,
                 );
 
-            // Cek BOM
+            // Cek BOM. 1 by kode barang, 12 by kode barang + idmesin
             let bomKode = idDivisi === "DEX" ? "12" : "1";
             let bomUrl =
                 idDivisi === "DEX"
