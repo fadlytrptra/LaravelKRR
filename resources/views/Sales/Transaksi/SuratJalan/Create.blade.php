@@ -51,7 +51,7 @@
                                                 <div class="acs-div-filter1">
                                                     <label for="surat_jalan">Surat Jalan</label>
                                                     <input type="text" id="surat_jalan" name="surat_jalan"
-                                                        placeholder="Surat Jalan" class="input" required/>
+                                                        placeholder="Surat Jalan" class="input" maxlength="10" required/>
                                                 </div>
                                                 <div class="acs-div-filter1">
                                                     <label for="surat_jalan">Tanggal</label>
