@@ -1,5 +1,10 @@
 $(document).ready(function () {
 
+    const today = new Date();
+    const todayString = today.getFullYear() + '-' +
+        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+        String(today.getDate()).padStart(2, '0');
+    $('#tanggal_mulai').val(todayString); $('#tanggal_akhir').val(todayString);
     $('#table_SJ').DataTable({
         processing: true,
         responsive: false,
@@ -181,10 +186,8 @@ $('#btnFilterTanggal').on('click', function () {
 });
 
 
-$('#btnResetTanggal').on('click', function () {
-
-    $('#tanggal_mulai').val('');
-    $('#tanggal_akhir').val('');
-
+$('#btnResetTanggal').on('click', function () { // Reset kembali ke hari ini
+    $('#tanggal_mulai').val(todayString);
+    $('#tanggal_akhir').val(todayString);
     $('#table_SJ').DataTable().ajax.reload();
 });

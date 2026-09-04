@@ -32,6 +32,12 @@ class KirimSJController extends Controller
         $jenisProses = $request->jenisProses;
         if ($jenisProses == 'kirimSJ') {
             $idPengiriman = $request->idPengiriman;
+            $idDO = $request->idDO;
+
+            $request->validate([
+                'idPengiriman' => 'required',
+                'idDO' => 'required',
+            ]);
 
             try {
                 DB::connection('ConnSales')->beginTransaction();
@@ -59,17 +65,22 @@ class KirimSJController extends Controller
                 // proses update kolom kirim customer, proses insert into database public web
                 DB::connection('ConnSales')
                     ->statement(
-                        'exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?',
-                        [2, $idPengiriman]
+                        'exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?, @XIdDO = ?',
+                        [2, $idPengiriman, $idDO]
                     );
                 //get data to send email
                 $dataSuratJalan = DB::connection('ConnSales')
                     ->select(
-                        'exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?',
-                        [3, $idPengiriman]
+                        'exec SP_4384_SLS_KIRIM_SJ
+                            @XKode = ?,
+                            @XIdPengiriman = ?,
+                            @XIdDO = ?',
+                        [3, $idPengiriman, $idDO]
                     );
                 // proses send email permintaan acc customer
-                Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan) {
+               $namaCustomer = $this->getNamaCustomer($idPengiriman);
+
+                    Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $namaCustomer) {
                     $data = $dataSuratJalan[0];
 
                     $product = $data->NamaType ?? '-';
@@ -105,7 +116,7 @@ class KirimSJController extends Controller
                     $linkWeb = 'https://mykrr.co.id/';
                     $message->to($emails)
                         ->subject("SJ Digital {$idPengiriman} Kerta Rajasa Raya")
-                        ->html("<p>Dear Customer,</p>
+                        ->html("<p>Dear {$namaCustomer},</p>
 
                         <p>Berikut detail Surat Jalan Digital:</p>
 
@@ -175,6 +186,13 @@ class KirimSJController extends Controller
         if ($jenisProses == 'resendSJ') {
             try {
                 $idPengiriman = $request->idPengiriman;
+                $idDO = $request->idDO;
+
+                if (!$idPengiriman || !$idDO) {
+                    return response()->json([
+                        'error' => 'ID Pengiriman dan IDDO wajib diisi'
+                    ], 422);
+                }
 
                 // ambil email customer
                 $emailCustomer = DB::connection('ConnSales')
@@ -197,8 +215,11 @@ class KirimSJController extends Controller
 
                 // increment resend + ambil counter
                 $resendResult = DB::connection('ConnSales')->select(
-                    'exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?',
-                    [5, $idPengiriman]
+                    'exec SP_4384_SLS_KIRIM_SJ
+                        @XKode = ?,
+                        @XIdPengiriman = ?,
+                        @XIdDO = ?',
+                    [5, $idPengiriman, $idDO]
                 );
 
                 if (empty($resendResult)) {
@@ -210,11 +231,13 @@ class KirimSJController extends Controller
                 $resendCount = $resendResult[0]->ResendCount ?? 1;
 
                 // ambil data SJ
-                $dataSuratJalan = DB::connection('ConnSales')
-                    ->select(
-                        'exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?',
-                        [3, $idPengiriman]
-                    );
+                $dataSuratJalan = DB::connection('ConnSales')->select(
+                    'exec SP_4384_SLS_KIRIM_SJ
+                        @XKode = ?,
+                        @XIdPengiriman = ?,
+                        @XIdDO = ?',
+                    [3, $idPengiriman, $idDO]
+                );
 
                 if (empty($dataSuratJalan)) {
                     return response()->json([
@@ -223,7 +246,9 @@ class KirimSJController extends Controller
                 }
 
                 // kirim email
-                Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $resendCount) {
+                $namaCustomer = $this->getNamaCustomer($idPengiriman);
+
+                    Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $resendCount, $namaCustomer) {
                     $data = $dataSuratJalan[0];
 
                     $product = $data->NamaType ?? '-';
@@ -260,7 +285,7 @@ class KirimSJController extends Controller
                     $message->to($emails)
                         ->subject($subject)
                         ->html("
-                            <p>Dear Customer,</p>
+                            <p>Dear {$namaCustomer},</p>
 
                             <p>Berikut detail Surat Jalan Digital:</p>
 
@@ -376,7 +401,9 @@ class KirimSJController extends Controller
                         [3, $idPengiriman]
                     );
                 // proses send email permintaan acc customer
-                Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $qtyTempVerifikasi) {
+                $namaCustomer = $this->getNamaCustomer($idPengiriman);
+
+                    Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $qtyTempVerifikasi, $namaCustomer) {
                     $data = $dataSuratJalan[0];
 
                     $product = $data->NamaType ?? '-';
@@ -412,7 +439,7 @@ class KirimSJController extends Controller
                     $linkWeb = 'https://mykrr.co.id/';
                     $message->to($emails)
                         ->subject("Pasca Kirim SJ Digital {$idPengiriman} Kerta Rajasa Raya")
-                        ->html("<p>Dear Customer,</p>
+                        ->html("<p>Dear {$namaCustomer},</p>
 
                         <p>Berikut detail <strong>Pasca Kirim</strong> Surat Jalan Digital:</p>
 
@@ -530,7 +557,9 @@ class KirimSJController extends Controller
                 }
 
                 // kirim email
-                Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $resendCount) {
+                $namaCustomer = $this->getNamaCustomer($idPengiriman);
+
+                    Mail::mailer('MailShipment')->send([], [], function ($message) use ($emails, $idPengiriman, $dataSuratJalan, $resendCount, $namaCustomer) {
                     $data = $dataSuratJalan[0];
 
                     $product = $data->NamaType ?? '-';
@@ -568,7 +597,7 @@ class KirimSJController extends Controller
                     $message->to($emails)
                         ->subject($subject)
                         ->html("
-                            <p>Dear Customer,</p>
+                            <p>Dear {$namaCustomer},</p>
 
                             <p>Berikut detail <strong>Pasca Kirim</strong> Surat Jalan Digital:</p>
 
@@ -658,6 +687,7 @@ class KirimSJController extends Controller
                 $qty_primerDiterimaCustomer = $request->qty_primerDiterimaCustomer;
                 $qty_sekunderDiterimaCustomer = $request->qty_sekunderDiterimaCustomer;
                 $qty_tritierDiterimaCustomer = $request->qty_tritierDiterimaCustomer;
+                $idDO = $request->idDO;
                 $pascaKirimCheck = db::connection('ConnSales')->select('exec SP_1486_SLS_CEK_PASCA_KIRIM @IdPengiriman = ?, @IDDetailKirim = ?', [$surat_jalan, $idDetailKirim]);
                 // dd($pascaKirimCheck[0]->StatusPasca);
                 if ($pascaKirimCheck[0]->StatusPasca == "Pengembalian" && $jenis_pasca == "Pengembalian") {
@@ -693,19 +723,23 @@ class KirimSJController extends Controller
                 );
 
                 // update data T_KirimSJ PublicWeb
-                DB::connection('ConnSales')
-                    ->statement(
-                        'exec SP_4384_SLS_KIRIM_SJ @XKode = ?,
-                        @JmlTerimaPrimer = ?
+                DB::connection('ConnSales')->statement(
+                    'exec SP_4384_SLS_KIRIM_SJ
+                        @XKode = ?,
+                        @XIdPengiriman = ?,
+                        @XIdDO = ?,
+                        @JmlTerimaPrimer = ?,
                         @JmlTerimaSekunder = ?,
-                        @JmlTerimaSekunder = ?',
-                        [
-                            8,
-                            $qty_primerDiterimaCustomer,
-                            $qty_sekunderDiterimaCustomer,
-                            $qty_tritierDiterimaCustomer
-                        ]
-                    );
+                        @JmlTerimaTritier = ?',
+                    [
+                        8,
+                        $surat_jalan,
+                        $request->idDO,
+                        $qty_primerDiterimaCustomer,
+                        $qty_sekunderDiterimaCustomer,
+                        $qty_tritierDiterimaCustomer
+                    ]
+                );
             } catch (Exception $e) {
                 return response()->json([
                     'error' => (string) 'Terjadi kesalahan pada sistem, ' . $e->getMessage()
@@ -880,6 +914,7 @@ class KirimSJController extends Controller
                     'exec SP_4384_SLS_KIRIM_SJ @XKode = ?',
                     [4]
                 );
+            // dd($dataSuratJalan);
 
             $dataSuratJalan = collect($dataSuratJalan);
 
@@ -900,8 +935,9 @@ class KirimSJController extends Controller
             return datatables($dataSuratJalan->values())->make(true);
         } else if ($id == 'preparePasca') {
             $idPengiriman = $request->idPengiriman;
+            $idDO = $request->idDO;
             $dataSuratJalanTerkirim = DB::connection('ConnSales')
-                ->select('exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?', [3, $idPengiriman]);
+                ->select('exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?, @XIdDO = ?', [3, $idPengiriman, $idDO]);
             $idCust = $dataSuratJalanTerkirim[0]->IDCust;
             // $invoiceCheck = db::connection('ConnAccounting')->select('exec SP_1486_SLS_CEK_INVOICE @Id_cust = ?, @SJ = ?', [$idCust, $idPengiriman]);
             // if (count($invoiceCheck) > 0) {
@@ -909,7 +945,13 @@ class KirimSJController extends Controller
             //     return response()->json(['error' => 'Invoice already exists! Id Penagihan: ' . $invoiceCheck[0]->Id_Penagihan]);
             // }
             $dataIdDetailPengiriman = DB::connection('ConnSales')
-                ->select('exec SP_4384_SLS_KIRIM_SJ @XKode = ?, @XIdPengiriman = ?', [6, $idPengiriman]);
+                ->select(
+                    'exec SP_4384_SLS_KIRIM_SJ
+                        @XKode = ?,
+                        @XIdPengiriman = ?,
+                        @XIdDO = ?',
+                    [6, $idPengiriman, $idDO]
+                );
 
             return response()->json(['dataSuratJalanTerkirim' => $dataSuratJalanTerkirim, 'idDetailKirim' => $dataIdDetailPengiriman]);
         } else if ($id == 'UnduhAttachment') {
@@ -991,6 +1033,18 @@ class KirimSJController extends Controller
 
         }
     }
+
+
+    private function getNamaCustomer($idPengiriman)
+    {
+        return DB::connection('ConnSales')
+            ->table('T_HeaderPengiriman as H')
+            ->leftJoin('T_Customer as C', 'H.IDCust', '=', 'C.IDCust')
+            ->where('H.IDPengiriman', $idPengiriman)
+            ->value('C.NamaCust') ?? 'Customer';
+    }
+
+
 
     public function edit($id)
     {

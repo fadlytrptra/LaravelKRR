@@ -1,5 +1,10 @@
 jQuery(function ($) {
     //#region Variables
+    const today = new Date();
+    const todayString = today.getFullYear() + "-" +
+        String(today.getMonth() + 1).padStart(2, "0") + "-" +
+        String(today.getDate()).padStart(2, "0");
+    $("#tanggal_mulai").val(todayString); $("#tanggal_akhir").val(todayString);
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content"); // prettier-ignore
 
     let table_SJ = $("#table_SJ").DataTable({
@@ -138,6 +143,7 @@ jQuery(function ($) {
                             <button class="btn btn-proses-pasca"
                                 style="background:#14f2fd;color:white;border-color:#14f2fd;"
                                 data-idpengiriman="${data}"
+                                data-iddo="${row.IDDO}"
                                 data-qtyjual="${row.QuantityDisplay}">
                                 Proses Pasca
                             </button>
@@ -188,7 +194,8 @@ jQuery(function ($) {
 
                     return `
                         <button class="btn btn-success btn-kirimSJ"
-                                data-idpengiriman="${data}">
+                                data-idpengiriman="${data}"
+                                data-iddo="${row.IDDO}">
                             Kirim SJ
                         </button>
                     `;
@@ -371,6 +378,20 @@ jQuery(function ($) {
     $("#table_SJ").on("click", ".btn-kirimSJ", function () {
         let $btn = $(this);
         let idPengiriman = $btn.data("idpengiriman");
+        let idDO = $btn.data("iddo");
+
+        console.log("ID Pengiriman:", idPengiriman);
+        console.log("IDDO:", idDO);
+
+        if (!idDO) {
+            Swal.fire(
+                "Error",
+                "IDDO tidak ditemukan.",
+                "error"
+            );
+
+            return;
+        }
 
         // CEGAH DOUBLE CLICK
         if ($btn.data("clicked")) return;
@@ -399,6 +420,7 @@ jQuery(function ($) {
                     data: {
                         jenisProses: "kirimSJ",
                         idPengiriman: idPengiriman,
+                        idDO: idDO,
                         _token: csrfToken,
                     },
                 })
@@ -478,6 +500,7 @@ jQuery(function ($) {
     $("#table_SJ").on("click", ".btn-verifikasi", function () {
         let $btn = $(this);
         let idPengiriman = $btn.data("idpengiriman");
+        let idDO = $btn.data("iddo");
         let qtyjual = numeral($btn.data("qtyjual")).value();
         let maxQty = qtyjual * 2;
         let qtyTemp = 0;
@@ -505,6 +528,7 @@ jQuery(function ($) {
             type: "GET",
             data: {
                 idPengiriman: idPengiriman,
+                idDO: idDO,
                 _token: csrfToken,
             },
             success: function (response) {
@@ -759,6 +783,7 @@ jQuery(function ($) {
     $("#table_SJ").on("click", ".btn-proses-pasca", function () {
         let $btn = $(this);
         let idPengiriman = $btn.data("idpengiriman");
+        let idDO = $btn.data("iddo");
         let qtyjual = numeral($btn.data("qtyjual")).value();
         let maxQty = qtyjual * 2;
         let qtyTemp = 0;
@@ -786,6 +811,7 @@ jQuery(function ($) {
             type: "GET",
             data: {
                 idPengiriman: idPengiriman,
+                idDO: idDO,
                 _token: csrfToken,
             },
             success: function (response) {
@@ -886,6 +912,7 @@ jQuery(function ($) {
                     console.log(result);
 
                     if (result.isConfirmed) {
+                        const pascaData = result.value;
                         if (qtyTempVerifikasi > qtyjual) {
                             Swal.fire({
                                 title: "Konfirmasi",
@@ -899,25 +926,29 @@ jQuery(function ($) {
                                 // lock UI swal
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
-                            }).then((result) => {
+                            }).then((jenisResult) => {
                                 $.ajax({
                                     url: "KirimSJ",
                                     type: "POST",
                                     data: {
                                         jenisProses: "pascaKirim",
-                                        jenis_pasca: result.isConfirmed
+
+                                        jenis_pasca: jenisResult.isConfirmed
                                             ? "Pengembalian"
                                             : "Kurang/Lebih",
+
                                         surat_jalan: idPengiriman,
+                                        idDO: idDO,
+
                                         idDetailKirim: idDetailKirim,
                                         idHeaderKirim: idHeaderKirim,
-                                        qty_primerDiterimaCustomer:
-                                            result.value.qty1,
-                                        qty_sekunderDiterimaCustomer:
-                                            result.value.qty2,
-                                        qty_tritierDiterimaCustomer:
-                                            result.value.qty3,
-                                        alasan: result.value.alasan,
+
+                                        qty_primerDiterimaCustomer: pascaData.qty1,
+                                        qty_sekunderDiterimaCustomer: pascaData.qty2,
+                                        qty_tritierDiterimaCustomer: pascaData.qty3,
+
+                                        alasan: pascaData.alasan,
+
                                         _token: csrfToken,
                                     },
                                 })
@@ -950,6 +981,7 @@ jQuery(function ($) {
                                     jenisProses: "pascaKirim",
                                     jenis_pasca: "Kurang/Lebih",
                                     surat_jalan: idPengiriman,
+                                    idDO: idDO,
                                     idDetailKirim: idDetailKirim,
                                     idHeaderKirim: idHeaderKirim,
                                     qty_primerDiterimaCustomer:
@@ -1010,8 +1042,8 @@ jQuery(function ($) {
     });
 
     $("#btnResetTanggal").on("click", function () {
-        $("#tanggal_mulai").val("");
-        $("#tanggal_akhir").val("");
+        $("#tanggal_mulai").val(todayString);
+        $("#tanggal_akhir").val(todayString);
 
         table_SJ.ajax.reload();
     });
