@@ -260,7 +260,8 @@ class TerimaPurchasingController extends Controller
         $MasukPrimer   = $request->input('MasukPrimer');
         $MasukSekunder = $request->input('MasukSekunder');
         $MasukTritier  = $request->input('MasukTritier');
-
+        $divisiId      = $request->input('divisiId');
+        // dd($divisiId);
         if (empty($IdTransaksi) || empty($IdType) || empty($Penerima)) {
             return response()->json([
                 'error' => 'Data wajib belum lengkap'
@@ -301,7 +302,8 @@ class TerimaPurchasingController extends Controller
                     @Penerima = ?,
                     @MasukPrimer = ?,
                     @MasukSekunder = ?,
-                    @MasukTritier = ?',
+                    @MasukTritier = ?,
+                    @divisiId = ?',
                 [
                     $IdTransaksi,
                     $IdType,
@@ -310,6 +312,7 @@ class TerimaPurchasingController extends Controller
                     $MasukPrimer,
                     $MasukSekunder,
                     $MasukTritier,
+                    $divisiId,
                 ]
             );
 

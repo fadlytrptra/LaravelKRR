@@ -1052,6 +1052,7 @@
                             MasukPrimer: item.MasukPrimer,
                             MasukSekunder: item.MasukSekunder,
                             MasukTritier: item.MasukTritier,
+                            divisiId: divisiId.value,
                             //simulate: 1 || proses: 0
                             simulate: 0,
                             _token: csrfToken,
