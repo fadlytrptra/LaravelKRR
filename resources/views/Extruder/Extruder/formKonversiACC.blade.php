@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <style>
+    {{-- <style>
         .aligned-text, label {
             font-size: 0.85rem;
             margin-bottom: 0;
@@ -13,6 +13,13 @@
         }
         .table-wrapper {
             max-height: 30vh;
+        }
+    </style> --}}
+    <style>
+        .extruder_root {
+            transform: scale(0.8);
+            transform-origin: top left;
+            width: 111.11%;
         }
     </style>
 
@@ -56,8 +63,10 @@
                                 <div class="col-lg-3"><span class="aligned-text">Shift:</span></div>
                                 <div class="col-lg-8">
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="shift" class="form-control" style="max-width: 50px; border-right: none;" disabled>
-                                        <input type="time" id="shift_awal" class="form-control unclickable" style="border-left: none;">
+                                        <input type="text" id="shift" class="form-control"
+                                            style="max-width: 50px; border-right: none;" disabled>
+                                        <input type="time" id="shift_awal" class="form-control unclickable"
+                                            style="border-left: none;">
                                         <span class="input-group-text">s/d</span>
                                         <input type="time" id="shift_akhir" class="form-control unclickable">
                                     </div>
@@ -68,8 +77,10 @@
                                 <div class="col-lg-3"><span class="aligned-text">Mesin:</span></div>
                                 <div class="col-lg-9">
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="id_mesin" class="form-control" style="border-right: none;" disabled>
-                                        <input type="text" id="nama_mesin" class="form-control" style="width: 12.5vw; border-left: none;" disabled>
+                                        <input type="text" id="id_mesin" class="form-control"
+                                            style="border-right: none;" disabled>
+                                        <input type="text" id="nama_mesin" class="form-control"
+                                            style="width: 12.5vw; border-left: none;" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -77,14 +88,16 @@
                             <div class="row mt-1 align-items-center">
                                 <div class="col-lg-3"><span class="aligned-text">Ukuran:</span></div>
                                 <div class="col-lg-4">
-                                    <input type="number" min="0" id="ukuran" class="form-control form-control-sm" placeholder="0" disabled>
+                                    <input type="number" min="0" id="ukuran" class="form-control form-control-sm"
+                                        placeholder="0" disabled>
                                 </div>
                             </div>
 
                             <div class="row mt-1 align-items-center">
                                 <div class="col-lg-3"><span class="aligned-text">Denier:</span></div>
                                 <div class="col-lg-4">
-                                    <input type="number" min="0" id="denier" class="form-control form-control-sm" placeholder="0" disabled>
+                                    <input type="number" min="0" id="denier" class="form-control form-control-sm"
+                                        placeholder="0" disabled>
                                 </div>
                             </div>
 
@@ -93,19 +106,22 @@
                                     <div class="row align-items-center">
                                         <div class="col-lg-5"><span class="aligned-text">Warna:</span></div>
                                         <div class="col-lg-7">
-                                            <input type="text" id="warna" class="form-control form-control-sm" disabled>
+                                            <input type="text" id="warna" class="form-control form-control-sm"
+                                                disabled>
                                         </div>
                                     </div>
                                     <div class="row align-items-center mt-1">
                                         <div class="col-lg-5"><span class="aligned-text">Lot:</span></div>
                                         <div class="col-lg-7">
-                                            <input type="text" id="lot" class="form-control form-control-sm" disabled>
+                                            <input type="text" id="lot" class="form-control form-control-sm"
+                                                disabled>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-5 d-flex align-items-center justify-content-center">
                                     <div class="col-lg-10">
-                                        <input type="number" id="no_urut" class="form-control form-control-sm" placeholder="Nomor urut">
+                                        <input type="number" id="no_urut" class="form-control form-control-sm"
+                                            placeholder="Nomor urut">
                                     </div>
                                 </div>
                             </div>
@@ -114,8 +130,10 @@
                                 <div class="col-lg-3"><span class="aligned-text">No. Order:</span></div>
                                 <div class="col-lg-9">
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="id_order" class="form-control" style="border-right: none;" disabled>
-                                        <input type="text" id="nama_order" class="form-control" style="width: 12.5vw; border-left: none;" disabled>
+                                        <input type="text" id="id_order" class="form-control"
+                                            style="border-right: none;" disabled>
+                                        <input type="text" id="nama_order" class="form-control"
+                                            style="width: 12.5vw; border-left: none;" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -124,8 +142,10 @@
                                 <div class="col-lg-3"><span class="aligned-text">Komposisi:</span></div>
                                 <div class="col-lg-9">
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="id_komposisi" class="form-control" style="border-right: none;" disabled>
-                                        <input type="text" id="nama_komposisi" class="form-control" style="width: 12.5vw; border-left: none;" disabled>
+                                        <input type="text" id="id_komposisi" class="form-control"
+                                            style="border-right: none;" disabled>
+                                        <input type="text" id="nama_komposisi" class="form-control"
+                                            style="width: 12.5vw; border-left: none;" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -133,11 +153,13 @@
                             <div class="row mt-1 mb-1 align-items-center">
                                 <div class="col-lg-3"><span class="aligned-text">Mulai:</span></div>
                                 <div class="col-lg-3">
-                                    <input type="time" id="waktu_mulai" class="form-control form-control-sm unclickable">
+                                    <input type="time" id="waktu_mulai"
+                                        class="form-control form-control-sm unclickable">
                                 </div>
                                 <div class="col-lg-3"><span class="aligned-text">Selesai:</span></div>
                                 <div class="col-lg-3">
-                                    <input type="time" id="waktu_selesai" class="form-control form-control-sm unclickable">
+                                    <input type="time" id="waktu_selesai"
+                                        class="form-control form-control-sm unclickable">
                                 </div>
                             </div>
 
@@ -170,7 +192,8 @@
                                 <tr>
                                     @php $tableWidth = 10; @endphp
                                     <td colspan="{{ $tableWidth }}" class="text-center">
-                                        <h6 class="mt-2 mb-2 text-muted">Tabel masih kosong...</h6> <!-- h1 diubah ke h6 agar tidak makan tempat -->
+                                        <h6 class="mt-2 mb-2 text-muted">Tabel masih kosong...</h6>
+                                        <!-- h1 diubah ke h6 agar tidak makan tempat -->
                                     </td>
                                     @for ($i = 0; $i < $tableWidth - 1; $i++)
                                         <td class="hidden"></td>
@@ -183,15 +206,18 @@
                     <div class="row mt-2 d-flex justify-content-center">
                         <div class="col-lg-3">
                             <label for="total_bahan_terpakai">Total Bahan Terpakai:</label>
-                            <input type="number" min="0" id="total_bahan_terpakai" class="form-control form-control-sm" placeholder="0">
+                            <input type="number" min="0" id="total_bahan_terpakai"
+                                class="form-control form-control-sm" placeholder="0">
                         </div>
                         <div class="col-lg-3">
                             <label for="hasil_timbang">Hasil Timbang:</label>
-                            <input type="number" min="0" id="hasil_timbang" class="form-control form-control-sm" placeholder="0">
+                            <input type="number" min="0" id="hasil_timbang" class="form-control form-control-sm"
+                                placeholder="0">
                         </div>
                         <div class="col-lg-3">
                             <label for="afalan">Afalan:</label>
-                            <input type="number" min="0" id="afalan" class="form-control form-control-sm" placeholder="0">
+                            <input type="number" min="0" id="afalan" class="form-control form-control-sm"
+                                placeholder="0">
                         </div>
                     </div>
                 </div>

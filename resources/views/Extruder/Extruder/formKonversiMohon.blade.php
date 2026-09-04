@@ -3,8 +3,14 @@
 @section('title')
     Permohonan Konversi
 @endsection
-
 @section('content')
+    <style>
+        .extruder_root {
+            transform: scale(0.8);
+            transform-origin: top left;
+            width: 111.11%;
+        }
+    </style>
     <div class="extruder_root">
         <input type="hidden" id="nama_gedung" value="{{ $formData['namaGedung'] ?? 'B' }}">
 
