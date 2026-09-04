@@ -415,6 +415,12 @@ isi_button.addEventListener("click", function (event) {
         hapus_button.style.display = "none";
         jenis_pengiriman.focus();
     } else if (proses == 1) {
+        if (surat_jalan.value.trim() === "") {
+            surat_jalan.focus();
+            surat_jalan.setCustomValidity("Surat Jalan wajib diisi!");
+            surat_jalan.reportValidity();
+            return;
+        }
         form_suratJalan.submit();
         proses = 0;
         this.innerHTML = "Isi";

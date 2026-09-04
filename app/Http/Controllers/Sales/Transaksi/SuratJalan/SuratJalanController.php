@@ -64,6 +64,9 @@ class SuratJalanController extends Controller
     // Store a newly created resource in storage.
     public function store(Request $request)
     {
+        $request->validate([
+            'surat_jalan' => 'required|string',
+        ]);
         // $data = $request->all();
         // dd($data);
         $Mytype = 1;
