@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Exception;
 
 class InputSumberAirController extends Controller
@@ -32,6 +33,7 @@ class InputSumberAirController extends Controller
         $namaSumberAir = $request->input('namaSumberAir');
         $angkaDibelakangKoma = $request->input('angkaDibelakangKoma');
         $lokasi = $request->input('select_lokasiSumberAir');
+        $user = trim(Auth::user()->NomorUser);
         if ($jenisStore == 'store') {
             // Tambah Mesin
             try {
@@ -69,6 +71,33 @@ class InputSumberAirController extends Controller
                     ]
                 );
                 return response()->json(['success' => 'Data sumber air berhasil diubah.']);
+            } catch (Exception $e) {
+                return response()->json(['error' => (string) "Terjadi Kesalahan! " . $e->getMessage()]);
+            }
+        } else if ($jenisStore == 'resetCounter') {
+            // Edit Mesin
+            try {
+                DB::connection('ConnUtility')->statement('EXEC SP_4384_PDAM_Maintenance_Data_PDAM
+                    @XKode = ?,
+                    @XTanggal = ?,
+                    @XIdSumberAir = ?,
+                    @XKeterangan = ?,
+                    @XCounter = ?,
+                    @XPemakaian = ?,
+                    @XFoto = ?,
+                    @XUser = ?',
+                    [
+                        3,
+                        Carbon::now()->format('Y-m-d'),
+                        $idSumberAir,
+                        "Reset Counter",
+                        0,
+                        0,
+                        null,
+                        $user
+                    ]
+                );
+                return response()->json(['success' => 'Data sumber air berhasil direset.']);
             } catch (Exception $e) {
                 return response()->json(['error' => (string) "Terjadi Kesalahan! " . $e->getMessage()]);
             }

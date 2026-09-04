@@ -405,7 +405,7 @@ jQuery(function ($) {
             if (parseInt(this.value) < minimalCounterSaatIni) {
                 this.setCustomValidity(
                     "Counter saat ini tidak boleh lebih kecil dari " +
-                        minimalCounterSaatIni,
+                    minimalCounterSaatIni,
                 );
 
                 this.reportValidity();
@@ -439,7 +439,7 @@ jQuery(function ($) {
             if (this.value < minimalCounterSaatIni) {
                 this.setCustomValidity(
                     "Counter saat ini tidak boleh lebih kecil dari " +
-                        minimalCounterSaatIni,
+                    minimalCounterSaatIni,
                 );
 
                 this.reportValidity();
@@ -453,6 +453,37 @@ jQuery(function ($) {
             this.setCustomValidity("");
             if (counterSebelumnya.value > 0) {
                 counterPemakaian.value = this.value - counterSebelumnya.value;
+            } else {
+                $.ajax({
+                    url: "/InputPDAM/getDataCounterReset",
+                    type: "GET",
+                    data: {
+                        idSumberAir: select_sumberAir.value,
+                    },
+                    success: function (responseSelisih) {
+                        console.log(responseSelisih);
+
+                        let selisihCounter = numeral(
+                            responseSelisih[0].Counter ?? 0
+                        ).value();
+                        
+                        selisihCounter = 9999999 - selisihCounter; 
+
+                        // Hitung pemakaian menggunakan selisih
+                        counterPemakaian.value =
+                            parseInt(counterSaatIni.value) +
+                            parseInt(selisihCounter);
+
+                    },
+                    error: function (xhr) {
+                        console.error(
+                            "Gagal mengambil selisih counter",
+                            xhr
+                        );
+
+                        counterPemakaian.value = 0;
+                    },
+                });
             }
         }
     });
@@ -611,7 +642,7 @@ jQuery(function ($) {
         if (parseInt(counterSaatIni.value) < minimalCounterSaatIni) {
             counterSaatIni.setCustomValidity(
                 "Counter saat ini tidak boleh lebih kecil dari " +
-                    minimalCounterSaatIni,
+                minimalCounterSaatIni,
             );
 
             counterSaatIni.reportValidity();

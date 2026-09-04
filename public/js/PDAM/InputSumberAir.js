@@ -10,7 +10,7 @@ jQuery(function ($) {
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content"); // prettier-ignore
 
     let table_sumberAir = $("#table_sumberAir").DataTable({
-        processing: true, // Optional, as processing is more relevant for server-side
+        processing: true,
         responsive: true,
         data: [],
         columns: [
@@ -23,37 +23,40 @@ jQuery(function ($) {
                 render: function (data, type, full, meta) {
                     let buttonLabel =
                         full.Aktif == 1 ? "Deactivate" : "Activate";
+
                     let toggleClass =
                         full.Aktif == 1 ? "btn-danger" : "btn-success";
+
                     return (
-                        // '<button class="btn btn-primary btn-detail" data-id="' +
-                        // data +
-                        // '" data-toggle="modal" data-target="#detailMesinModal" id="button_modalDetailMesin">Lihat Detail</button> ' +
-                        '<button class="btn btn-secondary btn-edit" data-id="' +
-                        data +
-                        '" data-toggle="modal" data-target="#tambahSumberAirModal">Edit</button> ' +
-                        '<button class="btn ' +
-                        toggleClass +
-                        ' btn-delete" data-id="' +
-                        data +
-                        '" data-aktif="' +
-                        full.Aktif +
-                        '" data-namaSumberAir ="' +
-                        full.NamaSumberAir +
-                        '">' +
+                        '<button class="btn btn-secondary btn-edit" ' +
+                        'data-id="' + data + '" ' +
+                        'data-toggle="modal" ' +
+                        'data-target="#tambahSumberAirModal">' +
+                        'Edit</button> ' +
+
+                        '<button class="btn ' + toggleClass + ' btn-delete" ' +
+                        'data-id="' + data + '" ' +
+                        'data-aktif="' + full.Aktif + '" ' +
+                        'data-namaSumberAir="' + full.NamaSumberAir + '">' +
                         buttonLabel +
-                        "</button>"
+                        '</button> ' +
+
+                        '<button class="btn btn-warning btn-reset-counter" ' +
+                        'data-id="' + data + '" ' +
+                        'data-namaSumberAir="' + full.NamaSumberAir + '">' +
+                        'Reset Counter' +
+                        '</button>'
                     );
                 },
             },
             {
-                data: "Aktif", // hidden column
-                visible: false, // make it invisible
-                searchable: false, // optional, if you don't want it in search
+                data: "Aktif",
+                visible: false,
+                searchable: false,
             },
         ],
         orderFixed: {
-            pre: [3, "desc"], // Always sort by Aktif first
+            pre: [3, "desc"],
         },
     });
     //#endregion
@@ -299,6 +302,63 @@ jQuery(function ($) {
                 Swal.fire(
                     "Pemberitahuan",
                     "Status sumber air tidak jadi dirubah :)",
+                    "info",
+                );
+            }
+        });
+    });
+
+    $(document).on("click", ".btn-reset-counter", function (e) {
+        var rowID = $(this).data("id");
+        var namaSumberAir = $(this).data("namasumberair");
+        var isActive = $(this).data("aktif");
+        let buttonLabel = isActive ? "Nonaktifkan" : "Aktifkan";
+
+        Swal.fire({
+            title: "Apakah anda yakin untuk reset counter sumber air?",
+            // text: "Apakah anda yakin untuk",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/InputSumberAir",
+                    type: "POST",
+                    data: {
+                        jenisStore: "resetCounter",
+                        namaSumberAir: namaSumberAir.value,
+                        angkaDibelakangKoma: angkaDibelakangKoma.value,
+                        select_lokasiSumberAir: select_lokasiSumberAir.value,
+                        idSumberAir: rowID,
+                        _token: csrfToken,
+                    },
+                    success: function (response) {
+                        if (response.error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Terjadi Kesalahan!",
+                                text: response.error,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Berhasil!",
+                                text: response.success,
+                            });
+                            getDataSumberAir();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching data: ", error);
+                    },
+                });
+            } else if (result.isDismissed) {
+                // If user cancels, show a message or do nothing
+                Swal.fire(
+                    "Pemberitahuan",
+                    "Counter sumber air tidak jadi dirubah",
                     "info",
                 );
             }

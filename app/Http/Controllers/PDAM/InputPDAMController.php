@@ -162,6 +162,7 @@ class InputPDAMController extends Controller
             $idDataPDAM = $request->idDataPDAM ?? NULL;
             // dd($idSumberAir, $idDataPDAM);
             $dataCounterTerakhir = DB::connection('ConnUtility')->select('EXEC SP_4384_PDAM_Maintenance_Data_PDAM @XKode = ?, @XIdSumberAir = ?, @XIdPdam = ?', [1, $idSumberAir, $idDataPDAM]);
+            // dd($dataCounterTerakhir);
             return datatables($dataCounterTerakhir)->make(true);
         } else if ($id == 'getDetailDataPDAM') {
             $idDataPDAM = $request->idDataPDAM;
@@ -175,6 +176,11 @@ class InputPDAMController extends Controller
         } else if ($id == 'getDataSumberAir') {
             $idLokasi = $request->idLokasi;
             $dataSumberAir = DB::connection('ConnUtility')->select('EXEC SP_4384_PDAM_Maintenance_Sumber_Air @XKode = ?, @XLokasi = ?', [6, $idLokasi]);
+            return response()->json($dataSumberAir);
+        } else if ($id == 'getDataCounterReset') {
+            $idSumberAir = $request->idSumberAir;
+            $dataSumberAir = DB::connection('ConnUtility')->select('EXEC SP_4384_PDAM_Maintenance_Data_PDAM @XKode = ?, @XIdSumberAir = ?', [9, $idSumberAir]);
+            // dd($dataSumberAir);
             return response()->json($dataSumberAir);
         } else {
             return response()->json(['error' => (string) "Undefined request: " . $id]);
