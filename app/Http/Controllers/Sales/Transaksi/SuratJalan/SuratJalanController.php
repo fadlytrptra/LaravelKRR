@@ -65,15 +65,13 @@ class SuratJalanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'surat_jalan' => 'required|string',
+            'surat_jalan' => 'required|string|max:10',
         ]);
-        // $data = $request->all();
-        // dd($data);
+
         $Mytype = 1;
         $JnsIdPengiriman = $request->jenis_pengiriman;
         $IDPengiriman1 = $request->surat_jalan;
         $IDPengiriman = str_pad($IDPengiriman1, 10, '0', STR_PAD_LEFT);
-        // dd($IDPengiriman);
         $IDExpeditor = $request->expeditor;
         $IdCust = $request->customer;
         $TrukNopol = $request->truk_nopol ?? "";
@@ -86,47 +84,102 @@ class SuratJalanController extends Controller
         $TglActual = $request->tanggal_actual;
         $IdDO = $request->barang0;
         $IDSuratPesanan = $request->barang3;
-        $AccMgr = Auth::user()->NomorUser;
-        // dd($IdDO[0]);
-        //save data header duluu
-        db::connection('ConnSales')->statement(
-            'exec SP_1486_SLS_MAINT_HEADERPENGIRIMAN @Mytype = ?,
-        @JnsIdPengiriman = ?,
-        @IDPengiriman = ?,
-        @IDExpeditor = ?,
-        @IdCust = ?,
-        @TrukNopol = ?,
-        @Tanggal = ?,
-        @Biaya = ?,
-        @StatusBiaya = ?,
-        @Keterangan = ?,
-        @NoContainer = ?,
-        @NoSeal = ?,
-        @TglActual = ?',
-            [$Mytype, $JnsIdPengiriman, $IDPengiriman, $IDExpeditor, $IdCust, $TrukNopol, $Tanggal, $Biaya, $StatusBiaya, $Keterangan, $NoContainer, $NoSeal, $TglActual],
+
+        // User login
+        $UserInput = Auth::user()->NomorUser;
+        $AccMgr = $UserInput;
+
+        // =========================
+        // SAVE HEADER
+        // =========================
+        DB::connection('ConnSales')->statement(
+            'exec SP_1486_SLS_MAINT_HEADERPENGIRIMAN
+                @Mytype = ?,
+                @JnsIdPengiriman = ?,
+                @IDPengiriman = ?,
+                @IDExpeditor = ?,
+                @IdCust = ?,
+                @TrukNopol = ?,
+                @Tanggal = ?,
+                @Biaya = ?,
+                @StatusBiaya = ?,
+                @Keterangan = ?,
+                @NoContainer = ?,
+                @NoSeal = ?,
+                @TglActual = ?',
+            [
+                $Mytype,
+                $JnsIdPengiriman,
+                $IDPengiriman,
+                $IDExpeditor,
+                $IdCust,
+                $TrukNopol,
+                $Tanggal,
+                $Biaya,
+                $StatusBiaya,
+                $Keterangan,
+                $NoContainer,
+                $NoSeal,
+                $TglActual
+            ]
         );
 
-        //kita cari Header kirim yang baru saja dibuat..
+        // =========================
+        // CARI HEADER YANG BARU DIBUAT
+        // =========================
         $IDHeaderKirim = DB::connection('ConnSales')->select(
-            'Select IdHeaderKirim
-            from T_HeaderPengiriman
-            where JnsIdPengiriman = ' . $JnsIdPengiriman . ' and
-            IDPengiriman = \'' . $IDPengiriman . '\''
+            'SELECT IdHeaderKirim
+            FROM T_HeaderPengiriman
+            WHERE JnsIdPengiriman = ?
+            AND IDPengiriman = ?',
+            [
+                $JnsIdPengiriman,
+                $IDPengiriman
+            ]
         );
-        // dd($IDHeaderKirim, $IdDO, $IDSuratPesanan);
-        //save data detail duluu
 
+        if (empty($IDHeaderKirim)) {
+            return redirect()->back()
+                ->with('error', 'Header Surat Jalan tidak ditemukan.');
+        }
+
+        // Ambil nilai ID saja
+        $IdHeaderKirim = $IDHeaderKirim[0]->IdHeaderKirim;
+
+        // =========================
+        // SIMPAN USER INPUT
+        // =========================
+        DB::connection('ConnSales')
+            ->table('T_HeaderPengiriman')
+            ->where('IdHeaderKirim', $IdHeaderKirim)
+            ->update([
+                'UserInput' => $UserInput
+            ]);
+
+        // =========================
+        // SAVE DETAIL
+        // =========================
         for ($i = 0; $i < count($request->barang0); $i++) {
-            db::connection('ConnSales')->statement(
-                'exec SP_1486_SLS_MAINT_DETAILPENGIRIMAN @Mytype = ?,
-            @IDHeaderKirim = ?,
-            @IdDO = ?,
-            @IDSuratPesanan = ?,
-            @AccMgr = ?',
-                [$Mytype, $IDHeaderKirim[0]->IdHeaderKirim, $IdDO[$i], $IDSuratPesanan[$i], $AccMgr],
+
+            DB::connection('ConnSales')->statement(
+                'exec SP_1486_SLS_MAINT_DETAILPENGIRIMAN
+                    @Mytype = ?,
+                    @IDHeaderKirim = ?,
+                    @IdDO = ?,
+                    @IDSuratPesanan = ?,
+                    @AccMgr = ?',
+                [
+                    $Mytype,
+                    $IdHeaderKirim,
+                    $IdDO[$i],
+                    $IDSuratPesanan[$i],
+                    $AccMgr
+                ]
             );
         }
-        return redirect()->back()->with('success', 'Surat Jalan Sudah Dibuat!');
+
+        return redirect()->back()
+            ->with('success', 'Surat Jalan Sudah Dibuat!');
     }
 
     //Display the specified resource.
