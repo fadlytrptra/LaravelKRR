@@ -1008,5 +1008,12 @@ jQuery(function ($) {
 
         table_SJ.ajax.reload();
     });
+
+    $("#btnResetTanggal").on("click", function () {
+        $("#tanggal_mulai").val("");
+        $("#tanggal_akhir").val("");
+
+        table_SJ.ajax.reload();
+    });
     //#endregion
 });
