@@ -408,7 +408,7 @@ btnProses.addEventListener("click", async function () {
 });
 
 btnKeluar.addEventListener("click", function () {
-    window.location.href = '/Extruder/Extruder';
+    window.location.href = "/Extruder/Extruder";
 });
 
 async function cekPenyesuaian() {
@@ -441,12 +441,27 @@ async function prosesInventory() {
     const tmpTrans = transData;
 
     for (const t of tmpTrans) {
+        // PERBAIKAN: Konversi nilai ke float/number sebelum dibandingkan
+        const keluarPrimer = parseFloat(t.JumlahPengeluaranPrimer) || 0;
+        const saldoPrimer = parseFloat(t.SaldoPrimer) || 0;
+
+        const keluarSekunder = parseFloat(t.JumlahPengeluaranSekunder) || 0;
+        const saldoSekunder = parseFloat(t.SaldoSekunder) || 0;
+
+        const keluarTritier = parseFloat(t.JumlahPengeluaranTritier) || 0;
+        const saldoTritier = parseFloat(t.SaldoTritier) || 0;
+
         if (
-            (t.JumlahPengeluaranPrimer || 0) > (t.SaldoPrimer || 0) ||
-            (t.JumlahPengeluaranSekunder || 0) > (t.SaldoSekunder || 0) ||
-            (t.JumlahPengeluaranTritier || 0) > (t.SaldoTritier || 0)
+            keluarPrimer > saldoPrimer ||
+            keluarSekunder > saldoSekunder ||
+            keluarTritier > saldoTritier
         ) {
-            throw new Error(`Saldo untuk type ${t.namatype} tidak mencukupi.`);
+            throw new Error(
+                `Saldo untuk type ${t.namatype} tidak mencukupi. ` +
+                    `Primer (Keluar: ${keluarPrimer}, Saldo: ${saldoPrimer}) | ` +
+                    `Sekunder (Keluar: ${keluarSekunder}, Saldo: ${saldoSekunder}) | ` +
+                    `Tritier (Keluar: ${keluarTritier}, Saldo: ${saldoTritier})`,
+            );
         }
     }
 
@@ -541,40 +556,49 @@ async function prosesInventory() {
 }
 
 async function prosesExtruder() {
-    const idKonv = listKonversi[konversiPil].IdKonversi;
+    try {
+        const idKonv = listKonversi[konversiPil].IdKonversi;
 
-    await fetchPost(
-        "/Konversi/updACCMasterKonv",
-        {
-            id_konversi: idKonv,
-        },
-        "PUT",
-    );
+        await fetchPost(
+            "/Konversi/updACCMasterKonv",
+            {
+                id_konversi: idKonv,
+            },
+            "PUT",
+        );
 
-    for (const item of listHasil) {
-        if (item.StatusType === "HP") {
-            await fetchPost(
-                "/Konversi/updSaldoOrderDetail",
-                {
-                    id_order: txtIdOrder.value,
-                    no_urut_order: txtNoUrut.value,
-                    primer: item.JumlahPrimer,
-                    sekunder: item.JumlahSekunder,
-                    tritier: item.JumlahTritier,
-                },
-                "PUT",
-            );
+        for (const item of listHasil) {
+            if (item.StatusType === "HP") {
+                const result = await fetchPost(
+                    "/Konversi/updSaldoOrderDetail",
+                    {
+                        id_order: txtIdOrder.value,
+                        no_urut_order: txtNoUrut.value,
+                        primer: item.JumlahPrimer,
+                        sekunder: item.JumlahSekunder,
+                        tritier: item.JumlahTritier,
+                    },
+                    "PUT",
+                );
+
+                if (result && result.nmerror) {
+                    await Swal.fire("Informasi", result.nmerror, "info");
+                }
+            }
         }
-    }
 
-    const orderStatus = await fetchSelectAsync(
-        `/Konversi/getSaldoOrderDetail/${safeUrlParam(txtIdOrder.value)}/${safeUrlParam(txtNoUrut.value)}`,
-    );
-    if (orderStatus && orderStatus.nmerror) {
-        await Swal.fire("Informasi", orderStatus.nmerror, "info");
-    }
+        return true;
+    } catch (error) {
+        console.error("prosesExtruder:", error);
 
-    return true;
+        await Swal.fire(
+            "Error",
+            error.message || "Terjadi kesalahan saat proses extruder.",
+            "error",
+        );
+
+        return false;
+    }
 }
 //#endregion
 
