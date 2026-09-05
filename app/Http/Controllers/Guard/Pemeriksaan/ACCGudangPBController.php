@@ -315,8 +315,9 @@ class ACCGudangPBController extends Controller
                 // dd($response);
                 return datatables($response)->make(true);
             } else {
+                // Batal ACC
                 $results = DB::connection('ConnGuard')
-                    ->select('EXEC SP_4451_ACCGudangPB @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @nomorUser = ?', [3, $tgl_awal, $tgl_akhir, $user_input]);
+                    ->select('EXEC SP_4451_ACCGudangPB @Kode = ?, @tgl_awal = ?, @tgl_akhir = ?, @nomorUser = ?', [5, $tgl_awal, $tgl_akhir, $user_input]);
                 // dd($results);
                 $response = [];
                 foreach ($results as $row) {
