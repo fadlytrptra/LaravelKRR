@@ -350,6 +350,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('SuratPesananEkspor', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananEksportController::class);
     Route::resource('SuratPesanan', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController::class);
     Route::resource('SuratPesananManager', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class);
+    Route::resource('SuratPesananDirektur', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class);
+    Route::resource('ListSPSudahAcc', App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class);
     Route::resource('PenyesuaianSuratPesanan', App\Http\Controllers\Sales\Transaksi\SuratPesanan\PenyesuaianSuratPesananController::class);
     Route::resource('BarcodeKerta2', App\Http\Controllers\Sales\ToolPenjualan\BarcodeKerta2Controller::class);
     Route::resource('BatalJual', App\Http\Controllers\Sales\ToolPenjualan\BatalJualController::class);
@@ -392,6 +394,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/penyesuaiansp/batalsp', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@batalspPenyesuaianSP');
     Route::post('/batalsplokal/{nosp}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@batalspPenyesuaianSP');
     Route::post('/SuratPesananManager/upPenyesuaian', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@updatePenyesuaian');
+    Route::get('SuratPesananManager/dokumentasi/{id}',[App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class,'downloadDokumentasi'])->name('SuratPesananManager.dokumentasi');
+    Route::post('SuratPesananDirektur/upall', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'updateAll'])->name('SuratPesananDirektur.updateAll');
+    Route::get('SuratPesananDirektur/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'downloadDokumentasi'])->name('SuratPesananDirektur.dokumentasi');
+    Route::post('SuratPesananDirektur/batal', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'batal'])->name('SuratPesananDirektur.batal');
+    Route::get('ListSPSudahAcc/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class, 'downloadDokumentasi'])->name('ListSPSudahAcc.dokumentasi');
     Route::get('/options/kategori/{kategoriUtama}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController@getKategori');
     Route::get('/options/subKategori/{kategori}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController@getSubKategori');
     Route::get('/options/namaBarang/{subKategori}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController@getNamaBarang');
@@ -1797,6 +1804,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('PemeriksaanBarang', App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class);
     Route::resource('ACCGudangPB', App\Http\Controllers\Guard\Pemeriksaan\ACCGudangPBController::class);
     Route::resource('ViewPemeriksaanBarang', App\Http\Controllers\Guard\Pemeriksaan\ViewPemeriksaanBarangController::class);
+    Route::resource('SJSudahKirimCustomer', App\Http\Controllers\Guard\Pemeriksaan\SJSudahKirimCustomerController::class);
     Route::get('PemeriksaanBarang/download/{id}', [App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class,'downloadPdf']);
 
     #region COA
