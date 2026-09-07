@@ -27,20 +27,41 @@ class SppbPembelianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'Mode'            => 'required|integer',
-            'KdDiv'           => 'required|string',
-            'TanggalSPPB'     => 'required|date',
-            'Supplier'        => 'required|string',
-            'PayTerm'         => 'required|string',
-            'Transaksi'       => 'required|array|min:1',
-            'Transaksi.*.NoTrans'        => 'required|string',
-            'Transaksi.*.TanggalDatang' => 'required|date',
-            'Transaksi.*.Jenis'         => 'required|string',
-            'Transaksi.*.PriceUnit'     => 'required|numeric|min:0',
-            'Transaksi.*.Disc'          => 'required|numeric|min:0',
-            'Transaksi.*.IdPPN'         => 'required',
-            'Transaksi.*.SubTotalHarga' => 'required|numeric|min:0',
-            'Transaksi.*.TotalHarga'    => 'required|numeric|min:0',
+            'Mode'        => 'required|integer',
+            'KdDiv'       => 'required|string',
+            'TanggalSPPB' => 'required|date',
+
+            'Transaksi'   => 'required|array|min:1',
+
+            'Transaksi.*.NoTrans' =>
+                'required|string',
+
+            'Transaksi.*.Supplier' =>
+                'required|string',
+
+            'Transaksi.*.PayTerm' =>
+                'required|string',
+
+            'Transaksi.*.TanggalDatang' =>
+                'required|date',
+
+            'Transaksi.*.Jenis' =>
+                'required|string',
+
+            'Transaksi.*.PriceUnit' =>
+                'required|numeric|min:0',
+
+            'Transaksi.*.Disc' =>
+                'required|numeric|min:0',
+
+            'Transaksi.*.IdPPN' =>
+                'required',
+
+            'Transaksi.*.SubTotalHarga' =>
+                'required|numeric|min:0',
+
+            'Transaksi.*.TotalHarga' =>
+                'required|numeric|min:0',
         ]);
 
         // mode isi
@@ -121,8 +142,8 @@ class SppbPembelianController extends Controller
                             ->table('YTRANSBL')
                             ->where('No_trans', $item['NoTrans'])
                             ->update([
-                                'Supplier'  => $request->Supplier,
-                                'Pay_Term'  => $request->PayTerm,
+                                'Supplier'  => $item['Supplier'],
+                                'Pay_Term'  => $item['PayTerm'],
                                 'PriceUnit' => $item['PriceUnit'],
                                 'disc'      => $item['Disc'],
                                 'IdPPN'     => $item['IdPPN'],

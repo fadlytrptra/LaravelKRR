@@ -19,9 +19,16 @@ let cmbSupplier = $('#supplier');
 let cmbPaymentTerm = $('#paymentTerm');
 let tableSPPB = null;
 let sppbData = [];
-
 let btnHarga = $('#btnHarga');
 let tableHistory = null;
+
+//save
+let btnSimpanTransaksi = $('#btnSimpanTransaksi');
+let btnBatalTransaksi = $('#btnBatalTransaksi');
+let tableTransaksiSPPB = null;
+let transaksiPending = [];
+let noTransaksiAktif = null;
+let transaksiPendingAktif = null;
 
 //#endregion
 
@@ -101,23 +108,23 @@ function loadTable(data) {
         ],
         columns: [
             // Checkbox
-            {
-                data: null,
-                visible: mode != 2,
-                orderable: false,
-                searchable: false,
-                className: 'text-center',
-                width: '40px',
-                render: function (data, type, row) {
-                    return `
-                        <input
-                            type="checkbox"
-                            class="form-check-input check-item"
-                            value="${row.No_trans}"
-                            ${row.selected ? 'checked' : ''}>
-                    `;
-                }
-            },
+            // {
+            //     data: null,
+            //     visible: mode != 2,
+            //     orderable: false,
+            //     searchable: false,
+            //     className: 'text-center',
+            //     width: '40px',
+            //     render: function (data, type, row) {
+            //         return `
+            //             <input
+            //                 type="checkbox"
+            //                 class="form-check-input check-item"
+            //                 value="${row.No_trans}"
+            //                 ${row.selected ? 'checked' : ''}>
+            //         `;
+            //     }
+            // },
             {
                 data: 'Tgl_order',
                 render: function (data) {
@@ -209,10 +216,13 @@ function setModeIsi() {
     btnHapusSPPB.prop('disabled', true);
     btnIsi.prop('disabled', true);
     btnLihat.prop('disabled', true);
-    btnProses.prop('disabled', false);
+    btnProses.prop('disabled', true);
     btnBatal.prop('disabled', false);
     txtNoSPPB.prop('readonly', true);
     btnLoadSPPB.prop('disabled', true);
+
+    transaksiPending = [];
+    noTransaksiAktif = null;
 
     clearForm();
     setTanggalHariIni();
@@ -638,100 +648,27 @@ function clearForm() {
 }
 
 function proses() {
-    // isi
-    let transaksi = [];
 
-    $('#tableSPPB tbody .check-item:checked').each(function () {
-        let row = tableSPPB.row($(this).closest('tr')).data();
+    // =========================
+    // HARUS ADA TRANSAKSI
+    // =========================
 
-        if (!row)
-            return;
-
-        // =========================
-        // DATA TRANSAKSI
-        // =========================
-
-        let qty = parseFloat(row.Qty) || 0;
-
-        let priceUnit = parseFloat(row.PriceUnit) || 0;
-
-        let disc = parseFloat(row.disc) || 0;
-
-        let idPPN = row.IdPPN;
-
-        // =========================
-        // AMOUNT
-        // =========================
-
-        let amount = qty * priceUnit;
-
-        // =========================
-        // DISCOUNT
-        // =========================
-
-        let nilaiDisc = amount * disc / 100;
-
-        // =========================
-        // SUBTOTAL
-        // =========================
-
-        let subtotalHarga = amount - nilaiDisc;
-
-        // =========================
-        // PPN
-        // =========================
-
-        let ppn = parseFloat(
-            $('#PPN option[value="' + idPPN + '"]')
-                .data('jumlah')
-        ) || 0;
-
-        let nilaiPPN = subtotalHarga * ppn / 100;
-
-        // =========================
-        // TOTAL
-        // =========================
-
-        let totalHarga = subtotalHarga + nilaiPPN;
-
-        // =========================
-        // SIMPAN TRANSAKSI
-        // =========================
-
-        transaksi.push({
-
-            NoTrans: row.No_trans,
-
-            TanggalDatang: $('#TanggalDatang').val(),
-
-            Jenis: $('#JenisPembelian').val(),
-
-            PriceUnit: priceUnit,
-
-            Disc: disc,
-
-            IdPPN: idPPN,
-
-            SubTotalHarga: subtotalHarga,
-
-            TotalHarga: totalHarga
-
-        });
-
-    });
-
-    if (transaksi.length == 0) {
+    if (transaksiPending.length === 0) {
 
         Swal.fire({
             icon: 'warning',
             title: 'Peringatan',
-            text: 'Pilih minimal satu transaksi.'
+            text: 'Belum ada transaksi yang disimpan.'
         });
 
         return;
     }
 
-    if ($('#TanggalSPPB').val() == '') {
+    // =========================
+    // TANGGAL SPPB
+    // =========================
+
+    if (!$('#TanggalSPPB').val()) {
 
         Swal.fire({
             icon: 'warning',
@@ -742,103 +679,138 @@ function proses() {
         return;
     }
 
-    if ($('#supplier').val() == '') {
+    // =========================
+    // KONFIRMASI
+    // =========================
 
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'Supplier harus dipilih.'
-        });
+    Swal.fire({
 
-        return;
-    }
+        icon: 'question',
 
-    if ($('#paymentTerm').val() == '') {
+        title: 'Proses SPPB?',
 
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'Payment Term harus dipilih.'
-        });
+        html:
+            'Terdapat <b>' +
+            transaksiPending.length +
+            '</b> transaksi yang akan dibuat menjadi satu SPPB.',
 
-        return;
-    }
+        showCancelButton: true,
 
-    if ($('#TanggalDatang').val() == '') {
+        confirmButtonText: 'Ya, Proses',
 
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'Tanggal Datang harus diisi.'
-        });
+        cancelButtonText: 'Batal'
 
-        return;
-    }
+    }).then(function (result) {
 
-    if ($('#JenisPembelian').val() == '') {
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Peringatan',
-            text: 'Jenis Pembelian harus dipilih.'
-        });
-
-        return;
-    }
-
-    $.ajax({
-        url: '/Kencana/SppbPembelian',
-        type: 'POST',
-
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-
-        data: {
-            Mode: mode,
-            KdDiv: txtKdDiv.val(),
-            TanggalSPPB: $('#TanggalSPPB').val(),
-            Supplier: $('#supplier').val(),
-            PayTerm: $('#paymentTerm').val(),
-            Transaksi: transaksi
-        },
-
-        beforeSend: function () {
-            btnProses.prop('disabled', true);
-        },
-
-        success: function (response) {
-
-            $('#NoSPPB').val(response.NoSPPB);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: response.message,
-                confirmButtonText: 'OK'
-            }).then(() => {
-
-                setModeAwal();
-
-            });
-        },
-
-        error: function (xhr) {
-            let pesan = 'Terjadi kesalahan.';
-
-            if (xhr.responseJSON?.message) {
-                pesan = xhr.responseJSON.message;
-            }
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: pesan
-            });
-        },
-
-        complete: function () {
-            btnProses.prop('disabled', false);
+        if (!result.isConfirmed) {
+            return;
         }
+
+        $.ajax({
+
+            url: '/Kencana/SppbPembelian',
+
+            type: 'POST',
+
+            headers: {
+                'X-CSRF-TOKEN':
+                    $('meta[name="csrf-token"]').attr('content')
+            },
+
+            data: {
+
+                Mode: mode,
+
+                KdDiv:
+                    txtKdDiv.val(),
+
+                TanggalSPPB:
+                    $('#TanggalSPPB').val(),
+
+                Transaksi:
+                    transaksiPending
+
+            },
+
+            beforeSend: function () {
+
+                btnProses.prop(
+                    'disabled',
+                    true
+                );
+
+            },
+
+            success: function (response) {
+
+                $('#NoSPPB')
+                    .val(response.NoSPPB);
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Berhasil',
+
+                    html:
+                        'SPPB <b>' +
+                        response.NoSPPB +
+                        '</b> berhasil dibuat dengan ' +
+                        '<b>' +
+                        transaksiPending.length +
+                        '</b> transaksi.',
+
+                    confirmButtonText: 'OK'
+
+                }).then(function () {
+
+                    setModeAwal();
+
+                    transaksiPending = [];
+
+                    loadTableTransaksiPending();
+
+                });
+
+            },
+
+            error: function (xhr) {
+
+                let pesan =
+                    'Terjadi kesalahan.';
+
+                if (
+                    xhr.responseJSON &&
+                    xhr.responseJSON.message
+                ) {
+
+                    pesan =
+                        xhr.responseJSON.message;
+                }
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Error',
+
+                    text: pesan
+
+                });
+
+            },
+
+            complete: function () {
+
+                btnProses.prop(
+                    'disabled',
+                    false
+                );
+
+            }
+
+        });
+
     });
 }
 
@@ -1185,66 +1157,31 @@ function hitungHarga() {
     if (mode == 1) {
 
         tableSPPB.rows().every(function () {
-
             let row = this.data();
 
-            if (!row)
+            if (!row) {
                 return;
-
-
-            // Ambil checkbox langsung dari row DataTable
-            let checkbox = $(this.node())
-                .find('.check-item');
-
-
-            let checked = checkbox.is(':checked');
-
-
-            // Backup menggunakan property selected
-            if (row.selected === true) {
-                checked = true;
             }
 
-
-            if (!checked)
+            // Hanya hitung row yang sedang dipilih
+            if (
+                !noTransaksiAktif ||
+                String(row.No_trans) !== String(noTransaksiAktif)
+            ) {
                 return;
+            }
 
-
-            // ==========================================
-            // QTY
-            // ==========================================
             let qty = parseFloat(row.Qty) || 0;
 
-
-            // ==========================================
-            // AMOUNT
-            // ==========================================
             let amount = qty * hargaSatuan;
 
-
-            // ==========================================
-            // DISCOUNT
-            // ==========================================
             let nilaiDisc = amount * disc / 100;
 
-
-            // ==========================================
-            // SUBTOTAL
-            // ==========================================
             let subtotal = amount - nilaiDisc;
 
-
-            // ==========================================
-            // PPN
-            // ==========================================
             let nilaiPPN = subtotal * ppn / 100;
 
-
-            // ==========================================
-            // TOTAL
-            // ==========================================
             let total = subtotal + nilaiPPN;
-
 
             console.log('Row:', {
                 NoTrans: row.No_trans,
@@ -1257,15 +1194,10 @@ function hitungHarga() {
                 Total: total
             });
 
-
-            // ==========================================
-            // AKUMULASI
-            // ==========================================
             totalAmount += amount;
             totalDisc += nilaiDisc;
             totalPPN += nilaiPPN;
             totalHarga += total;
-
         });
     }
 
@@ -1448,29 +1380,629 @@ function setTanggalHariIni() {
     $('#TanggalDatang').val(tanggalHariIni);
 }
 
-//#region Add Event Listener
+function loadTableTransaksiPending() {
 
-$('#tableSPPB tbody').on('click', 'tr', function (e) {
+    if ($.fn.DataTable.isDataTable('#tableTransaksiSPPB')) {
+        tableTransaksiSPPB.destroy();
+    }
 
-    // Jika yang diklik adalah checkbox, jangan proses klik row
-    if ($(e.target).closest('.check-item').length) {
+    $('#tableTransaksiSPPB tbody').empty();
+
+    tableTransaksiSPPB = $('#tableTransaksiSPPB').DataTable({
+        destroy: true,
+        processing: true,
+        responsive: true,
+        autoWidth: false,
+        searching: false,
+        paging: true,
+        info: true,
+        ordering: true,
+        pageLength: 10,
+        data: transaksiPending,
+        columns: [
+            {
+                data: null,
+                className: 'text-center',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            },
+            {
+                data: 'NoTrans'
+            },
+            {
+                data: 'TglOrder',
+                render: function (data) {
+                    return data
+                        ? moment(data).format('DD/MM/YYYY')
+                        : '-';
+                }
+            },
+            {
+                data: 'Qty',
+                className: 'text-end',
+                render: function (data) {
+                    return (parseFloat(data) || 0)
+                        .toLocaleString('id-ID', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                }
+            },
+            {
+                data: 'Pemesan',
+                defaultContent: '-'
+            },
+            {
+                data: 'NM_MSN',
+                defaultContent: '-'
+            },
+            {
+                data: 'NM_GOL',
+                defaultContent: '-'
+            },
+            {
+                data: 'Supplier',
+                defaultContent: '-'
+            },
+            {
+                data: 'PayTerm',
+                defaultContent: '-'
+            },
+            {
+                data: 'TanggalDatang',
+                render: function (data) {
+                    return data
+                        ? moment(data).format('DD/MM/YYYY')
+                        : '-';
+                }
+            },
+            {
+                data: 'Jenis',
+                defaultContent: '-'
+            },
+            {
+                data: 'PriceUnit',
+                className: 'text-end',
+                render: function (data) {
+                    return formatNumber(data);
+                }
+            },
+            {
+                data: 'Disc',
+                className: 'text-end',
+                render: function (data) {
+                    return (parseFloat(data) || 0)
+                        .toLocaleString('id-ID', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                }
+            },
+            {
+                data: 'PPN',
+                className: 'text-end',
+                render: function (data) {
+                    return (parseFloat(data) || 0)
+                        .toLocaleString('id-ID', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) + '%';
+                }
+            },
+            {
+                data: 'SubTotalHarga',
+                className: 'text-end',
+                render: function (data) {
+                    return formatNumber(data);
+                }
+            },
+            {
+                data: 'TotalHarga',
+                className: 'text-end fw-bold',
+                render: function (data) {
+                    return formatNumber(data);
+                }
+            }
+        ]
+    });
+}
+
+function clearDetailForm() {
+    $('#NoTransaksi').val('');
+    $('#KdBarang').val('');
+    $('#NamaBarang').val('');
+    $('#KetBarang').val('');
+    $('#KategoriUtama').val('');
+    $('#Kategori').val('');
+    $('#SubKategori').val('');
+    $('#KetPembelian').val('');
+    $('#Satuan').val('');
+    $('#supplier').val('').trigger('change');
+    $('#paymentTerm').val('').trigger('change');
+    $('#HargaSatuan').val('0');
+    $('#Disc').val('0');
+    $('#SubTotalHarga').val('0,00');
+    $('#PPN').val('').trigger('change');
+    $('#TotalHarga').val('0,00');
+    $('#TanggalDatang').val('');
+    $('#JenisPembelian').val('').trigger('change');
+    $('#tableSPPB tbody tr').removeClass('sppb-row-active');
+    $('#tableTransaksiSPPB tbody tr').removeClass('sppb-row-active');
+
+    noTransaksiAktif = null;
+    transaksiPendingAktif = null;
+}
+
+function simpanTransaksi() {
+
+    if (!tableSPPB) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Data transaksi belum tersedia.'
+        });
+
         return;
     }
 
+    if (!noTransaksiAktif) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Pilih satu transaksi terlebih dahulu.'
+        });
+
+        return;
+    }
+
+    let rowApi = null;
+
+    tableSPPB.rows().every(function () {
+
+        let row = this.data();
+
+        if (
+            row &&
+            String(row.No_trans) === String(noTransaksiAktif)
+        ) {
+            rowApi = this;
+        }
+    });
+
+    if (!rowApi) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Transaksi tidak ditemukan.'
+        });
+
+        return;
+    }
+
+    let row = rowApi.data();
+
+    if (!row) {
+        return;
+    }
+
+    if (!row) {
+        return;
+    }
+
+    // =========================
+    // VALIDASI
+    // =========================
+
+    if (!$('#supplier').val()) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Supplier harus dipilih.'
+        });
+
+        return;
+    }
+
+    if (!$('#paymentTerm').val()) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Payment Term harus dipilih.'
+        });
+
+        return;
+    }
+
+    if (!$('#TanggalDatang').val()) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Tanggal Datang harus diisi.'
+        });
+
+        return;
+    }
+
+    if (!$('#JenisPembelian').val()) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Jenis Pembelian harus dipilih.'
+        });
+
+        return;
+    }
+
+    if (!$('#HargaSatuan').val()) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Harga Satuan harus diisi.'
+        });
+
+        return;
+    }
+
+    if (!$('#PPN').val()) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'PPN harus dipilih.'
+        });
+
+        return;
+    }
+
+    // =========================
+    // HARGA
+    // =========================
+
+    let priceUnit = parseFloat(
+        String($('#HargaSatuan').val())
+            .replace(/\./g, '')
+            .replace(',', '.')
+    ) || 0;
+
+    let disc = parseFloat(
+        String($('#Disc').val())
+            .replace(',', '.')
+    ) || 0;
+
+    let idPPN = $('#PPN').val();
+
+    let ppn = parseFloat(
+        $('#PPN option:selected').attr('data-jumlah')
+    ) || 0;
+
+    let qty = parseFloat(row.Qty) || 0;
+
+    let amount = qty * priceUnit;
+
+    let nilaiDisc =
+        amount * disc / 100;
+
+    let subtotalHarga =
+        amount - nilaiDisc;
+
+    let nilaiPPN =
+        subtotalHarga * ppn / 100;
+
+    let totalHarga =
+        subtotalHarga + nilaiPPN;
+
+    // =========================
+    // DATA TRANSAKSI
+    // =========================
+
+    let transaksi = {
+        OriginalRow: $.extend(true, {}, row),
+        NoTrans: row.No_trans,
+        TglOrder: row.Tgl_order,
+        Qty: qty,
+        Pemesan: row.Pemesan,
+        NM_MSN: row.NM_MSN,
+        NM_GOL: row.NM_GOL,
+        KdBarang: row.Kd_brg,
+        NamaBarang: row.NAMA_BRG,
+        Supplier: $('#supplier').val(),
+        SupplierNama: $('#supplier option:selected').text(),
+        PayTerm: $('#paymentTerm').val(),
+        PayTermNama: $('#paymentTerm option:selected').text(),
+        TanggalDatang: $('#TanggalDatang').val(),
+        Jenis: $('#JenisPembelian').val(),
+        JenisNama: $('#JenisPembelian option:selected').text(),
+        PriceUnit: priceUnit,
+        Disc: disc,
+        IdPPN: idPPN,
+        PPN: ppn,
+        SubTotalHarga: subtotalHarga,
+        TotalHarga: totalHarga
+    };
+
+    // =========================
+    // CEK DUPLIKAT
+    // =========================
+
+    let sudahAda = transaksiPending.some(function (item) {
+
+        return item.NoTrans === transaksi.NoTrans;
+
+    });
+
+    if (sudahAda) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Transaksi tersebut sudah ada di tabel bawah.'
+        });
+
+        return;
+    }
+
+    // =========================
+    // MASUKKAN KE TABLE BAWAH
+    // =========================
+
+    transaksiPending.push(transaksi);
+
+    // Hapus dari table atas
+    rowApi.remove().draw(false);
+
+    // Update sppbData
+    sppbData = tableSPPB
+        .rows()
+        .data()
+        .toArray();
+
+    // Reset form detail
+    clearDetailForm();
+
+    // Render tabel bawah
+    loadTableTransaksiPending();
+
+    // Hitung ulang
+    hitungHarga();
+
+    btnProses.prop(
+        'disabled',
+        transaksiPending.length === 0
+    );
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Tersimpan',
+        text: 'Transaksi berhasil ditambahkan ke daftar SPPB.',
+        timer: 1200,
+        showConfirmButton: false
+    });
+}
+
+function batalkanTransaksiPending() {
+
+    // ==========================================
+    // VALIDASI TABLE
+    // ==========================================
+
+    if (!tableTransaksiSPPB) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Tabel transaksi belum tersedia.'
+        });
+
+        return;
+    }
+
+    // ==========================================
+    // VALIDASI PILIHAN
+    // ==========================================
+
+    if (!transaksiPendingAktif) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Pilih satu transaksi pada tabel bawah terlebih dahulu.'
+        });
+
+        return;
+    }
+
+    // ==========================================
+    // CARI TRANSAKSI
+    // ==========================================
+
+    let index = transaksiPending.findIndex(function (item) {
+
+        return String(item.NoTrans) ===
+            String(transaksiPendingAktif);
+
+    });
+
+    if (index === -1) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Transaksi tidak ditemukan.'
+        });
+
+        return;
+    }
+
+    // ==========================================
+    // AMBIL TRANSAKSI
+    // ==========================================
+
+    let transaksi = transaksiPending[index];
+
+    // ==========================================
+    // AMBIL ROW ASLI
+    // ==========================================
+
+    let dataKembali = transaksi.OriginalRow;
+
+    if (!dataKembali) {
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Data asli transaksi tidak ditemukan.'
+        });
+
+        return;
+    }
+
+    // Clone supaya object pending tidak ikut berubah
+    dataKembali = $.extend(true, {}, dataKembali);
+
+    // ==========================================
+    // CEK DUPLIKAT DI TABLE ATAS
+    // ==========================================
+
+    let sudahAda = false;
+
+    tableSPPB.rows().every(function () {
+
+        let row = this.data();
+
+        if (
+            row &&
+            String(row.No_trans) ===
+            String(dataKembali.No_trans)
+        ) {
+            sudahAda = true;
+        }
+
+    });
+
+    if (sudahAda) {
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Transaksi tersebut sudah ada di tabel SPPB.'
+        });
+
+        return;
+    }
+
+    // ==========================================
+    // KEMBALIKAN KE TABLE SPPB
+    // ==========================================
+
+    tableSPPB
+        .row
+        .add(dataKembali)
+        .draw(false);
+
+    // ==========================================
+    // HAPUS DARI TRANSAKSI PENDING
+    // ==========================================
+
+    transaksiPending.splice(index, 1);
+
+    // ==========================================
+    // UPDATE DATA
+    // ==========================================
+
+    sppbData = tableSPPB
+        .rows()
+        .data()
+        .toArray();
+
+    // ==========================================
+    // RESET SELECTION
+    // ==========================================
+
+    noTransaksiAktif = null;
+    transaksiPendingAktif = null;
+
+    $('#tableSPPB tbody tr')
+        .removeClass('sppb-row-active');
+
+    $('#tableTransaksiSPPB tbody tr')
+        .removeClass('sppb-row-active');
+
+    // ==========================================
+    // RESET FORM
+    // ==========================================
+
+    clearDetailForm();
+
+    // ==========================================
+    // RENDER ULANG TABLE BAWAH
+    // ==========================================
+
+    loadTableTransaksiPending();
+
+    // ==========================================
+    // UPDATE TOMBOL PROSES
+    // ==========================================
+
+    btnProses.prop(
+        'disabled',
+        transaksiPending.length === 0
+    );
+
+    console.log(
+        'Transaksi dikembalikan ke tableSPPB:',
+        dataKembali
+    );
+
+    // ==========================================
+    // NOTIFIKASI
+    // ==========================================
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Dibatalkan',
+        text: 'Transaksi berhasil dikembalikan ke daftar SPPB.',
+        timer: 1200,
+        showConfirmButton: false
+    });
+}
+
+//#region Add Event Listener
+$('#tableSPPB tbody').on('click', 'tr', function () {
+
     let data = tableSPPB.row(this).data();
 
-    if (!data)
+    if (!data) {
         return;
+    }
 
-    $('#tableSPPB tbody tr').removeClass('selected');
+    $('#tableSPPB tbody tr')
+        .removeClass('sppb-row-active');
 
-    $(this).addClass('selected');
+    $(this)
+        .addClass('sppb-row-active');
+
+    noTransaksiAktif = data.No_trans;
+    transaksiPendingAktif = null;
 
     fillForm(data);
 
-    $('#HargaSatuan').val(formatNumber(data.PriceUnit));
-    $('#Disc').val(parseFloat(data.disc || 0));
-    $('#PPN').val(data.IdPPN);
+    $('#HargaSatuan')
+        .val(formatNumber(data.PriceUnit || 0));
+
+    $('#Disc')
+        .val(parseFloat(data.disc || 0));
+
+    $('#PPN')
+        .val(data.IdPPN || '')
+        .trigger('change');
+
     hitungHarga();
 });
 
@@ -1506,58 +2038,7 @@ btnBatalSPPB.on('click', function (e) {
 });
 
 
-$(document).on('change', '#tableSPPB tbody .check-item', function () {
 
-    let rowApi = tableSPPB.row($(this).closest('tr'));
-    let row = rowApi.data();
-
-    if (!row)
-        return;
-
-    // Simpan status checkbox ke data row
-    row.selected = this.checked;
-
-    rowApi.data(row);
-
-    // Update checkAll
-    let total = $('#tableSPPB tbody .check-item').length;
-    let checked = $('#tableSPPB tbody .check-item:checked').length;
-
-    $('#checkAll').prop(
-        'checked',
-        total > 0 && total === checked
-    );
-
-    hitungHarga();
-});
-
-
-// =====================================================
-// CHECK ALL
-// =====================================================
-
-$(document).on('change', '#checkAll', function () {
-
-    let checked = this.checked;
-
-    tableSPPB.rows({ search: 'applied' }).every(function () {
-
-        let row = this.data();
-
-        if (!row)
-            return;
-
-        row.selected = checked;
-
-        this.data(row);
-
-        $(this.node())
-            .find('.check-item')
-            .prop('checked', checked);
-    });
-
-    hitungHarga();
-});
 
 btnCariDivisi.on('click', function () {
     if ($(this).prop('disabled')) {
@@ -1771,4 +2252,84 @@ $('#HargaSatuan, #Disc, #PPN').on('input change', function () {
 //         });
 //     });
 // });
+
+// =====================================================
+// SELECT TRANSAKSI PENDING
+// =====================================================
+
+$('#tableTransaksiSPPB tbody').on('click', 'tr', function () {
+    let data = tableTransaksiSPPB.row(this).data();
+
+    if (!data) {
+        return;
+    }
+
+    $('#tableTransaksiSPPB tbody tr')
+        .removeClass('sppb-row-active');
+
+    $(this).addClass('sppb-row-active');
+
+    transaksiPendingAktif = data.NoTrans;
+    noTransaksiAktif = null;
+
+    console.log(
+        'Transaksi Pending Aktif:',
+        transaksiPendingAktif
+    );
+
+    $('#NoTransaksi')
+        .val(data.NoTrans || '');
+
+    $('#KdBarang')
+        .val(data.KdBarang || '');
+
+    $('#NamaBarang')
+        .val(data.NamaBarang || '');
+
+    $('#Supplier')
+        .val(data.Supplier || '');
+
+    $('#supplier')
+        .val(data.Supplier || '')
+        .trigger('change');
+
+    $('#paymentTerm')
+        .val(data.PayTerm || '')
+        .trigger('change');
+
+    $('#TanggalDatang')
+        .val(data.TanggalDatang || '');
+
+    $('#JenisPembelian')
+        .val(data.Jenis || '')
+        .trigger('change');
+
+    $('#HargaSatuan')
+        .val(formatNumber(data.PriceUnit || 0));
+
+    $('#Disc')
+        .val(parseFloat(data.Disc || 0));
+
+    $('#PPN')
+        .val(data.IdPPN || '')
+        .trigger('change');
+
+    // ==========================================
+    // Hitung harga
+    // ==========================================
+
+    hitungHarga();
+});
+
+btnSimpanTransaksi.on('click', function (e) {
+    e.preventDefault();
+    simpanTransaksi();
+});
+
+
+btnBatalTransaksi.on('click', function (e) {
+    e.preventDefault();
+    batalkanTransaksiPending();
+});
+
 //#endregion

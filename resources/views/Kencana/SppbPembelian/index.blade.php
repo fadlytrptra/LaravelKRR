@@ -27,13 +27,17 @@
         box-shadow:0 0 0 .15rem rgba(13,110,253,.15);
     }
 
-    #tableSPPB tbody tr.selected{
-        background:#d8ecff !important;
+    #tableSPPB tbody tr.sppb-row-active td,
+    #tableTransaksiSPPB tbody tr.sppb-row-active td {
+        background-color: #0d6efd !important;
+        color: #fff !important;
     }
 
-    #tableSPPB tbody tr{
-        cursor:pointer;
+    #tableSPPB tbody tr,
+    #tableTransaksiSPPB tbody tr {
+        cursor: pointer;
     }
+
     #HargaSatuan,
     #Disc,
     #SubTotalHarga,
@@ -228,9 +232,9 @@
                     <table class="table table-bordered table-sm" id="tableSPPB">
                         <thead class="table-light">
                         <tr>
-                            <th width="40">
+                            {{-- <th width="40">
                                 <input type="checkbox" id="checkAll">
-                            </th>
+                            </th> --}}
                             <th>Tgl Order</th>
                             <th>Quantity</th>
                             <th>Pemesan</th>
@@ -245,6 +249,63 @@
                         <tbody></tbody>
                     </table>
                 </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-12 text-end">
+                        <button
+                            type="button"
+                            id="btnSimpanTransaksi"
+                            class="btn btn-primary">
+                            SIMPAN
+                        </button>
+
+                        <button
+                            type="button"
+                            id="btnBatalTransaksi"
+                            class="btn btn-danger">
+                            BATAL
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6 class="fw-bold">
+                        Transaksi yang Akan Dibuat SPPB
+                    </h6>
+
+                    <div class="table-responsive">
+                        <table
+                            class="table table-bordered table-sm"
+                            id="tableTransaksiSPPB">
+
+                            <thead class="table-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>No Trans</th>
+                                    <th>Tgl Order</th>
+                                    <th>Quantity</th>
+                                    <th>Pemesan</th>
+                                    <th>Nama Mesin</th>
+                                    <th>Nama Golongan</th>
+                                    <th>Supplier</th>
+                                    <th>Payment Term</th>
+                                    <th>Tgl Datang</th>
+                                    <th>Jenis Pembelian</th>
+                                    <th>Harga Satuan</th>
+                                    <th>Disc</th>
+                                    <th>PPN</th>
+                                    <th>SubTotal</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody></tbody>
+
+                        </table>
+                    </div>
+                </div>
+
 
                 <!-- Harga -->
                 <div class="row mt-3 mb-3">
