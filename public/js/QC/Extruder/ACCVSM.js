@@ -730,6 +730,9 @@ jQuery(function ($) {
     tgl_awal.valueAsDate = new Date();
     tgl_akhir.valueAsDate = new Date();
 
+    btn_simpanKet.style.display = "none";
+    btn_simpanKetD.style.display = "none";
+
     function getTextColor(element) {
         if (!element) {
             return "black";
@@ -764,7 +767,7 @@ jQuery(function ($) {
         if (color === "red") {
 
             element.innerHTML = `
-            <div contenteditable="false" style="text-align:center;">
+            <div contenteditable="true" style="text-align:center;">
                 ${formatPrint(value)}
             </div>
         `;
@@ -806,7 +809,7 @@ jQuery(function ($) {
         ">
 
             <!-- Nilai utama -->
-            <div contenteditable="false" style="text-align:center;">
+            <div contenteditable="true" style="text-align:center;">
                 ${value}
             </div>
 
@@ -832,10 +835,9 @@ jQuery(function ($) {
                            display:${isNG ? "block" : "none"};
                            width:40px;
                            height:18px;
-                           padding:0px 1px;
+                           padding:1px 3px;
                            text-align:center;
                            box-sizing:border-box;
-                           font-family: "Times New Roman", serif;
                        ">
             </div>
 
@@ -1045,7 +1047,7 @@ jQuery(function ($) {
             if (!el) continue;
 
             // Ambil HANYA nilai utama
-            const valueElement = el.querySelector('[contenteditable="false"]');
+            const valueElement = el.querySelector('[contenteditable="true"]');
 
             const value = valueElement
                 ? valueElement.textContent.trim()
@@ -1127,11 +1129,11 @@ jQuery(function ($) {
 
             // Ambil element nilai utama
             const baseValueElement = baseElement.querySelector(
-                '[contenteditable="false"]'
+                '[contenteditable="true"]'
             );
 
             const compareValueElement = compareElement.querySelector(
-                '[contenteditable="false"]'
+                '[contenteditable="true"]'
             );
 
             // Ambil nilai utama
@@ -1322,7 +1324,7 @@ jQuery(function ($) {
             serverSide: true,
             destroy: true,
             ajax: {
-                url: "VerifikasiSM/getDataExt",
+                url: "ACCVSM/getDataExt",
                 dataType: "json",
                 type: "GET",
                 data: function (d) {
@@ -1371,7 +1373,7 @@ jQuery(function ($) {
                     searchable: false,
                     render: function (data, type, row) {
 
-                        // Jika sudah ACC SPV
+                        // jika sudah ada user verified
                         if (
                             row.userACCSPV !== null &&
                             row.userACCSPV !== ""
@@ -1379,44 +1381,26 @@ jQuery(function ($) {
                             return `
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                                 <span style="color: green; font-weight: bold;">
-                                    Sudah diverifikasi ${row.userVerified}
-                                </span>
-
-                                <span style="color: blue; font-weight: bold;">
-                                    Sudah ACC SPV ${row.userACCSPV}
-                                </span>
-                            </div>
-                        `;
-                        }
-
-                        // Jika sudah diverifikasi tetapi belum ACC SPV
-                        if (
-                            row.userVerified !== null &&
-                            row.userVerified !== ""
-                        ) {
-                            return `
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
-                                <span style="color: green; font-weight: bold;">
-                                    Sudah diverifikasi ${row.userVerified}
+                                    Sudah diACC ${row.userACCSPV}
                                 </span>
 
                                 <button
                                     class="btn btn-sm btn-danger btn-batal-verifikasi"
                                     style="width: 130px;"
                                     data-id="${row.idLaporan}">
-                                    <i class="fa fa-times"></i> Batal Verifikasi
+                                    <i class="fa fa-times"></i> Batal ACC
                                 </button>
                             </div>
                         `;
                         }
 
-                        // Jika belum diverifikasi
+                        // jika belum diverifikasi
                         return `
                         <button
                             class="btn btn-sm btn-success btn-verifikasi"
                             style="width: 100px;"
                             data-id="${row.idLaporan}">
-                            <i class="fa fa-edit"></i> Verifikasi
+                            <i class="fa fa-edit"></i> ACC
                         </button>
                     `;
                     },
@@ -1450,7 +1434,7 @@ jQuery(function ($) {
         const id = $(this).data("id");
         console.log(id);
         Swal.fire({
-            title: "Apakah anda yakin ingin batal verifikasi id laporan " + id + "?",
+            title: "Apakah anda yakin ingin batal ACC id laporan " + id + "?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Ya",
@@ -1460,12 +1444,12 @@ jQuery(function ($) {
             if (result.isConfirmed) {
                 if ($("#" + slcLokasi.id).val() == "3") {
                     $.ajax({
-                        url: "VerifikasiSM",
+                        url: "ACCVSM",
                         dataType: "json",
                         type: "POST",
                         data: {
                             _token: csrfToken,
-                            proses: 6,
+                            proses: 4,
                             idLaporan: id,
                         },
                         success: function (response) {
@@ -1496,12 +1480,12 @@ jQuery(function ($) {
                     });
                 } else {
                     $.ajax({
-                        url: "VerifikasiSM",
+                        url: "ACCVSM",
                         dataType: "json",
                         type: "POST",
                         data: {
                             _token: csrfToken,
-                            proses: 5,
+                            proses: 3,
                             idLaporan: id,
                         },
                         success: function (response) {
@@ -1540,7 +1524,7 @@ jQuery(function ($) {
         const id = $(this).data("id");
         console.log(id);
         Swal.fire({
-            title: "Apakah anda yakin ingin verifikasi id laporan " + id + "?",
+            title: "Apakah anda yakin ingin ACC verifikasi id laporan " + id + "?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Ya",
@@ -1550,12 +1534,12 @@ jQuery(function ($) {
             if (result.isConfirmed) {
                 if ($("#" + slcLokasi.id).val() == "3") {
                     $.ajax({
-                        url: "VerifikasiSM",
+                        url: "ACCVSM",
                         dataType: "json",
                         type: "POST",
                         data: {
                             _token: csrfToken,
-                            proses: 4,
+                            proses: 2,
                             idLaporan: id,
                         },
                         success: function (response) {
@@ -1572,8 +1556,8 @@ jQuery(function ($) {
                                 });
                             } else if (response.error) {
                                 Swal.fire({
-                                    icon: "info",
-                                    title: "Info!",
+                                    icon: "error",
+                                    title: "Error!",
                                     text: response.error,
                                     showConfirmButton: false,
                                 });
@@ -1586,7 +1570,7 @@ jQuery(function ($) {
                     });
                 } else {
                     $.ajax({
-                        url: "VerifikasiSM",
+                        url: "ACCVSM",
                         dataType: "json",
                         type: "POST",
                         data: {
@@ -1608,8 +1592,8 @@ jQuery(function ($) {
                                 });
                             } else if (response.error) {
                                 Swal.fire({
-                                    icon: "info",
-                                    title: "Info!",
+                                    icon: "error",
+                                    title: "Error!",
                                     text: response.error,
                                     showConfirmButton: false,
                                 });
@@ -1690,7 +1674,7 @@ jQuery(function ($) {
                 },
                 success: function (data) {
                     console.log(data);
-
+                    
                     if (data.data[0].userVerified !== null) {
                         btn_simpanKetD.disabled = true;
                     } else {
@@ -1716,6 +1700,7 @@ jQuery(function ($) {
                             .text("")
                             .hide();
                     }
+
                     // if (data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
 
                     //     let ttd = data.ttd.FotoTtd;
@@ -2300,6 +2285,8 @@ jQuery(function ($) {
                     keterangan: keterangan.value
                 },
                 success: function (data) {
+                    console.log(data.data[0].userVerified, data.data[0].userACCSPV);
+                    
                     if (data.data[0].userVerified !== null) {
                         btn_simpanKet.disabled = true;
                     } else {

@@ -564,8 +564,11 @@
                                         style="display:block; width:100%; text-align:center !important;">
                                     </span>
                                 </td>
-                                <td rowspan="2" style="border-bottom:none !important">
-                                    <img id="ttd_spvqc" style="display:none; max-width:70px;">
+                                <td rowspan="2"
+                                    style="border-bottom:none !important; text-align:center !important; vertical-align:middle !important;">
+                                    <span id="ttd_spvqc"
+                                        style="display:block; width:100%; text-align:center !important;">
+                                    </span>
                                 </td>
                                 {{-- <td rowspan="2" style="border-bottom:none !important">
                                     <img id="ttd_cog" style="display:none; max-width:70px;">
@@ -1497,6 +1500,16 @@
                         border: none;
                         outline: none;
                         background: transparent;
+                        font-family: "Times New Roman", serif;
+                        font-size: inherit;
+                    }
+                                    
+                    .check-input {
+                        font-family: "Times New Roman", serif !important;
+                        font-size: inherit !important;
+                        font-weight: normal;
+                        text-align: center;
+                        color: blue;
                     }
                 </style>
             </head>
