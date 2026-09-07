@@ -12,13 +12,22 @@ class SJSudahKirimCustomerController extends Controller
 {
     public function index()
     {
-        $access = (new HakAksesController)
-            ->HakAksesFiturMaster('Guard');
-
-        return view(
-            'Guard.Pemeriksaan.SJSudahKirimCustomer',
-            compact('access')
-        );
+        $access = (new HakAksesController)->HakAksesFiturMaster('Guard');
+        $listLokasi = DB::connection('ConnEDP')
+            ->table('Lokasi')
+            ->select('Id_Lokasi', 'Lokasi')
+            ->orderByRaw("
+                CASE Id_Lokasi
+                    WHEN 'TPD' THEN 1
+                    WHEN 'MJS' THEN 2
+                    WHEN 'MLH' THEN 3
+                    WHEN 'JKK' THEN 4
+                    WHEN 'JMB' THEN 5
+                    ELSE 999
+                END
+            ")
+            ->get();
+        return view('Guard.Pemeriksaan.SJSudahKirimCustomer', compact('access', 'listLokasi'));
     }
 
     public function create()
@@ -34,9 +43,9 @@ class SJSudahKirimCustomerController extends Controller
     public function show(Request $request, $id)
     {
         if ($id === 'getData') {
-
             $tgl_awal  = $request->input('tgl_awal');
             $tgl_akhir = $request->input('tgl_akhir');
+            $id_lokasi = $request->input('id_lokasi');
 
             $query = DB::connection('ConnGuard')
                 ->table('Header_PemeriksaanBarang as h')
@@ -45,6 +54,7 @@ class SJSudahKirimCustomerController extends Controller
                     'h.tanggal',
                     'h.jam_muat_awal',
                     'h.jam_muat_akhir',
+                    'h.nopol',
                     'h.instansi',
                     'h.tujuan_kirim',
                     'h.sopir',
@@ -53,6 +63,7 @@ class SJSudahKirimCustomerController extends Controller
                     'h.surat_jalanTerdaftar'
                 );
 
+            // syarat kondisi
             if (!empty($tgl_awal)) {
                 $query->whereDate(
                     'h.tanggal',
@@ -67,6 +78,12 @@ class SJSudahKirimCustomerController extends Controller
                     '<=',
                     $tgl_akhir
                 );
+            }
+
+            $query->where('h.customer', 1);
+
+            if (!empty($id_lokasi)) {
+                $query->where('h.Id_Lokasi', $id_lokasi);
             }
 
             $headers = $query
@@ -192,6 +209,7 @@ class SJSudahKirimCustomerController extends Controller
                             Carbon::parse($header->jam_muat_akhir)
                             ->format('H:i')
                         : '',
+                    'nopol' => trim((string) ($header->nopol ?? '')),
                     'instansi' => $namaExpeditor,
                     'tujuan_kirim' => trim((string) ($header->tujuan_kirim ?? '')),
                     'sopir' => trim((string) ($header->sopir ?? '')),

@@ -46,6 +46,22 @@
 
                     <br>
 
+                     <div class="row">
+                        <div class="col-md-3">
+                            <label for="lokasi" class="form-label">Lokasi</label>
+                            <select id="lokasi" class="form-select form-select-sm" style="width: 100%">
+                                <option></option>
+                                @foreach ($listLokasi as $d)
+                                    <option value="{{ $d->Id_Lokasi }}">
+                                        {{ $d->Lokasi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <br>
+
                     <div style="overflow-x: auto;">
                         <table style="width: 100%;" id="table_atas">
                             <thead class="table-dark">
@@ -53,6 +69,7 @@
                                     <th>Id Header</th>
                                     <th>Tanggal Muat</th>
                                     <th>Jam Muat</th>
+                                    <th>Nopol</th>
                                     <th>Instansi</th>
                                     <th>Tujuan Kirim</th>
                                     <th>Sopir</th>
@@ -72,9 +89,8 @@
     </div>
 </div>
 
-<script
-    type="text/javascript"
-    src="{{ asset('js/Guard/Pemeriksaan/SJSudahKirimCustomer.js') }}"
-></script>
+@include('Guard.Pemeriksaan.ModalPemeriksaanBarang')
+@include('Guard.Pemeriksaan.ModalPemeriksaanBarangCustomer')
+<script type="text/javascript" src="{{ asset('js/Guard/Pemeriksaan/SJSudahKirimCustomer.js') }}"></script>
 
 @endsection
