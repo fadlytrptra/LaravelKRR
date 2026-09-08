@@ -1089,10 +1089,23 @@ function loadPaymentTerm(selectedPaymentTerm = '') {
 function formatNumber(value) {
     let number = parseFloat(value) || 0;
 
-    return number.toLocaleString('id-ID', {
+    return number.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
+}
+
+function parseHarga(value) {
+    if (value === null || value === undefined || value === '') {
+        return 0;
+    }
+
+    let str = String(value).trim();
+
+    // Format baru: 66,000.00
+    str = str.replace(/,/g, '');
+
+    return parseFloat(str) || 0;
 }
 
 function hitungHarga() {
@@ -1113,11 +1126,7 @@ function hitungHarga() {
     // ==========================================
     // HARGA SATUAN
     // ==========================================
-    let hargaSatuan = parseFloat(
-        String($('#HargaSatuan').val() || '')
-            .replace(/\./g, '')
-            .replace(',', '.')
-    ) || 0;
+    let hargaSatuan = parseHarga($('#HargaSatuan').val());
 
 
     // ==========================================
@@ -1350,11 +1359,7 @@ function updateHargaRow() {
     if (!row)
         return;
 
-    let hargaSatuan = parseFloat(
-        ($('#HargaSatuan').val() || '')
-            .replace(/\./g, '')
-            .replace(',', '.')
-    ) || 0;
+    let hargaSatuan = parseHarga($('#HargaSatuan').val());
 
     let disc = parseFloat(
         ($('#Disc').val() || '')
@@ -1665,11 +1670,7 @@ function simpanTransaksi() {
     // HARGA
     // =========================
 
-    let priceUnit = parseFloat(
-        String($('#HargaSatuan').val())
-            .replace(/\./g, '')
-            .replace(',', '.')
-    ) || 0;
+    let priceUnit = parseHarga($('#HargaSatuan').val());
 
     let disc = parseFloat(
         String($('#Disc').val())

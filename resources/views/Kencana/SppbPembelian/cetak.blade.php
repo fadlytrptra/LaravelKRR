@@ -297,20 +297,22 @@
                         </td>
                         <td class="center">{{ number_format($row->Qty, 2) }}</td>
                         <td class="center">{{ $row->Nama_satuan }}</td>
+
                         <td class="right">
-                            {{ number_format($row->PriceUnit ?? 0, 2, ',', '.') }}
+                            {{ number_format($row->PriceUnit ?? 0, 2, '.', ',') }}
                         </td>
 
                         <td class="right">
-                            {{ number_format($row->DiscAmount ?? 0, 2, ',', '.') }}
+                            {{ number_format($row->DiscAmount ?? 0, 2, '.', ',') }}
                             <div>
-                                ({{ number_format($row->disc ?? 0, 2, ',', '.') }}%)
+                                ({{ number_format($row->disc ?? 0, 2, '.', ',') }}%)
                             </div>
                         </td>
 
                         <td class="right">
-                            {{ number_format($row->Amount ?? 0, 2, ',', '.') }}
+                            {{ number_format($row->Amount ?? 0, 2, '.', ',') }}
                         </td>
+
                     </tr>
                 @endforeach
             </tbody>
@@ -328,7 +330,7 @@
                     style="padding: 1px 0; width: 13%; border-bottom: 1px solid;"
                     class="right"
                 >
-                    {{ number_format($subTotal ?? 0, 2, ',', '.') }}
+                    {{ number_format($subTotal ?? 0, 2, '.', ',') }}
                 </td>
             </tr>
 
@@ -342,7 +344,7 @@
                     style="padding: 1px 0; border-bottom: 1px solid;"
                     class="right"
                 >
-                    {{ number_format(($subTotal ?? 0) * 11 / 12, 2, ',', '.') }}
+                    {{ number_format(($subTotal ?? 0) * 11 / 12, 2, '.', ',') }}
                 </td>
             </tr>
 
@@ -357,7 +359,7 @@
                     style="padding: 1px 0; border-bottom: 1px solid;"
                     class="right"
                 >
-                    {{ number_format($ppnTotal ?? 0, 2, ',', '.') }}
+                    {{ number_format($ppnTotal ?? 0, 2, '.', ',') }}
                 </td>
             </tr>
 
@@ -374,7 +376,7 @@
                     style="padding: 1px 0; border-bottom: 1px solid;"
                     class="right"
                 >
-                    {{ number_format($total ?? 0, 2, ',', '.') }}
+                    {{ number_format($total ?? 0, 2, '.', ',') }}
                 </td>
             </tr>
         </table>
