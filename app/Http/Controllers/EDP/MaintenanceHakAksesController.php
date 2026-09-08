@@ -31,7 +31,15 @@ class MaintenanceHakAksesController extends Controller
             ->leftJoin('MenuMaster', 'Id_Menu', '=', 'IdMenu')
             ->where('Id_Program', '=', $IdProgram)
             ->orderBy('NamaMenu', 'ASC')
-            ->orderBy('NamaFitur', 'ASC')
+            ->orderByRaw("
+                LTRIM(
+                    SUBSTRING(
+                        NamaFitur,
+                        CHARINDEX('-', NamaFitur) + 1,
+                        LEN(NamaFitur)
+                    )
+                ) ASC
+            ")
             ->get();
 
         $idFiturMilikUser = DB::connection('ConnEDP')->table('User_Fitur')
