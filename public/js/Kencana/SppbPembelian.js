@@ -1446,7 +1446,7 @@ function loadTableTransaksiPending() {
                 defaultContent: '-'
             },
             {
-                data: 'PayTerm',
+                data: 'PayTermNama',
                 defaultContent: '-'
             },
             {
@@ -1458,7 +1458,7 @@ function loadTableTransaksiPending() {
                 }
             },
             {
-                data: 'Jenis',
+                data: 'JenisNama',
                 defaultContent: '-'
             },
             {
