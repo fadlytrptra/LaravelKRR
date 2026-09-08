@@ -119,36 +119,53 @@ class SppbPembelianController extends Controller
                     */
 
                     foreach ($request->Transaksi as $item) {
-                        DB::connection('ConnKCNPurchase')
-                            ->statement(
-                                "EXEC SP_7775_PBL_UPDATE_YTRANSBL_SPPB_1
-                                    @no_trans_1=?,
-                                    @no_sppb_2=?,
-                                    @tgl_sppb_3=?,
-                                    @tgl_dtg_4=?,
-                                    @jenis_5=?,
-                                    @operator_sppb_6=?",
-                                [
-                                    $item['NoTrans'],
-                                    $noSPPB,
-                                    $request->TanggalSPPB,
-                                    $item['TanggalDatang'],
-                                    $item['Jenis'],
-                                    $operator
-                                ]
-                            );
 
-                        DB::connection('ConnKCNPurchase')
-                            ->table('YTRANSBL')
-                            ->where('No_trans', $item['NoTrans'])
-                            ->update([
-                                'Supplier'  => $item['Supplier'],
-                                'Pay_Term'  => $item['PayTerm'],
-                                'PriceUnit' => $item['PriceUnit'],
-                                'disc'      => $item['Disc'],
-                                'IdPPN'     => $item['IdPPN'],
-                            ]);
-                    }
+                    // ==========================================
+                    // UPDATE SPPB MELALUI STORED PROCEDURE
+                    // ==========================================
+                    DB::connection('ConnKCNPurchase')
+                        ->statement(
+                            "EXEC SP_7775_PBL_UPDATE_YTRANSBL_SPPB_1
+                                @no_trans_1=?,
+                                @no_sppb_2=?,
+                                @tgl_sppb_3=?,
+                                @tgl_dtg_4=?,
+                                @jenis_5=?,
+                                @operator_sppb_6=?",
+                            [
+                                $item['NoTrans'],
+                                $noSPPB,
+                                $request->TanggalSPPB,
+                                $item['TanggalDatang'],
+                                $item['Jenis'],
+                                $operator
+                            ]
+                        );
+
+                    // ==========================================
+                    // PASTIKAN TANGGAL SPPB SESUAI INPUT USER
+                    // ==========================================
+                    DB::connection('ConnKCNPurchase')
+                        ->table('YTRANSBL')
+                        ->where('No_trans', $item['NoTrans'])
+                        ->update([
+                            'Tgl_sppb' => $request->TanggalSPPB,
+                        ]);
+
+                    // ==========================================
+                    // UPDATE DATA TRANSAKSI
+                    // ==========================================
+                    DB::connection('ConnKCNPurchase')
+                        ->table('YTRANSBL')
+                        ->where('No_trans', $item['NoTrans'])
+                        ->update([
+                            'Supplier'  => $item['Supplier'],
+                            'Pay_Term'  => $item['PayTerm'],
+                            'PriceUnit' => $item['PriceUnit'],
+                            'disc'      => $item['Disc'],
+                            'IdPPN'     => $item['IdPPN'],
+                        ]);
+                }
 
                     /*
                     ==========================================

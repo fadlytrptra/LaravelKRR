@@ -57,13 +57,13 @@ function loadData() {
             },
 
             {
-                data: 'Tgl_acc',
+                data: 'Tgl_sppb',
                 defaultContent: '',
                 render: function (data) {
 
                     if (!data) return '';
 
-                    return moment(data).format('DD/MM/YYYY');
+                    return moment(data).format('MM/DD/YYYY');
                 }
             },
 

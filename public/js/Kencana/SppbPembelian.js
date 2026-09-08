@@ -132,7 +132,7 @@ function loadTable(data) {
                     if (!data)
                         return '';
 
-                    return moment(data).format('DD/MM/YYYY');
+                    return moment(data).format('MM/DD/YYYY');
 
                 }
             },
@@ -1414,7 +1414,7 @@ function loadTableTransaksiPending() {
                 data: 'TglOrder',
                 render: function (data) {
                     return data
-                        ? moment(data).format('DD/MM/YYYY')
+                        ? moment(data).format('MM/DD/YYYY')
                         : '-';
                 }
             },
@@ -1705,7 +1705,8 @@ function simpanTransaksi() {
     let transaksi = {
         OriginalRow: $.extend(true, {}, row),
         NoTrans: row.No_trans,
-        TglOrder: row.Tgl_order,
+        // tanggal ambil dari tgl sppb
+        TglOrder: $('#TanggalSPPB').val(),
         Qty: qty,
         Pemesan: row.Pemesan,
         NM_MSN: row.NM_MSN,
