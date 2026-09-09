@@ -263,17 +263,30 @@
                                     contenteditable="true"></td>
                             </tr>
                             <tr class="textBener">
-                                <td style="border-right:none !important">Jumlah</td>
+                                <td style="border-right:none !important">Jumlah (KRJ)</td>
                                 <td style="border-left:none !important; border-right:none !important">
                                     :</td>
                                 <td style="border-left:none !important; border-right:none !important" id="jumlah_lap"
                                     contenteditable="true"></td>
                                 <td style="border-right:none !important; text-align:left; border-left:none !important">
-                                    Keterangan</td>
+                                    Berat (KG)</td>
                                 <td style="border-left:none !important; border-right:none !important">
                                     :</td>
-                                <td colspan="3" style="border-left:none !important" id="keterangan_lap"
+                                <td colspan="3" style="border-left:none !important" id="berat_lap"
                                     contenteditable="true"></td>
+                            </tr>
+                            <tr class="textBener">
+                                <td style="border-right:none !important">Keterangan</td>
+                                <td style="border-left:none !important; border-right:none !important">
+                                    :</td>
+                                <td colspan="7" style="border-left:none !important; border-right:none !important" id="keterangan_lap"
+                                    contenteditable="true"></td>
+                                {{-- <td style="border-right:none !important; text-align:left; border-left:none !important">
+                                    </td>
+                                <td style="border-left:none !important; border-right:none !important">
+                                    </td>
+                                <td colspan="3" style="border-left:none !important" id=""
+                                    contenteditable="true"></td> --}}
                             </tr>
                             <tr>
                                 <td colspan="8" style="padding:8px;">

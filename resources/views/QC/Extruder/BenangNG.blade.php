@@ -153,16 +153,31 @@
                                 <div class="col-md-1">
                                     <label for="spek_benang">Spek Benang</label>
                                 </div>
+
                                 <div class="col-md-5">
-                                    <input type="text" class="form-control" id="spek_benang"
-                                        name="spek_benang">
+                                    <input type="text" class="form-control" id="spek_benang" name="spek_benang">
                                 </div>
+
                                 <div class="col-md-1 d-flex justify-content-end">
                                     <label for="jumlah">Jumlah</label>
                                 </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" id="jumlah"
-                                        name="jumlah">
+
+                                <div class="col-md-2">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="jumlah" name="jumlah">
+                                        <span class="input-group-text">KRJ</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 d-flex justify-content-end">
+                                    <label for="berat">Berat</label>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="berat" name="berat">
+                                        <span class="input-group-text">KG</span>
+                                    </div>
                                 </div>
                             </div>
                             <br>

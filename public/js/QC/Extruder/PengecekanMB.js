@@ -684,13 +684,13 @@ jQuery(function ($) {
                         .hide();
                 }
 
-                if (data.ttd && data.ttd.NamaUser && data.ttd.NamaUser !== "") {
+                if (data.ttd) {
                     document.getElementById("nama_qc").textContent = data.ttd.NamaUser;
                 } else {
                     document.getElementById("nama_qc").textContent = "";
                 }
 
-                if (data.ttd2 && data.ttd2.NamaUser && data.ttd2.NamaUser !== "") {
+                if (data.ttd2) {
                     document.getElementById("nama_ext").textContent = data.ttd2.NamaUser;
                 } else {
                     document.getElementById("nama_ext").textContent = "";

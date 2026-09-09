@@ -7,6 +7,7 @@ jQuery(function ($) {
     let jam_prod = document.getElementById("jam_prod");
     let spek_benang = document.getElementById("spek_benang");
     let jumlah = document.getElementById("jumlah");
+    let berat = document.getElementById("berat");
     let keterangan = document.getElementById("keterangan");
     let kel_samping = document.getElementById("kel_samping");
     let bendol = document.getElementById("bendol");
@@ -257,6 +258,7 @@ jQuery(function ($) {
                 tanggal: tanggal.value,
                 spek_benang: spek_benang.value,
                 jumlah: jumlah.value,
+                berat: berat.value,
                 keterangan: keterangan.value,
                 kel_samping: kel_samping.value,
                 bendol: bendol.value,
@@ -632,6 +634,8 @@ jQuery(function ($) {
                 id_laporan: id,
             },
             success: function (data) {
+                console.log(data);
+
                 if (data.data && data.data.length > 0) {
                     $("#ttd_qc")
                         .text(data.data[0].user_input)
@@ -652,7 +656,7 @@ jQuery(function ($) {
                         .hide();
                 }
 
-                if (data.ttd && data.ttd.FotoTtd && data.ttd.FotoTtd !== "") {
+                if (data.ttd) {
 
                     let ttd = data.ttd.FotoTtd;
 
@@ -719,6 +723,7 @@ jQuery(function ($) {
                 document.getElementById("mesin_lap").textContent = data.data[0].TypeMesin;
                 document.getElementById("spek_benang_lap").textContent = data.data[0].spek_benang;
                 document.getElementById("jumlah_lap").textContent = data.data[0].jumlah;
+                document.getElementById("berat_lap").textContent = data.data[0].berat;
                 document.getElementById("keterangan_lap").textContent = data.data[0].keterangan;
                 $("#modalLaporan .cacat-item .kode").removeClass("selected");
 
@@ -878,6 +883,7 @@ jQuery(function ($) {
                 document.getElementById("mesin_lap").textContent = data.data[0].TypeMesin;
                 document.getElementById("spek_benang_lap").textContent = data.data[0].spek_benang;
                 document.getElementById("jumlah_lap").textContent = data.data[0].jumlah;
+                document.getElementById("berat_lap").textContent = data.data[0].berat;
                 document.getElementById("keterangan_lap").textContent = data.data[0].keterangan;
                 $("#modalLaporan .cacat-item .kode").removeClass("selected");
 

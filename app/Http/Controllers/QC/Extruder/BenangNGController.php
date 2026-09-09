@@ -57,6 +57,7 @@ class BenangNGController extends Controller
         $tanggal = $request->input('tanggal');
         $spek_benang = $request->input('spek_benang');
         $jumlah = $request->input('jumlah');
+        $berat = $request->input('berat');
         $keterangan = $request->input('keterangan');
         $kel_samping = $request->input('kel_samping');
         $bendol = $request->input('bendol');
@@ -97,6 +98,7 @@ class BenangNGController extends Controller
                         @jam_prod = ?,
                         @spek_benang = ?,
                         @jumlah = ?,
+                        @berat = ?,
                         @keterangan = ?,
                         @kel_samping = ?,
                         @bendol = ?,
@@ -128,6 +130,7 @@ class BenangNGController extends Controller
                                 $jam_prod,
                                 $spek_benang,
                                 $jumlah,
+                                $berat,
                                 $keterangan,
                                 $kel_samping,
                                 $bendol,
@@ -169,6 +172,7 @@ class BenangNGController extends Controller
                         @jam_prod = ?,
                         @spek_benang = ?,
                         @jumlah = ?,
+                        @berat = ?,
                         @keterangan = ?,
                         @kel_samping = ?,
                         @bendol = ?,
@@ -200,6 +204,7 @@ class BenangNGController extends Controller
                                 $jam_prod,
                                 $spek_benang,
                                 $jumlah,
+                                $berat,
                                 $keterangan,
                                 $kel_samping,
                                 $bendol,
