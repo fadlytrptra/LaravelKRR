@@ -405,48 +405,50 @@ btn_divisi.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                jQuery(function ($) {
-                    const table = $("#table_list").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "PenghangusanBarang/getDivisi",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                            },
+                const table = $("#table_list").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    destroy: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "PenghangusanBarang/getDivisi",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
                         },
-                        columns: [{ data: "IdDivisi" }, { data: "NamaDivisi" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_list tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_list_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_list")
-                    );
+                    },
+                    columns: [{ data: "IdDivisi" }, { data: "NamaDivisi" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_list tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_list_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_list");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -516,48 +518,50 @@ btn_objek.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                jQuery(function ($) {
-                    const table = $("#table_list").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "PenghangusanBarang/getObjek",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                divisiId: divisiId.value,
-                            },
+                const table = $("#table_list").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    destroy: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "PenghangusanBarang/getObjek",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            divisiId: divisiId.value,
                         },
-                        columns: [{ data: "IdObjek" }, { data: "NamaObjek" }],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-                    $("#table_list tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_list_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_list")
-                    );
+                    },
+                    columns: [{ data: "IdObjek" }, { data: "NamaObjek" }],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+                $("#table_list tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_list_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_list");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -606,52 +610,54 @@ btn_kelut.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                jQuery(function ($) {
-                    const table = $("#table_list").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "PenghangusanBarang/getKelUt",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                objekId: objekId.value,
-                            },
+                const table = $("#table_list").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    destroy: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "PenghangusanBarang/getKelUt",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            objekId: objekId.value,
                         },
-                        columns: [
-                            { data: "IdKelompokUtama" },
-                            { data: "NamaKelompokUtama" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_list tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_list_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_list")
-                    );
+                    },
+                    columns: [
+                        { data: "IdKelompokUtama" },
+                        { data: "NamaKelompokUtama" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_list tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_list_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_list");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -700,52 +706,54 @@ btn_kelompok.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                jQuery(function ($) {
-                    const table = $("#table_list").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "PenghangusanBarang/getKelompok",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                kelutId: kelutId.value,
-                            },
+                const table = $("#table_list").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    destroy: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "PenghangusanBarang/getKelompok",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            kelutId: kelutId.value,
                         },
-                        columns: [
-                            { data: "idkelompok" },
-                            { data: "namakelompok" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-
-                    $("#table_list tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_list_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_list")
-                    );
+                    },
+                    columns: [
+                        { data: "idkelompok" },
+                        { data: "namakelompok" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+
+                $("#table_list tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_list_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_list");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -794,51 +802,53 @@ btn_subkel.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: "Select",
             didOpen: () => {
-                jQuery(function ($) {
-                    const table = $("#table_list").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        scrollY: "400px",
-                        scrollCollapse: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "PenghangusanBarang/getSubkel",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken,
-                                kelompokId: kelompokId.value,
-                            },
+                const table = $("#table_list").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollY: "400px",
+                    scrollCollapse: true,
+                    destroy: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "PenghangusanBarang/getSubkel",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken,
+                            kelompokId: kelompokId.value,
                         },
-                        columns: [
-                            { data: "IdSubkelompok" },
-                            { data: "NamaSubKelompok" },
-                        ],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                width: "100px",
-                            },
-                        ],
-                    });
-                    $("#table_list tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                        scrollRowIntoView(this);
-                    });
-
-                    const searchInput = $("#table_list_filter input");
-                    if (searchInput.length > 0) {
-                        searchInput.focus();
-                    }
-
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener("keydown", (e) =>
-                        handleTableKeydown(e, "table_list")
-                    );
+                    },
+                    columns: [
+                        { data: "IdSubkelompok" },
+                        { data: "NamaSubKelompok" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            width: "100px",
+                        },
+                    ],
                 });
+                $("#table_list tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
+                    scrollRowIntoView(this);
+                });
+
+                table.on("init.dt", function () {
+                    setTimeout(() => {
+                        $("#table_list_filter input").trigger("focus");
+                    }, 50);
+                });
+
+                currentIndex = null;
+                const popup = Swal.getPopup();
+
+                popup.onkeydown = (e) => {
+                    handleTableKeydown(e, "table_list");
+                };
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1001,60 +1011,59 @@ function handleTypeSelection() {
                         showConfirmButton: true,
                         confirmButtonText: "Select",
                         didOpen: () => {
-                            jQuery(function ($) {
-                                const table = $("#table_list").DataTable({
-                                    responsive: true,
-                                    processing: true,
-                                    serverSide: true,
-                                    paging: false,
-                                    scrollY: "400px",
-                                    scrollCollapse: true,
-                                    order: [1, "asc"],
-                                    ajax: {
-                                        url: "PenghangusanBarang/getABM",
-                                        dataType: "json",
-                                        type: "GET",
-                                        data: {
-                                            _token: csrfToken,
-                                            subkelId: subkelId.value,
-                                        },
+                            const table = $("#table_list").DataTable({
+                                responsive: true,
+                                processing: true,
+                                serverSide: true,
+                                paging: false,
+                                scrollY: "400px",
+                                scrollCollapse: true,
+                                destroy: true,
+                                order: [1, "asc"],
+                                ajax: {
+                                    url: "PenghangusanBarang/getABM",
+                                    dataType: "json",
+                                    type: "GET",
+                                    data: {
+                                        _token: csrfToken,
+                                        subkelId: subkelId.value,
                                     },
-                                    columns: [
-                                        { data: "idtype" },
-                                        { data: "BARU" },
-                                    ],
-                                    columnDefs: [
-                                        {
-                                            targets: 0,
-                                            width: "200px",
-                                        },
-                                    ],
-                                });
-                                $("#table_list tbody").on(
-                                    "click",
-                                    "tr",
-                                    function () {
-                                        table
-                                            .$("tr.selected")
-                                            .removeClass("selected");
-                                        $(this).addClass("selected");
-                                        scrollRowIntoView(this);
-                                    }
-                                );
-
-                                const searchInput = $(
-                                    "#table_list_filter input"
-                                );
-                                if (searchInput.length > 0) {
-                                    searchInput.focus();
-                                }
-
-                                currentIndex = null;
-                                Swal.getPopup().addEventListener(
-                                    "keydown",
-                                    (e) => handleTableKeydown(e, "table_list")
-                                );
+                                },
+                                columns: [
+                                    { data: "idtype" },
+                                    { data: "BARU" },
+                                ],
+                                columnDefs: [
+                                    {
+                                        targets: 0,
+                                        width: "200px",
+                                    },
+                                ],
                             });
+                            $("#table_list tbody").on(
+                                "click",
+                                "tr",
+                                function () {
+                                    table
+                                        .$("tr.selected")
+                                        .removeClass("selected");
+                                    $(this).addClass("selected");
+                                    scrollRowIntoView(this);
+                                }
+                            );
+
+                            table.on("init.dt", function () {
+                                setTimeout(() => {
+                                    $("#table_list_filter input").trigger("focus");
+                                }, 50);
+                            });
+
+                            currentIndex = null;
+                            const popup = Swal.getPopup();
+
+                            popup.onkeydown = (e) => {
+                                handleTableKeydown(e, "table_list");
+                            };
                         },
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -1124,60 +1133,59 @@ function handleTypeSelection() {
                         showConfirmButton: true,
                         confirmButtonText: "Select",
                         didOpen: () => {
-                            jQuery(function ($) {
-                                const table = $("#table_list").DataTable({
-                                    responsive: true,
-                                    processing: true,
-                                    serverSide: true,
-                                    paging: false,
-                                    scrollY: "400px",
-                                    scrollCollapse: true,
-                                    order: [1, "asc"],
-                                    ajax: {
-                                        url: "PenghangusanBarang/getTypeCIR",
-                                        dataType: "json",
-                                        type: "GET",
-                                        data: {
-                                            _token: csrfToken,
-                                        },
+                            const table = $("#table_list").DataTable({
+                                responsive: true,
+                                processing: true,
+                                serverSide: true,
+                                paging: false,
+                                scrollY: "400px",
+                                scrollCollapse: true,
+                                destroy: true,
+                                order: [1, "asc"],
+                                ajax: {
+                                    url: "PenghangusanBarang/getTypeCIR",
+                                    dataType: "json",
+                                    type: "GET",
+                                    data: {
+                                        _token: csrfToken,
                                     },
-                                    columns: [
-                                        { data: "Id_Type" },
-                                        { data: "Nm_Type" },
-                                    ],
-                                    columnDefs: [
-                                        {
-                                            targets: 0,
-                                            width: "200px",
-                                        },
-                                    ],
-                                });
-
-                                $("#table_list tbody").on(
-                                    "click",
-                                    "tr",
-                                    function () {
-                                        table
-                                            .$("tr.selected")
-                                            .removeClass("selected");
-                                        $(this).addClass("selected");
-                                        scrollRowIntoView(this);
-                                    }
-                                );
-
-                                const searchInput = $(
-                                    "#table_list_filter input"
-                                );
-                                if (searchInput.length > 0) {
-                                    searchInput.focus();
-                                }
-
-                                currentIndex = null;
-                                Swal.getPopup().addEventListener(
-                                    "keydown",
-                                    (e) => handleTableKeydown(e, "table_list")
-                                );
+                                },
+                                columns: [
+                                    { data: "Id_Type" },
+                                    { data: "Nm_Type" },
+                                ],
+                                columnDefs: [
+                                    {
+                                        targets: 0,
+                                        width: "200px",
+                                    },
+                                ],
                             });
+
+                            $("#table_list tbody").on(
+                                "click",
+                                "tr",
+                                function () {
+                                    table
+                                        .$("tr.selected")
+                                        .removeClass("selected");
+                                    $(this).addClass("selected");
+                                    scrollRowIntoView(this);
+                                }
+                            );
+
+                            table.on("init.dt", function () {
+                                setTimeout(() => {
+                                    $("#table_list_filter input").trigger("focus");
+                                }, 50);
+                            });
+
+                            currentIndex = null;
+                            const popup = Swal.getPopup();
+
+                            popup.onkeydown = (e) => {
+                                handleTableKeydown(e, "table_list");
+                            };
                         },
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -1238,58 +1246,60 @@ function handleTypeSelection() {
                     showConfirmButton: true,
                     confirmButtonText: "Select",
                     didOpen: () => {
-                        jQuery(function ($) {
-                            const table = $("#table_list").DataTable({
-                                responsive: true,
-                                processing: true,
-                                serverSide: true,
-                                paging: false,
-                                scrollY: "400px",
-                                scrollCollapse: true,
-                                order: [1, "asc"],
-                                ajax: {
-                                    url: "PenghangusanBarang/getType",
-                                    dataType: "json",
-                                    type: "GET",
-                                    data: {
-                                        _token: csrfToken,
-                                        subkelId: subkelId.value,
-                                    },
+                        const table = $("#table_list").DataTable({
+                            responsive: true,
+                            processing: true,
+                            serverSide: true,
+                            paging: false,
+                            scrollY: "400px",
+                            scrollCollapse: true,
+                            destroy: true,
+                            order: [1, "asc"],
+                            ajax: {
+                                url: "PenghangusanBarang/getType",
+                                dataType: "json",
+                                type: "GET",
+                                data: {
+                                    _token: csrfToken,
+                                    subkelId: subkelId.value,
                                 },
-                                columns: [
-                                    { data: "IdType" },
-                                    { data: "NamaType" },
-                                ],
-                                columnDefs: [
-                                    {
-                                        targets: 0,
-                                        width: "200px",
-                                    },
-                                ],
-                            });
-
-                            $("#table_list tbody").on(
-                                "click",
-                                "tr",
-                                function () {
-                                    table
-                                        .$("tr.selected")
-                                        .removeClass("selected");
-                                    $(this).addClass("selected");
-                                    scrollRowIntoView(this);
-                                }
-                            );
-
-                            const searchInput = $("#table_list_filter input");
-                            if (searchInput.length > 0) {
-                                searchInput.focus();
-                            }
-
-                            currentIndex = null;
-                            Swal.getPopup().addEventListener("keydown", (e) =>
-                                handleTableKeydown(e, "table_list")
-                            );
+                            },
+                            columns: [
+                                { data: "IdType" },
+                                { data: "NamaType" },
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: "200px",
+                                },
+                            ],
                         });
+
+                        $("#table_list tbody").on(
+                            "click",
+                            "tr",
+                            function () {
+                                table
+                                    .$("tr.selected")
+                                    .removeClass("selected");
+                                $(this).addClass("selected");
+                                scrollRowIntoView(this);
+                            }
+                        );
+
+                        table.on("init.dt", function () {
+                            setTimeout(() => {
+                                $("#table_list_filter input").trigger("focus");
+                            }, 50);
+                        });
+
+                        currentIndex = null;
+                        const popup = Swal.getPopup();
+
+                        popup.onkeydown = (e) => {
+                            handleTableKeydown(e, "table_list");
+                        };
                     },
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -1356,7 +1366,7 @@ jQuery(function ($) {
             },
             stateLoadCallback: function (settings) {
                 let stateStorageName =
-                        window.location.pathname + "/colResizeStateData",
+                    window.location.pathname + "/colResizeStateData",
                     data = localStorage.getItem(stateStorageName);
                 return data != null ? JSON.parse(data) : null;
             },
