@@ -141,7 +141,7 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="font-weight-bold" for="bttb_nilaiTrans">Nilai Trans</label>
-                                <input type="number" name="bttb_nilaiTrans" id="bttb_nilaiTrans"
+                                <input type="text" name="bttb_nilaiTrans" id="bttb_nilaiTrans"
                                     class="form-control font-weight-bold" min="0" readonly>
                             </div>
                             <div class="col-md-8 mb-3">
