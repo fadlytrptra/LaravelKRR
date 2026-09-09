@@ -180,92 +180,226 @@ class MaintenanceKodeBarangController extends Controller
 
         if ($Kriteria != null && $Jenis_Pembelian != null) {
             try {
-                $counterBrg = DB::connection('ConnPurchase')->table('YCOUNTER')->select('Y_BARANG')->get();
-                $counterBrg = intval($counterBrg[0]->Y_BARANG) + 1;
-                $chrCounterBrg = str_pad($counterBrg, 9, '0', STR_PAD_LEFT);
-                if ($BrgSama == "N") {
-                    $chrCounterBrg = $Kriteria . $Jenis_Pembelian . substr($chrCounterBrg, -7);
+
+                if ($BrgSama == 'Y') {
+
+                    $kodePurchase =
+                        $Kriteria .
+                        $Jenis_Pembelian .
+                        substr($KodeBrgAslinya, -7);
+
                 } else {
-                    $chrCounterBrg = $Kriteria . $Jenis_Pembelian . substr($KodeBrgAslinya, -7);
+                    $counterPurchase = DB::connection('ConnPurchase')
+                        ->table('YCOUNTER')
+                        ->value('Y_BARANG');
+
+                    $nextCounterPurchase = intval($counterPurchase) + 1;
+
+                    $kodePurchase =
+                        $Kriteria .
+                        $Jenis_Pembelian .
+                        substr(
+                            str_pad(
+                                $nextCounterPurchase,
+                                9,
+                                '0',
+                                STR_PAD_LEFT
+                            ),
+                            -7
+                        );
                 }
 
-                $data = DB::connection('ConnPurchase')->statement('exec SpInsert_TypeBarang_dotNet @USERINPUT =?, @Kriteria =?,@Jenis_Pembelian =?,@BrgSama =?,@KodeBrgAslinya =?,@NO_SUB_KATEGORI =?,@NAMA_BRG =?,@KET =?,@KET_KHUSUS =?,@ST_TRI =?,@ST_SEK =?,@ST_PRIM =?,@NO_SATUAN_UMUM =?,@ROUND =?,@D_Tek0 =?,@D_Tek1 =?,@D_Tek2 =?,@D_Tek3 =?,@D_Tek4 =?,@D_Tek5 =?,@D_Tek6 =?,@D_Tek7 =?,@D_Tek8 =?,@D_Tek9 =?,@D_Tek10 =?,@D_Tek11 =?,@D_Tek12 =?,@D_Tek13 =?,@Ket_Tek0 =?,@Ket_Tek1 =?,@KdSpec =?,@Penjaluk =?,@Barang_Export =?', [
-                    $USERINPUT,
-                    $Kriteria,
-                    $Jenis_Pembelian,
-                    $BrgSama,
-                    $KodeBrgAslinya,
-                    $NO_SUB_KATEGORI,
-                    $NAMA_BRG,
-                    $KET,
-                    $KET_KHUSUS,
-                    $ST_TRI,
-                    $ST_SEK,
-                    $ST_PRIM,
-                    $NO_SATUAN_UMUM,
-                    $ROUND,
-                    $D_Tek0,
-                    $D_Tek1,
-                    $D_Tek2,
-                    $D_Tek3,
-                    $D_Tek4,
-                    $D_Tek5,
-                    $D_Tek6,
-                    $D_Tek7,
-                    $D_Tek8,
-                    $D_Tek9,
-                    $D_Tek10,
-                    $D_Tek11,
-                    $D_Tek12,
-                    $D_Tek13,
-                    $Ket_Tek0,
-                    $Ket_Tek1,
-                    $KdSpec,
-                    $Penjaluk,
-                    $Barang_Export
+                DB::connection('ConnPurchase')->statement(
+                    'exec SpInsert_TypeBarang_dotNet
+                        @USERINPUT =?,
+                        @Kriteria =?,
+                        @Jenis_Pembelian =?,
+                        @BrgSama =?,
+                        @KodeBrgAslinya =?,
+                        @NO_SUB_KATEGORI =?,
+                        @NAMA_BRG =?,
+                        @KET =?,
+                        @KET_KHUSUS =?,
+                        @ST_TRI =?,
+                        @ST_SEK =?,
+                        @ST_PRIM =?,
+                        @NO_SATUAN_UMUM =?,
+                        @ROUND =?,
+                        @D_Tek0 =?,
+                        @D_Tek1 =?,
+                        @D_Tek2 =?,
+                        @D_Tek3 =?,
+                        @D_Tek4 =?,
+                        @D_Tek5 =?,
+                        @D_Tek6 =?,
+                        @D_Tek7 =?,
+                        @D_Tek8 =?,
+                        @D_Tek9 =?,
+                        @D_Tek10 =?,
+                        @D_Tek11 =?,
+                        @D_Tek12 =?,
+                        @D_Tek13 =?,
+                        @Ket_Tek0 =?,
+                        @Ket_Tek1 =?,
+                        @KdSpec =?,
+                        @Penjaluk =?,
+                        @Barang_Export =?',
+                    [
+                        $USERINPUT,
+                        $Kriteria,
+                        $Jenis_Pembelian,
+                        $BrgSama,
+                        $KodeBrgAslinya,
+                        $NO_SUB_KATEGORI,
+                        $NAMA_BRG,
+                        $KET,
+                        $KET_KHUSUS,
+                        $ST_TRI,
+                        $ST_SEK,
+                        $ST_PRIM,
+                        $NO_SATUAN_UMUM,
+                        $ROUND,
+                        $D_Tek0,
+                        $D_Tek1,
+                        $D_Tek2,
+                        $D_Tek3,
+                        $D_Tek4,
+                        $D_Tek5,
+                        $D_Tek6,
+                        $D_Tek7,
+                        $D_Tek8,
+                        $D_Tek9,
+                        $D_Tek10,
+                        $D_Tek11,
+                        $D_Tek12,
+                        $D_Tek13,
+                        $Ket_Tek0,
+                        $Ket_Tek1,
+                        $KdSpec,
+                        $Penjaluk,
+                        $Barang_Export
+                    ]
+                );
+
+
+                // KCN MEMBUAT KODE SENDIRI
+                $BrgSamaKCN = 'N';
+
+                $counterKCN = DB::connection('ConnKCNPurchase')
+                    ->table('YCOUNTER')
+                    ->value('Y_BARANG');
+
+                $nextCounterKCN = intval($counterKCN) + 1;
+
+                $kodeKCN =
+                    $Kriteria .
+                    $Jenis_Pembelian .
+                    substr(
+                        str_pad(
+                            $nextCounterKCN,
+                            9,
+                            '0',
+                            STR_PAD_LEFT
+                        ),
+                        -7
+                    );
+
+                DB::connection('ConnKCNPurchase')->statement(
+                    'exec SpInsert_TypeBarang_dotNet
+                        @USERINPUT =?,
+                        @Kriteria =?,
+                        @Jenis_Pembelian =?,
+                        @BrgSama =?,
+                        @KodeBrgAslinya =?,
+                        @NO_SUB_KATEGORI =?,
+                        @NAMA_BRG =?,
+                        @KET =?,
+                        @KET_KHUSUS =?,
+                        @ST_TRI =?,
+                        @ST_SEK =?,
+                        @ST_PRIM =?,
+                        @NO_SATUAN_UMUM =?,
+                        @ROUND =?,
+                        @D_Tek0 =?,
+                        @D_Tek1 =?,
+                        @D_Tek2 =?,
+                        @D_Tek3 =?,
+                        @D_Tek4 =?,
+                        @D_Tek5 =?,
+                        @D_Tek6 =?,
+                        @D_Tek7 =?,
+                        @D_Tek8 =?,
+                        @D_Tek9 =?,
+                        @D_Tek10 =?,
+                        @D_Tek11 =?,
+                        @D_Tek12 =?,
+                        @D_Tek13 =?,
+                        @Ket_Tek0 =?,
+                        @Ket_Tek1 =?,
+                        @KdSpec =?,
+                        @Penjaluk =?,
+                        @Barang_Export =?',
+                    [
+                        $USERINPUT,
+                        $Kriteria,
+                        $Jenis_Pembelian,
+                        $BrgSamaKCN,
+                        null,
+                        $NO_SUB_KATEGORI,
+                        $NAMA_BRG,
+                        $KET,
+                        $KET_KHUSUS,
+                        $ST_TRI,
+                        $ST_SEK,
+                        $ST_PRIM,
+                        $NO_SATUAN_UMUM,
+                        $ROUND,
+                        $D_Tek0,
+                        $D_Tek1,
+                        $D_Tek2,
+                        $D_Tek3,
+                        $D_Tek4,
+                        $D_Tek5,
+                        $D_Tek6,
+                        $D_Tek7,
+                        $D_Tek8,
+                        $D_Tek9,
+                        $D_Tek10,
+                        $D_Tek11,
+                        $D_Tek12,
+                        $D_Tek13,
+                        $Ket_Tek0,
+                        $Ket_Tek1,
+                        $KdSpec,
+                        $Penjaluk,
+                        $Barang_Export
+                    ]
+                );
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data berhasil ditambahkan',
+                    'kodePurchase' => $kodePurchase,
+                    'kodeKCN' => $kodeKCN
                 ]);
 
-                $data = DB::connection('ConnKCNPurchase')->statement('exec SpInsert_TypeBarang_dotNet @USERINPUT =?, @Kriteria =?,@Jenis_Pembelian =?,@BrgSama =?,@KodeBrgAslinya =?,@NO_SUB_KATEGORI =?,@NAMA_BRG =?,@KET =?,@KET_KHUSUS =?,@ST_TRI =?,@ST_SEK =?,@ST_PRIM =?,@NO_SATUAN_UMUM =?,@ROUND =?,@D_Tek0 =?,@D_Tek1 =?,@D_Tek2 =?,@D_Tek3 =?,@D_Tek4 =?,@D_Tek5 =?,@D_Tek6 =?,@D_Tek7 =?,@D_Tek8 =?,@D_Tek9 =?,@D_Tek10 =?,@D_Tek11 =?,@D_Tek12 =?,@D_Tek13 =?,@Ket_Tek0 =?,@Ket_Tek1 =?,@KdSpec =?,@Penjaluk =?,@Barang_Export =?', [
-                    $USERINPUT,
-                    $Kriteria,
-                    $Jenis_Pembelian,
-                    $BrgSama,
-                    $KodeBrgAslinya,
-                    $NO_SUB_KATEGORI,
-                    $NAMA_BRG,
-                    $KET,
-                    $KET_KHUSUS,
-                    $ST_TRI,
-                    $ST_SEK,
-                    $ST_PRIM,
-                    $NO_SATUAN_UMUM,
-                    $ROUND,
-                    $D_Tek0,
-                    $D_Tek1,
-                    $D_Tek2,
-                    $D_Tek3,
-                    $D_Tek4,
-                    $D_Tek5,
-                    $D_Tek6,
-                    $D_Tek7,
-                    $D_Tek8,
-                    $D_Tek9,
-                    $D_Tek10,
-                    $D_Tek11,
-                    $D_Tek12,
-                    $D_Tek13,
-                    $Ket_Tek0,
-                    $Ket_Tek1,
-                    $KdSpec,
-                    $Penjaluk,
-                    $Barang_Export
-                ]);
-                return response()->json(['message' => 'Data berhasil ditambahkan', "kd" => $chrCounterBrg]);
             } catch (\Throwable $Error) {
-                return response()->json($Error);
+
+                \Log::error('Maintenance Kode Barang - INSERT GAGAL', [
+                    'message' => $Error->getMessage(),
+                    'errorInfo' => $Error instanceof \PDOException
+                        ? $Error->errorInfo
+                        : null,
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $Error->getMessage(),
+                    'errorInfo' => $Error instanceof \PDOException
+                        ? $Error->errorInfo
+                        : null,
+                ], 500);
             }
-        } else {
-            return response()->json('Parameter harus diisi');
         }
     }
 

@@ -281,36 +281,73 @@ btn_proses.addEventListener("click", function (event) {
                 Barang_Export: barangEksport,
             },
             success: function (response) {
-                if (response.errorInfo == undefined) {
-                    Swal.fire({
-                        icon: "success",
-                        title:
-                            "Data Berhasil DiTambahkan! Kode Barang = " +
-                            response.kd,
-                    });
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Data Tidak Berhasil DiTambahkan Karena Data Sudah Ada!",
-                        showConfirmButton: false,
-                        timer: "5000",
-                    });
-                }
+                console.log("INSERT BERHASIL:", response);
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Data Berhasil DiTambahkan!",
+                    html: `
+                        <div style="font-size: 17px; text-align: center; margin-top: 15px;">
+
+                            <div style="margin-bottom: 15px;">
+                                <strong>Kode Barang Kerta</strong>
+                                <div style="
+                                    font-size: 22px;
+                                    font-weight: bold;
+                                    margin-top: 5px;
+                                ">
+                                    ${response.kodePurchase ?? "-"}
+                                </div>
+                            </div>
+
+                            <div>
+                                <strong>Kode Barang Kencana</strong>
+                                <div style="
+                                    font-size: 22px;
+                                    font-weight: bold;
+                                    margin-top: 5px;
+                                ">
+                                    ${response.kodeKCN ?? "-"}
+                                </div>
+                            </div>
+
+                        </div>
+                    `,
+                    confirmButtonText: "OK"
+                });
+
                 clearData();
                 btnActive = "batal";
                 disableAll();
+
                 btn_isi.disabled = false;
                 btn_koreksi.disabled = false;
                 btn_hapus.disabled = false;
             },
-            error: function (error) {
+            error: function (xhr) {
+                console.error("ERROR INSERT:", xhr);
+                console.error("RESPONSE:", xhr.responseJSON);
+
+                let message = "Terjadi kesalahan saat menambahkan data.";
+
+                if (xhr.responseJSON) {
+                    message =
+                        xhr.responseJSON.message ??
+                        message;
+                }
+
                 Swal.fire({
                     icon: "error",
-                    title: "Data Tidak Berhasil DiTambahkan!",
-                    showConfirmButton: false,
-                    timer: "2000",
+                    title: "Data Tidak Berhasil Ditambahkan!",
+                    html: `
+                        <div style="text-align:left; font-size:14px;">
+                            <strong>Error:</strong>
+                            <br>
+                            ${message}
+                        </div>
+                    `,
+                    confirmButtonText: "OK"
                 });
-                console.error("Error Send Data:", error);
             },
             complete: function () {
                 // Hide loading screen
