@@ -77,7 +77,7 @@
                             {{-- {{ url('/SuratPesananManager/upall') }} --}}
                             {{ csrf_field() }}
                             @php
-                                $canApprove = in_array(trim($user), ['adam', 'rudy', '4496']);
+                                $canApprove = in_array(trim($user), ['adam', 'rudy', '4496', 'RUDY']);
                             @endphp
 
                             <button class="btn btn-sm btn-success" id="button_submitSelected"
