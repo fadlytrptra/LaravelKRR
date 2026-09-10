@@ -299,7 +299,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/FinalApprove/{id}/up', 'App\Http\Controllers\Beli\Transaksi\FinalApproveController@update')->name('finalapprove.update');
     Route::get('/FinalApprove/downloadDokumentasi/{noTrans}', [FinalApproveController::class, 'downloadDokumentasi']);
     Route::get('/MaintenanceOrderPembeliann/CekNoTrans', 'App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController@cekNoTrans')->name('maintenanceorderpembelian.ceknotrans');
-    Route::get('/MaintenanceOrderPembeliann/CekDivisiPembelian','App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController@cekDivisiPembelian')->name('maintenanceorderpembelian.cekdivisipembelian');
+    Route::get('/MaintenanceOrderPembeliann/CekDivisiPembelian', 'App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController@cekDivisiPembelian')->name('maintenanceorderpembelian.cekdivisipembelian');
 
     Route::get('/MaintenanceOrderPembeliann/KodeBarang', 'App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController@kodeBarang')->name('maintenanceorderpembelian.kodebarang');
     Route::get('/MaintenanceOrderPembeliann/Data', 'App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController@data')->name('maintenanceorderpembelian.data');
@@ -394,7 +394,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/penyesuaiansp/batalsp', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@batalspPenyesuaianSP');
     Route::post('/batalsplokal/{nosp}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@batalspPenyesuaianSP');
     Route::post('/SuratPesananManager/upPenyesuaian', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@updatePenyesuaian');
-    Route::get('SuratPesananManager/dokumentasi/{id}',[App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class,'downloadDokumentasi'])->name('SuratPesananManager.dokumentasi');
+    Route::get('SuratPesananManager/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class, 'downloadDokumentasi'])->name('SuratPesananManager.dokumentasi');
     Route::post('SuratPesananDirektur/upall', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'updateAll'])->name('SuratPesananDirektur.updateAll');
     Route::get('SuratPesananDirektur/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'downloadDokumentasi'])->name('SuratPesananDirektur.dokumentasi');
     Route::post('SuratPesananDirektur/batal', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'batal'])->name('SuratPesananDirektur.batal');
@@ -535,7 +535,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('ACCPengecekanMB', App\Http\Controllers\Extruder\ExtruderNet\ACCPengecekanMBController::class);
     Route::resource('ACCBenangNG', App\Http\Controllers\Extruder\ExtruderNet\ACCBenangNGController::class);
     Route::get('/print-laporan-produksi-extruder', [App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class, 'print'])
-    ->name('print.laporan.produksi.extruder');
+        ->name('print.laporan.produksi.extruder');
     #endregion
 
     Route::get('/beratStandar/{fun_str}/{fun_data}', [BeratController::class, 'beratStandar']);
@@ -1643,6 +1643,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('HasilMeterD', App\Http\Controllers\CircularD\HasilMeterDController::class);
     #endregion
 
+    #region Circular M
+    Route::get('CircularM', 'App\Http\Controllers\HomeController@CircularM');
+
+    Route::get('/orderM/{form_name}', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'index'])->name('orderM.index');
+    Route::get('/orderM/show/{id}', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'show'])->name('orderM.show');
+    Route::post('/orderM/store', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'store'])->name('orderM.store');
+    Route::post('/proses-orderM', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'prosesOrder']);
+    Route::get('/sp-orderM/{sp_str}/{sp_data?}', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'spOrder']);
+
+    Route::get('/paginationM/get-mesin-order', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'getMesinOrder']);
+    Route::get('/paginationM/get-pegawai', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'getDaftarPegawai']);
+    Route::get('/paginationM/get-log-mesin', [App\Http\Controllers\CircularM\OrderCircularMlorahController::class, 'getLogMesin']);
+
+    Route::resource('HasilMeterM', App\Http\Controllers\CircularM\HasilMeterMController::class);
+    #endregion
+
     #region Circular
     Route::get('Circular', 'App\Http\Controllers\HomeController@Circular');
 
@@ -1806,7 +1822,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('ACCGudangPB', App\Http\Controllers\Guard\Pemeriksaan\ACCGudangPBController::class);
     Route::resource('ViewPemeriksaanBarang', App\Http\Controllers\Guard\Pemeriksaan\ViewPemeriksaanBarangController::class);
     Route::resource('SJSudahKirimCustomer', App\Http\Controllers\Guard\Pemeriksaan\SJSudahKirimCustomerController::class);
-    Route::get('PemeriksaanBarang/download/{id}', [App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class,'downloadPdf']);
+    Route::get('PemeriksaanBarang/download/{id}', [App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class, 'downloadPdf']);
 
     #region COA
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
@@ -1846,9 +1862,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     #region Kencana Beli
     Route::get('Kencana', 'App\Http\Controllers\HomeController@Kencana')->name('Kencana.Home');
-    Route::put('/Kencana/BttbPembelian/updateFlag',[App\Http\Controllers\Kencana\BttbPembelianController::class, 'updateFlag']);
+    Route::put('/Kencana/BttbPembelian/updateFlag', [App\Http\Controllers\Kencana\BttbPembelianController::class, 'updateFlag']);
     Route::resource('Kencana/PermohonanPembelian', App\Http\Controllers\Kencana\PermohonanPembelianController::class);
-    Route::get('/Kencana/AccPermohonan/dokumentasi/{noTrans}',[App\Http\Controllers\Kencana\AccPermohonanController::class, 'downloadDokumentasi'])->name('AccPermohonan.downloadDokumentasi');
+    Route::get('/Kencana/AccPermohonan/dokumentasi/{noTrans}', [App\Http\Controllers\Kencana\AccPermohonanController::class, 'downloadDokumentasi'])->name('AccPermohonan.downloadDokumentasi');
     Route::resource('Kencana/AccPermohonan', App\Http\Controllers\Kencana\AccPermohonanController::class);
     Route::get('/Kencana/AccPembelian/dokumentasi/{noTrans}', [App\Http\Controllers\Kencana\AccPembelianController::class, 'downloadDokumentasi'])->name('AccPembelian.downloadDokumentasi');
     Route::resource('Kencana/AccPembelian', App\Http\Controllers\Kencana\AccPembelianController::class);
@@ -1863,8 +1879,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('Kencana/TransferBarang', App\Http\Controllers\Kencana\TransferBarangController::class);
     Route::get('/Kencana/FinalApproveKencana/dokumentasi/{noTrans}', [App\Http\Controllers\Kencana\FinalApproveKencanaController::class, 'downloadDokumentasi'])->name('FinalApprove.downloadDokumentasi');
     Route::resource('Kencana/FinalApprove', App\Http\Controllers\Kencana\FinalApproveKencanaController::class);
-    Route::get( '/Kencana/CetakPembelian/print', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'print'] )->name('Kencana.CetakPembelian.print');
-    Route::post( '/Kencana/CetakPembelian/sendEmailSupplier', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'sendEmailSupplier'] )->name('Kencana.CetakPembelian.sendEmailSupplier');
+    Route::get('/Kencana/CetakPembelian/print', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'print'])->name('Kencana.CetakPembelian.print');
+    Route::post('/Kencana/CetakPembelian/sendEmailSupplier', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'sendEmailSupplier'])->name('Kencana.CetakPembelian.sendEmailSupplier');
     Route::get('/Kencana/CetakPembelian/getData', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'getData'])->name('Kencana.CetakPembelian.getData');
     Route::resource('Kencana/Cetak', App\Http\Controllers\Kencana\CetakPembelianKencanaController::class);
     Route::resource('Kencana/Supplier', App\Http\Controllers\Kencana\SupplierKencanaController::class);

@@ -1,0 +1,26 @@
+table {
+    border-collapse: collapse;
+    margin: 20px auto;
+    background-color: #fff;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #343a40;
+}
+
+td {
+    cursor: pointer;
+}
+
+.row_selected {
+    background-color: lightskyblue !important;
+}

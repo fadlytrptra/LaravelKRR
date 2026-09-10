@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\CircularD;
+namespace App\Http\Controllers\CircularM;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class HasilMeterDController extends Controller
+class HasilMeterMController extends Controller
 {
     public function index()
     {
-        $access = (new HakAksesController)->HakAksesFiturMaster('Circular D');
-        return view('CircularD.informasi.HasilMeter', compact('access'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Circular M');
+        return view('CircularM.informasi.HasilMeter', compact('access'));
     }
 
     public function create()
@@ -39,7 +39,7 @@ class HasilMeterDController extends Controller
             // === Ambil data utama ===
             $results = DB::connection('ConnCircular')->select(
                 'exec Sp_List_ProsesMeter @Kode = ?, @Tanggal = ?, @Shift = ?',
-                [11, $tanggal, $shift]
+                [16, $tanggal, $shift]
             );
 
             $response = [];
@@ -117,7 +117,7 @@ class HasilMeterDController extends Controller
             // === Cek data Ada / Tidak ===
             $cek = DB::connection('ConnCircular')->select(
                 'exec Sp_List_ProsesMeter @Kode = ?, @Tanggal = ?, @Shift = ?',
-                [10, $tanggal, $shift]
+                [15, $tanggal, $shift]
             );
             // dd($cek);
             if (empty($cek) || ($cek[0]->Ada ?? 0) == 0) {
