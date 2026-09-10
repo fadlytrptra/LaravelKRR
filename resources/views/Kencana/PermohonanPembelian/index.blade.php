@@ -46,6 +46,49 @@
     #modalPermohonan textarea{
         resize:none;
     }
+
+    .keterangan-warna {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        font-weight: 500;
+    }
+
+    /* Kotak warna */
+    .legend-color::after {
+        content: "■";
+        font-size: 25px;
+    }
+
+    /* Hitam */
+    .legend-hitam {
+        color: #000000;
+    }
+
+    /* Biru */
+    .legend-biru {
+        color: #0d6efd;
+    }
+
+    /* Merah */
+    .legend-merah {
+        color: #dc3545;
+    }
+
+    /* Hijau */
+    .legend-hijau {
+        color: #198754;
+    }
 </style>
 
 <div class="container-fluid">
@@ -101,9 +144,33 @@
                                 <th>No Trans</th>
                             </tr>
                         </thead>
+
                         <tbody>
                         </tbody>
                     </table>
+
+                    {{-- KETERANGAN WARNA --}}
+                    <div class="keterangan-warna mt-2 mb-1">
+                        <span class="legend-item">
+                            <span class="legend-color legend-hitam"></span>
+                            Belum ACC
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-color legend-biru"></span>
+                            Sudah ACC Manager
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-color legend-merah"></span>
+                            Sudah ACC Manager & Direktur
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-color legend-hijau"></span>
+                            Batal ACC
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

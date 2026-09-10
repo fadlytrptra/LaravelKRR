@@ -89,7 +89,60 @@ $(document).ready(function () {
                 data: 'No_trans',
                 name: 'No_trans'
             }
-        ]
+        ], 
+
+        rowCallback: function (row, data) {
+
+            let warna = '#000000'; // default hitam
+
+            // ------------------------------------------------------
+            //  BATAL ACC = HIJAU
+            // ------------------------------------------------------
+            if (data.Batal_acc !== null &&
+                data.Batal_acc !== undefined &&
+                String(data.Batal_acc).trim() !== '') {
+
+                warna = '#198754';
+            }
+
+            // ------------------------------------------------------
+            //  SUDAH ACC MANAGER + SUDAH ACC DIREKTUR = MERAH
+            // ------------------------------------------------------
+            else if (
+                data.Tgl_acc !== null &&
+                data.Tgl_acc !== undefined &&
+                String(data.Tgl_acc).trim() !== '' &&
+
+                data.Tgl_Direktur !== null &&
+                data.Tgl_Direktur !== undefined &&
+                String(data.Tgl_Direktur).trim() !== ''
+            ) {
+
+                warna = '#dc3545';
+            }
+
+            // ------------------------------------------------------
+            //  SUDAH ACC MANAGER + BELUM ACC DIREKTUR = BIRU
+            // ------------------------------------------------------
+            else if (
+                data.Tgl_acc !== null &&
+                data.Tgl_acc !== undefined &&
+                String(data.Tgl_acc).trim() !== ''
+            ) {
+
+                warna = '#0d6efd';
+            }
+
+            // ------------------------------------------------------
+            //  BELUM ACC MANAGER + BELUM ACC DIREKTUR = HITAM
+            // ------------------------------------------------------
+            else {
+                warna = '#000000';
+            }
+
+            // Terapkan warna ke seluruh tulisan dalam baris
+            $(row).find('td').css('color', warna);
+        }
     });
 
     //#endregion
