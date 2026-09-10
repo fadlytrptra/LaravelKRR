@@ -561,6 +561,7 @@ jQuery(function ($) {
                 $("#" + slcMesin.id).val(data.data[0].mesin).trigger("change");
                 spek_benang.value = data.data[0].spek_benang;
                 jumlah.value = data.data[0].jumlah;
+                berat.value = data.data[0].berat;
                 keterangan.value = data.data[0].keterangan;
                 [
                     "kel_samping",
