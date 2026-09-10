@@ -34,7 +34,7 @@ class SuratJalanKencanaController extends Controller
             ->join('T_HeaderPesanan as HP', 'DP.IDSuratPesanan', '=', 'HP.IDSuratPesanan')
             ->join('T_Customer as C', 'HP.IDCust', '=', 'C.IDCust')
             ->whereNotNull('DO.TglAccManager')
-            ->whereNull('DO.Pengiriman')
+            ->whereNotNull('DO.Pengiriman')
             ->whereNotNull('DO.AccManager')
             ->whereNotNull('DO.Dikeluarkan')
             ->whereNull('DO.KetBatal')
