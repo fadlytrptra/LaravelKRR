@@ -208,7 +208,7 @@ class TransferHasilMeterDController extends Controller
     {
         if ($id == 'getData') {
             $results = DB::connection('ConnCircular')
-                ->select('exec Sp_Maint_Transfer ?', [1]);
+                ->select('exec Sp_Maint_Transfer ?', [11]);
             // dd($results);
             $response = [];
             foreach ($results as $row) {
