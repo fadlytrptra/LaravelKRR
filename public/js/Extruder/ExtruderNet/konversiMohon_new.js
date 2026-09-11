@@ -280,35 +280,45 @@ numLot.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         if (this.value === "") this.value = 0;
         numUkuran.disabled = false;
-        numUkuran.focus();
+        setTimeout(() => {
+            numUkuran.focus();
+        }, 150);
     }
 });
 
 numUkuran.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         numDenier.disabled = false;
-        numDenier.focus();
+        setTimeout(() => {
+            numDenier.focus();
+        }, 150);
     }
 });
 
 numDenier.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         txtWarna.disabled = false;
-        txtWarna.focus();
+        setTimeout(() => {
+            txtWarna.focus();
+        }, 150);
     }
 });
 
 txtWarna.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         dateTanggal.disabled = false;
-        dateTanggal.focus();
+        setTimeout(() => {
+            dateTanggal.focus();
+        }, 150);
     }
 });
 
 dateTanggal.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         txtShift.disabled = false;
-        txtShift.focus();
+        setTimeout(() => {
+            txtShift.focus();
+        }, 150);
     }
 });
 
@@ -320,34 +330,44 @@ txtShift.addEventListener("keypress", function (event) {
                 "Isi Shift terlebih dahulu",
                 "warning",
             ).then(() => {
-                txtShift.focus();
+                setTimeout(() => {
+                    txtShift.focus();
+                }, 150);
             });
             return;
         }
         this.value = this.value.toUpperCase();
         timeAwal.classList.remove("unclickable");
-        timeAwal.focus();
+        setTimeout(() => {
+            timeAwal.focus();
+        }, 150);
     }
 });
 
 timeAwal.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         timeAkhir.classList.remove("unclickable");
-        timeAkhir.focus();
+        setTimeout(() => {
+            timeAkhir.focus();
+        }, 150);
     }
 });
 
 timeAkhir.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         timeMulai.classList.remove("unclickable");
-        timeMulai.focus();
+        setTimeout(() => {
+            timeMulai.focus();
+        }, 150);
     }
 });
 
 timeMulai.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         timeSelesai.classList.remove("unclickable");
-        timeSelesai.focus();
+        setTimeout(() => {
+            timeSelesai.focus();
+        }, 150);
     }
 });
 
@@ -359,12 +379,14 @@ timeSelesai.addEventListener("keydown", function (event) {
 
         if (rows.length === 0) return;
 
-        rows.forEach((row) => row.classList.remove("keyboard-selected"));
+        setTimeout(() => {
+            rows.forEach((row) => row.classList.remove("keyboard-selected"));
 
-        rows[0].classList.add("keyboard-selected");
-        rows[0].focus();
+            rows[0].classList.add("keyboard-selected");
+            rows[0].focus();
 
-        rowEventKomposisi(0, null, false);
+            rowEventKomposisi(0, null, false);
+        }, 150);
     }
 });
 
@@ -412,7 +434,7 @@ numPrimer.addEventListener("keydown", function (event) {
         setTimeout(() => {
             numSekunder.focus();
             numSekunder.select();
-        }, 0);
+        }, 150);
     }
 });
 
@@ -433,7 +455,7 @@ numSekunder.addEventListener("keydown", function (event) {
         setTimeout(() => {
             numTritier.focus();
             numTritier.select();
-        }, 0);
+        }, 150);
     }
 });
 
@@ -467,7 +489,7 @@ numTritier.addEventListener("keydown", function (event) {
                 btnTambahDetail.disabled = false;
                 btnTambahDetail.focus();
             }
-        }, 0);
+        }, 150);
     }
 });
 
@@ -622,31 +644,39 @@ btnTambahDetail.addEventListener("click", function () {
                 confirmButtonText: "Ya",
                 cancelButtonText: "Tidak",
             }).then((result) => {
-                suppressSelectionReset = false;
-                if (result.isConfirmed) {
-                    $(window).scrollTop($(document).height());
-                    btnTambahDetail.disabled = false;
+                setTimeout(() => {
+                    suppressSelectionReset = false;
+                    if (result.isConfirmed) {
+                        $(window).scrollTop($(document).height());
+                        btnTambahDetail.disabled = false;
 
-                    document
-                        .querySelectorAll("#table_komposisi tbody tr")
-                        .forEach((row) => {
-                            row.classList.remove(
-                                "selected",
-                                "keyboard-selected",
+                        document
+                            .querySelectorAll("#table_komposisi tbody tr")
+                            .forEach((row) => {
+                                row.classList.remove(
+                                    "selected",
+                                    "keyboard-selected",
+                                );
+                            });
+
+                        const tableRows = getKomposisiRows();
+                        const selectedRow = tableRows.find((row) => {
+                            const rowData = tableKomposisi.row(row).data();
+                            return (
+                                rowData &&
+                                String(rowData.IdType).trim() ===
+                                    String(listKomposisi[pilKomposisi].IdType).trim()
                             );
                         });
-
-                    let tableRows = document.querySelectorAll(
-                        "#table_komposisi .odd, #table_komposisi .even",
-                    );
-                    if (tableRows[pilKomposisi]) {
-                        tableRows[pilKomposisi].click();
+                        if (selectedRow) {
+                            selectedRow.click();
+                        }
+                        if (tableRows.length > 0) tableRows[0].focus();
+                    } else {
+                        btnProses.disabled = false;
+                        btnProses.focus();
                     }
-                    document.getElementById("table_komposisi").focus();
-                } else {
-                    btnProses.focus();
-                    this.disabled = false;
-                }
+                }, 150);
             });
         }
     } else {
@@ -839,6 +869,95 @@ function setKomposisiSelection(index, shouldFocus = true) {
     return targetRow;
 }
 
+function resolveKomposisiSelection(rowIndex, rowData = null) {
+    const rows = getKomposisiRows();
+    const row = rowData
+        ? rows.find((candidate) => {
+              const candidateData = tableKomposisi.row(candidate).data();
+              return (
+                  candidateData &&
+                  String(candidateData.IdType).trim() ===
+                      String(rowData.IdType).trim()
+              );
+          })
+        : rows[rowIndex];
+    const data = rowData || (row ? tableKomposisi.row(row).data() : null);
+
+    if (!data) return null;
+
+    const originalIndex = listKomposisi.findIndex(
+        (item) => String(item.IdType).trim() === String(data.IdType).trim(),
+    );
+
+    if (originalIndex === -1) return null;
+
+    return {
+        data: listKomposisi[originalIndex],
+        originalIndex,
+        visibleIndex: row ? rows.indexOf(row) : rowIndex,
+    };
+}
+
+function bindKomposisiKeyboardNavigation() {
+    const tableContainer = tableKomposisi.table().container();
+    const searchInput = tableContainer.querySelector(
+        "input[type='search']",
+    );
+
+    if (!searchInput) return;
+
+    searchInput.onkeydown = function (event) {
+        const rows = getKomposisiRows();
+        if (!rows.length) return;
+
+        const currentIndex = rows.findIndex(
+            (row) =>
+                row.classList.contains("keyboard-selected") ||
+                row.classList.contains("selected") ||
+                row.classList.contains("table-primary"),
+        );
+
+        let nextIndex = currentIndex;
+        if (event.key === "ArrowDown") {
+            nextIndex =
+                currentIndex < 0
+                    ? 0
+                    : Math.min(currentIndex + 1, rows.length - 1);
+        } else if (event.key === "ArrowUp") {
+            if (currentIndex <= 0) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+            nextIndex = currentIndex - 1;
+        } else if (event.key === "Enter") {
+            nextIndex = currentIndex < 0 ? 0 : currentIndex;
+            event.preventDefault();
+            event.stopPropagation();
+            setKomposisiSelection(nextIndex, false);
+            rowEventKomposisi(
+                nextIndex,
+                tableKomposisi.row(rows[nextIndex]).data(),
+                true,
+            );
+            return;
+        } else {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        const selectedRow = setKomposisiSelection(nextIndex, true);
+        if (selectedRow) {
+            rowEventKomposisi(
+                nextIndex,
+                tableKomposisi.row(selectedRow).data(),
+                false,
+            );
+        }
+    };
+}
+
 document
     .getElementById("table_komposisi")
     .addEventListener("keydown", function (event) {
@@ -860,31 +979,37 @@ document
 
         switch (event.key) {
             case "ArrowDown":
+                event.stopPropagation();
                 event.preventDefault();
                 nextIndex = Math.min(startIndex + 1, rows.length - 1);
                 break;
 
             case "ArrowUp":
+                event.stopPropagation();
                 event.preventDefault();
                 nextIndex = Math.max(startIndex - 1, 0);
                 break;
 
             case "PageDown":
+                event.stopPropagation();
                 event.preventDefault();
                 nextIndex = Math.min(startIndex + 5, rows.length - 1);
                 break;
 
             case "PageUp":
+                event.stopPropagation();
                 event.preventDefault();
                 nextIndex = Math.max(startIndex - 5, 0);
                 break;
 
             case "Home":
+                event.stopPropagation();
                 event.preventDefault();
                 nextIndex = 0;
                 break;
 
             case "End":
+                event.stopPropagation();
                 event.preventDefault();
                 nextIndex = rows.length - 1;
                 break;
@@ -892,7 +1017,11 @@ document
             case "Enter":
                 event.preventDefault();
                 event.stopPropagation();
-                rowEventKomposisi(startIndex, null, true);
+                rowEventKomposisi(
+                    startIndex,
+                    tableKomposisi.row(rows[startIndex]).data(),
+                    true,
+                );
                 return;
 
             default:
@@ -901,7 +1030,11 @@ document
 
         if (nextIndex !== startIndex) {
             setKomposisiSelection(nextIndex, true);
-            rowEventKomposisi(nextIndex, null, false);
+            rowEventKomposisi(
+                nextIndex,
+                tableKomposisi.row(rows[nextIndex]).data(),
+                false,
+            );
         }
     });
 
@@ -1100,6 +1233,8 @@ async function getDataKomposisiFetch(no_komposisi, post_action = null) {
                         "300px",
                         "table_only",
                     );
+                    tableKomposisi = $("#table_komposisi").DataTable();
+                    bindKomposisiKeyboardNavigation();
                     document
                         .querySelectorAll("#table_komposisi tbody tr")
                         .forEach((row) => row.setAttribute("tabindex", "0"));
@@ -1459,8 +1594,9 @@ async function prosesHapusFetch(id_konversi_ext) {
     Swal.fire("Berhasil", "Data berhasil dihapus!", "success");
 }
 
-function rowEventKomposisi(index, _, focus = false) {
-    if (index < 0 || !listKomposisi[index]) {
+function rowEventKomposisi(index, rowData = null, focus = false) {
+    const selection = resolveKomposisiSelection(index, rowData);
+    if (!selection) {
         console.log("[DEBUG detail] rowEventKomposisi skipped invalid row", {
             index,
             suppressSelectionReset,
@@ -1469,9 +1605,9 @@ function rowEventKomposisi(index, _, focus = false) {
         return;
     }
 
-    const rows = document.querySelectorAll("#table_komposisi tbody tr");
+    const rows = getKomposisiRows();
     rows.forEach((row, i) => {
-        if (i === index) {
+        if (i === selection.visibleIndex) {
             row.classList.add("selected");
         } else {
             row.classList.remove(
@@ -1482,8 +1618,8 @@ function rowEventKomposisi(index, _, focus = false) {
         }
     });
 
-    pilKomposisi = index;
-    let data = listKomposisi[index];
+    pilKomposisi = selection.originalIndex;
+    let data = selection.data;
 
     const hasCurrentDetailInput = [numPrimer, numSekunder, numTritier].some(
         (input) => {
@@ -1551,7 +1687,7 @@ function rowEventKomposisi(index, _, focus = false) {
                 setTimeout(() => {
                     numPrimer.focus();
                     numPrimer.select();
-                }, 0);
+                }, 150);
             }
         }
     });
@@ -1608,7 +1744,7 @@ function init() {
         scrollY: "300px",
         scrollX: true,
         columns: colKomposisi,
-        searching: false,
+        searching: true,
         info: false,
     });
 

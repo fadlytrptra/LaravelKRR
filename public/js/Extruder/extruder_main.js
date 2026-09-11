@@ -101,7 +101,7 @@ function addTable_DataTable(
         let table1 = tableElement.DataTable({
             ...dtConfig,
             data: null,
-            searching: false,
+            // searching: false,
             info: false,
             ordering: false,
         });
@@ -125,7 +125,7 @@ function addTable_DataTable(
         elements.forEach((ele, i) => {
             ele.addEventListener("click", () => {
                 removeNavigation_DataTable([table1]);
-                rowFun(i, table1.row(i).data());
+                rowFun(i, table1.row(ele).data());
                 arrowNavigation_DataTable(table1, i, (index, data) => {
                     rowFun(index, data, true);
                 });
@@ -239,7 +239,7 @@ function arrowNavigation_DataTable(d_table, s_index, e_handler = null) {
             elements[selectedRow].classList.add("selected");
         } else if (e.key === "Enter") {
             let row_index = selectedRow;
-            let row_data = d_table.row(selectedRow).data();
+            let row_data = d_table.row(elements[selectedRow]).data();
             if (e_handler != null) e_handler(row_index, row_data);
         }
     });

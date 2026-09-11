@@ -441,7 +441,6 @@ async function prosesInventory() {
     const tmpTrans = transData;
 
     for (const t of tmpTrans) {
-        // PERBAIKAN: Konversi nilai ke float/number sebelum dibandingkan
         const keluarPrimer = parseFloat(t.JumlahPengeluaranPrimer) || 0;
         const saldoPrimer = parseFloat(t.SaldoPrimer) || 0;
 
@@ -510,35 +509,31 @@ async function prosesInventory() {
         }
     }
 
-    if (adaHutang) {
-        // 1. Proses semua transaksi (sama seperti di else)
-        for (const t of tmpTrans) {
-            await fetchPost(
-                "/Konversi/updProsesACCKonversi",
-                {
-                    id_transaksi: t.IdTransaksi,
-                    id_type: t.IdType.trim(),
-                    waktu_acc: dateInput.value,
-                    keluar_primer: t.JumlahPengeluaranPrimer || 0,
-                    keluar_sekunder: t.JumlahPengeluaranSekunder || 0,
-                    keluar_tritier: t.JumlahPengeluaranTritier || 0,
-                    masuk_primer: t.JumlahPemasukanPrimer || 0,
-                    masuk_sekunder: t.JumlahPemasukanSekunder || 0,
-                    masuk_tritier: t.JumlahPemasukanTritier || 0,
-                },
-                "PUT",
-            );
-        }
+    for (const t of tmpTrans) {
+        await fetchPost(
+            "/Konversi/updProsesACCKonversi",
+            {
+                id_transaksi: t.IdTransaksi,
+                id_type: t.IdType.trim(),
+                waktu_acc: dateInput.value,
+                keluar_primer: t.JumlahPengeluaranPrimer || 0,
+                keluar_sekunder: t.JumlahPengeluaranSekunder || 0,
+                keluar_tritier: t.JumlahPengeluaranTritier || 0,
+                masuk_primer: t.JumlahPemasukanPrimer || 0,
+                masuk_sekunder: t.JumlahPemasukanSekunder || 0,
+                masuk_tritier: t.JumlahPemasukanTritier || 0,
+            },
+            "PUT",
+        );
+    }
 
-        // 2. Lunasi hutang untuk transaksi yang memiliki hutang
+    if (adaHutang) {
         for (const h of hutangItems) {
-            // a. Ambil ID transaksi inventory (SP_5298_EXT_GET_IDTRANS_INV)
             const idTransInv = await fetchSelectAsync(
                 `/Konversi/getIdTransInv/${safeUrlParam(h.IdType)}/${safeUrlParam(h.IdSubKel)}/${safeUrlParam(formatDateToDDMMYY(dateInput.value))}/${safeUrlParam(shift)}`,
             );
             if (idTransInv && idTransInv.length > 0) {
                 for (const inv of idTransInv) {
-                    // b. Update hutang (SP_5298_EXT_PROSES_UPDATE_HUTANG)
                     await fetchPost(
                         "/Konversi/updProsesHutang",
                         {
@@ -585,6 +580,13 @@ async function prosesExtruder() {
                     await Swal.fire("Informasi", result.nmerror, "info");
                 }
             }
+        }
+
+        const orderStatus = await fetchSelectAsync(
+            `/Konversi/getSaldoOrderDetail/${safeUrlParam(txtIdOrder.value)}/${safeUrlParam(txtNoUrut.value)}`,
+        );
+        if (orderStatus && orderStatus.nmerror) {
+            await Swal.fire("Informasi", orderStatus.nmerror, "info");
         }
 
         return true;

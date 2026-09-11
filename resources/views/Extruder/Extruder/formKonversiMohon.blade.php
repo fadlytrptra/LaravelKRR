@@ -3,12 +3,13 @@
 @section('title')
     Permohonan Konversi
 @endsection
+
 @section('content')
     <style>
         .extruder_root {
+            /* zoom: 0.8; */
             transform: scale(0.8);
-            transform-origin: top left;
-            width: 111.11%;
+            transform-origin: top center;
         }
     </style>
     <div class="extruder_root">

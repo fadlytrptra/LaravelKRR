@@ -216,7 +216,7 @@ class KonversiController extends Controller
                 'tritier' => 'required|numeric'
             ]);
 
-            DB::connection('ConnExtruder')->statement(
+            $result = DB::connection('ConnExtruder')->statement(
                 'exec SP_5298_EXT_UPDATE_SALDO_ORDER_DETAIL @idorder = ?, @nourutorder = ?, @primer = ?, @sekunder = ?, @tritier = ?',
                 [$validated['id_order'], $validated['no_urut_order'], $validated['primer'], $validated['sekunder'], $validated['tritier']]
             );
