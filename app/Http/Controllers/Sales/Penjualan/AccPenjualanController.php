@@ -43,6 +43,10 @@ class AccPenjualanController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        // dd([
+        //     'request' => $request->all(),
+        //     'user' => Auth::user()->NomorUser,
+        // ]);
 
         $idtype = $request->id_type;
         $penyesuaian = db::connection('ConnInventory')->select('exec SP_1003_INV_check_penyesuaian_transaksi @idtype = ?, @idtypetransaksi = ?', [$idtype, '06']);
@@ -62,14 +66,24 @@ class AccPenjualanController extends Controller
         $noindeks = explode(',', $request->noindeks);
         // dd($noindeks);
 
-        db::connection('ConnInventory')->statement('exec SP_1003_INV_PROSES_ACC_JUAL_BARCODE
-        @IDtransaksi = ' . $idtransaksi . ',
-        @IDPemberi = ' . $user . ',
-        @JumlahKeluarPrimer = ' . $saldo_primerDikeluarkan . ',
-        @JumlahKeluarSekunder = ' . $saldo_sekunderDikeluarkan . ',
-        @JumlahKeluarTritier = ' . $saldo_tritierDikeluarkan . ',
-        @JumlahKonversi = ' . $jumlah_konversi . ',
-        @NoSP = \'' . $no_sp . '\''
+        DB::connection('ConnInventory')->statement(
+            'EXEC SP_1003_INV_PROSES_ACC_JUAL_BARCODE
+                @IdTransaksi = ?,
+                @idPemberi = ?,
+                @JumlahKeluarPrimer = ?,
+                @JumlahKeluarSekunder = ?,
+                @JumlahKeluarTritier = ?,
+                @JumlahKonversi = ?,
+                @NoSP = ?',
+            [
+                $idtransaksi,
+                $user,
+                $saldo_primerDikeluarkan ?? 0,
+                $saldo_sekunderDikeluarkan ?? 0,
+                $saldo_tritierDikeluarkan ?? 0,
+                $jumlah_konversi ?? 0,
+                $no_sp
+            ]
         );
 
         $counter = db::connection('ConnInventory')->select('exec SP_1003_BCD_Ambil_COUNTER_SALES');
