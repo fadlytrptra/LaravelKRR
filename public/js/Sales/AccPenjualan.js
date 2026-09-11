@@ -356,18 +356,17 @@ prosesButton.addEventListener("click", function (event) {
     });
     console.log(selectedRowData);
     console.log(selectedRowData.length);
+
+    if (selectedRowData.length === 0) {
+        alert("Tolong pilih barcode dulu!");
+        return; // Exit the function if a checked checkbox is not found
+    }
     let kodebarang = selectedRowData[0].expr2;
     let noindeks = [];
     for (let i = 0; i < selectedRowData.length; i++) {
         noindeks.push(selectedRowData[i].expr3);
     }
-    if (selectedRowData.length < 0) {
-        alert("Tolong pilih barcode dulu!");
-        return; // Exit the function if a checked checkbox is not found
-    }
-    if (
-        saldo_primerDikeluarkanSatuan.value.trim() == max_doSatuan.value.trim()
-    ) {
+    if (saldo_primerDikeluarkanSatuan.value.trim() == max_doSatuan.value.trim()) {
         if (
             parseFloat(saldo_primerDikeluarkan.value) <
                 parseFloat(min_do.value) ||
@@ -443,46 +442,81 @@ prosesButton.addEventListener("click", function (event) {
         return;
     }
 
-    if (
-        (saldo_primerDikeluarkanSatuan.value !== "NULL" &&
-            parseInt(saldo_primerDikeluarkan.value) > 0) ||
-        (saldo_primerDikeluarkanSatuan.value == "NULL" &&
-            parseInt(saldo_primerDikeluarkan.value) == 0)
-    ) {
-        if (
-            (saldo_sekunderDikeluarkanSatuan.value !== "NULL" &&
-                parseInt(saldo_sekunderDikeluarkan.value) > 0) ||
-            (saldo_sekunderDikeluarkanSatuan.value == "NULL" &&
-                parseInt(saldo_sekunderDikeluarkan.value) == 0)
-        ) {
-            if (
-                (saldo_tritierDikeluarkanSatuan.value !== "NULL" &&
-                    parseInt(saldo_tritierDikeluarkan.value) > 0) ||
-                (saldo_tritierDikeluarkanSatuan.value == "NULL" &&
-                    parseInt(saldo_tritierDikeluarkan.value) == 0)
-            ) {
-                let kodebarangInput = document.createElement("input");
-                kodebarangInput.type = "hidden";
-                kodebarangInput.name = "kodebarang";
-                kodebarangInput.value = kodebarang;
-                form_accJualBarcode.appendChild(kodebarangInput);
+    // ========================================
+    // VALIDASI JUMLAH BARANG
+    // ========================================
 
-                let jumlahdicentangInput = document.createElement("input");
-                jumlahdicentangInput.type = "hidden";
-                jumlahdicentangInput.name = "jumlahDicentang";
-                jumlahdicentangInput.value = selectedRowData.length;
-                form_accJualBarcode.appendChild(jumlahdicentangInput);
+    const primer = parseFloat(saldo_primerDikeluarkan.value) || 0;
+    const sekunder = parseFloat(saldo_sekunderDikeluarkan.value) || 0;
+    const tritier = parseFloat(saldo_tritierDikeluarkan.value) || 0;
 
-                let noindeksInput = document.createElement("input");
-                noindeksInput.type = "hidden";
-                noindeksInput.name = "noindeks";
-                noindeksInput.value = noindeks;
-                form_accJualBarcode.appendChild(noindeksInput);
+    console.log("=== DATA SEBELUM SUBMIT ===");
+    console.log("Primer   :", primer);
+    console.log("Sekunder :", sekunder);
+    console.log("Tritier  :", tritier);
+    console.log("Satuan Primer   :", saldo_primerDikeluarkanSatuan.value);
+    console.log("Satuan Sekunder :", saldo_sekunderDikeluarkanSatuan.value);
+    console.log("Satuan Tritier  :", saldo_tritierDikeluarkanSatuan.value);
+    console.log("Jumlah Barcode  :", selectedRowData.length);
+    console.log("Kode Barang     :", kodebarang);
+    console.log("No Indeks       :", noindeks);
 
-                form_accJualBarcode.submit();
-            }
-        }
+
+    // Tidak boleh semuanya 0
+    if (primer === 0 && sekunder === 0 && tritier === 0) {
+        alert("Jumlah barang yang dikeluarkan tidak boleh semuanya 0.");
+        return;
     }
+
+
+    // Tidak boleh negatif
+    if (primer < 0 || sekunder < 0 || tritier < 0) {
+        alert("Jumlah barang yang dikeluarkan tidak boleh negatif.");
+        return;
+    }
+
+
+    // ========================================
+    // TAMBAHKAN DATA KE FORM
+    // ========================================
+
+    let kodebarangInput = document.createElement("input");
+    kodebarangInput.type = "hidden";
+    kodebarangInput.name = "kodebarang";
+    kodebarangInput.value = kodebarang;
+    form_accJualBarcode.appendChild(kodebarangInput);
+
+
+    let jumlahdicentangInput = document.createElement("input");
+    jumlahdicentangInput.type = "hidden";
+    jumlahdicentangInput.name = "jumlahDicentang";
+    jumlahdicentangInput.value = selectedRowData.length;
+    form_accJualBarcode.appendChild(jumlahdicentangInput);
+
+
+    let noindeksInput = document.createElement("input");
+    noindeksInput.type = "hidden";
+    noindeksInput.name = "noindeks";
+    noindeksInput.value = noindeks.join(",");
+    form_accJualBarcode.appendChild(noindeksInput);
+
+
+    // ========================================
+    // DEBUG
+    // ========================================
+
+    console.log("================================");
+    console.log("FORM AKAN DI-SUBMIT");
+    console.log("Action :", form_accJualBarcode.action);
+    console.log("Method :", form_accJualBarcode.method);
+    console.log("Form Data :", new FormData(form_accJualBarcode));
+
+
+    // ========================================
+    // SUBMIT
+    // ========================================
+
+    form_accJualBarcode.submit();
 });
 
 //#endregion
