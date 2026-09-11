@@ -44,7 +44,7 @@ class HapusKegiatanMesinDController extends Controller
             foreach ($dataList as $item) {
                 // Step 1: Ambil TotalOrder
                 $totalOrderResult = DB::connection('ConnCircular')
-                    ->select('EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?', ['9', $item['Id_Log']]);
+                    ->select('EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?', ['9', $id_order]);
 
                 $totalOrder = $totalOrderResult[0]->A_jumlah_Order ?? 0;
 
@@ -54,7 +54,7 @@ class HapusKegiatanMesinDController extends Controller
                 // SP Kode 10 (update jumlah order)
                 DB::connection('ConnCircular')->statement(
                     'EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?, @JmlOrder = ?',
-                    ['10', $item['Id_Log'], $jumlahOrder]
+                    ['10', $id_order, $jumlahOrder]
                 );
 
                 // SP Kode 11 (hapus per Id_Log)

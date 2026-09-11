@@ -162,4 +162,21 @@ jQuery(function ($) {
             }
         }
     });
+
+    $("#table_atas tbody").on("click", "tr", function () {
+        // Remove the 'selected' class from any previously selected row
+        $("#table_atas tbody tr").removeClass("selected");
+
+        // Add the 'selected' class to the clicked row
+        $(this).addClass("selected");
+
+        // Get data from the clicked row
+        var data = table_atas.row(this).data();
+        console.log(data);
+        sisa.value =
+            numeral(data.Counter_mesin_akhir).value() -
+            numeral(data.Counter_mesin_awal).value();
+        id_log.value = data.Id_Log;
+        id_order.value = data.Id_order;
+    });
 });
