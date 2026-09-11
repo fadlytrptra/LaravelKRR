@@ -394,6 +394,7 @@ jQuery(function ($) {
                 document.getElementById("mesin_lap").textContent = data.data[0].TypeMesin;
                 document.getElementById("spek_benang_lap").textContent = data.data[0].spek_benang;
                 document.getElementById("jumlah_lap").textContent = data.data[0].jumlah;
+                document.getElementById("berat_lap").textContent = data.data[0].berat;
                 document.getElementById("keterangan_lap").textContent = data.data[0].keterangan;
                 $("#modalLaporan .cacat-item .kode").removeClass("selected");
 
