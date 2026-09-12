@@ -650,33 +650,47 @@ btnTambahDetail.addEventListener("click", function () {
                         $(window).scrollTop($(document).height());
                         btnTambahDetail.disabled = false;
 
-                        document
-                            .querySelectorAll("#table_komposisi tbody tr")
-                            .forEach((row) => {
-                                row.classList.remove(
-                                    "selected",
-                                    "keyboard-selected",
-                                );
-                            });
-
                         const tableRows = getKomposisiRows();
+
+                        // Hapus selection lama
+                        tableRows.forEach((row) => {
+                            row.classList.remove(
+                                "selected",
+                                "keyboard-selected",
+                                "table-primary"
+                            );
+                        });
+
+                        // Cari kembali row yang baru saja diproses
                         const selectedRow = tableRows.find((row) => {
                             const rowData = tableKomposisi.row(row).data();
+
                             return (
                                 rowData &&
                                 String(rowData.IdType).trim() ===
-                                    String(listKomposisi[pilKomposisi].IdType).trim()
+                                String(listKomposisi[pilKomposisi].IdType).trim()
                             );
                         });
+
                         if (selectedRow) {
-                            selectedRow.click();
+                            // Cari index row setelah search/filter
+                            const selectedIndex = tableRows.indexOf(selectedRow);
+
+                            // Set selected + fokus ke row tersebut
+                            setKomposisiSelection(selectedIndex, true);
+                        } else if (tableRows.length > 0) {
+                            // Kalau row sebelumnya tidak ditemukan,
+                            // mulai dari row pertama
+                            setKomposisiSelection(0, true);
                         }
-                        if (tableRows.length > 0) tableRows[0].focus();
+
+                        // Pastikan tombol tambah tetap aktif
+                        btnTambahDetail.disabled = false;
                     } else {
                         btnProses.disabled = false;
                         btnProses.focus();
                     }
-                }, 150);
+                }, 300);
             });
         }
     } else {
@@ -852,34 +866,68 @@ function getKomposisiRows() {
 
 function setKomposisiSelection(index, shouldFocus = true) {
     const rows = getKomposisiRows();
-    if (!rows.length || index < 0 || index >= rows.length) return null;
 
-    rows.forEach((row) => {
-        row.classList.remove("keyboard-selected", "selected", "table-primary");
-    });
+    if (!rows.length || index < 0 || index >= rows.length) {
+        return null;
+    }
 
     const targetRow = rows[index];
-    targetRow.classList.add("keyboard-selected", "selected", "table-primary");
+    const data = tableKomposisi.row(targetRow).data();
+
+    if (!data) return null;
+
+    selectedKomposisiId = String(data.IdType).trim();
+
+    // Hapus selection dari SEMUA row
+    rows.forEach((row) => {
+        row.classList.remove(
+            "keyboard-selected",
+            "table-primary",
+            "selected"
+        );
+    });
+
+    // Hanya 1 row yang diberi highlight
+    targetRow.classList.add(
+        "keyboard-selected",
+        "table-primary"
+    );
 
     if (shouldFocus) {
         targetRow.focus();
-        targetRow.scrollIntoView({ block: "nearest", inline: "nearest" });
+
+        targetRow.scrollIntoView({
+            block: "nearest",
+            inline: "nearest",
+        });
     }
 
     return targetRow;
+}
+
+function clearKomposisiSelection() {
+    const rows = getKomposisiRows();
+
+    rows.forEach((row) => {
+        row.classList.remove(
+            "keyboard-selected",
+            // "selected",
+            "table-primary"
+        );
+    });
 }
 
 function resolveKomposisiSelection(rowIndex, rowData = null) {
     const rows = getKomposisiRows();
     const row = rowData
         ? rows.find((candidate) => {
-              const candidateData = tableKomposisi.row(candidate).data();
-              return (
-                  candidateData &&
-                  String(candidateData.IdType).trim() ===
-                      String(rowData.IdType).trim()
-              );
-          })
+            const candidateData = tableKomposisi.row(candidate).data();
+            return (
+                candidateData &&
+                String(candidateData.IdType).trim() ===
+                String(rowData.IdType).trim()
+            );
+        })
         : rows[rowIndex];
     const data = rowData || (row ? tableKomposisi.row(row).data() : null);
 
@@ -913,7 +961,7 @@ function bindKomposisiKeyboardNavigation() {
         const currentIndex = rows.findIndex(
             (row) =>
                 row.classList.contains("keyboard-selected") ||
-                row.classList.contains("selected") ||
+                // row.classList.contains("selected") ||
                 row.classList.contains("table-primary"),
         );
 
@@ -968,11 +1016,11 @@ document
         const currentIndex = activeRow
             ? rows.indexOf(activeRow)
             : rows.findIndex(
-                  (row) =>
-                      row.classList.contains("keyboard-selected") ||
-                      row.classList.contains("selected") ||
-                      row.classList.contains("table-primary"),
-              );
+                (row) =>
+                    row.classList.contains("keyboard-selected") ||
+                    // row.classList.contains("selected") ||
+                    row.classList.contains("table-primary"),
+            );
 
         const startIndex = currentIndex >= 0 ? currentIndex : 0;
         let nextIndex = startIndex;
@@ -1233,7 +1281,27 @@ async function getDataKomposisiFetch(no_komposisi, post_action = null) {
                         "300px",
                         "table_only",
                     );
+
                     tableKomposisi = $("#table_komposisi").DataTable();
+
+                    // Pastikan event draw tidak terpasang berkali-kali
+                    tableKomposisi.off("draw.dt.komposisi");
+
+                    tableKomposisi.on("draw.dt.komposisi", function () {
+                        const rows = getKomposisiRows();
+
+                        // Setelah search/redraw, bersihkan semua selection
+                        rows.forEach((row) => {
+                            row.classList.remove(
+                                "keyboard-selected",
+                                "selected",
+                                "table-primary"
+                            );
+
+                            row.setAttribute("tabindex", "0");
+                        });
+                    });
+
                     bindKomposisiKeyboardNavigation();
                     document
                         .querySelectorAll("#table_komposisi tbody tr")
@@ -1611,7 +1679,7 @@ function rowEventKomposisi(index, rowData = null, focus = false) {
             row.classList.add("selected");
         } else {
             row.classList.remove(
-                "selected",
+                // "selected",
                 "keyboard-selected",
                 "table-primary",
             );

@@ -101,7 +101,6 @@ function addTable_DataTable(
         let table1 = tableElement.DataTable({
             ...dtConfig,
             data: null,
-            // searching: false,
             info: false,
             ordering: false,
         });
@@ -119,18 +118,44 @@ function addTable_DataTable(
             document.body.style.overflow = "visible";
         });
 
-        const tableContainer = table1.table().container();
-        const elements = tableContainer.querySelectorAll(".odd, .even");
+        // Gunakan delegated event agar tetap bekerja setelah SEARCH / redraw
+        tableElement
+            .off("click.tableOnly")
+            .on("click.tableOnly", "tbody tr", function () {
+                const row = this;
 
-        elements.forEach((ele, i) => {
-            ele.addEventListener("click", () => {
+                const visibleRows = table1
+                    .rows({
+                        search: "applied",
+                    })
+                    .nodes()
+                    .toArray();
+
+                const index = visibleRows.indexOf(row);
+
+                if (index < 0) return;
+
+                const data = table1.row(row).data();
+
                 removeNavigation_DataTable([table1]);
-                rowFun(i, table1.row(ele).data());
-                arrowNavigation_DataTable(table1, i, (index, data) => {
-                    rowFun(index, data, true);
-                });
+
+                // Khusus komposisi, pastikan selection hanya 1
+                if (tableId === "table_komposisi") {
+                    setKomposisiSelection(index, false);
+                }
+
+                rowFun(index, data);
+
+                if (tableId !== "table_komposisi") {
+                    arrowNavigation_DataTable(
+                        table1,
+                        index,
+                        (index, data) => {
+                            rowFun(index, data, true);
+                        }
+                    );
+                }
             });
-        });
     } else if (extra === "dom_empty") {
         tableElement.DataTable({
             ...dtConfig,
@@ -392,9 +417,9 @@ function clearOptions(selectEle, selectLbl = "") {
     const selectHead =
         selectLbl === ""
             ? "Pilih " +
-              snakeCaseToTitleCase(
-                  selectEle.getAttribute("id").replace("select_", ""),
-              )
+            snakeCaseToTitleCase(
+                selectEle.getAttribute("id").replace("select_", ""),
+            )
             : selectLbl;
 
     selectEle.innerHTML = `<option selected disabled>-- ${selectHead} --</option>`;
