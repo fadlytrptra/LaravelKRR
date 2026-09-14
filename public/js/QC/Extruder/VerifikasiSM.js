@@ -765,7 +765,7 @@ jQuery(function ($) {
 
             element.innerHTML = `
             <div contenteditable="false" style="text-align:center;">
-                ${formatPrint(value)}
+                ${value}
             </div>
         `;
 
