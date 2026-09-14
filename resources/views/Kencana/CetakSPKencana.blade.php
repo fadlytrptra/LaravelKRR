@@ -84,25 +84,25 @@
                                     <table>
                                         <tbody>
                                             <tr>
-                                                <td style="font-size: 13px;">Tanggal Pesanan</td>
-                                                <td style="font-size: 13px;">:</td>
-                                                <td id="tgl_pesanKolom" style="font-size: 13px;"></td>
+                                                <td style="font-size: 18px;">Tanggal Pesanan</td>
+                                                <td style="font-size: 18px;">:</td>
+                                                <td id="tgl_pesanKolom" style="font-size: 18px;"></td>
                                             </tr>
                                             <tr>
-                                                <td style="font-size: 13px;">Nama Langganan</td>
-                                                <td style="font-size: 13px;">:</td>
-                                                <td id="nama_customerKolom" style="font-size: 13px;"></td>
+                                                <td style="font-size: 18px;">Nama Langganan</td>
+                                                <td style="font-size: 18px;">:</td>
+                                                <td id="nama_customerKolom" style="font-size: 18px;"></td>
                                             </tr>
                                             <tr>
-                                                <td style="white-space: nowrap;vertical-align:top; font-size:13px;">Alamat Langganan
+                                                <td style="white-space: nowrap;vertical-align:top; font-size:18px;">Alamat Langganan
                                                 </td>
-                                                <td style="vertical-align:top; font-size: 13px;">:</td>
-                                                <td id="alamat_kantorKolom" style="font-size:13px;"></td>
+                                                <td style="vertical-align:top; font-size: 18px;">:</td>
+                                                <td id="alamat_kantorKolom" style="font-size:18px;"></td>
                                             </tr>
                                             <tr>
-                                                <td style="vertical-align:top; font-size:13px;">Alamat Kirim</td>
-                                                <td style="vertical-align:top; font-size: 13px;" >:</td>
-                                                <td id="alamat_kirimKolom" contenteditable="true" style="font-size:13px;"></td>
+                                                <td style="vertical-align:top; font-size:18px;">Alamat Kirim</td>
+                                                <td style="vertical-align:top; font-size: 18px;" >:</td>
+                                                <td id="alamat_kirimKolom" contenteditable="true" style="font-size:18px;"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -117,16 +117,16 @@
                                         <th>TYPE BARANG</th>
                                         <th>KD. BARANG</th>
                                         <th>QUANTITY</th>
-                                        <th>HARGA SATUAN</th>
+                                        {{-- <th>HARGA SATUAN</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {{-- <tr class="acs-table-border">
-                                                <td id="nomor_barangKolom">d</td>
-                                                <td class="acs-table-border" id="nama_barangKolom">c</td>
-                                                <td class="acs-table-border" id="kode_barangKolom">b</td>
-                                                <td class="acs-table-border" id="quantity_barangKolom">a</td>
-                                            </tr> --}}
+                                            <td id="nomor_barangKolom">d</td>
+                                            <td class="acs-table-border" id="nama_barangKolom">c</td>
+                                            <td class="acs-table-border" id="kode_barangKolom">b</td>
+                                            <td class="acs-table-border" id="quantity_barangKolom">a</td>
+                                        </tr> --}}
                                 </tbody>
                                 {{-- ini harus di-loop sesuai data pesanan --}}
                             </table>
@@ -176,7 +176,7 @@
                                         <td style="text-align: center">MANAGER</td>
                                         <td style="text-align: center">DIREKTUR</td>
                                         <td style="text-align: center">PPIC</td>
-                                        <td>Lembar Ke:</td>
+                                        <td style="font-size: 18px">Lembar Ke:</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: center;min-width:100px;">
@@ -189,7 +189,7 @@
                                             <img id="ttd_direkturKolom" style="width:75px; height:auto;">
                                         </td>
                                         <td style="min-width:100px;"></td>
-                                        <td style="border: none !important;">1. Putih - Produksi <br>
+                                        <td style="border: none !important; font-size: 18px">1. Putih - Produksi <br>
                                             2. Merah - QC <br>
                                             3. Kuning - Adm. Piutang <br>
                                             4. Hijau - Arsip Pemasaran

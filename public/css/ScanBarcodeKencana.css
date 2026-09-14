@@ -1,0 +1,82 @@
+.nowrap{
+    white-space: nowrap;
+}
+.acs-div-filter{
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    margin: 4px 0;
+}
+.acs-div-filter1{
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    margin: 4px 0;
+}
+.acs-div-filter2{
+    display: flex;
+    width: 300px;
+    flex-direction: row;
+    gap: 5px;
+    margin: 4px 0;
+}
+.acs-div-filter3{
+    display: block;
+    width: 100%;
+    flex-direction: row;
+    margin: 4px 0;
+}
+.acs-div-filter4{
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    margin: 4px 0;
+}
+.acs-div-form{
+    margin: 100px;
+    display: flex;
+    flex-direction: row;
+    gap: 1%;
+}
+.acs-div-form2{
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+}
+.acs-div-form3{
+    display: flex;
+    flex: 1;
+    margin: 5px;
+    width: 50%;
+    flex-direction: column;
+    border-bottom: 1px solid grey;
+}
+.acs-div-form4{
+    display: flex;
+    flex: 1;
+    margin: 5px;
+    width: 50%;
+    flex-direction: column;
+}
+.acs-div-form4{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+.acs-btn-form{
+    margin: 10px;
+    width: 100px;
+    aspect-ratio: 8/3;
+}
+.acs-table-barcode{
+    display: block;
+    margin: 3%;
+    border: 1px solid black;
+}
+tr.selected {
+    background-color: yellow;
+}
+tr {
+    cursor: pointer;
+}

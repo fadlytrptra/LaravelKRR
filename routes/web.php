@@ -86,6 +86,9 @@ use App\Http\Controllers\Inventory\Transaksi\Mutasi\KeluarBarangUntukPenjualanCo
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\PengembalianPascaPenjualanController;
 use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
 
+use App\Http\Controllers\Sales\Penjualan\AccPenjualanKencanaController;
+use App\Http\Controllers\Sales\Penjualan\ScanBarcodeKencanaController;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HomeComProController;
 use App\Http\Controllers\MeetingController;
@@ -361,8 +364,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('PenjualanNyangkut', App\Http\Controllers\Sales\ToolPenjualan\PenjualanNyangkutController::class);
     Route::resource('SetengahJadiNyangkut', App\Http\Controllers\Sales\ToolPenjualan\SetengahJadiNyangkutController::class);
     Route::resource('ScanBarcode', App\Http\Controllers\Sales\Penjualan\ScanBarcodeController::class);
+    Route::resource('ScanBarcodeKencana', App\Http\Controllers\Sales\Penjualan\ScanBarcodeKencanaController::class);
     Route::resource('BarcodeJual', App\Http\Controllers\Sales\Penjualan\BarcodeJualController::class);
     Route::resource('AccPenjualan', App\Http\Controllers\Sales\Penjualan\AccPenjualanController::class);
+    Route::get('/accPenjualanKencanaTampilData/{idtransaksi}', [AccPenjualanKencanaController::class, 'accPenjualanTampilData'])->name('accPenjualanKencanaTampilData');
+    Route::get('/accPenjualanKencanaTampilBarcode/{idtype}/{kodebarang}', [AccPenjualanKencanaController::class, 'accPenjualanTampilBarcode'])->name('accPenjualanKencanaTampilBarcode');
+    Route::resource('AccPenjualanKencana', App\Http\Controllers\Sales\Penjualan\AccPenjualanKencanaController::class);
     Route::get('/Customer/{id}/show', 'App\Http\Controllers\Sales\Master\CustomerController@show')->name('customer.show');
     Route::post('/Customer/{id}/up', 'App\Http\Controllers\Sales\Master\CustomerController@update')->name('customer.update');
     Route::get('KirimSJACCCustomer/downloadAttachment/{idPengiriman}', [App\Http\Controllers\Sales\Transaksi\SuratJalan\KirimSJACCCustomerController::class, 'downloadAttachment']);
@@ -477,6 +484,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('AccPenjualan/{kodebarang}/{noindeks}', 'App\Http\Controllers\Sales\Penjualan\AccPenjualanController@destroy');
     Route::get('/accPenjualanTampilData/{idtransaksi}', 'App\Http\Controllers\Sales\Penjualan\AccPenjualanController@accPenjualanTampilData');
     Route::get('/accPenjualanTampilBarcode/{IdType}/{KodeBarang}', 'App\Http\Controllers\Sales\Penjualan\AccPenjualanController@accPenjualanTampilBarcode');
+    Route::get('/scanBarcodeKencanaLihatData/{date}', [ScanBarcodeKencanaController::class, 'scanBarcodeLihatData']);
+    Route::get('/scanBarcodeKencanaDetailData/{idType}/{kodeBarang}/{tglMutasi}',[ScanBarcodeKencanaController::class, 'scanBarcodeDetailData']);
+    Route::post('/ScanBarcodeKencana',[ScanBarcodeKencanaController::class, 'store']);
     Route::resource('AccPenjualanCloth', App\Http\Controllers\Sales\Penjualan\AccPenjualanClothController::class);
     #endregion
 
@@ -1959,6 +1969,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Kencana/optionsCetakSuratJalan/{tanggal}', 'App\Http\Controllers\Kencana\CetakSJKencanaController@getSuratJalan');
     Route::get('/Kencana/cetakSuratJalanPPN/{tanggal}/{nosj}/{jenissj}', 'App\Http\Controllers\Kencana\CetakSJKencanaController@getDataCetakSuratJalan');
     Route::resource('Kencana/CetakSJ', App\Http\Controllers\Kencana\CetakSJKencanaController::class);
+    Route::resource('Kencana/AccPenjualanTanpaBarcodeKencana', App\Http\Controllers\Kencana\AccPenjualanTanpaBarcodeKencanaController::class);
 
     #region Kencana Accounting
     Route::resource('Kencana/MaintenanceBank', App\Http\Controllers\Kencana\Accounting\MaintenanceBankKencanaController::class);

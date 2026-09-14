@@ -4,46 +4,35 @@ let tanggal_sp = document.getElementById("tanggal_sp");
 let no_spText = document.getElementById("no_spText");
 let no_spSelect = document.getElementById("no_spSelect");
 let jenis_sp = document.getElementById("jenis_sp");
-
 let print_button = document.getElementById("print_button");
 let contoh_print = document.getElementById("contoh_print");
 let contoh_printDiv = document.getElementById("contoh_printDiv");
-
 let nomor_spSpan = document.getElementById("nomor_spSpan");
 let no_poKolom = document.getElementById("no_poKolom");
 let tgl_poKolom = document.getElementById("tgl_poKolom");
 let tgl_pesanKolom = document.getElementById("tgl_pesanKolom");
-
 let nama_customerKolom = document.getElementById("nama_customerKolom");
 let alamat_kantorKolom = document.getElementById("alamat_kantorKolom");
 let alamat_kirimKolom = document.getElementById("alamat_kirimKolom");
-
 let jenis_bayarKolom = document.getElementById("jenis_bayarKolom");
 let rencana_kirimKolom = document.getElementById("rencana_kirimKolom");
 let syarat_bayarKolom = document.getElementById("syarat_bayarKolom");
 let keterangan_ppnKolom = document.getElementById("keterangan_ppnKolom");
 let keterangan_kolom = document.getElementById("keterangan_kolom");
-
 let ttd_salesKolom = document.getElementById("ttd_salesKolom");
 let ttd_managerKolom = document.getElementById("ttd_managerKolom");
 let ttd_direkturKolom = document.getElementById("ttd_direkturKolom");
-
 let nama_salesKolom = document.getElementById("nama_salesKolom");
 let nama_managerKolom = document.getElementById("nama_managerKolom");
 let nama_direkturKolom = document.getElementById("nama_direkturKolom");
-
-
 let lihat_sp = document.getElementById("lihat_sp");
 let print_pdf = document.getElementById("print_pdf");
 let loading_screen = document.getElementById("loading-screen");
-
-
 //#endregion
 
 
 
 //#region DataTable
-
 let table_sp = $("#table_sp").DataTable({
     searching: false,
     paging: false,
@@ -59,7 +48,6 @@ let table_sp = $("#table_sp").DataTable({
 //#region Load Page
 
 tanggal_sp.focus();
-
 tanggal_sp.valueAsDate = new Date();
 
 contoh_print.style.display = "none";
@@ -73,33 +61,19 @@ print_pdf.style.display = "none";
 //#region Pilih Tanggal
 
 tanggal_sp.addEventListener("change", function () {
-
     fetch("/Kencana/nosp/" + this.value)
-
         .then((response) => response.json())
-
         .then((options) => {
 
-            no_spSelect.innerHTML =
-                '<option disabled selected value>-- Pilih Nomor SP --</option>';
-
+            no_spSelect.innerHTML = '<option disabled selected value>-- Pilih Nomor SP --</option>';
             options.forEach((option) => {
-
-                let optionTag =
-                    document.createElement("option");
-
-                optionTag.value =
-                    option.IDSuratPesanan;
-
-                optionTag.text =
-                    option.IDSuratPesanan +
+                let optionTag = document.createElement("option");
+                optionTag.value = option.IDSuratPesanan;
+                optionTag.text = option.IDSuratPesanan +
                     " | " +
                     option.NamaCust;
-
                 no_spSelect.appendChild(optionTag);
-
             });
-
         })
 
         .catch((error) => {
@@ -441,32 +415,20 @@ print_button.addEventListener(
 
                 table_sp =
                     $("#table_sp").DataTable({
-
                         searching: false,
                         paging: false,
                         info: false,
                         ordering: false,
-
                         data: data,
-
                         columns: [
 
-                            // NO
                             {
                                 data: null,
-
                                 render:
-                                    function (
-                                        data,
-                                        type,
-                                        row,
-                                        meta
-                                    ) {
-
+                                    function (data,type,row,meta) {
                                         return (
                                             meta.row + 1
                                         );
-
                                     }
                             },
 
@@ -474,7 +436,6 @@ print_button.addEventListener(
                             // TYPE BARANG
                             {
                                 data: "JnsBarang",
-
                                 render: function (data, type, row) {
                                     return (
                                         "<b>" +
@@ -489,7 +450,6 @@ print_button.addEventListener(
                             // KODE BARANG
                             {
                                 data: "KodeBarang",
-
                                 defaultContent: ""
                             },
 
@@ -497,57 +457,41 @@ print_button.addEventListener(
                             // QUANTITY
                             {
                                 data: null,
-
                                 render:
-                                    function (
-                                        data,
-                                        type,
-                                        row
-                                    ) {
-
+                                    function (data,type,row) {
                                         return (
-                                            numeral(
-                                                row.JmlOrder
-                                            ).format(
-                                                "0,0.00"
-                                            ) +
-                                            " " +
-                                            (
-                                                row.Satuan ??
-                                                ""
-                                            )
+                                            numeral(row.JmlOrder).format("0,0.00") + " " + (row.Satuan ?? "")
                                         );
-
                                     }
                             },
 
 
-                            // HARGA
-                            {
-                                data: null,
+                            // // HARGA
+                            // {
+                            //     data: null,
 
-                                render:
-                                    function (
-                                        data,
-                                        type,
-                                        row
-                                    ) {
+                            //     render:
+                            //         function (
+                            //             data,
+                            //             type,
+                            //             row
+                            //         ) {
 
-                                        return (
-                                            (
-                                                row.Symbol ??
-                                                ""
-                                            ) +
-                                            " " +
-                                            numeral(
-                                                row.HargaSatuan
-                                            ).format(
-                                                "0,0.00"
-                                            )
-                                        );
+                            //             return (
+                            //                 (
+                            //                     row.Symbol ??
+                            //                     ""
+                            //                 ) +
+                            //                 " " +
+                            //                 numeral(
+                            //                     row.HargaSatuan
+                            //                 ).format(
+                            //                     "0,0.00"
+                            //                 )
+                            //             );
 
-                                    }
-                            }
+                            //         }
+                            // }
 
                         ],
 
@@ -561,23 +505,23 @@ print_button.addEventListener(
 
                             {
                                 targets: 1,
-                                width: "49%"
+                                width: "57%"
                             },
 
                             {
                                 targets: 2,
-                                width: "18%"
+                                width: "22%"
                             },
 
                             {
                                 targets: 3,
-                                width: "17%"
-                            },
-
-                            {
-                                targets: 4,
-                                width: "15%"
+                                width: "20%"
                             }
+
+                            // {
+                            //     targets: 4,
+                            //     width: "15%"
+                            // }
 
                         ]
 
