@@ -92,9 +92,9 @@ class MaintenanceBKKKRR1Controller extends Controller
                     // DATA NO PENAGIHAN
                     if ($tIdBayar == null && $tIdPenagihan == null) {
                         // dd('hehe');
-                        if ($tNilaiRincian == 0.0) {
-                            return response()->json(['error' => 'Data tidak dapat diSIMPAN !!.. Nilai Rincian=0(nol)']);
-                        }
+                        // if ($tNilaiRincian == 0.0) {
+                        //     return response()->json(['error' => 'Data tidak dapat diSIMPAN !!.. Nilai Rincian=0(nol)']);
+                        // }
                         $result = DB::connection('ConnAccounting')
                             ->statement('EXEC SP_1273_ACC_INS_BKK1_IDBAYAR_NOTT ?, ?, ?, ?', [
                                 $tRincian,
@@ -119,9 +119,9 @@ class MaintenanceBKKKRR1Controller extends Controller
                             'Id_Penagihan' => $results->Id_Penagihan
                         ]);
                     } else {
-                        if ($tNilaiRincian == 0) {
-                            return response()->json(['message' => 'Data tidak dapat diSIMPAN !!.. Nilai Rincian=0(nol)']);
-                        }
+                        // if ($tNilaiRincian == 0) {
+                        //     return response()->json(['message' => 'Data tidak dapat diSIMPAN !!.. Nilai Rincian=0(nol)']);
+                        // }
                         DB::connection('ConnAccounting')
                             ->statement('EXEC SP_1273_ACC_INS_BKK1_DETAILBYR ?, ?, ?, ?', [
                                 $tIdBayar,
