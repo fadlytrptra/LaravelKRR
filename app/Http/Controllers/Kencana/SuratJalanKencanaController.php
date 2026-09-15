@@ -36,11 +36,9 @@ class SuratJalanKencanaController extends Controller
             ->whereNotNull('DO.TglAccManager')
             ->whereNotNull('DO.AccManager')
             ->whereNotNull('DO.Dikeluarkan')
+            ->whereNull('DO.Pengiriman')
             ->whereNull('DO.KetBatal')
-            ->select(
-                'C.NamaCust',
-                DB::raw("C.IDCust + ' - ' + C.JnsCust AS IdCust")
-            )
+            ->select('C.NamaCust', DB::raw("C.IDCust + ' - ' + C.JnsCust AS IdCust"))
             ->groupBy(
                 'C.NamaCust',
                 'C.IDCust',
@@ -114,18 +112,16 @@ class SuratJalanKencanaController extends Controller
                 'DO.IDDO',
                 DB::raw('DO.IdTransTmp AS NoTrans'),
                 DB::raw("
-                    CASE
-                        WHEN DO.Uraian IS NOT NULL
-                            AND LTRIM(RTRIM(DO.Uraian)) <> ''
-                        THEN DO.Uraian
-
-                        ELSE
+                    LTRIM(RTRIM(
+                        COALESCE(
+                            NULLIF(LTRIM(RTRIM(DO.Uraian)), ''),
                             T.NamaType
-                            + ' Qty Primer : ' + CONVERT(varchar(10), DO.QtyPrimer, 0)
-                            + '   Qty Sekunder : ' + CONVERT(varchar(10), DO.QtySekunder, 0)
-                            + '   Qty Tritier : ' + CONVERT(varchar(10), DO.QtyTritier, 0)
-                            + '  Tgl Keluar Gdg : ' + RIGHT(DO.Dikeluarkan, 10)
-                    END AS Uraian
+                        )
+                        + ' | Qty Primer : ' + CONVERT(varchar(20), DO.QtyPrimer)
+                        + ' | Qty Sekunder : ' + CONVERT(varchar(20), DO.QtySekunder)
+                        + ' | Qty Tritier : ' + CONVERT(varchar(20), DO.QtyTritier)
+                        + ' | Tgl Keluar Gudang : ' + RIGHT(DO.Dikeluarkan, 10)
+                    )) AS Uraian
                 ")
             )
             ->orderByDesc('DO.IDDO')
@@ -133,6 +129,7 @@ class SuratJalanKencanaController extends Controller
 
         return response()->json($data);
     }
+    
     public function getNomorSuratJalan(Request $request)
     {
         try {
@@ -277,12 +274,6 @@ class SuratJalanKencanaController extends Controller
     // Store a newly created resource in storage.
     public function store(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDASI
-        |--------------------------------------------------------------------------
-        */
-
         $validator = \Validator::make(
             $request->all(),
             [
@@ -316,17 +307,8 @@ class SuratJalanKencanaController extends Controller
                 ->with('validation_error', $validator->errors()->first());
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | AMBIL DATA REQUEST
-        |--------------------------------------------------------------------------
-        */
-
         $JnsIdPengiriman = $request->jenis_pengiriman;
-
         $IDPengiriman1 = $request->surat_jalan;
-
         $IDPengiriman = str_pad(
             (string) $IDPengiriman1,
             10,
@@ -341,21 +323,12 @@ class SuratJalanKencanaController extends Controller
         $Biaya       = $request->biaya ?? 0;
         $StatusBiaya = 'N';
         $Keterangan  = $request->keterangan ?? '';
-
         $NoContainer = null;
         $NoSeal       = null;
-
         $TglActual = $request->tanggal_actual;
-
         $IdDO = $request->barang0 ?? [];
         $IDSuratPesanan = $request->barang3 ?? [];
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK JUMLAH DO DAN SURAT PESANAN
-        |--------------------------------------------------------------------------
-        */
 
         if (count($IdDO) != count($IDSuratPesanan)) {
 
@@ -368,21 +341,7 @@ class SuratJalanKencanaController extends Controller
                 );
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | CONNECTION KCN_SALES
-        |--------------------------------------------------------------------------
-        */
-
         $conn = DB::connection('ConnKCNSales');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK NOMOR SURAT JALAN
-        |--------------------------------------------------------------------------
-        */
 
         $cekHeader = $conn
             ->table('T_HeaderPengiriman')
@@ -403,30 +362,10 @@ class SuratJalanKencanaController extends Controller
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | USER / MANAGER
-        |--------------------------------------------------------------------------
-        */
-
         $AccMgr = trim(Auth::user()->NomorUser);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | MULAI TRANSACTION
-        |--------------------------------------------------------------------------
-        */
-
         $conn->beginTransaction();
 
         try {
-
-            /*
-            |--------------------------------------------------------------------------
-            | 1. INSERT HEADER SURAT JALAN
-            |--------------------------------------------------------------------------
-            */
 
             $IDHeaderKirim = $conn
                 ->table('T_HeaderPengiriman')
@@ -447,24 +386,10 @@ class SuratJalanKencanaController extends Controller
                 ]);
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | 2. INSERT DETAIL SURAT JALAN
-            |--------------------------------------------------------------------------
-            */
-
             for ($i = 0; $i < count($IdDO); $i++) {
 
                 $idDO = $IdDO[$i];
                 $idSP = $IDSuratPesanan[$i];
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | CEK APAKAH DO SUDAH PERNAH DIGUNAKAN
-                |--------------------------------------------------------------------------
-                */
-
                 $cekDetail = $conn
                     ->table('T_DetailPengiriman')
                     ->where('IdDO', $idDO)
@@ -478,12 +403,6 @@ class SuratJalanKencanaController extends Controller
                     );
                 }
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | INSERT DETAIL MENGGUNAKAN STORED PROCEDURE
-                |--------------------------------------------------------------------------
-                */
 
                 $conn->statement(
                     'EXEC dbo.SP_1273_PRG_MAINT_DETAILPENGIRIMAN
@@ -502,32 +421,6 @@ class SuratJalanKencanaController extends Controller
                 );
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | 3. AUTO ACC SURAT JALAN
-            |--------------------------------------------------------------------------
-            |
-            | Setelah SEMUA detail berhasil dibuat,
-            | langsung jalankan:
-            |
-            | SP_1273_PRG_ACC_PENGIRIMAN
-            |
-            | Stored procedure ini akan:
-            |
-            | - Update T_DetailPengiriman.StatusKirim = 'Y'
-            | - Update T_DetailPengiriman.Penerima
-            | - Update JmlTerimaPrimer
-            | - Update JmlTerimaSekunder
-            | - Update JmlTerimaTritier
-            | - Update JmlTerimaUmum
-            | - Update T_DetailPesanan.Terkirim
-            | - Update Lunas jika memenuhi kondisi
-            | - Update T_HeaderPengiriman.AccMrg
-            | - Update T_HeaderPengiriman.TglAcc
-            |
-            */
-
             $conn->statement(
                 'EXEC dbo.SP_1273_PRG_ACC_PENGIRIMAN
                     @IDManager = ?,
@@ -538,21 +431,7 @@ class SuratJalanKencanaController extends Controller
                 ]
             );
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | 4. COMMIT
-            |--------------------------------------------------------------------------
-            */
-
             $conn->commit();
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | 5. BERHASIL
-            |--------------------------------------------------------------------------
-            */
 
             return redirect()
                 ->back()
@@ -564,33 +443,11 @@ class SuratJalanKencanaController extends Controller
 
 
         } catch (\Throwable $e) {
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ROLLBACK
-            |--------------------------------------------------------------------------
-            */
-
             if ($conn->transactionLevel() > 0) {
                 $conn->rollBack();
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | ERROR MESSAGE
-            |--------------------------------------------------------------------------
-            */
-
             $message = $e->getMessage();
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ERROR DETAIL UNTUK DUPLIKAT DETAIL SJ
-            |--------------------------------------------------------------------------
-            */
 
             if (
                 str_contains($message, 'IX_T_DetailPengiriman') ||
@@ -602,13 +459,6 @@ class SuratJalanKencanaController extends Controller
                     'Silakan periksa kembali data DO yang dipilih.';
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | ERROR DETAIL UNTUK DUPLIKAT HEADER SJ
-            |--------------------------------------------------------------------------
-            */
-
             elseif (
                 str_contains($message, 'IX_T_HeaderPengiriman') ||
                 str_contains($message, 'T_HeaderPengiriman')
@@ -619,17 +469,6 @@ class SuratJalanKencanaController extends Controller
                     ' sudah digunakan. Silakan gunakan nomor lain.';
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | ERROR SQL / STORED PROCEDURE
-            |--------------------------------------------------------------------------
-            |
-            | Untuk sementara kita tampilkan error asli.
-            | Ini penting untuk debugging SP AUTO ACC.
-            |
-            */
-
             elseif (
                 str_contains($message, 'SQLSTATE') ||
                 str_contains($message, 'ODBC Driver') ||
@@ -638,13 +477,6 @@ class SuratJalanKencanaController extends Controller
 
                 $message = $e->getMessage();
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | KEMBALI KE FORM
-            |--------------------------------------------------------------------------
-            */
 
             return redirect()
                 ->back()
@@ -685,20 +517,15 @@ class SuratJalanKencanaController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
             $IdHeaderKirim = $request->id_kirimText ?? $id;
-
             $JnsIdPengiriman = $request->jenis_pengiriman;
-
             $IDPengiriman1 = $request->surat_jalan;
-
             $IDPengiriman = str_pad(
                 $IDPengiriman1,
                 10,
                 '0',
                 STR_PAD_LEFT
             );
-
             $IDExpeditor = $request->expeditor;
             $IdCust = $request->customer;
             $TrukNopol = $request->truk_nopol ?? "";
@@ -706,36 +533,21 @@ class SuratJalanKencanaController extends Controller
             $Biaya = $request->biaya ?? 0;
             $StatusBiaya = 'N';
             $Keterangan = $request->keterangan ?? "";
-
             $NoContainer = null;
             $NoSeal = null;
-
             $TglActual = $request->tanggal_actual;
-
             $IdDO = $request->barang0 ?? [];
             $IDSuratPesanan = $request->barang3 ?? [];
-
             $AccMrg = Auth::user()->NomorUser;
-
             $conn = DB::connection('ConnKCNSales');
-
             $conn->beginTransaction();
-
-            /*
-            |--------------------------------------------------------------------------
-            | CEK HEADER
-            |--------------------------------------------------------------------------
-            */
-
             $header = $conn
                 ->table('T_HeaderPengiriman')
                 ->where('IDHeaderKirim', $IdHeaderKirim)
                 ->first();
 
             if (!$header) {
-
                 $conn->rollBack();
-
                 return redirect()
                     ->back()
                     ->withInput()
@@ -744,14 +556,6 @@ class SuratJalanKencanaController extends Controller
                         'Data Surat Jalan tidak ditemukan.'
                     );
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | UPDATE HEADER
-            | Pengganti SP_1486_SLS_MAINT_HEADERPENGIRIMAN @MyType = 2
-            |--------------------------------------------------------------------------
-            */
 
             $conn
                 ->table('T_HeaderPengiriman')
@@ -770,20 +574,7 @@ class SuratJalanKencanaController extends Controller
                 ]);
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | UPDATE DETAIL
-            |--------------------------------------------------------------------------
-            */
-
             for ($i = 0; $i < count($IdDO); $i++) {
-
-                /*
-                * Sama seperti kode lama:
-                *
-                * if ($request->barang2[$i])
-                */
-
                 if (!empty($request->barang2[$i])) {
 
                     $conn
@@ -797,16 +588,7 @@ class SuratJalanKencanaController extends Controller
                 }
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | COMMIT
-            |--------------------------------------------------------------------------
-            */
-
             $conn->commit();
-
-
             return redirect()
                 ->back()
                 ->with(

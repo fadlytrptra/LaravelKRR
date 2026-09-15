@@ -103,6 +103,38 @@ jQuery(function ($) {
 
         canvas.addEventListener("touchend", () => (drawing = false));
     }
+
+    function cleanNull(value) {
+        if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === "" ||
+            String(value).trim().toUpperCase() === "NULL"
+        ) {
+            return "";
+        }
+
+        return String(value).trim();
+    }
+
+    function formatQty(value) {
+        if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === "" ||
+            String(value).trim().toUpperCase() === "NULL"
+        ) {
+            return "";
+        }
+
+        const number = parseFloat(value);
+
+        if (isNaN(number)) {
+            return "";
+        }
+
+        return numeral(number).format("0,0.[00]");
+    }
     //#endregion
 
     //#region Load Form
@@ -165,9 +197,9 @@ jQuery(function ($) {
                 numeral.locale("id");
                 moment.locale("id");
 
-                let qtyPrimerValue = parseFloat(data[0].QtyPrimer);
-                let qtySekunderValue = parseFloat(data[0].QtySekunder);
-                let qtyTritierValue = parseFloat(data[0].QtyTritier);
+                let qtyPrimerValue = formatQty(data[0].QtyPrimer);
+                let qtySekunderValue = formatQty(data[0].QtySekunder);
+                let qtyTritierValue = formatQty(data[0].QtyTritier);
 
                 contoh_printSjEksportDiv.style.width = "21cm";
 
@@ -201,43 +233,96 @@ jQuery(function ($) {
                 nama_customerKolomAlamat_kolom.innerHTML +=
                     "<br>" + data[0].Alamat;
 
-                satuan_barangPrimerKolom.innerHTML =
-                    data[0].satPrimer?.trim() ?? "";
+                // ==========================================
+                // DATA SATUAN
+                // ==========================================
+                const satPrimer = cleanNull(data[0].satPrimer);
+                const satuan = cleanNull(data[0].Satuan);
+                const satTritier = cleanNull(data[0].SatTRitier);
+                const satSekunder = cleanNull(data[0].satSekunder);
 
-                jumlah_barangPrimerKolom.innerHTML =
-                    numeral(qtyPrimerValue).format("0,0.[00]");
+                // ==========================================
+                // RESET
+                // ==========================================
+                satuan_barangPrimerKolom.innerHTML = "";
+                jumlah_barangPrimerKolom.innerHTML = "";
 
-                satuan_barangSekunderKolom.innerHTML =
-                    data[0].Satuan?.trim() ?? "";
+                satuan_barangSekunderKolom.innerHTML = "";
+                jumlah_barangSekunderKolom.innerHTML = "";
+
+                satuan_barangPrimerKolom.style.display = "none";
+                jumlah_barangPrimerKolom.style.display = "none";
+
+                satuan_barangSekunderKolom.style.display = "none";
+                jumlah_barangSekunderKolom.style.display = "none";
+
+                // ==========================================
+                // PRIMER
+                // Tampilkan hanya jika satuan ada DAN qty > 0
+                // ==========================================
+                const qtyPrimerNumber = parseFloat(data[0].QtyPrimer);
 
                 if (
-                    data[0].Satuan?.trim() ==
-                    data[0].SatTRitier?.trim()
+                    satPrimer !== "" &&
+                    !isNaN(qtyPrimerNumber) &&
+                    qtyPrimerNumber > 0
                 ) {
-                    jumlah_barangSekunderKolom.innerHTML =
-                        numeral(qtyTritierValue).format("0,0.[00]");
-                } else if (
-                    data[0].Satuan?.trim() ==
-                    data[0].satSekunder?.trim()
-                ) {
-                    jumlah_barangSekunderKolom.innerHTML =
-                        numeral(qtySekunderValue).format("0,0.[00]");
-                } else if (
-                    data[0].Satuan?.trim() ==
-                    data[0].satPrimer?.trim()
-                ) {
-                    jumlah_barangSekunderKolom.innerHTML =
-                        numeral(qtyPrimerValue).format("0,0.[00]");
+                    satuan_barangPrimerKolom.innerHTML = satPrimer;
+                    jumlah_barangPrimerKolom.innerHTML =
+                        numeral(qtyPrimerNumber).format("0,0.[00]");
+
+                    satuan_barangPrimerKolom.style.display = "inline";
+                    jumlah_barangPrimerKolom.style.display = "inline";
                 }
 
-                if (data[0].NO_PO !== null) {
+                // ==========================================
+                // SEKUNDER / TRITIER
+                // Tentukan jumlah berdasarkan satuannya
+                // ==========================================
+                let qtySekunderFinal = "";
+
+                if (satuan !== "" && satuan === satTritier) {
+
+                    qtySekunderFinal = formatQty(data[0].QtyTritier);
+
+                } else if (satuan !== "" && satuan === satSekunder) {
+
+                    qtySekunderFinal = formatQty(data[0].QtySekunder);
+
+                } else if (satuan !== "" && satuan === satPrimer) {
+
+                    qtySekunderFinal = formatQty(data[0].QtyPrimer);
+                }
+
+                // ==========================================
+                // TAMPILKAN SEKUNDER HANYA JIKA:
+                // 1. Satuan ada
+                // 2. Jumlah ada
+                // 3. Jumlah > 0
+                // ==========================================
+                const qtySekunderNumber = parseFloat(qtySekunderFinal);
+
+                if (
+                    satuan !== "" &&
+                    qtySekunderFinal !== "" &&
+                    !isNaN(qtySekunderNumber) &&
+                    qtySekunderNumber > 0
+                ) {
+                    satuan_barangSekunderKolom.innerHTML = satuan;
+                    jumlah_barangSekunderKolom.innerHTML = qtySekunderFinal;
+
+                    satuan_barangSekunderKolom.style.display = "inline";
+                    jumlah_barangSekunderKolom.style.display = "inline";
+                }
+
+                const noPO = cleanNull(data[0].NO_PO);
+
+                if (noPO !== "") {
                     nama_barangKolomNo_poKolom.innerHTML +=
-                        "<br><br>PO: " + data[0].NO_PO;
+                        "<br><br>PO: " + noPO;
                 }
 
-                alamat_kirimKolom.innerHTML =
-                    "Dikirim ke: <br>" + data[0].AlamatKirim;
-
+                alamat_kirimKolom.innerHTML = "Dikirim ke: <br>" + data[0].AlamatKirim;
                 contoh_print.style.display = "block";
                 contoh_printDiv.style.display = "block";
                 div_accSuratJalan.style.display = "flex";

@@ -483,47 +483,91 @@ function funcInsertRow(array) {
     const dataToCheck = array[1];
     let isDataInTable = false;
 
-    if (table.rows.length > 0) {
-        const cellValue = table.querySelectorAll("input");
+    // ==========================================
+    // CEK DATA DUPLIKAT
+    // ==========================================
+    const existingInputs = table.querySelectorAll(
+        'input[name="barang1[]"]'
+    );
 
-        for (let i = 1; i < cellValue.length; i++) {
-            if (cellValue[i].value === dataToCheck) {
-                isDataInTable = true;
-            }
+    existingInputs.forEach((input) => {
+        if (input.value === dataToCheck) {
+            isDataInTable = true;
         }
-    }
+    });
+
     if (isDataInTable) {
         alert("Data sudah ada di table");
-    } else {
-        const newRow = table.insertRow(-1);
-        newRow.setAttribute("class", "acs-tr-hover");
-
-        for (let i = 0; i < array.length; i++) {
-            const cell = newRow.insertCell(i);
-            cell.innerHTML = array[i];
-            cell.setAttribute("class", "acs-tr-hover");
-            const input = document.createElement("input");
-            input.setAttribute("type", "text");
-            input.setAttribute("readonly", "true");
-            input.setAttribute("value", array[i]);
-            input.setAttribute("class", "acs-input-table");
-            input.setAttribute("name", "barang" + i + "[]");
-            input.style.backgroundColor = table.style.backgroundColor;
-            cell.innerHTML = "";
-            cell.appendChild(input);
-        }
-        newRow.addEventListener("click", () => {
-            // remove highlight from previously selected row
-            const highlightedRow = table.querySelector("tr.highlighted");
-            const inputs = newRow.querySelectorAll("input");
-            if (highlightedRow) {
-                highlightedRow.classList.remove("highlighted");
-            }
-            // highlight current row
-            newRow.classList.add("highlighted");
-            // add the "highlighted" class to all input elements in the row
-        });
+        return;
     }
+
+    // ==========================================
+    // BUAT ROW BARU
+    // ==========================================
+    const newRow = table.insertRow(-1);
+    newRow.className = "acs-tr-hover";
+
+    for (let i = 0; i < array.length; i++) {
+        const cell = newRow.insertCell(i);
+
+        cell.className = "acs-tr-hover";
+
+        // Jangan pakai height tetap
+        cell.style.height = "auto";
+        cell.style.verticalAlign = "top";
+        cell.style.overflow = "visible";
+
+        // ==========================================
+        // INPUT HIDDEN UNTUK FORM
+        // ==========================================
+        const hiddenInput = document.createElement("input");
+
+        hiddenInput.type = "hidden";
+        hiddenInput.value = array[i];
+        hiddenInput.name = "barang" + i + "[]";
+
+        cell.appendChild(hiddenInput);
+
+        // ==========================================
+        // TAMPILAN DATA
+        // ==========================================
+        const display = document.createElement("div");
+
+        display.textContent = array[i];
+
+        display.style.width = "100%";
+        display.style.height = "auto";
+        display.style.minHeight = "35px";
+
+        display.style.padding = "8px";
+        display.style.boxSizing = "border-box";
+
+        display.style.whiteSpace = "normal";
+        display.style.wordBreak = "break-word";
+        display.style.overflowWrap = "anywhere";
+
+        display.style.lineHeight = "1.5";
+
+        // Khusus Uraian
+        if (i === 1) {
+            display.style.minHeight = "80px";
+        }
+
+        cell.appendChild(display);
+    }
+
+    // ==========================================
+    // SELECT ROW
+    // ==========================================
+    newRow.addEventListener("click", () => {
+        const highlightedRow = table.querySelector("tr.highlighted");
+
+        if (highlightedRow) {
+            highlightedRow.classList.remove("highlighted");
+        }
+
+        newRow.classList.add("highlighted");
+    });
 }
 
 function funcClearDataInput() {

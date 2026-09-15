@@ -63,15 +63,66 @@
         </tr>
     </table>
     @php
+        $cleanNull = function ($value) {
+            if (
+                $value === null ||
+                trim((string) $value) === '' ||
+                strtoupper(trim((string) $value)) === 'NULL'
+            ) {
+                return '';
+            }
+
+            return trim((string) $value);
+        };
+
+        $satPrimer = $cleanNull($items->satPrimer);
+
+        $qtyPrimer = is_numeric($items->QtyPrimer ?? null)
+            ? (float) $items->QtyPrimer
+            : 0;
+
+        $satuan = $cleanNull($items->Satuan);
+        $satSekunder = $cleanNull($items->satSekunder);
+        $satTritier = $cleanNull($items->SatTRitier);
+
         $satuanUmum = '';
         $jumlahUmum = '';
-        if ($items->Satuan == trim($items->satSekunder)) {
-            $satuanUmum = trim($items->satSekunder);
-            $jumlahUmum = number_format($items->QtySekunder, 0, ',', '.');
-        } elseif ($items->Satuan == trim($items->SatTRitier)) {
-            $satuanUmum = trim($items->SatTRitier);
-            $jumlahUmum = number_format($items->QtyTritier, 0, ',', '.');
+
+        if (
+            $satuan !== '' &&
+            $satuan === $satSekunder &&
+            is_numeric($items->QtySekunder ?? null) &&
+            (float) $items->QtySekunder > 0
+        ) {
+            $satuanUmum = $satSekunder;
+            $jumlahUmum = number_format(
+                (float) $items->QtySekunder,
+                0,
+                ',',
+                '.'
+            );
+        } elseif (
+            $satuan !== '' &&
+            $satuan === $satTritier &&
+            is_numeric($items->QtyTritier ?? null) &&
+            (float) $items->QtyTritier > 0
+        ) {
+            $satuanUmum = $satTritier;
+            $jumlahUmum = number_format(
+                (float) $items->QtyTritier,
+                0,
+                ',',
+                '.'
+            );
         }
+
+        $noPO = $cleanNull($items->NO_PO);
+        $uraian = $cleanNull($items->Uraian);
+
+        if ($uraian === '') {
+            $uraian = $cleanNull($items->NamaType);
+        }
+        $ketSKBDN = $cleanNull($items->KetSKBDN ?? null);
     @endphp
     <table style="border: 1px solid black;width: 100%;border-collapse: collapse;margin-top: 10px">
         <tr>
@@ -79,20 +130,49 @@
             <th style="border: 1px solid black;padding:8px">Satuan</th>
             <th style="border: 1px solid black;padding:8px">Jumlah</th>
         </tr>
+
         <tr>
-            <td style="border: 1px solid black;padding:8px">{{ $items->NAMATYPEBARANG }} <br>
-                {{ $items->Uraian ?? $items->NamaType }}
-                <br>
-                PO: {{ $items->NO_PO }}
-                @if (!empty($items->KetSKBDN))
+            <td style="border: 1px solid black;padding:8px">
+                {{ $items->NAMATYPEBARANG }}
+                @if ($uraian !== '')
                     <br>
-                    <p style="font-size: small">{!! nl2br(e($items->KetSKBDN)) !!}</p>
+                    {{ $uraian }}
+                @endif
+                @if ($noPO !== '')
+                    <br>
+                    PO: {{ $noPO }}
+                @endif
+                @if ($ketSKBDN !== '')
+                    <br>
+                    <p style="font-size: small">
+                        {!! nl2br(e($ketSKBDN)) !!}
+                    </p>
                 @endif
             </td>
-            <td style="border: 1px solid black;padding:8px">{{ trim($satuanUmum) }} <br> {{ trim($items->satPrimer) }}
+
+            <td style="border: 1px solid black;padding:8px">
+                @if ($satuanUmum !== '')
+                    {{ $satuanUmum }}
+                    <br>
+                @endif
+
+                @if ($satPrimer !== '' && $qtyPrimer > 0)
+                    {{ $satPrimer }}
+                @endif
+
             </td>
-            <td style="border: 1px solid black;padding:8px">{{ trim($jumlahUmum) }} <br>
-                {{ number_format($items->QtyPrimer, 0, ',', '.') }}
+
+            <td style="border: 1px solid black;padding:8px">
+
+                @if ($jumlahUmum !== '')
+                    {{ $jumlahUmum }}
+                    <br>
+                @endif
+
+                @if ($satPrimer !== '' && $qtyPrimer > 0)
+                    {{ number_format($qtyPrimer, 0, ',', '.') }}
+                @endif
+
             </td>
         </tr>
     </table>

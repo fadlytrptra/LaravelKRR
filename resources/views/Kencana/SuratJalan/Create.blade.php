@@ -605,11 +605,6 @@ document.addEventListener('DOMContentLoaded', function () {
     window.oldBarang1 = @json(old('barang1', []));
     window.oldBarang2 = @json(old('barang2', []));
     window.oldBarang3 = @json(old('barang3', []));
-
-    console.log('Old Barang0:', window.oldBarang0);
-    console.log('Old Barang1:', window.oldBarang1);
-    console.log('Old Barang2:', window.oldBarang2);
-    console.log('Old Barang3:', window.oldBarang3);
 </script>
 
 @endif
