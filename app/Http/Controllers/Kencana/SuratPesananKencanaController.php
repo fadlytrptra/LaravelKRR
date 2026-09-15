@@ -240,7 +240,6 @@ class SuratPesananKencanaController extends Controller
     public function getListSatuan()
     {
         $list_satuan = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_SATUAN');
-
         return response($list_satuan);
     }
 
@@ -455,7 +454,6 @@ class SuratPesananKencanaController extends Controller
             $data = DB::connection('ConnKCNSales')->select('exec SP_4384_SLS_MAINTENANCE_SURAT_PESANAN @XKode = 5');
             return response()->json($data);
         }
-
     }
 
     //Show the form for editing the specified resource.
@@ -501,9 +499,7 @@ class SuratPesananKencanaController extends Controller
     public function update(Request $request, $id = null)
     {
         // $data = $request->all();
-        // dd($request->all());
         $UraianPesanan = null;
-        $Lunas = null;
         $no_spText = $request->no_spText;
         $user = trim(Auth::user()->NomorUser);
         $tgl_pesan = $request->tgl_pesan;
@@ -526,6 +522,7 @@ class SuratPesananKencanaController extends Controller
         $Satuan = $request->barang5; //satuan
         $HargaSatuan = $request->barang2; //harga satuan
         $TglRencanaKirim = $request->barang6; //rencana kirim
+        $Lunas = $request->barang7;
         $ppn = $request->barang8; //ppn
         $IdJnsBarang = $request->barang9; //jenis barang
         $id_pesanan = $request->barang10; //idsuratpesanan
@@ -599,11 +596,12 @@ class SuratPesananKencanaController extends Controller
                         0.0,
                         $UraianPesanan ?? null,
                         $TglRencanaKirim[$i],
-                        $Lunas ?? null,
+                        $Lunas[$i] ?? null,
                         $ppn[$i],
                     ],
                 );
             } else {
+
                 DB::connection('ConnKCNSales')->statement(
                     'exec SP_1273_PRG_MAINT_DETAILPESANAN1 @Kode = ?,
             @IdPesanan = ?,
@@ -628,7 +626,7 @@ class SuratPesananKencanaController extends Controller
                         0.0,
                         $UraianPesanan ?? null,
                         $TglRencanaKirim[$i],
-                        $Lunas ?? null,
+                        $Lunas[$i] ?? null,
                         $ppn[$i],
                     ],
                 );

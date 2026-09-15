@@ -508,9 +508,11 @@ $(document).ready(function () {
         } else if (
             createSPModalLabel.innerHTML == "Penyesuaian Surat Pesanan"
         ) {
+            console.log("MASUK PENYESUAIAN");
             funcDatatablesIntoInput();
             // Ambil form data menggunakan FormData
             var formData = new FormData(form_suratPesanan);
+            console.log("URL:", "/Kencana/penyesuaiansp/koreksi");
 
             $.ajax({
                 // url: "/SuratPesanan/" + no_spText.value + "/up",
@@ -1337,29 +1339,48 @@ $(document).ready(function () {
     }
 
     function funcDatatablesIntoInput() {
-        let dataArray = [];
-        dataArray = list_view.data().toArray();
-        // console.log(dataArray);
-        // Create a hidden input element
+        let dataArray = list_view.data().toArray();
+
+        console.log("DataTable sebelum submit:", dataArray);
+        console.log("Status Lunas dari input:", lunas.value);
+
         for (let i = 0; i < dataArray.length; i++) {
             let row = dataArray[i];
-            for (let j = 0; j < dataArray[i].length; j++) {
-                // console.log(row[j]);
+
+            for (let j = 0; j < row.length; j++) {
+
                 let hiddenInput = document.createElement("input");
                 hiddenInput.type = "hidden";
-                hiddenInput.name = "barang" + j + "[]"; // Set the name attribute as desired
+                hiddenInput.name = "barang" + j + "[]";
                 hiddenInput.multiple = true;
-                if (row[j] !== null && row[j] !== undefined) {
-                    if (row[j].includes(",")) {
-                        hiddenInput.value = row[j].replace(/,/g, "");
-                    } else {
-                        hiddenInput.value = row[j];
-                    }
-                } else {
-                    hiddenInput.value = ""; // Set a default value when row[j] is null or undefined
+
+                let value = row[j];
+
+                // ==========================================
+                // KHUSUS LUNAS
+                // barang7 = nilai dari input Status Lunas
+                // ==========================================
+                if (j === 7) {
+                    value = lunas.value ? lunas.value.trim() : "";
                 }
 
-                // Append the hidden input to the document body or any other element
+                if (value !== null && value !== undefined) {
+                    value = String(value);
+
+                    if (value.includes(",")) {
+                        value = value.replace(/,/g, "");
+                    }
+
+                    hiddenInput.value = value;
+                } else {
+                    hiddenInput.value = "";
+                }
+
+                console.log(
+                    "barang" + j + "[" + i + "] =",
+                    hiddenInput.value
+                );
+
                 form_suratPesanan.appendChild(hiddenInput);
             }
         }

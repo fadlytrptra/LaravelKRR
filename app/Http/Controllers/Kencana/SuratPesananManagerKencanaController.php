@@ -250,7 +250,7 @@ class SuratPesananManagerKencanaController extends Controller
         }
     }
 
-    public function koreksiPenyesuaianSP(Request $request)
+    public function koreksiPenyesuaianSPManager(Request $request)
     {
         // dd($request->all());
         $UraianPesanan = null;

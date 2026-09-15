@@ -1942,7 +1942,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/Kencana/SuratPesananManager/upall', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@updateAll');
     Route::get('/Kencana/SuratPesananManager/penyesuaian/suratpesanan', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@penyesuaian');
     Route::get('/Kencana/penyesuaian/{suratPesanan}', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@getPenyesuaianSP');
-    Route::post('/Kencana/penyesuaiansp/koreksi', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@koreksiPenyesuaianSP');
+    Route::post('/Kencana/penyesuaiansp/koreksi-manager', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@koreksiPenyesuaianSPManager')->name('suratpesananmanager.koreksi');
     Route::post('/Kencana/penyesuaiansp/batalsp', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@batalspPenyesuaianSP');
     Route::post('/Kencana/batalsplokal/{nosp}', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@batalspPenyesuaianSP');
     Route::post('/Kencana/SuratPesananManager/upPenyesuaian', 'App\Http\Controllers\Kencana\SuratPesananManagerKencanaController@updatePenyesuaian');
