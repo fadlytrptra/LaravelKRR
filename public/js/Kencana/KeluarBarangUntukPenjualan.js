@@ -356,10 +356,8 @@ function Tampil_Data(sIdTrans) {
                 subkel.value = decodeHtmlEntities(result[0].NamaSubKelompok);
                 transaksi.value = decodeHtmlEntities(result[0].IdTransaksi);
                 type.value = decodeHtmlEntities(result[0].NamaType);
-                satPrimer.value = decodeHtmlEntities(result[0].satuanPrimer);
-                satSekunder.value = decodeHtmlEntities(
-                    result[0].satuanSekunder
-                );
+                satPrimer.value = decodeHtmlEntities(result[0].SatuanPrimer);
+                satSekunder.value = decodeHtmlEntities(result[0].SatuanSekunder);
                 satTritier.value = decodeHtmlEntities(result[0].SatuanTritier);
                 subkelId.value = decodeHtmlEntities(result[0].IdSubkelompok);
                 primer.value = formatNumber(result[0].SaldoPrimer);
