@@ -339,6 +339,23 @@ function Cek_Sesuai_Pemberi(sIdtrans) {
     });
 }
 
+function setInputState(input, value) {
+    const numberValue = parseFloat(value);
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(numberValue) ||
+        numberValue === 0
+    ) {
+        input.value = "0";
+        input.disabled = true;
+    } else {
+        input.disabled = false;
+    }
+}
+
 function Tampil_Data(sIdTrans) {
     $.ajax({
         type: "GET",
@@ -347,52 +364,221 @@ function Tampil_Data(sIdTrans) {
             _token: csrfToken,
             IDTransaksi: sIdTrans,
         },
+
         success: function (result) {
             if (result.length !== 0) {
-                divisi.value = decodeHtmlEntities(result[0].NamaDivisi);
-                objek.value = decodeHtmlEntities(result[0].NamaObjek);
-                kelut.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
-                kelompok.value = decodeHtmlEntities(result[0].NamaKelompok);
-                subkel.value = decodeHtmlEntities(result[0].NamaSubKelompok);
-                transaksi.value = decodeHtmlEntities(result[0].IdTransaksi);
-                type.value = decodeHtmlEntities(result[0].NamaType);
-                satPrimer.value = decodeHtmlEntities(result[0].SatuanPrimer);
-                satSekunder.value = decodeHtmlEntities(result[0].SatuanSekunder);
-                satTritier.value = decodeHtmlEntities(result[0].SatuanTritier);
-                subkelId.value = decodeHtmlEntities(result[0].IdSubkelompok);
-                primer.value = formatNumber(result[0].SaldoPrimer);
-                sekunder.value = formatNumber(result[0].SaldoSekunder);
-                tritier.value = formatNumber(result[0].SaldoTritier);
-                customer.value = decodeHtmlEntities(result[0].NamaCust);
-                noSp.value = decodeHtmlEntities(result[0].IDSuratPesanan);
-                max.value = formatNumber(result[0].MaxKirimDO);
-                min.value = formatNumber(result[0].MinKirimDO);
-                satJual.value = decodeHtmlEntities(result[0].SatuanJual);
+
+                // =====================================================
+                // DATA UTAMA
+                // =====================================================
+                divisi.value = decodeHtmlEntities(
+                    result[0].NamaDivisi
+                );
+
+                objek.value = decodeHtmlEntities(
+                    result[0].NamaObjek
+                );
+
+                kelut.value = decodeHtmlEntities(
+                    result[0].NamaKelompokUtama
+                );
+
+                kelompok.value = decodeHtmlEntities(
+                    result[0].NamaKelompok
+                );
+
+                subkel.value = decodeHtmlEntities(
+                    result[0].NamaSubKelompok
+                );
+
+                subkelId.value = decodeHtmlEntities(
+                    result[0].IdSubkelompok
+                );
+
+                transaksi.value = decodeHtmlEntities(
+                    result[0].IdTransaksi
+                );
+
+                type.value = decodeHtmlEntities(
+                    result[0].NamaType
+                );
+
+                // =====================================================
+                // SALDO AKHIR
+                // =====================================================
+                primer.value = formatNumber(
+                    result[0].SaldoPrimer
+                );
+
+                sekunder.value = formatNumber(
+                    result[0].SaldoSekunder
+                );
+
+                tritier.value = formatNumber(
+                    result[0].SaldoTritier
+                );
+
+                // =====================================================
+                // SATUAN GUDANG
+                // =====================================================
+                satPrimer.value = decodeHtmlEntities(
+                    result[0].SatuanPrimer
+                );
+
+                satSekunder.value = decodeHtmlEntities(
+                    result[0].SatuanSekunder
+                );
+
+                satTritier.value = decodeHtmlEntities(
+                    result[0].SatuanTritier
+                );
+
+                // =====================================================
+                // DATA CUSTOMER / SP / DO
+                // =====================================================
+                customer.value = decodeHtmlEntities(
+                    result[0].NamaCust
+                );
+
+                noSp.value = decodeHtmlEntities(
+                    result[0].IDSuratPesanan
+                );
+
+                max.value = formatNumber(
+                    result[0].MaxKirimDO
+                );
+
+                min.value = formatNumber(
+                    result[0].MinKirimDO
+                );
+
+                tanggal.value = formatDateToMMDDYYYY(
+                    result[0].TglDO
+                );
+
+                // =====================================================
+                // SATUAN JUAL
+                // =====================================================
+                satJual.value = decodeHtmlEntities(
+                    result[0].SatuanJual
+                );
+
+                // =====================================================
+                // RESET JUMLAH YANG AKAN DIKELUARKAN
+                // =====================================================
                 primer1.value = "0";
                 sekunder1.value = "0";
                 tritier1.value = "0";
                 konversi.value = "0";
-                tanggal.value = formatDateToMMDDYYYY(result[0].TglDO);
 
-                if (!primer1.disabled) {
-                    primer1.focus();
-                }
+                // =====================================================
+                // RESET KONVERSI
+                // =====================================================
+                konversi.disabled = true;
 
-                if (
-                    satJual.value.trim() !== satPrimer.value.trim() &&
-                    satJual.value.trim() !== satSekunder.value.trim() &&
-                    satJual.value.trim() !== satTritier.value.trim()
-                ) {
+                // =====================================================
+                // DISABLE INPUT BERDASARKAN SALDO
+                //
+                // Saldo = NULL / 0  -> disabled
+                // Saldo > 0         -> enabled
+                // =====================================================
+                setInputState(
+                    primer1,
+                    result[0].SaldoPrimer
+                );
+
+                setInputState(
+                    sekunder1,
+                    result[0].SaldoSekunder
+                );
+
+                setInputState(
+                    tritier1,
+                    result[0].SaldoTritier
+                );
+
+                // =====================================================
+                // NORMALISASI SATUAN
+                // =====================================================
+                const satuanJual = (
+                    satJual.value || ""
+                ).trim().toUpperCase();
+
+                const satuanPrimer = (
+                    satPrimer.value || ""
+                ).trim().toUpperCase();
+
+                const satuanSekunder = (
+                    satSekunder.value || ""
+                ).trim().toUpperCase();
+
+                const satuanTritier = (
+                    satTritier.value || ""
+                ).trim().toUpperCase();
+
+                // =====================================================
+                // CEK APAKAH SATUAN JUAL SAMA DENGAN SATUAN GUDANG
+                // =====================================================
+                const satuanSama =
+                    satuanJual !== "" &&
+                    (
+                        satuanJual === satuanPrimer ||
+                        satuanJual === satuanSekunder ||
+                        satuanJual === satuanTritier
+                    );
+
+                // =====================================================
+                // JIKA SATUAN TIDAK SAMA
+                // =====================================================
+                if (!satuanSama) {
+
                     konversi.disabled = false;
+
                     Swal.fire({
                         icon: "error",
-                        text: "Satuan Jual dan Satuan di Gudang Tidak Sama\nAnda Harus Mengisi Jumlah Konversinya!",
+                        text:
+                            "Satuan Jual dan Satuan di Gudang Tidak Sama\n" +
+                            "Anda Harus Mengisi Jumlah Konversinya!",
                     });
+
+                } else {
+
+                    // Jika satuan jual sudah sama dengan
+                    // salah satu satuan gudang
+                    konversi.value = "0";
+                    konversi.disabled = true;
+                }
+
+                // =====================================================
+                // FOCUS KE INPUT YANG AKTIF
+                // =====================================================
+                if (!primer1.disabled) {
+
+                    primer1.focus();
+
+                } else if (!sekunder1.disabled) {
+
+                    sekunder1.focus();
+
+                } else if (!tritier1.disabled) {
+
+                    tritier1.focus();
+
+                } else if (!konversi.disabled) {
+
+                    konversi.focus();
+
                 }
             }
         },
+
         error: function (xhr, status, error) {
             console.error("Error:", error);
+
+            console.error(
+                "Response:",
+                xhr.responseText
+            );
         },
     });
 }
