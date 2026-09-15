@@ -63,7 +63,7 @@
 
                 <div>
                     <table id="table_AccPenjualan"
-                        class="table table-bordered table-striped hover"
+                        class="table table-bordered table hover"
                         style="width:100%">
 
                         <thead class="thead-light">
