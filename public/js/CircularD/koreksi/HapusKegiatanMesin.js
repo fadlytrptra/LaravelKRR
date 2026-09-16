@@ -59,7 +59,7 @@ jQuery(function ($) {
 
     btn_proses.addEventListener("click", function (event) {
         event.preventDefault();
-        var data = table_atas.rows().data().toArray();
+        // var data = table_atas.rows().data().toArray();
         $.ajax({
             url: "HapusKegiatanMesinD",
             type: "POST",
@@ -84,6 +84,10 @@ jQuery(function ($) {
                     }).then((result) => {
                         console.log(result);
                         $("#table_atas").DataTable().ajax.reload();
+                        data = [];
+                        id_log.value = "";
+                        id_order.value = "";
+                        sisa.value = "";
                     });
                 } else if (response.error) {
                     Swal.fire({
@@ -163,6 +167,7 @@ jQuery(function ($) {
         }
     });
 
+    let data = [];
     $("#table_atas tbody").on("click", "tr", function () {
         // Remove the 'selected' class from any previously selected row
         $("#table_atas tbody tr").removeClass("selected");
@@ -171,7 +176,7 @@ jQuery(function ($) {
         $(this).addClass("selected");
 
         // Get data from the clicked row
-        var data = table_atas.row(this).data();
+        data = table_atas.row(this).data();
         console.log(data);
         sisa.value =
             numeral(data.Counter_mesin_akhir).value() -

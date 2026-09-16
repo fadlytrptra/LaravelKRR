@@ -27,46 +27,58 @@ class HapusKegiatanMesinDController extends Controller
 
     public function store(Request $request)
     {
-        $dataList = $request->input('data', []);
+        $data = $request->input('data', []);
+
         $id_order = $request->input('id_order');
         $sisa = $request->input('sisa');
         $mesin = $request->input('nama_mesin');
 
         // Validasi awal
-        if (empty($mesin) || empty($id_order) || $sisa === null || count($dataList) === 0) {
-            return response()->json(['error' => 'Mohon lengkapi dulu datanya']);
+        if (
+            empty($mesin) ||
+            empty($id_order) ||
+            $sisa === null ||
+            empty($data)
+        ) {
+            return response()->json([
+                'error' => 'Mohon lengkapi dulu datanya'
+            ]);
         }
 
         DB::connection('ConnCircular')->beginTransaction();
 
         try {
-            // Step 3: Loop dataList
-            foreach ($dataList as $item) {
-                // Step 1: Ambil TotalOrder
-                $totalOrderResult = DB::connection('ConnCircular')
-                    ->select('EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?', ['9', $id_order]);
-
-                $totalOrder = $totalOrderResult[0]->A_jumlah_Order ?? 0;
-
-                // Step 2: Hitung JumlahOrder
-                $jumlahOrder = $totalOrder - (float) $item['Counter_mesin_akhir'] - (float) $item['Counter_mesin_awal'];
-
-                // SP Kode 10 (update jumlah order)
-                DB::connection('ConnCircular')->statement(
-                    'EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?, @JmlOrder = ?',
-                    ['10', $id_order, $jumlahOrder]
+            // Ambil TotalOrder
+            $totalOrderResult = DB::connection('ConnCircular')
+                ->select(
+                    'EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?',
+                    ['9', $id_order]
                 );
 
-                // SP Kode 11 (hapus per Id_Log)
-                DB::connection('ConnCircular')->statement(
-                    'EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdLog = ?',
-                    ['11', $item['Id_Log']]
-                );
-            }
+            $totalOrder = $totalOrderResult[0]->A_jumlah_Order ?? 0;
+
+            // Hitung jumlah order
+            $jumlahOrder = $totalOrder
+                - (float) $data['Counter_mesin_akhir']
+                - (float) $data['Counter_mesin_awal'];
+
+            // Update jumlah order
+            DB::connection('ConnCircular')->statement(
+                'EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdOrder = ?, @JmlOrder = ?',
+                ['10', $id_order, $jumlahOrder]
+            );
+
+            // Hapus log
+            DB::connection('ConnCircular')->statement(
+                'EXEC SP_1273_CIR_ERROR_CIR @Kode = ?, @IdLog = ?',
+                ['11', $data['Id_Log']]
+            );
 
             DB::connection('ConnCircular')->commit();
 
-            return response()->json(['message' => 'Data sudah dihapus']);
+            return response()->json([
+                'message' => 'Data sudah dihapus'
+            ]);
         } catch (Exception $e) {
             DB::connection('ConnCircular')->rollBack();
 
