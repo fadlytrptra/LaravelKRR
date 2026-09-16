@@ -50,17 +50,37 @@ class CustomerKencanaController extends Controller
     // Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $request->validate([
-            'KodeCust' => 'required',
-            'NamaCust' => 'required',
-            'JnsCust'  => 'required',
-        ]);
+        $KodeCust    = trim($request->KodeCust ?? '');
+        $JnsCust     = trim($request->JnsCust ?? '');
+        $NamaCust    = trim($request->NamaCust ?? '');
+        $AlamatKirim = trim($request->AlamatKirim ?? '');
+        $KotaKirim   = trim($request->KotaKirim ?? '');
+        $Negara      = trim($request->Negara ?? '');
 
-        $KodeCust = $request->KodeCust;
-        $JnsCust = $request->JnsCust;
-        $NamaCust = $request->NamaCust;
+        /*
+        |--------------------------------------------------------------------------
+        | Validasi kelengkapan Customer
+        |--------------------------------------------------------------------------
+        */
+        if (
+            $KodeCust === '' ||
+            $JnsCust === '' ||
+            $NamaCust === '' ||
+            $AlamatKirim === '' ||
+            $KotaKirim === '' ||
+            $Negara === ''
+        ) {
+            return response()->json([
+                'allowed' => false,
+                'message' => 'Data ' . $KodeCust . ' belum lengkap. Mohon mengecek kolom Jenis Customer, Nama Customer, Initial Customer, Alamat Kirim, Kota Kirim, Negara.'
+            ], 422);
+        }
 
-        // Check existing customer
+        /*
+        |--------------------------------------------------------------------------
+        | Check existing customer
+        |--------------------------------------------------------------------------
+        */
         $existing = DB::connection('ConnKCNSales')
             ->table('T_Customer')
             ->where('KodeCust', $KodeCust)
@@ -70,34 +90,43 @@ class CustomerKencanaController extends Controller
 
         if ($existing) {
             return response()->json([
-                'error' => 'Data dengan kombinasi KodeCust, NamaCust, dan JnsCust sudah ada.'
+                'allowed' => false,
+                'message' => 'Data dengan kombinasi KodeCust, NamaCust, dan JnsCust sudah ada.'
             ], 409);
         }
 
-        $NPWP = $request->NPWP ?? null;
-        $LimitBeli = $request->LimitBeli ?? 0;
-        $ContactPerson = $request->ContactPerson ?? null;
-        $AlamatKirim = $request->AlamatKirim ?? null;
-        $Alamat = $request->Alamat ?? null;
-        $Kota = $request->Kota ?? null;
-        $Propinsi = $request->Province ?? null;
-        $Negara = $request->Negara ?? null;
-        $KodePos = $request->KodePos ?? null;
-        $NoTelp1 = $request->NoTelp1 ?? null;
-        $NoTelp2 = $request->NoTelp2 ?? null;
-        $NoFax1 = $request->NoFax1 ?? null;
-        $NoFax2 = $request->NoFax2 ?? null;
-        $NoHp1 = $request->NoHp1 ?? null;
-        $NoHp2 = $request->NoHp2 ?? null;
-        $NoTelex = $request->NoTelex ?? null;
-        $Email = $request->Email ?? null;
-        $NamaNPWP = $request->NamaNPWP ?? null;
-        $AlamatNPWP = $request->AlamatNPWP ?? null;
-        $KotaKirim = $request->KotaKirim ?? null;
-        $NITKU = $request->NITKU ?? null;
+        /*
+        |--------------------------------------------------------------------------
+        | Field lainnya
+        |--------------------------------------------------------------------------
+        */
+        $NPWP             = $request->NPWP ?? null;
+        $LimitBeli        = $request->LimitBeli ?? 0;
+        $ContactPerson    = $request->ContactPerson ?? null;
+        $Alamat           = $request->Alamat ?? null;
+        $Kota             = $request->Kota ?? null;
+        $Propinsi         = $request->Province ?? null;
+        $KodePos          = $request->KodePos ?? null;
+        $NoTelp1          = $request->NoTelp1 ?? null;
+        $NoTelp2          = $request->NoTelp2 ?? null;
+        $NoFax1           = $request->NoFax1 ?? null;
+        $NoFax2           = $request->NoFax2 ?? null;
+        $NoHp1            = $request->NoHp1 ?? null;
+        $NoHp2            = $request->NoHp2 ?? null;
+        $NoTelex          = $request->NoTelex ?? null;
+        $Email            = $request->Email ?? null;
+        $NamaNPWP         = $request->NamaNPWP ?? null;
+        $AlamatNPWP       = $request->AlamatNPWP ?? null;
+        $NITKU            = $request->NITKU ?? null;
         $IdPembeliCoretax = $request->IdPembeliCoretax ?? null;
 
+        /*
+        |--------------------------------------------------------------------------
+        | Proses simpan
+        |--------------------------------------------------------------------------
+        */
         try {
+
             DB::connection('ConnKCNSales')->statement(
                 'EXEC SP_1273_PRG_PROSES_INS_CUSTOMER
                     @KodeCust = ?,
@@ -157,7 +186,9 @@ class CustomerKencanaController extends Controller
             return response()->json([
                 'success' => 'Data berhasil disimpan!'
             ]);
-        } catch (Exception $ex) {
+
+        } catch (\Exception $ex) {
+
             return response()->json([
                 'error' => 'Data gagal disimpan: ' . $ex->getMessage()
             ], 500);
