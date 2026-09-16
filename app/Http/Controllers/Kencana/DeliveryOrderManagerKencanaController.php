@@ -87,27 +87,54 @@ class DeliveryOrderManagerKencanaController extends Controller
 
     public function destroy(Request $request)
     {
-        // dd($id);
-        // $data = $request->all();
-        // dd($data);
         $nomorTransTmps = $request->nomorTransTmps;
-        $nomorDOs = $request->nomorDOs;
-        $value = $request->value;
-        $user = Auth::user()->NomorUser;
+        $nomorDOs       = $request->nomorDOs;
+        $value          = $request->value;
+        $user           = Auth::user()->NomorUser;
+
         $errors = [];
+
         for ($i = 0; $i < count($nomorDOs); $i++) {
-            $accManager = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_DO_BATAL @Kode = ?, @IDDO = ?', [1, $nomorDOs[$i]]);
-            // dd($accManager);
-            if (trim($accManager[0]->AccManager) == trim($user)) {
-                DB::connection('ConnKCNSales')->statement('exec SP_1273_PRG_DO_BATAL @Kode = ?, @IdDO = ?, @IDManager = ?, @KetBatal = ?, @IdTransTmp = ?', [2, $nomorDOs[$i], $user, $value, $nomorTransTmps[$i]]);
-            } else {
-                $errors[] = 'Anda tidak berhak untuk menghapus Delivery Order ' . $nomorDOs[$i] . '. Coba hubungi pemilik login: ' . $accManager[0]->AccManager;
+
+            try {
+
+                DB::connection('ConnKCNSales')->statement(
+                    'EXEC SP_1273_PRG_DO_BATAL
+                        @Kode = ?,
+                        @IdDO = ?,
+                        @IDManager = ?,
+                        @KetBatal = ?,
+                        @IdTransTmp = ?',
+                    [
+                        2,
+                        $nomorDOs[$i],
+                        $user,
+                        $value,
+                        $nomorTransTmps[$i]
+                    ]
+                );
+
+            } catch (\Throwable $e) {
+
+                $errors[] =
+                    'Gagal membatalkan Delivery Order ' .
+                    $nomorDOs[$i] .
+                    ': ' .
+                    $e->getMessage();
             }
         }
+
         if (count($errors) > 0) {
-            return redirect()->back()->with('error', $errors);
-        } else {
-            return redirect()->back()->with('success', 'Delivery Order yang Dipilih Sudah Dihapus!');
+            return redirect()
+                ->back()
+                ->with('error', $errors);
         }
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Delivery Order yang Dipilih Sudah Dibatalkan!'
+            );
     }
 }
