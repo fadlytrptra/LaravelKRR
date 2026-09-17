@@ -576,9 +576,10 @@ jQuery(function ($) {
         });
 
         if (
-            nomorUser !== "4384" && //adam
+            nomorUser !== "4451" && //fadly
             nomorUser !== "4199" && //kelvin
             nomorUser !== "4428" && //aulia
+            nomorUser !== "4045" && //sri mulyaningsing (achi)
             nomorUser !== "2244" //ika
         ) {
             afalan_setting.readOnly = true;
