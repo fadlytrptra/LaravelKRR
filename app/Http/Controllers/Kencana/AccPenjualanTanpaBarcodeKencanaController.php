@@ -10,22 +10,12 @@ use App\Http\Controllers\HakAksesController;
 
 class AccPenjualanTanpaBarcodeKencanaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('Kencana');
-
-        return view(
-            'Kencana.KeluarBarangUntukPenjualan',
-            compact('access')
-        );
+        return view('Kencana.KeluarBarangUntukPenjualan', compact('access'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -82,9 +72,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
         |--------------------------------------------------------------------------
         */
         if ($id === 'tampilData') {
-
             $idTransaksi = $request->input('IDTransaksi');
-
             $data = $this->getDetailBarang(
                 $idTransaksi,
                 $user
@@ -106,9 +94,6 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         if ($id !== 'proses') {
@@ -119,34 +104,17 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
 
         $request->validate([
             'IDtransaksi' => 'required|integer',
-
-            'JumlahKeluarPrimer' =>
-                'required|numeric',
-
-            'JumlahKeluarSekunder' =>
-                'required|numeric',
-
-            'JumlahKeluartritier' =>
-                'required|numeric',
-
-            'JumlahKonversi' =>
-                'nullable|numeric',
+            'JumlahKeluarPrimer' => 'required|numeric',
+            'JumlahKeluarSekunder' => 'required|numeric',
+            'JumlahKeluartritier' => 'required|numeric',
+            'JumlahKonversi' => 'nullable|numeric',
         ]);
 
         $idTransaksi = $request->input('IDtransaksi');
-
-        $jumlahPrimer =
-            $request->input('JumlahKeluarPrimer');
-
-        $jumlahSekunder =
-            $request->input('JumlahKeluarSekunder');
-
-        $jumlahTritier =
-            $request->input('JumlahKeluartritier');
-
-        $jumlahKonversi =
-            $request->input('JumlahKonversi', 0);
-
+        $jumlahPrimer = $request->input('JumlahKeluarPrimer');
+        $jumlahSekunder = $request->input('JumlahKeluarSekunder');
+        $jumlahTritier = $request->input('JumlahKeluartritier');
+        $jumlahKonversi = $request->input('JumlahKonversi', 0);
         $user = trim(Auth::user()->NomorUser);
 
         // $conn = DB::connection('ConnInventory');
@@ -418,79 +386,31 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
                     $conn
                         ->table('Transaksi')
                         ->insert([
-                            'IdTransaksi' =>
-                                $yIdTransaksi,
-
-                            'IdTypeTransaksi' =>
-                                $tmp->IdTypeTransaksi,
-
-                            'UraianDetailTransaksi' =>
-                                $tmp->UraianDetailTransaksi,
-
-                            'IdType' =>
-                                $tmp->IdType,
-
-                            'IdPenerima' =>
-                                $tmp->IdPenerima,
-
-                            'IdPemberi' =>
-                                $user,
-
-                            'SaatAwalTransaksi' =>
-                                $tmp->SaatAwalTransaksi,
-
-                            'SaatAkhirTransaksi' =>
-                                now(),
-
-                            'SaatLog' =>
-                                now(),
-
-                            'KomfirmasiPenerima' =>
-                                $tmp->KomfirmasiPenerima,
-
-                            'KomfirmasiPemberi' =>
-                                $user,
-
-                            'SaatAwalKomfirmasi' =>
-                                $tmp->SaatAwalKomfirmasi,
-
-                            'SaatAkhirKomfirmasi' =>
-                                now(),
-
-                            'JumlahPemasukanPrimer' =>
-                                $tmp->JumlahPemasukanPrimer,
-
-                            'JumlahPemasukanSekunder' =>
-                                $tmp->JumlahPemasukanSekunder,
-
-                            'JumlahPemasukanTritier' =>
-                                $tmp->JumlahPemasukanTritier,
-
-                            'JumlahPengeluaranPrimer' =>
-                                $tmp->JumlahPengeluaranPrimer,
-
-                            'JumlahPengeluaranSekunder' =>
-                                $tmp->JumlahPengeluaranSekunder,
-
-                            'JumlahPengeluaranTritier' =>
-                                $tmp->JumlahPengeluaranTritier,
-
+                            'IdTransaksi' =>$yIdTransaksi,
+                            'IdTypeTransaksi' =>$tmp->IdTypeTransaksi,
+                            'UraianDetailTransaksi' =>$tmp->UraianDetailTransaksi,
+                            'IdType' =>$tmp->IdType,
+                            'IdPenerima' =>$tmp->IdPenerima,
+                            'IdPemberi' =>$user,
+                            'SaatAwalTransaksi' =>$tmp->SaatAwalTransaksi,
+                            'SaatAkhirTransaksi' =>now(),
+                            'SaatLog' =>now(),
+                            'KomfirmasiPenerima' =>$tmp->KomfirmasiPenerima,
+                            'KomfirmasiPemberi' =>$user,
+                            'SaatAwalKomfirmasi' =>$tmp->SaatAwalKomfirmasi,
+                            'SaatAkhirKomfirmasi' =>now(),
+                            'JumlahPemasukanPrimer' =>$tmp->JumlahPemasukanPrimer,
+                            'JumlahPemasukanSekunder' =>$tmp->JumlahPemasukanSekunder,
+                            'JumlahPemasukanTritier' =>$tmp->JumlahPemasukanTritier,
+                            'JumlahPengeluaranPrimer' =>$jumlahPrimer,
+                            'JumlahPengeluaranSekunder' =>$jumlahSekunder,
+                            'JumlahPengeluaranTritier' =>$jumlahTritier,
                             'AsalIdSubKelompok' => $tmp->AsalIdSubkelompok,
-
-                            'TujuanIdSubkelompok' =>
-                                $tmp->TujuanIdSubkelompok,
-
-                            'SaldoPrimer' =>
-                                $saldo->SaldoPrimer,
-
-                            'SaldoSekunder' =>
-                                $saldo->SaldoSekunder,
-
-                            'SaldoTritier' =>
-                                $saldo->SaldoTritier,
-
-                            'TimeInput' =>
-                                $tmp->TimeInput,
+                            'TujuanIdSubkelompok' =>$tmp->TujuanIdSubkelompok,
+                            'SaldoPrimer' =>$saldo->SaldoPrimer,
+                            'SaldoSekunder' =>$saldo->SaldoSekunder,
+                            'SaldoTritier' =>$saldo->SaldoTritier,
+                            'TimeInput' =>$tmp->TimeInput,
                         ]);
 
                     /*
@@ -911,70 +831,60 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
     {
         return DB::connection('ConnInventory')
             ->table('Tmp_Transaksi as TT')
-
             ->join(
                 'Type as T',
                 'TT.IdType',
                 '=',
                 'T.IdType'
             )
-
             ->join(
                 'Subkelompok as SK',
                 'T.IdSubkelompok_Type',
                 '=',
                 'SK.IdSubkelompok'
             )
-
             ->join(
                 'Kelompok as K',
                 'SK.IdKelompok_Subkelompok',
                 '=',
                 'K.IdKelompok'
             )
-
             ->join(
                 'KelompokUtama as KU',
                 'K.IdKelompokUtama_Kelompok',
                 '=',
                 'KU.IdKelompokUtama'
             )
-
             ->join(
                 'Objek as O',
                 'KU.IdObjek_KelompokUtama',
                 '=',
                 'O.IdObjek'
             )
-
             ->join(
                 'Divisi as D',
                 'O.IdDivisi_Objek',
                 '=',
                 'D.IdDivisi'
             )
-
             ->join(
                 'UserObjek as UO',
                 'O.IdObjek',
                 '=',
                 'UO.IdObjek'
             )
-
            ->leftJoin(
                 'SATUAN as S1',
                 'T.UnitPrimer',
                 '=',
                 'S1.no_satuan'
             )
-
             ->leftJoin(
                 'SATUAN as S2',
                 'T.UnitSekunder',
                 '=',
                 'S2.no_satuan'
             )
-
             ->leftJoin(
                 'SATUAN as S3',
                 'T.UnitTritier',
@@ -982,11 +892,6 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
                 'S3.no_satuan'
             )
 
-            /*
-            |--------------------------------------------------------------------------
-            | KCN_SALES
-            |--------------------------------------------------------------------------
-            */
             ->join(
                 'KCN_SALES.dbo.T_DeliveryOrder as DO',
                 'DO.IdTransTmp',

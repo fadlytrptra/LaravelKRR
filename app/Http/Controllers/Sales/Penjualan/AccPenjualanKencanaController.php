@@ -543,90 +543,36 @@ class AccPenjualanKencanaController extends Controller
                 // =====================================================
 
                 $tanggal = now();
-
                 $conn
                     ->table('Transaksi')
                     ->insert([
-                        'IdTransaksi' =>
-                            $idTransaksiInventory,
-
-                        'IdTypeTransaksi' =>
-                            $getTmp('IdTypeTransaksi'),
-
-                        'UraianDetailTransaksi' =>
-                            $getTmp('UraianDetailTransaksi'),
-
-                        'IdType' =>
-                            $getTmp('IdType'),
-
-                        'IdPenerima' =>
-                            $getTmp('IdPenerima'),
-
-                        'IdPemberi' =>
-                            $user,
-
-                        'SaatAwalTransaksi' =>
-                            $getTmp('SaatAwalTransaksi'),
-
-                        'SaatAkhirTransaksi' =>
-                            $tanggal,
-
-                        'SaatLog' =>
-                            $tanggal,
-
-                        'KomfirmasiPenerima' =>
-                            $getTmp('KomfirmasiPenerima'),
-
-                        'KomfirmasiPemberi' =>
-                            $user,
-
-                        'SaatAwalKomfirmasi' =>
-                            $getTmp('SaatAwalKomfirmasi'),
-
-                        'SaatAkhirKomfirmasi' =>
-                            $tanggal,
-
-                        'JumlahPemasukanPrimer' =>
-                            $getTmp('JumlahPemasukanPrimer', 0),
-
-                        'JumlahPemasukanSekunder' =>
-                            $getTmp('JumlahPemasukanSekunder', 0),
-
-                        'JumlahPemasukanTritier' =>
-                            $getTmp('JumlahPemasukanTritier', 0),
-
-                        'JumlahPengeluaranPrimer' =>
-                            $getTmp('JumlahPengeluaranPrimer', 0),
-
-                        'JumlahPengeluaranSekunder' =>
-                            $getTmp('JumlahPengeluaranSekunder', 0),
-
-                        'JumlahPengeluaranTritier' =>
-                            $getTmp('JumlahPengeluaranTritier', 0),
-
-                        'AsalIdSubKelompok' =>
-                            $getTmp('AsalIdSubKelompok'),
-
-                        'TujuanIdSubkelompok' =>
-                            $getTmp('TujuanIdSubkelompok'),
-
-                        'SaldoPrimer' =>
-                            $saldoPrimerBaru,
-
-                        'SaldoSekunder' =>
-                            $saldoSekunderBaru,
-
-                        'SaldoTritier' =>
-                            $saldoTritierBaru,
-
-                        'IdSubkontraktor' =>
-                            'barcode',
-
-                        'TimeInput' =>
-                            $getTmp('TimeInput'),
-
-                        'NoSP' =>
-                            $noSP,
+                        'IdTransaksi' =>$idTransaksiInventory,
+                        'IdTypeTransaksi' =>$getTmp('IdTypeTransaksi'),
+                        'UraianDetailTransaksi' =>$getTmp('UraianDetailTransaksi'),
+                        'IdType' =>$getTmp('IdType'),
+                        'IdPenerima' =>$getTmp('IdPenerima'),
+                        'IdPemberi' =>$user,
+                        'SaatAwalTransaksi' =>$getTmp('SaatAwalTransaksi'),
+                        'SaatAkhirTransaksi' =>$tanggal,
+                        'SaatLog' =>$tanggal,
+                        'KomfirmasiPenerima' =>$getTmp('KomfirmasiPenerima'),
+                        'KomfirmasiPemberi' =>$user,
+                        'SaatAwalKomfirmasi' =>$getTmp('SaatAwalKomfirmasi'),
+                        'SaatAkhirKomfirmasi' =>$tanggal,
+                        'JumlahPemasukanPrimer' =>$getTmp('JumlahPemasukanPrimer', 0),
+                        'JumlahPemasukanSekunder' =>$getTmp('JumlahPemasukanSekunder', 0),
+                        'JumlahPemasukanTritier' =>$getTmp('JumlahPemasukanTritier', 0),
+                        'JumlahPengeluaranPrimer' =>$saldoPrimerDikeluarkan,
+                        'JumlahPengeluaranSekunder' =>$saldoSekunderDikeluarkan,
+                        'JumlahPengeluaranTritier' =>$saldoTritierDikeluarkan,
+                        'AsalIdSubKelompok' =>$getTmp('AsalIdSubKelompok'),
+                        'TujuanIdSubkelompok' =>$getTmp('TujuanIdSubkelompok'),
+                        'SaldoPrimer' =>$saldoPrimerBaru,
+                        'SaldoSekunder' =>$saldoSekunderBaru,
+                        'SaldoTritier' =>$saldoTritierBaru,
+                        'IdSubkontraktor' =>'barcode',
+                        'TimeInput' =>$getTmp('TimeInput'),
+                        'NoSP' =>$noSP,
                     ]);
 
 
@@ -718,21 +664,14 @@ class AccPenjualanKencanaController extends Controller
                 // gunakan nilai tersebut.
 
                 foreach ($noIndeks as $itemNumber) {
-
                     $query = $conn
                         ->table('Tmp_Gudang')
                         ->where(
                             'Kode_barang',
                             $kodeBarang
                         )
-                        ->where(
-                            'NoIndeks',
-                            (int) $itemNumber
-                        )
-                        ->where(
-                            'typetransaksi',
-                            '09'
-                        );
+                        ->where('NoIndeks', (int) $itemNumber)
+                        ->where('typetransaksi','09');
 
                     $updateData = [
                         'Aktif' =>
@@ -928,6 +867,8 @@ class AccPenjualanKencanaController extends Controller
                 );
         }
     }
+
+
 
     //Display the specified resource.
     public function show($id)
