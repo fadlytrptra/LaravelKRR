@@ -17,250 +17,530 @@
         max-height: 80px;
     }
 </style>
-<div style="min-width: 16cm;min-height: 20.5cm;border: 1px solid black;padding: 10px;box-sizing: border-box;"
-    contenteditable="true">
-    <h2>PT. KENCANA RAJASA RAYA</h2>
-    <h4>JL RAYA TROPODO No. 1 WARU - SIDOARJO - INDONESIA</h4>
-    <h4>TELP (031) 8669595, 8669966</h4>
-    <h4>FAX (031) 8669989</h4>
-    <h3>SURAT PENGANTAR PENGIRIMAN BARANG</h3>
-    <table style="width:100%; margin-top:10px;" cellpadding="0" cellspacing="0">
-        <tr>
-            <!-- LEFT SIDE -->
-            <td style="width:50%; vertical-align:top; border:1px solid black; padding:8px;">
-                <h5 style="margin:0;">Kepada Yth.</h5>
-                <h5 style="margin:0;">{{ $items->NamaCust }}</h5>
-                <p style="margin:0;">{{ $items->Alamat }}</p>
-            </td>
 
-            <!-- RIGHT SIDE -->
-            <td style="width:50%; vertical-align:top; padding-left:15px;">
-                <table>
-                    <tr>
-                        <td>No. SJ</td>
-                        <td>: </td>
-                        <td>{{ $items->IDPengiriman }}</td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal</td>
-                        <td>: </td>
-                        <td>
-                            {{ \Carbon\Carbon::parse($items->TanggalActual)->locale('id')->translatedFormat('d-F-Y') }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Truk No.</td>
-                        <td>: </td>
-                        <td>{{ $items->TrukNopol }}</td>
-                    </tr>
-                    <tr>
-                        <td>No. SP</td>
-                        <td>: </td>
-                        <td>{{ $items->SuratPesanan }}</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    @php
-        $cleanNull = function ($value) {
-            if (
-                $value === null ||
-                trim((string) $value) === '' ||
-                strtoupper(trim((string) $value)) === 'NULL'
-            ) {
-                return '';
-            }
-
-            return trim((string) $value);
-        };
-
-        $satPrimer = $cleanNull($items->satPrimer);
-
-        $qtyPrimer = is_numeric($items->QtyPrimer ?? null)
-            ? (float) $items->QtyPrimer
-            : 0;
-
-        $satuan = $cleanNull($items->Satuan);
-        $satSekunder = $cleanNull($items->satSekunder);
-        $satTritier = $cleanNull($items->SatTRitier);
-
-        $satuanUmum = '';
-        $jumlahUmum = '';
-
+@php
+    $cleanNull = function ($value) {
         if (
-            $satuan !== '' &&
-            $satuan === $satSekunder &&
-            is_numeric($items->QtySekunder ?? null) &&
-            (float) $items->QtySekunder > 0
+            $value === null ||
+            trim((string) $value) === '' ||
+            strtoupper(trim((string) $value)) === 'NULL'
         ) {
-            $satuanUmum = $satSekunder;
-            $jumlahUmum = number_format(
-                (float) $items->QtySekunder,
-                0,
-                ',',
-                '.'
-            );
-        } elseif (
-            $satuan !== '' &&
-            $satuan === $satTritier &&
-            is_numeric($items->QtyTritier ?? null) &&
-            (float) $items->QtyTritier > 0
-        ) {
-            $satuanUmum = $satTritier;
-            $jumlahUmum = number_format(
-                (float) $items->QtyTritier,
+            return '';
+        }
+
+        return trim((string) $value);
+    };
+
+    // CUSTOMER
+    $namaCust = $cleanNull($items->NamaCust ?? null);
+    $alamatKirim = $cleanNull($items->AlamatKirim ?? null);
+
+    // SJ
+    $noSJ = $cleanNull($items->IDPengiriman ?? null);
+    $trukNopol = $cleanNull($items->TrukNopol ?? null);
+
+    // TANGGAL
+    $tanggalActual = $items->TanggalActual ?? null;
+
+    // SP
+    $idSP = $cleanNull($items->IdSP ?? null);
+
+    // BARANG
+    $namaTipeBarang = $cleanNull($items->NamaTipeBarang ?? null);
+
+    // Uraian berasal dari DO.Uraian
+    $namaBarang = $cleanNull($items->NamaBarang ?? null);
+
+    // SATUAN
+    $satuan = $cleanNull($items->Satuan ?? null);
+
+    // JUMLAH DARI T_DeliveryOrder.QtyTritier
+    $jumlah = is_numeric($items->QtyTritier ?? null)
+        ? (float) $items->QtyTritier
+        : 0;
+
+    // ALAMAT PENGIRIMAN
+    $alamatPengiriman = $cleanNull(
+        $items->AlamatPengiriman ?? null
+    );
+
+    $kotaKirim = $cleanNull(
+        $items->KotaKirim ?? null
+    );
+
+    // FORMAT ANGKA
+    $formatQty = function ($value) {
+        if ($value === null || $value === '') {
+            return '';
+        }
+
+        if (!is_numeric($value)) {
+            return '';
+        }
+
+        $number = (float) $value;
+
+        if ($number == floor($number)) {
+            return number_format(
+                $number,
                 0,
                 ',',
                 '.'
             );
         }
 
-        $noPO = $cleanNull($items->NO_PO);
-        $uraian = $cleanNull($items->Uraian);
+        return rtrim(
+            rtrim(
+                number_format(
+                    $number,
+                    2,
+                    ',',
+                    '.'
+                ),
+                '0'
+            ),
+            ','
+        );
+    };
+@endphp
 
-        if ($uraian === '') {
-            $uraian = $cleanNull($items->NamaType);
-        }
-        $ketSKBDN = $cleanNull($items->KetSKBDN ?? null);
-    @endphp
-    <table style="border: 1px solid black;width: 100%;border-collapse: collapse;margin-top: 10px">
-        <tr>
-            <th style="border: 1px solid black;padding:8px">Uraian</th>
-            <th style="border: 1px solid black;padding:8px">Satuan</th>
-            <th style="border: 1px solid black;padding:8px">Jumlah</th>
-        </tr>
 
+<div
+    style="
+        min-width:16cm;
+        min-height:20.5cm;
+        border:1px solid black;
+        padding:10px;
+        box-sizing:border-box;
+    "
+    contenteditable="true"
+>
+
+    {{-- =========================================================
+         HEADER PERUSAHAAN
+    ========================================================== --}}
+
+    <h2>PT. KENCANA RAJASA RAYA</h2>
+
+    <h4>
+        JL RAYA TROPODO No. 1 WARU - SIDOARJO - INDONESIA
+    </h4>
+
+    <h4>
+        TELP (031) 8669595, 8669966
+    </h4>
+
+    <h4>
+        FAX (031) 8669989
+    </h4>
+
+    <h3>
+        SURAT PENGANTAR PENGIRIMAN BARANG
+    </h3>
+
+
+    {{-- =========================================================
+         CUSTOMER DAN INFORMASI SJ
+    ========================================================== --}}
+
+    <table
+        style="width:100%; margin-top:10px;"
+        cellpadding="0"
+        cellspacing="0"
+    >
         <tr>
-            <td style="border: 1px solid black;padding:8px">
-                {{ $items->NAMATYPEBARANG }}
-                @if ($uraian !== '')
-                    <br>
-                    {{ $uraian }}
-                @endif
-                @if ($noPO !== '')
-                    <br>
-                    PO: {{ $noPO }}
-                @endif
-                @if ($ketSKBDN !== '')
-                    <br>
-                    <p style="font-size: small">
-                        {!! nl2br(e($ketSKBDN)) !!}
+
+            {{-- =================================================
+                 CUSTOMER
+            ================================================== --}}
+
+            <td
+                style="
+                    width:50%;
+                    vertical-align:top;
+                    border:1px solid black;
+                    padding:8px;
+                "
+            >
+
+                <h5 style="margin:0;">
+                    Kepada Yth.
+                </h5>
+
+                <h5 style="margin:0;">
+                    {{ $namaCust }}
+                </h5>
+
+                @if ($alamatKirim !== '')
+                    <p style="margin:0;">
+                        {{ $alamatKirim }}
                     </p>
                 @endif
-            </td>
-
-            <td style="border: 1px solid black;padding:8px">
-                @if ($satuanUmum !== '')
-                    {{ $satuanUmum }}
-                    <br>
-                @endif
-
-                @if ($satPrimer !== '' && $qtyPrimer > 0)
-                    {{ $satPrimer }}
-                @endif
 
             </td>
 
-            <td style="border: 1px solid black;padding:8px">
 
-                @if ($jumlahUmum !== '')
-                    {{ $jumlahUmum }}
-                    <br>
-                @endif
+            {{-- =================================================
+                 INFORMASI SURAT JALAN
+            ================================================== --}}
 
-                @if ($satPrimer !== '' && $qtyPrimer > 0)
-                    {{ number_format($qtyPrimer, 0, ',', '.') }}
-                @endif
+            <td
+                style="
+                    width:50%;
+                    vertical-align:top;
+                    padding-left:15px;
+                "
+            >
+
+                <table>
+
+                    {{-- No SJ --}}
+                    <tr>
+                        <td>No. SJ</td>
+                        <td>:</td>
+                        <td>
+                            {{ $noSJ }}
+                        </td>
+                    </tr>
+
+
+                    {{-- Tanggal --}}
+                    <tr>
+                        <td>Tanggal</td>
+                        <td>:</td>
+                        <td>
+                            @if (!empty($tanggalActual))
+                                {{ \Carbon\Carbon::parse($tanggalActual)->locale('id')->translatedFormat('d-F-Y') }}
+                            @endif
+                        </td>
+                    </tr>
+
+
+                    {{-- Truk --}}
+                    <tr>
+                        <td>Truk No.</td>
+                        <td>:</td>
+                        <td>
+                            {{ $trukNopol }}
+                        </td>
+                    </tr>
+
+
+                    {{-- No SP --}}
+                    <tr>
+                        <td>No. SP</td>
+                        <td>:</td>
+                        <td>
+                            {{ $idSP }}
+                        </td>
+                    </tr>
+
+                </table>
 
             </td>
+
         </tr>
     </table>
-    <div style="width: 98%;border: 1px solid black;margin-top: 10px;padding: 0.85%">
-        <h5>Syarat Penyerahan:</h5>
-        @if (!empty($items->SyaratPenyerahanSKBDN))
-            <p style="font-size: small">{!! nl2br(e($items->SyaratPenyerahanSKBDN)) !!}</p>
-        @else
-            <p>Dikirim ke: {{ $items->AlamatKirim }}</p>
-        @endif
-    </div>
-    <table style="width:100%; margin-top:10px;" cellpadding="0" cellspacing="0">
+
+
+    {{-- =========================================================
+         TABEL BARANG
+    ========================================================== --}}
+
+    <table
+        style="
+            border:1px solid black;
+            width:100%;
+            border-collapse:collapse;
+            margin-top:10px;
+        "
+    >
         <tr>
-            <td style="width:55%; vertical-align:top; padding-left:10px;">
+            <th style="
+                border:1px solid black;
+                padding:8px;
+            ">
+                Uraian
+            </th>
 
-                <table style="width:100%; border-bottom:1px solid black; border-collapse:collapse;">
+            <th style="
+                border:1px solid black;
+                padding:8px;
+            ">
+                Satuan
+            </th>
 
-                    {{-- Header --}}
+            <th style="
+                border:1px solid black;
+                padding:8px;
+            ">
+                Jumlah
+            </th>
+        </tr>
+
+        <tr>
+
+            {{-- URAIAN --}}
+            <td
+                style="
+                    border:1px solid black;
+                    padding:8px;
+                    vertical-align:top;
+                "
+            >
+
+                {{-- Nama Type --}}
+                @if ($namaTipeBarang !== '')
+                    {{ $namaTipeBarang }}
+                @endif
+
+                {{-- Uraian dari T_DeliveryOrder.Uraian --}}
+                @if ($namaBarang !== '')
+
+                    @if ($namaTipeBarang !== '')
+                        <br>
+                    @endif
+
+                    {{ $namaBarang }}
+
+                @endif
+
+            </td>
+
+
+            {{-- SATUAN --}}
+            <td
+                style="
+                    border:1px solid black;
+                    padding:8px;
+                    vertical-align:top;
+                    text-align:center;
+                "
+            >
+                @if ($satuan !== '')
+                    {{ $satuan }}
+                @endif
+            </td>
+
+
+            {{-- JUMLAH --}}
+            <td
+                style="
+                    border:1px solid black;
+                    padding:8px;
+                    vertical-align:top;
+                    text-align:center;
+                "
+            >
+                @if ($jumlah > 0)
+                    {{ $formatQty($jumlah) }}
+                @endif
+            </td>
+
+        </tr>
+    </table>
+
+
+    {{-- =========================================================
+         SYARAT PENYERAHAN
+    ========================================================== --}}
+
+    <div
+        style="
+            width:98%;
+            border:1px solid black;
+            margin-top:10px;
+            padding:0.85%;
+        "
+    >
+
+        <h5>
+            Syarat Penyerahan:
+        </h5>
+
+        @if ($alamatPengiriman !== '')
+
+            <p>
+                Dikirim ke: {{ $alamatPengiriman }}
+
+                @if ($kotaKirim !== '')
+                    , {{ $kotaKirim }}
+                @endif
+            </p>
+
+        @elseif ($alamatKirim !== '')
+
+            <p>
+                Dikirim ke: {{ $alamatKirim }}
+            </p>
+
+        @endif
+
+    </div>
+
+
+    {{-- =========================================================
+         TANDA TANGAN
+    ========================================================== --}}
+
+    <table
+        style="
+            width:100%;
+            margin-top:10px;
+        "
+        cellpadding="0"
+        cellspacing="0"
+    >
+
+        <tr>
+
+            <td
+                style="
+                    width:55%;
+                    vertical-align:top;
+                    padding-left:10px;
+                "
+            >
+
+                <table
+                    style="
+                        width:100%;
+                        border-bottom:1px solid black;
+                        border-collapse:collapse;
+                    "
+                >
+
+                    {{-- HEADER TANDA TANGAN --}}
                     <tr>
+
                         <td
                             style="
-                            width:30%;
-                            text-align:center;
-                            font-size:14px;
-                            font-weight:bold;
-                            vertical-align:top;
-                            padding-top:28px;
-                        ">
+                                width:30%;
+                                text-align:center;
+                                font-size:14px;
+                                font-weight:bold;
+                                vertical-align:top;
+                                padding-top:28px;
+                            "
+                        >
                             PENGIRIM
                         </td>
 
                         <td
                             style="
-                            width:70%;
-                            text-align:center;
-                            font-size:14px;
-                            font-weight:bold;
-                            padding-top:10px;
-                        ">
-                            TANDA TERIMA <br>
-                            BARANG TERSEBUT TELAH KAMI TERIMA DALAM KEADAAN CUKUP DAN BAIK
+                                width:70%;
+                                text-align:center;
+                                font-size:14px;
+                                font-weight:bold;
+                                padding-top:10px;
+                            "
+                        >
+                            TANDA TERIMA
+                            <br>
+                            BARANG TERSEBUT TELAH KAMI TERIMA
+                            DALAM KEADAAN CUKUP DAN BAIK
                         </td>
+
                     </tr>
 
-                    {{-- QR --}}
+
+                    {{-- AREA TANDA TANGAN --}}
                     <tr>
-                        <td style="height:120px; text-align:center; vertical-align:bottom; padding-top:15px;">
-                            @if (!empty($items->GbrAccMng))
-                                <img src="data:image/png;base64, {{ $items->GbrAccMng }}" style="max-height:110px;">
+
+                        <td
+                            style="
+                                height:120px;
+                                text-align:center;
+                                vertical-align:bottom;
+                                padding-top:15px;
+                            "
+                        >
+
+                            @if (!empty($items->GbrAccMng ?? null))
+
+                                <img
+                                    src="data:image/png;base64,{{ $items->GbrAccMng }}"
+                                    style="max-height:110px;"
+                                >
+
                             @endif
+
                         </td>
 
-                        <td style="height:120px; text-align:center; vertical-align:bottom; padding-top:15px;">
-                            {{-- @if ($ttCustomer)
-                                <img src="{{ $ttCustomer }}" style="max-height:110px;">
-                            @endif --}}
+                        <td
+                            style="
+                                height:120px;
+                                text-align:center;
+                                vertical-align:bottom;
+                                padding-top:15px;
+                            "
+                        >
                         </td>
 
-                        {{-- <td style="vertical-align:middle; padding-right:30px; width:150px;">
-                            <strong>Tanggal Terima:</strong><br>
-                            {{ \Carbon\Carbon::parse($otp->ApprovedAt)->locale('id')->translatedFormat('d F Y, H:i:s') }}
-                        </td> --}}
                     </tr>
 
-                    {{-- Nama --}}
+
+                    {{-- NAMA --}}
                     <tr>
-                        <td style="text-align:center; font-size:15px; font-weight:normal; padding-bottom:15px;">
+
+                        <td
+                            style="
+                                text-align:center;
+                                font-size:15px;
+                                font-weight:normal;
+                                padding-bottom:15px;
+                            "
+                        >
                             SUNYATA ICHWAN
                         </td>
 
-                        <td style="text-align:center; font-size:15px; font-weight:normal; padding-bottom:15px;">
-                            {{ $items->NamaCust ?? '-' }}
+                        <td
+                            style="
+                                text-align:center;
+                                font-size:15px;
+                                font-weight:normal;
+                                padding-bottom:15px;
+                            "
+                        >
+                            {{ $namaCust !== '' ? $namaCust : '-' }}
                         </td>
+
                     </tr>
 
                 </table>
 
-                <table style="width:100%; font-size:12px; margin-top:50px;">
-                    <tr>
-                        <td><strong>Note :</strong></td>
-                    </tr>
+
+                {{-- =================================================
+                     NOTE
+                ================================================== --}}
+
+                <table
+                    style="
+                        width:100%;
+                        font-size:12px;
+                        margin-top:50px;
+                    "
+                >
+
                     <tr>
                         <td>
-                            Apabila barang belum terbayar maka barang yang terkirim merupakan barang titipan
+                            <strong>Note :</strong>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td>
+                            Apabila barang belum terbayar maka barang
+                            yang terkirim merupakan barang titipan
+                        </td>
+                    </tr>
+
                 </table>
+
             </td>
+
         </tr>
+
     </table>
+
 </div>

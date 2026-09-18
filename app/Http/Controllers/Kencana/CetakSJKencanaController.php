@@ -72,11 +72,6 @@ class CetakSJKencanaController extends Controller
         ]);
 
         if (!in_array($jenissj, ['suratjalanppn', 'suratjalanexport'])) {
-
-            \Log::warning('Jenis SJ tidak valid', [
-                'jenissj' => $jenissj
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Jenis SJ ' . $jenissj . ' belum disetting',
@@ -86,20 +81,134 @@ class CetakSJKencanaController extends Controller
 
         $connection = DB::connection('ConnKCNSales');
 
-        \Log::info('Database', [
-            'database' => $connection->getDatabaseName(),
-        ]);
-
         $data = $connection
-            ->table('dbo.VW_PRG_4496_SLS_CETAK_SJ')
-            ->where('IDPengiriman', $nosj)
+            ->table('T_HeaderPengiriman as H')
+
+            // =====================================================
+            // DETAIL SURAT JALAN
+            // =====================================================
+            ->join(
+                'T_DetailPengiriman as DG',
+                'H.IdHeaderKirim',
+                '=',
+                'DG.IDHeaderKirim'
+            )
+
+            // =====================================================
+            // DELIVERY ORDER
+            // =====================================================
+            ->join(
+                'T_DeliveryOrder as DO',
+                'DG.IDDO',
+                '=',
+                'DO.IDDO'
+            )
+
+            // =====================================================
+            // DETAIL PESANAN
+            // Dipakai untuk IDBarang, IDJnsBarang, Qty, Satuan, dll
+            // =====================================================
+            ->leftJoin(
+                'T_DetailPesanan as DP',
+                function ($join) {
+                    $join->on('DO.IDPesanan', '=', 'DP.IDPesanan')
+                        ->on('DG.IDSuratPesanan', '=', 'DP.IDSuratPesanan');
+                }
+            )
+
+            // =====================================================
+            // HEADER PESANAN
+            // =====================================================
+            ->leftJoin(
+                'T_HeaderPesanan as HP',
+                'DP.IDSuratPesanan',
+                '=',
+                'HP.IDSuratPesanan'
+            )
+
+            // =====================================================
+            // CUSTOMER
+            // =====================================================
+            ->leftJoin(
+                'T_Customer as C',
+                'HP.IDCust',
+                '=',
+                'C.IDCust'
+            )
+
+            // =====================================================
+            // TYPE BARANG
+            // DP.IDBarang -> INVENTORY.dbo.Type.KodeBarang
+            // =====================================================
+            ->leftJoin(
+                DB::raw('INVENTORY.dbo.Type as TY'),
+                'DP.IDBarang',
+                '=',
+                'TY.KodeBarang'
+            )
+
+            // =====================================================
+            // FILTER SJ
+            // =====================================================
+            ->where('H.IDPengiriman', $nosj)
+
+            ->select([
+                'DP.IDJnsBarang as IDJnsBarang',
+
+                // Customer
+                'C.NamaCust as NamaCust',
+                'C.AlamatKirim as AlamatKirim',
+
+                // SP
+                'DG.IDSuratPesanan as IdSP',
+
+                // SJ
+                'H.IDPengiriman as IDPengiriman',
+
+                // Type Barang
+                'TY.NamaType as NamaTipeBarang',
+
+                // Nama Barang
+                'DO.Uraian as NamaBarang',
+
+                // Tanggal dari T_HeaderPengiriman
+                'H.TanggalActual as TanggalActual',
+
+                // Quantity
+                'DP.Qty as JumlahPesan',
+                'DO.QtyPrimer as QtyPrimer',
+                'DO.QtySekunder as QtySekunder',
+                'DO.QtyTritier as QtyTritier',
+
+                // Satuan
+                'DP.Satuan as Satuan',
+
+                // No Polisi dari T_HeaderPengiriman
+                'H.TrukNopol as TrukNopol',
+
+                // No SP
+                'H.NoSP as NoSP',
+
+                // Alamat pengiriman
+                'DO.AlamatKirim as AlamatPengiriman',
+                'DO.KotaKirim as KotaKirim',
+
+                'DO.Expeditor as Expeditor',
+
+                'H.Ket as Ket',
+
+                'DP.KodeBarang as KodeBarang',
+                'DP.UraianPesanan as UraianPesanan',
+            ])
+
+            ->distinct()
             ->get();
 
-        \Log::info('Jumlah data view', [
+        \Log::info('Jumlah data query builder', [
             'jumlah' => $data->count()
         ]);
 
-        \Log::info('Data view', [
+        \Log::info('Data query builder', [
             'data' => $data->toArray()
         ]);
 
@@ -108,28 +217,107 @@ class CetakSJKencanaController extends Controller
 
     public function downloadPdf($no_sj)
     {
-        $items = DB::connection('ConnKCNSales')
-            ->table('VW_PRG_4496_SLS_CETAK_SJ as V')
+        $connection = DB::connection('ConnKCNSales');
+
+        $items = $connection
+            ->table('T_HeaderPengiriman as H')
+
+            // Detail Surat Jalan
             ->join(
-                'T_HeaderPengiriman as H',
-                'V.IDPengiriman',
+                'T_DetailPengiriman as DG',
+                'H.IdHeaderKirim',
                 '=',
-                'H.IDPengiriman'
+                'DG.IDHeaderKirim'
             )
-            ->where('V.IDPengiriman', $no_sj)
-            ->select(
-                'V.*',
-                'H.TanggalActual'
+
+            // Delivery Order
+            ->join(
+                'T_DeliveryOrder as DO',
+                'DG.IDDO',
+                '=',
+                'DO.IDDO'
             )
+
+            // Detail Pesanan
+            ->leftJoin(
+                'T_DetailPesanan as DP',
+                function ($join) {
+                    $join->on(
+                        'DO.IDPesanan',
+                        '=',
+                        'DP.IDPesanan'
+                    )->on(
+                        'DG.IDSuratPesanan',
+                        '=',
+                        'DP.IDSuratPesanan'
+                    );
+                }
+            )
+
+            // Header Pesanan
+            ->leftJoin(
+                'T_HeaderPesanan as HP',
+                'DP.IDSuratPesanan',
+                '=',
+                'HP.IDSuratPesanan'
+            )
+
+            // Customer
+            ->leftJoin(
+                'T_Customer as C',
+                'HP.IDCust',
+                '=',
+                'C.IDCust'
+            )
+
+            // Type Barang
+            ->leftJoin(
+                DB::raw('INVENTORY.dbo.Type as TY'),
+                'DP.IDBarang',
+                '=',
+                'TY.KodeBarang'
+            )
+
+            ->where('H.IDPengiriman', $no_sj)
+
+            ->select([
+                'C.NamaCust as NamaCust',
+                'C.AlamatKirim as AlamatKirim',
+                'DG.IDSuratPesanan as IdSP',
+                'H.IDPengiriman as IDPengiriman',
+                'H.TanggalActual as TanggalActual',
+                'H.TrukNopol as TrukNopol',
+                'H.NoSP as NoSP',
+                'H.Ket as Ket',
+                'TY.NamaType as NamaTipeBarang',
+                'DO.Uraian as NamaBarang',
+                'DP.Qty as JumlahPesan',
+                'DO.QtyTritier as QtyTritier',
+                'DP.Satuan as Satuan',
+                'DO.AlamatKirim as AlamatPengiriman',
+                'DO.KotaKirim as KotaKirim',
+                'DO.Expeditor as Expeditor',
+                'DP.KodeBarang as KodeBarang',
+                'DP.UraianPesanan as UraianPesanan',
+            ])
+
             ->first();
 
         if (!$items) {
             abort(404, 'Data Surat Jalan tidak ditemukan');
         }
 
-        $pdf = Pdf::loadView('Kencana.SuratJalan.SuratJalanPDF', [
-            'items' => $items,
-        ])->setPaper('A4', 'portrait');
+        \Log::info('=== DOWNLOAD PDF SJ ===', [
+            'no_sj' => $no_sj,
+            'data' => (array) $items,
+        ]);
+
+        $pdf = Pdf::loadView(
+            'Kencana.SuratJalan.SuratJalanPDF',
+            [
+                'items' => $items,
+            ]
+        )->setPaper('A4', 'portrait');
 
         return $pdf->stream("{$no_sj}.pdf");
     }

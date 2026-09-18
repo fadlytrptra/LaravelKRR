@@ -203,17 +203,18 @@ jQuery(function ($) {
 
                 contoh_printSjEksportDiv.style.width = "21cm";
 
-                no_spKolom.innerHTML = data[0].SuratPesanan;
-                // nomor_sjKolom.innerHTML = "sj: " + no_sjText.value;
+                no_spKolom.innerHTML = data[0].IdSP;
 
-                nama_typeBarangKolom.innerHTML = data[0].NAMATYPEBARANG;
-                nama_barangKolomNo_poKolom.innerHTML = data[0].Uraian;
+                nama_typeBarangKolom.innerHTML = data[0].NamaTipeBarang;
+
+                nama_barangKolomNo_poKolom.innerHTML = data[0].NamaBarang;
 
                 tanggal_kirimKolom.innerHTML = moment(
-                    tanggal_sj.value,
+                    data[0].TanggalActual
                 ).format("D-MMMM-YYYY");
 
-                truk_nopolKolom.innerHTML = data[0].TrukNopol;
+                truk_nopolKolom.innerHTML =
+                    cleanNull(data[0].TrukNopol);
 
                 if (data[0].Ket == null || data[0].Ket?.trim() == "") {
                     keterangan_tambahanKolom.style.display = "none";
@@ -228,10 +229,10 @@ jQuery(function ($) {
                 }
 
                 nama_customerKolomAlamat_kolom.innerHTML =
-                    data[0].NamaCust;
+                    cleanNull(data[0].NamaCust);
 
                 nama_customerKolomAlamat_kolom.innerHTML +=
-                    "<br>" + data[0].Alamat;
+                    "<br>" + cleanNull(data[0].AlamatKirim);
 
                 // ==========================================
                 // DATA SATUAN
