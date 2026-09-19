@@ -1836,6 +1836,7 @@ $("#uraian1").on("keydown", function (e) {
                 _token: csrfToken,
                 bank: IdBank1.trim(),
                 tahun: new Date(tglInput.value).getFullYear(),
+                tgl: tglInput.value,
             },
             success: function (result) {
                 if (result) {
@@ -2079,6 +2080,7 @@ $("#uraian").on("keydown", function (e) {
                 _token: csrfToken,
                 bank: IdBank.trim(),
                 tahun: new Date(tglInput.value).getFullYear(),
+                tgl: tglInput.value,
             },
             success: function (result) {
                 if (result) {
