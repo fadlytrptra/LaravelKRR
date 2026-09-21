@@ -1280,6 +1280,11 @@
 
                                     </div>
 
+                                    {{-- close preview detail --}}
+                                    {{--  --}}
+                                    {{--  --}}
+                                    {{--  --}}
+
                                     <div class="row mt-2">
                                         <div class="col-md-12">
                                             <div class="row bordered">
@@ -1297,7 +1302,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-md-12">
                                             <div class="row bordered">
                                                 <div class="col-sm-8 d-flex align-items-center justify-content-center bordered"
@@ -1307,16 +1311,10 @@
                                                 <div
                                                     class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
                                                     <span id="idSpv" class="h6"><strong></strong></span>
-                                                    <p style="margin-top: 12px; text-decoration: underline;">
-                                                        Slamet Basuki
-                                                    </p>
                                                 </div>
                                                 <div
                                                     class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
                                                     <span id="idMng" class="h6"><strong></strong></span>
-                                                    <p style="margin-top: 12px; text-decoration: underline;">
-                                                        Sunyata Ichwan
-                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
