@@ -7,9 +7,22 @@
 @section('content')
     <style>
         .extruder_root {
-            /* zoom: 0.8; */
-            transform: scale(0.8);
-            transform-origin: top center;
+            zoom: 0.8;
+            /* transform: scale(0.8);
+                transform-origin: top center; */
+        }
+
+        #tropodo_konversi_acc .form-control {
+            font-size: 20px !important;
+        }
+
+        table.dataTable thead th,
+        table.dataTable tbody td,
+        #table_konversi thead tr th,
+        #table_konversi tbody tr td,
+        #table_hasil thead tr th,
+        #table_hasil tbody tr td {
+            font-size: 20px !important;
         }
     </style>
     <div class="extruder_root">

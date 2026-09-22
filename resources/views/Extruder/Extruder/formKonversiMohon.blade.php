@@ -7,9 +7,22 @@
 @section('content')
     <style>
         .extruder_root {
-            /* zoom: 0.8; */
-            transform: scale(0.8);
-            transform-origin: top center;
+            zoom: 0.8;
+            /* transform: scale(0.8);
+                                transform-origin: top center; */
+        }
+
+        #konversi_mohon .form-control {
+            font-size: 20px !important;
+        }
+
+        table.dataTable thead th,
+        table.dataTable tbody td,
+        #table_konversi thead tr th,
+        #table_konversi tbody tr td,
+        #table_komposisi thead tr th,
+        #table_komposisi tbody tr td {
+            font-size: 20px !important;
         }
     </style>
     <div class="extruder_root">
@@ -35,7 +48,7 @@
                     <label for="txt_order">No. Order:</label>
                     <div class="input-group rounded">
                         <input type="text" id="id_order" class="form-control"
-                            style="max-width: 120px; border-right: none;" placeholder="ID" disabled>
+                            style="max-width: 200px; border-right: none;" placeholder="ID" disabled>
                         <input type="text" id="txt_order" class="form-control" style="border-left: none;"
                             placeholder="Pilih Order..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_order"
@@ -91,7 +104,7 @@
                     <label for="txt_mesin">Mesin:</label>
                     <div class="input-group rounded">
                         <input type="text" id="id_mesin" class="form-control"
-                            style="max-width: 120px; border-right: none;" placeholder="ID" disabled>
+                            style="max-width: 200px; border-right: none;" placeholder="ID" disabled>
                         <input type="text" id="txt_mesin" class="form-control" style="border-left: none;"
                             placeholder="Pilih Mesin..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_mesin"
@@ -116,7 +129,7 @@
                     <label for="txt_komposisi">Komposisi:</label>
                     <div class="input-group rounded">
                         <input type="text" id="id_komposisi" class="form-control"
-                            style="max-width: 120px; border-right: none;" placeholder="ID" disabled>
+                            style="max-width: 200px; border-right: none;" placeholder="ID" disabled>
                         <input type="text" id="txt_komposisi" class="form-control" style="border-left: none;"
                             placeholder="Pilih Komposisi..." disabled>
                         <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_komposisi"

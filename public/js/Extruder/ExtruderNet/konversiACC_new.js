@@ -387,8 +387,16 @@ btnProses.addEventListener("click", async function () {
             '<span class="spinner-border spinner-border-sm"></span> Memproses...';
 
         await cekPenyesuaian();
-        await prosesInventory();
-        await prosesExtruder();
+
+        const isInvSuccess = await prosesInventory();
+        if (!isInvSuccess) {
+            return;
+        }
+
+        const isExtSuccess = await prosesExtruder();
+        if (!isExtSuccess) {
+            return;
+        }
 
         Swal.fire("Berhasil", "Konversi berhasil di-ACC.", "success");
         clearForm();
@@ -416,6 +424,11 @@ async function cekPenyesuaian() {
         const result = await fetchSelectAsync(
             `/Konversi/getPenyesuaianTransaksi/${safeUrlParam(item.IdType.trim())}/06`,
         );
+        // Test Debug
+        console.log(
+            `[DEBUG cekPenyesuaian] Type: ${item.Type} | Result API:`,
+            result,
+        );
         if (result && result.length > 0 && result[0].jumlah > 1) {
             await Swal.fire(
                 "Peringatan",
@@ -429,64 +442,93 @@ async function cekPenyesuaian() {
 }
 
 async function prosesInventory() {
-    const idKonv = listKonversi[konversiPil].IdKonversi;
-    const transData = await fetchSelectAsync(
-        `/Konversi/getTransaksiKonversi/${safeUrlParam(idKonv)}`,
-    );
-
-    if (!transData || transData.length === 0) {
-        throw new Error("Data transaksi konversi tidak ditemukan.");
-    }
-
-    const tmpTrans = transData;
-
-    for (const t of tmpTrans) {
-        const keluarPrimer = parseFloat(t.JumlahPengeluaranPrimer) || 0;
-        const saldoPrimer = parseFloat(t.SaldoPrimer) || 0;
-
-        const keluarSekunder = parseFloat(t.JumlahPengeluaranSekunder) || 0;
-        const saldoSekunder = parseFloat(t.SaldoSekunder) || 0;
-
-        const keluarTritier = parseFloat(t.JumlahPengeluaranTritier) || 0;
-        const saldoTritier = parseFloat(t.SaldoTritier) || 0;
-
-        if (
-            keluarPrimer > saldoPrimer ||
-            keluarSekunder > saldoSekunder ||
-            keluarTritier > saldoTritier
-        ) {
-            throw new Error(
-                `Saldo untuk type ${t.namatype} tidak mencukupi. ` +
-                    `Primer (Keluar: ${keluarPrimer}, Saldo: ${saldoPrimer}) | ` +
-                    `Sekunder (Keluar: ${keluarSekunder}, Saldo: ${saldoSekunder}) | ` +
-                    `Tritier (Keluar: ${keluarTritier}, Saldo: ${saldoTritier})`,
+    try {
+        const idKonv = listKonversi[konversiPil].IdKonversi;
+        const transData = await fetchSelectAsync(
+            `/Konversi/getTransaksiKonversi/${safeUrlParam(idKonv)}`,
+        );
+        // Test Debug
+        console.log(
+            `[DEBUG prosesInverntory] Data transData ID ${idKonv}:`,
+            transData,
+        );
+        if (!transData || transData.length === 0) {
+            Swal.fire(
+                "Informasi",
+                "Data transaksi konversi tidak ditemukan.",
+                "info",
             );
+            return false;
         }
-    }
 
-    const shiftValue = timeAwal.value;
-    let shift;
-    if (shiftValue === "07:00") shift = "P";
-    else if (shiftValue === "15:00" || shiftValue === "12:00") shift = "S";
-    else if (
-        shiftValue === "19:00" ||
-        shiftValue === "23:00" ||
-        shiftValue === "17:00"
-    )
-        shift = "M";
+        for (const t of transData) {
+            const keluarPrimer = parseFloat(t.JumlahPengeluaranPrimer) || 0;
+            const saldoPrimer = parseFloat(t.SaldoPrimer) || 0;
 
-    let adaHutang = false;
-    const hutangItems = [];
+            const keluarSekunder = parseFloat(t.JumlahPengeluaranSekunder) || 0;
+            const saldoSekunder = parseFloat(t.SaldoSekunder) || 0;
 
-    for (const t of tmpTrans) {
-        const hutData = await fetchSelectAsync(
-            `/Konversi/getJumlahHutang/${safeUrlParam(t.IdType.trim())}/${safeUrlParam(t.idsubkelompok_type.trim())}/${safeUrlParam(shift)}/${safeUrlParam(formatDateToDDMMYY(dateInput.value))}`,
+            const keluarTritier = parseFloat(t.JumlahPengeluaranTritier) || 0;
+            const saldoTritier = parseFloat(t.SaldoTritier) || 0;
+
+            if (
+                keluarPrimer > saldoPrimer ||
+                keluarSekunder > saldoSekunder ||
+                keluarTritier > saldoTritier
+            ) {
+                Swal.fire(
+                    "Peringatan",
+                    `Saldo untuk type ${t.namatype} tidak mencukupi.`,
+                    "warning",
+                );
+                return false;
+            }
+        }
+
+        let rawTime = (timeAwal.value || "").trim();
+
+        let shiftValue =
+            rawTime.length >= 5 ? rawTime.substring(0, 5) : rawTime;
+
+        let shift = "";
+        if (shiftValue === "07:00") shift = "P";
+        else if (shiftValue === "15:00" || shiftValue === "12:00") shift = "S";
+        else if (
+            shiftValue === "19:00" ||
+            shiftValue === "23:00" ||
+            shiftValue === "17:00"
+        )
+            shift = "M";
+        // Test Debug
+        console.log(
+            `[DEBUG prosesInventory] rawTime: "${rawTime}", shiftValue: "${shiftValue}", Hasil Shift: "${shift}"`,
         );
 
-        if (hutData && hutData.length > 0) {
-            const h = hutData[0];
-            const totalS = parseFloat(h.TotalS) || 0;
-            const total = parseFloat(h.Total) || 0;
+        if (shift === "") {
+            Swal.fire(
+                "Peringatan",
+                `Jam shift (${rawTime}) tidak terdaftar di sistem.`,
+                "warning",
+            );
+            return false;
+        }
+
+        const hutangItems = [];
+        const tglFormatted = formatDateToDDMMYY(dateInput.value);
+
+        for (const t of transData) {
+            const hutData = await fetchSelectAsync(
+                `/Konversi/getJumlahHutang/${safeUrlParam(t.IdType.trim())}/${safeUrlParam(t.idsubkelompok_type.trim())}/${safeUrlParam(shift)}/${safeUrlParam(tglFormatted)}`,
+            );
+
+            let totalS = 0;
+            let total = 0;
+
+            if (hutData && hutData.length > 0) {
+                totalS = parseFloat(hutData[0].TotalS) || 0;
+                total = parseFloat(hutData[0].Total) || 0;
+            }
+
             const masukSekunder = parseFloat(t.JumlahPemasukanSekunder) || 0;
             const masukTritier = parseFloat(t.JumlahPemasukanTritier) || 0;
 
@@ -495,21 +537,88 @@ async function prosesInventory() {
                 masukTritier === total &&
                 (masukSekunder !== 0 || masukTritier !== 0)
             ) {
-                adaHutang = true;
                 hutangItems.push({
-                    IdTransaksi: t.IdTransaksi,
-                    IdType: t.IdType,
-                    IdSubKel: t.idsubkelompok_type,
-                    JumlahPemasukanSekunder: masukSekunder,
-                    JumlahPemasukanTritier: masukTritier,
+                    IdType: t.IdType.trim(),
+                    IdSubKel: t.idsubkelompok_type.trim(),
                 });
-            } else if (totalS !== 0 || total !== 0) {
-                throw new Error("Jumlah hutang tidak sesuai dengan konversi.");
+            } else {
+                if (totalS !== 0 || total !== 0) {
+                    Swal.fire(
+                        "Peringatan",
+                        "Jumlah hutang tidak sesuai dengan konversi",
+                        "warning",
+                    );
+                    return false;
+                }
             }
         }
-    }
+        // Test Debug
+        console.log(
+            "[DEBUG prosesInverntory] Daftar Hutang yang ditemukan:",
+            hutangItems,
+        );
 
-    for (const t of tmpTrans) {
+        if (hutangItems.length > 0) {
+            const confirmHutang = await Swal.fire({
+                title: "Konfirmasi",
+                text: "Ada hutang benang, apakah mau dilunasi?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya",
+                cancelButtonText: "Tidak",
+            });
+
+            if (confirmHutang.isConfirmed) {
+                // Test Debug
+                console.log(
+                    "[DEBUG prosesInventory] User memilih: YA, lunasi hutang. Mengeksekusi Update Konversi & Hutang...",
+                );
+                await eksekusiUpdateKonversi(transData);
+
+                for (const h of hutangItems) {
+                    const idTransInv = await fetchSelectAsync(
+                        `/Konversi/getIdTransInv/${safeUrlParam(h.IdType)}/${safeUrlParam(h.IdSubKel)}/${safeUrlParam(tglFormatted)}/${safeUrlParam(shift)}`,
+                    );
+
+                    if (idTransInv && idTransInv.length > 0) {
+                        for (const inv of idTransInv) {
+                            await fetchPost(
+                                "/Konversi/updProsesHutang",
+                                {
+                                    id_type: h.IdType,
+                                    subkel: h.IdSubKel,
+                                    id_inv: inv.Trans,
+                                },
+                                "PUT",
+                            );
+                        }
+                    }
+                }
+            } else {
+                // Test Debug
+                console.log(
+                    "[DEBUG prosesInventory] User memilih: TIDAK. Membatalkan proses (Return false).",
+                );
+                return false;
+            }
+        } else {
+            await eksekusiUpdateKonversi(transData);
+        }
+
+        return true;
+    } catch (error) {
+        console.error(error);
+        Swal.fire(
+            "Gagal",
+            error.message || "Terjadi kesalahan pada sistem.",
+            "error",
+        );
+        return false;
+    }
+}
+
+async function eksekusiUpdateKonversi(transData) {
+    for (const t of transData) {
         await fetchPost(
             "/Konversi/updProsesACCKonversi",
             {
@@ -526,33 +635,15 @@ async function prosesInventory() {
             "PUT",
         );
     }
-
-    if (adaHutang) {
-        for (const h of hutangItems) {
-            const idTransInv = await fetchSelectAsync(
-                `/Konversi/getIdTransInv/${safeUrlParam(h.IdType)}/${safeUrlParam(h.IdSubKel)}/${safeUrlParam(formatDateToDDMMYY(dateInput.value))}/${safeUrlParam(shift)}`,
-            );
-            if (idTransInv && idTransInv.length > 0) {
-                for (const inv of idTransInv) {
-                    await fetchPost(
-                        "/Konversi/updProsesHutang",
-                        {
-                            id_type: h.IdType,
-                            subkel: h.IdSubKel,
-                            id_inv: inv.Trans,
-                        },
-                        "PUT",
-                    );
-                }
-            }
-        }
-    }
-    return true;
 }
 
 async function prosesExtruder() {
     try {
         const idKonv = listKonversi[konversiPil].IdKonversi;
+        // Test Debug
+        console.log(
+            `[DEBUG prosesExtruder] Memulai proses ACC Master Konv untuk ID: ${idKonv}`,
+        );
 
         await fetchPost(
             "/Konversi/updACCMasterKonv",
@@ -564,6 +655,10 @@ async function prosesExtruder() {
 
         for (const item of listHasil) {
             if (item.StatusType === "HP") {
+                //Test Debug
+                console.log(
+                    `[DEBUG prosesExtruder] Update Saldo Order. ID Order: ${txtIdOrder.value}, No Urut: ${txtNoUrut.value}, Primer: ${item.JumlahPrimer}`,
+                );
                 const result = await fetchPost(
                     "/Konversi/updSaldoOrderDetail",
                     {

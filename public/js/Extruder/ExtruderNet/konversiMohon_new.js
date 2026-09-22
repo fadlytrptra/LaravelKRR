@@ -385,7 +385,8 @@ timeSelesai.addEventListener("keydown", function (event) {
             rows[0].classList.add("keyboard-selected");
             rows[0].focus();
 
-            rowEventKomposisi(0, null, false);
+            // Hanya select/highlight baris pertama saat fokus masuk tabel
+            setKomposisiSelection(0, true);
         }, 150);
     }
 });
@@ -657,7 +658,7 @@ btnTambahDetail.addEventListener("click", function () {
                             row.classList.remove(
                                 "selected",
                                 "keyboard-selected",
-                                "table-primary"
+                                "table-primary",
                             );
                         });
 
@@ -668,13 +669,16 @@ btnTambahDetail.addEventListener("click", function () {
                             return (
                                 rowData &&
                                 String(rowData.IdType).trim() ===
-                                String(listKomposisi[pilKomposisi].IdType).trim()
+                                    String(
+                                        listKomposisi[pilKomposisi].IdType,
+                                    ).trim()
                             );
                         });
 
                         if (selectedRow) {
                             // Cari index row setelah search/filter
-                            const selectedIndex = tableRows.indexOf(selectedRow);
+                            const selectedIndex =
+                                tableRows.indexOf(selectedRow);
 
                             // Set selected + fokus ke row tersebut
                             setKomposisiSelection(selectedIndex, true);
@@ -880,18 +884,11 @@ function setKomposisiSelection(index, shouldFocus = true) {
 
     // Hapus selection dari SEMUA row
     rows.forEach((row) => {
-        row.classList.remove(
-            "keyboard-selected",
-            "table-primary",
-            "selected"
-        );
+        row.classList.remove("keyboard-selected", "table-primary", "selected");
     });
 
     // Hanya 1 row yang diberi highlight
-    targetRow.classList.add(
-        "keyboard-selected",
-        "table-primary"
-    );
+    targetRow.classList.add("keyboard-selected", "table-primary");
 
     if (shouldFocus) {
         targetRow.focus();
@@ -912,7 +909,7 @@ function clearKomposisiSelection() {
         row.classList.remove(
             "keyboard-selected",
             // "selected",
-            "table-primary"
+            "table-primary",
         );
     });
 }
@@ -921,13 +918,13 @@ function resolveKomposisiSelection(rowIndex, rowData = null) {
     const rows = getKomposisiRows();
     const row = rowData
         ? rows.find((candidate) => {
-            const candidateData = tableKomposisi.row(candidate).data();
-            return (
-                candidateData &&
-                String(candidateData.IdType).trim() ===
-                String(rowData.IdType).trim()
-            );
-        })
+              const candidateData = tableKomposisi.row(candidate).data();
+              return (
+                  candidateData &&
+                  String(candidateData.IdType).trim() ===
+                      String(rowData.IdType).trim()
+              );
+          })
         : rows[rowIndex];
     const data = rowData || (row ? tableKomposisi.row(row).data() : null);
 
@@ -948,9 +945,7 @@ function resolveKomposisiSelection(rowIndex, rowData = null) {
 
 function bindKomposisiKeyboardNavigation() {
     const tableContainer = tableKomposisi.table().container();
-    const searchInput = tableContainer.querySelector(
-        "input[type='search']",
-    );
+    const searchInput = tableContainer.querySelector("input[type='search']");
 
     if (!searchInput) return;
 
@@ -983,7 +978,9 @@ function bindKomposisiKeyboardNavigation() {
             event.preventDefault();
             event.stopPropagation();
             setKomposisiSelection(nextIndex, false);
-            rowEventKomposisi(
+
+            // Panggil loading data hanya jika enter
+            loadSelectedKomposisi(
                 nextIndex,
                 tableKomposisi.row(rows[nextIndex]).data(),
                 true,
@@ -995,14 +992,9 @@ function bindKomposisiKeyboardNavigation() {
 
         event.preventDefault();
         event.stopPropagation();
-        const selectedRow = setKomposisiSelection(nextIndex, true);
-        if (selectedRow) {
-            rowEventKomposisi(
-                nextIndex,
-                tableKomposisi.row(selectedRow).data(),
-                false,
-            );
-        }
+
+        // Hanya pindah highlight saat up/down, tidak meload data otomatis
+        setKomposisiSelection(nextIndex, true);
     };
 }
 
@@ -1016,11 +1008,11 @@ document
         const currentIndex = activeRow
             ? rows.indexOf(activeRow)
             : rows.findIndex(
-                (row) =>
-                    row.classList.contains("keyboard-selected") ||
-                    // row.classList.contains("selected") ||
-                    row.classList.contains("table-primary"),
-            );
+                  (row) =>
+                      row.classList.contains("keyboard-selected") ||
+                      // row.classList.contains("selected") ||
+                      row.classList.contains("table-primary"),
+              );
 
         const startIndex = currentIndex >= 0 ? currentIndex : 0;
         let nextIndex = startIndex;
@@ -1065,7 +1057,9 @@ document
             case "Enter":
                 event.preventDefault();
                 event.stopPropagation();
-                rowEventKomposisi(
+
+                // Panggil loading data saat menekan Enter
+                loadSelectedKomposisi(
                     startIndex,
                     tableKomposisi.row(rows[startIndex]).data(),
                     true,
@@ -1077,12 +1071,8 @@ document
         }
 
         if (nextIndex !== startIndex) {
+            // Hanya highlight secara visual saat menggerakkan panah keyboard
             setKomposisiSelection(nextIndex, true);
-            rowEventKomposisi(
-                nextIndex,
-                tableKomposisi.row(rows[nextIndex]).data(),
-                false,
-            );
         }
     });
 
@@ -1277,7 +1267,7 @@ async function getDataKomposisiFetch(no_komposisi, post_action = null) {
                         "table_komposisi",
                         tableList,
                         colKomposisi,
-                        rowEventKomposisi,
+                        highlightOnlyKomposisi, // Menggunakan fungsi khusus yang hanya melakuan highlight klik baris mouse
                         "300px",
                         "table_only",
                     );
@@ -1295,7 +1285,7 @@ async function getDataKomposisiFetch(no_komposisi, post_action = null) {
                             row.classList.remove(
                                 "keyboard-selected",
                                 "selected",
-                                "table-primary"
+                                "table-primary",
                             );
 
                             row.setAttribute("tabindex", "0");
@@ -1662,14 +1652,24 @@ async function prosesHapusFetch(id_konversi_ext) {
     Swal.fire("Berhasil", "Data berhasil dihapus!", "success");
 }
 
-function rowEventKomposisi(index, rowData = null, focus = false) {
+function highlightOnlyKomposisi(index, rowData = null) {
+    const selection = resolveKomposisiSelection(index, rowData);
+    if (selection) {
+        setKomposisiSelection(selection.visibleIndex, true);
+    }
+}
+
+function loadSelectedKomposisi(index, rowData = null, focus = false) {
     const selection = resolveKomposisiSelection(index, rowData);
     if (!selection) {
-        console.log("[DEBUG detail] rowEventKomposisi skipped invalid row", {
-            index,
-            suppressSelectionReset,
-            modeProses,
-        });
+        console.log(
+            "[DEBUG detail] loadSelectedKomposisi skipped invalid row",
+            {
+                index,
+                suppressSelectionReset,
+                modeProses,
+            },
+        );
         return;
     }
 
@@ -1678,11 +1678,7 @@ function rowEventKomposisi(index, rowData = null, focus = false) {
         if (i === selection.visibleIndex) {
             row.classList.add("selected");
         } else {
-            row.classList.remove(
-                // "selected",
-                "keyboard-selected",
-                "table-primary",
-            );
+            row.classList.remove("keyboard-selected", "table-primary");
         }
     });
 
@@ -1709,7 +1705,7 @@ function rowEventKomposisi(index, rowData = null, focus = false) {
         numTritier.value = "0";
     }
 
-    console.log("[DEBUG detail] rowEventKomposisi", {
+    console.log("[DEBUG detail] loadSelectedKomposisi", {
         index,
         statusType: data.StatusType,
         idType: data.IdType,
