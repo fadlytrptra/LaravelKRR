@@ -55,38 +55,44 @@ class PenagihanPenjualanExportController extends Controller
 
             // Assume addMode and stored procedure
             if ($proses == 1) {
-                DB::connection('ConnAccounting')
-                    ->statement('exec SP_1486_ACC_MAINT_PENAGIHANSJ_EXPORT @Kode = ?, @Tgl_Penagihan = ?, @Id_Customer = ?, @id_Jenis_Dokumen = ?, @Nilai_Penagihan = ?, @Id_MataUang = ?, @Terbilang = ?, @UserInput = ?, @IdPenagih = ?, @NilaiKurs = ?, @NoPEB = ?, @TglPEB = ?, @NoBL = ?, @TglBL = ?, @NilaiTotalFOB = ?', [
-                        1,
-                        $request->input('tanggal'),
-                        $request->input('idCustomer'),
-                        (int) $request->input('idJenisDokumen'),
-                        (float) str_replace(',', '', $request->input('nilaiDitagihkan')),
-                        (int) $request->input('idMataUang'),
-                        (string) $terbilang,
-                        trim(Auth::user()->NomorUser),
-                        (string) $request->input('idUserPenagih'),
-                        (float) $request->input('nilaiKurs'),
-                        $request->input('noPEB'),
-                        $request->input('tanggalPEB'),
-                        $request->input('noBL'),
-                        $request->input('tanggalBL'),
-                        (float) $request->input('totalFOB'),
-                    ]);
+                $result = DB::connection('ConnAccounting')
+                    ->select(
+                        'exec SP_1486_ACC_MAINT_PENAGIHANSJ_EXPORT
+                @Kode = ?,
+                @Tgl_Penagihan = ?,
+                @Id_Customer = ?,
+                @id_Jenis_Dokumen = ?,
+                @Nilai_Penagihan = ?,
+                @Id_MataUang = ?,
+                @Terbilang = ?,
+                @UserInput = ?,
+                @IdPenagih = ?,
+                @NilaiKurs = ?,
+                @NoPEB = ?,
+                @TglPEB = ?,
+                @NoBL = ?,
+                @TglBL = ?,
+                @NilaiTotalFOB = ?',
+                        [
+                            1,
+                            $request->input('tanggal'),
+                            $request->input('idCustomer'),
+                            (int) $request->input('idJenisDokumen'),
+                            (float) str_replace(',', '', $request->input('nilaiDitagihkan')),
+                            (int) $request->input('idMataUang'),
+                            (string) $terbilang,
+                            trim(Auth::user()->NomorUser),
+                            (string) $request->input('idUserPenagih'),
+                            (float) $request->input('nilaiKurs'),
+                            $request->input('noPEB'),
+                            $request->input('tanggalPEB'),
+                            $request->input('noBL'),
+                            $request->input('tanggalBL'),
+                            (float) $request->input('totalFOB'),
+                        ]
+                    );
 
-                // dd($tes);
-
-                $currentYear = date('y');
-
-                $idPenagihan = DB::connection('ConnAccounting')
-                    ->table('T_PENAGIHAN_SJ')
-                    ->select('Id_Penagihan')
-                    ->where('Id_Penagihan', 'like', '%' . (string) $currentYear)
-                    ->where('UserInput', trim(Auth::user()->NomorUser))
-                    ->orderBy('Id_Penagihan', 'desc')
-                    ->orderBy('Tgl_Penagihan', 'desc')
-                    ->first();
-                $id_Penagihan = $idPenagihan->Id_Penagihan;
+                $id_Penagihan = $result[0]->ID_Penagihan ?? null;
                 // dd($id_Penagihan);
 
                 // $id_penagihan = DB::connection('ConnAccounting')
