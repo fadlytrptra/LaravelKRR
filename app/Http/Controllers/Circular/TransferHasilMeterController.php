@@ -208,47 +208,72 @@ class TransferHasilMeterController extends Controller
     {
         if ($id == 'getData') {
             $results = DB::connection('ConnCircular')
-                ->select('exec Sp_Maint_Transfer ?', [1]);
-            // dd($results);
-            $response = [];
-            foreach ($results as $row) {
-                // Panggil SP HitungMeter (SP_1486_CIR_LIST_TRANSF_MTR_3) untuk dapatkan hasil tambahan
-                $subResults = DB::connection('ConnCircular')->select(
-                    'exec SP_1486_CIR_LIST_TRANSF_MTR_3 @Id_Mesin = ?, @Id_Order = ?, @Id_Log = ?',
-                    [
-                        $row->Id_mesin ?? 0,
-                        $row->Id_order ?? 0,
-                        $row->Id_Log ?? 0
-                    ]
-                );
-                // dd($subResults);
-                // Default nilai jika SP kosong
-                $hasil_meter = 0;
-                $id_log_awal = 0;
+                ->select('EXEC SP_MAINT_TRANSFER ?', [13]);
 
-                if (!empty($subResults)) {
-                    $hasil_meter = $subResults[0]->Hasil_Meter ?? 0;
-                    $id_log_awal = $subResults[0]->Id_Log_Awal ?? 0;
-                }
+            $response = [];
+
+            foreach ($results as $row) {
 
                 $response[] = [
-                    // 'Tgl_Log' => isset($row->Tgl_Log) ? date('m/d/Y', strtotime($row->Tgl_Log)) : '',
                     'Tgl_Log' => Carbon::parse($row->Tgl_Log)->format('m/d/Y'),
                     'Tgl_Log_raw' => Carbon::parse($row->Tgl_Log)->format('Y-m-d'),
                     'Nama_mesin' => $row->Nama_mesin ?? '',
                     'NAMA_BRG' => $row->NAMA_BRG ?? '',
-                    'Hasil_meter' => (float) $hasil_meter,     // kolom dari HitungMeter
+                    'Hasil_meter' => (float) ($row->Hasil_Meter ?? 0),
                     'Id_mesin' => $row->Id_mesin ?? '',
                     'Id_order' => $row->Id_order ?? '',
                     'Id_Log' => $row->Id_Log ?? '',
-                    'id_log_awal' => (float) $id_log_awal,     // kolom dari HitungMeter
+                    'id_log_awal' => (float) ($row->Id_Log_Awal ?? 0),
                     'noIndek' => $row->noIndek ?? '',
                 ];
             }
-            // dd($response);
-            return datatables($response)->make(true);
 
-        } else if ($id == 'getDetail') {
+            return datatables($response)->make(true);
+        }
+        // if ($id == 'getData') {
+        //     $results = DB::connection('ConnCircular')
+        //         ->select('exec Sp_Maint_Transfer ?', [1]);
+        //     // dd($results);
+        //     $response = [];
+        //     foreach ($results as $row) {
+        //         // Panggil SP HitungMeter (SP_1486_CIR_LIST_TRANSF_MTR_3) untuk dapatkan hasil tambahan
+        //         $subResults = DB::connection('ConnCircular')->select(
+        //             'exec SP_1486_CIR_LIST_TRANSF_MTR_3 @Id_Mesin = ?, @Id_Order = ?, @Id_Log = ?',
+        //             [
+        //                 $row->Id_mesin ?? 0,
+        //                 $row->Id_order ?? 0,
+        //                 $row->Id_Log ?? 0
+        //             ]
+        //         );
+        //         // dd($subResults);
+        //         // Default nilai jika SP kosong
+        //         $hasil_meter = 0;
+        //         $id_log_awal = 0;
+
+        //         if (!empty($subResults)) {
+        //             $hasil_meter = $subResults[0]->Hasil_Meter ?? 0;
+        //             $id_log_awal = $subResults[0]->Id_Log_Awal ?? 0;
+        //         }
+
+        //         $response[] = [
+        //             // 'Tgl_Log' => isset($row->Tgl_Log) ? date('m/d/Y', strtotime($row->Tgl_Log)) : '',
+        //             'Tgl_Log' => Carbon::parse($row->Tgl_Log)->format('m/d/Y'),
+        //             'Tgl_Log_raw' => Carbon::parse($row->Tgl_Log)->format('Y-m-d'),
+        //             'Nama_mesin' => $row->Nama_mesin ?? '',
+        //             'NAMA_BRG' => $row->NAMA_BRG ?? '',
+        //             'Hasil_meter' => (float) $hasil_meter,     // kolom dari HitungMeter
+        //             'Id_mesin' => $row->Id_mesin ?? '',
+        //             'Id_order' => $row->Id_order ?? '',
+        //             'Id_Log' => $row->Id_Log ?? '',
+        //             'id_log_awal' => (float) $id_log_awal,     // kolom dari HitungMeter
+        //             'noIndek' => $row->noIndek ?? '',
+        //         ];
+        //     }
+        //     // dd($response);
+        //     return datatables($response)->make(true);
+
+        // }
+        else if ($id == 'getDetail') {
             // ambil parameter dari request
             $id_mesin = $request->input('Id_mesin');
             $id_order = $request->input('Id_order');
