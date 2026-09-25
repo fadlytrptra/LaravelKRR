@@ -1083,7 +1083,8 @@ print_button.addEventListener(
         ) {
 
             fetch(
-                "/Kencana/dosudahacc/" +
+                // "/Kencana/dosudahacc/" +
+                "/Kencana/doall/" +
                 tanggal_do.value
             )
 
