@@ -352,8 +352,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('CariBarcode', App\Http\Controllers\Sales\ToolPenjualan\CariBarcodeController::class);
     Route::resource('SuratPesananEkspor', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananEksportController::class);
     Route::resource('SuratPesanan', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController::class);
+    Route::get('/SuratPesananManager/PrintSP', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class,'printSP'])->name('SuratPesananManager.PrintSP');
     Route::resource('SuratPesananManager', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class);
+    Route::get('/SuratPesananDirektur/PrintSP', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class,'printSP'])->name('SuratPesananDirektur.printSP');
     Route::resource('SuratPesananDirektur', App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class);
+    Route::get('/ListSPSudahAcc/PrintSP', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class,'printSP'])->name('ListSpSudahAcc.printSP');
     Route::resource('ListSPSudahAcc', App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class);
     Route::resource('PenyesuaianSuratPesanan', App\Http\Controllers\Sales\Transaksi\SuratPesanan\PenyesuaianSuratPesananController::class);
     Route::resource('BarcodeKerta2', App\Http\Controllers\Sales\ToolPenjualan\BarcodeKerta2Controller::class);
@@ -403,9 +406,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/SuratPesananManager/upPenyesuaian', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController@updatePenyesuaian');
     Route::get('SuratPesananManager/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananManagerController::class, 'downloadDokumentasi'])->name('SuratPesananManager.dokumentasi');
     Route::post('SuratPesananDirektur/upall', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'updateAll'])->name('SuratPesananDirektur.updateAll');
-    Route::get('SuratPesananDirektur/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'downloadDokumentasi'])->name('SuratPesananDirektur.dokumentasi');
+    Route::get('SuratPesananDirektur/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class,'downloadDokumentasi'])->where('id', '.*')->name('SuratPesananDirektur.dokumentasi');
     Route::post('SuratPesananDirektur/batal', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananDirekturController::class, 'batal'])->name('SuratPesananDirektur.batal');
-    Route::get('ListSPSudahAcc/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class, 'downloadDokumentasi'])->name('ListSPSudahAcc.dokumentasi');
+    Route::get('ListSPSudahAcc/dokumentasi/{id}', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class, 'downloadDokumentasi'])->where('id', '.*')->name('ListSPSudahAcc.dokumentasi');
+    Route::post('ListSPSudahAcc/exportExcel', [App\Http\Controllers\Sales\Transaksi\SuratPesanan\ListSPSudahAccController::class, 'exportExcel'])->name('ListSPSudahAcc.exportExcel');
     Route::get('/options/kategori/{kategoriUtama}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController@getKategori');
     Route::get('/options/subKategori/{kategori}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController@getSubKategori');
     Route::get('/options/namaBarang/{subKategori}', 'App\Http\Controllers\Sales\Transaksi\SuratPesanan\SuratPesananController@getNamaBarang');
@@ -1918,6 +1922,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('Kencana/DeliveryOrderManager', App\Http\Controllers\Kencana\DeliveryOrderManagerKencanaController::class);
     Route::get('/Kencana/dosudahacc/{tanggal}', 'App\Http\Controllers\Kencana\CetakDOKencanaController@getDeliveryOrderSudahACC');
     Route::get('/Kencana/dobelumacc/{tanggal}', 'App\Http\Controllers\Kencana\CetakDOKencanaController@getDeliveryOrderBelumACC');
+    Route::get('/Kencana/doall/{tanggal}', [App\Http\Controllers\Kencana\CetakDOKencanaController::class, 'getDeliveryOrderAll']);
     Route::resource('Kencana/CetakDO', App\Http\Controllers\Kencana\CetakDOKencanaController::class);
     Route::get('/Kencana/SuratPesanan/{id}/show', 'App\Http\Controllers\Kencana\SuratPesananKencanaController@show')->name('suratpesanan.show');
     Route::post('/Kencana/SuratPesanan/{id}/up', 'App\Http\Controllers\Kencana\SuratPesananKencanaController@update')->name('suratpesanan.update');
