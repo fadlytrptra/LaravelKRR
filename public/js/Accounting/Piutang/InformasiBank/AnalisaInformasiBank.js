@@ -82,6 +82,7 @@ $(document).ready(function () {
 
     btn_proses.addEventListener("click", async function (event) {
         event.preventDefault();
+        btn_proses.disabled = true;
         // console.log(radiobtn.value);
         // console.log(radiogrup2.value);
         if (radiogrup2_K.checked) {
@@ -118,6 +119,7 @@ $(document).ready(function () {
                         //     .querySelectorAll("input")
                         //     .forEach((input) => (input.value = ""));
                         // $("#tabelAnalisa").DataTable().ajax.reload();
+                        btn_proses.disabled = false;
                         btnOk.click();
                     });
                 } else if (response.error) {
@@ -127,10 +129,12 @@ $(document).ready(function () {
                         text: response.error,
                         showConfirmButton: false,
                     });
+                    btn_proses.disabled = false;
                 }
             },
             error: function (xhr) {
                 alert(xhr.responseJSON.message);
+                btn_proses.disabled = false;
             },
         });
     });
