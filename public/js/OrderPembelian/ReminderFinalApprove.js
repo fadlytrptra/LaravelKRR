@@ -229,7 +229,7 @@ jQuery(function ($) {
                 },
                 { data: "Kd_div" },
                 { data: "Nama" },
-                { data: "StatusBeli" },
+                // { data: "StatusBeli" },
                 { data: "DirekturApprove" },
                 {
                     data: null,
