@@ -548,6 +548,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('LaporanProduksiExtruder', App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class);
     Route::resource('ACCPengecekanMB', App\Http\Controllers\Extruder\ExtruderNet\ACCPengecekanMBController::class);
     Route::resource('ACCBenangNG', App\Http\Controllers\Extruder\ExtruderNet\ACCBenangNGController::class);
+    // Route::resource('MaintenanceSM', App\Http\Controllers\Extruder\ExtruderNet\MaintenanceSMController::class);
     Route::get('/print-laporan-produksi-extruder', [App\Http\Controllers\Extruder\ExtruderNet\LaporanProduksiExtruderController::class, 'print'])
         ->name('print.laporan.produksi.extruder');
     #endregion
@@ -1815,6 +1816,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
     Route::resource('CircularTropodo', QCCircularTropodoController::class);
     Route::resource('CircularMojosari', QCCircularMojosariController::class);
+    Route::resource('CircularMojosariD', App\Http\Controllers\QC\Circular\CircularMojosariD::class);
     Route::resource('ExtruderTropodo', QCExtruderTropodoController::class);
     Route::resource('ExtruderB', QCExtruderBController::class);
     Route::resource('ExtruderD', QCExtruderDController::class);
