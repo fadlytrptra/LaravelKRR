@@ -23,10 +23,10 @@
 
                             <div class="container">
                                 <div class="row" style="padding-top: 10px">
-                                    <div class="col-sm-4">
-                                        <label><strong>Potong Gelondongan Circular Mojosari</strong></label>
+                                    <div class="col-sm-5">
+                                        <label><strong>Potong Gelondongan Circular Mojosari Gedung B</strong></label>
                                     </div>
-                                    <div class="col-sm-3 offset-sm-5">
+                                    <div class="col-sm-2 offset-sm-5">
 
                                         <form id="dateForm" class="form-inline d-flex align-items-center">
                                             <label for="tanggal" class="mr-2">Tanggal:</label>
