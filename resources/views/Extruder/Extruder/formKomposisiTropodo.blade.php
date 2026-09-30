@@ -5,10 +5,42 @@
 @endsection
 
 @section('content')
+    <style>
+        .extruder_root {
+            zoom: 0.8;
+        }
+
+        table.dataTable tbody td,
+        #table_komposisi tbody tr td {
+            padding: 2px 4px !important;
+        }
+
+        .label-span {
+            width: 190px;
+            justify-content: flex-start;
+            font-weight: 500;
+            background-color: transparent !important;
+            border: none !important;
+            padding-left: 0 !important;
+        }
+
+        .label-span-sm {
+            width: 140px;
+            justify-content: flex-start;
+            font-weight: 500;
+            background-color: transparent !important;
+            border: none !important;
+            padding-left: 0 !important;
+        }
+
+        /* #table_komposisi_wrapper .dataTables_scrollBody {
+            height: auto !important;
+        } */
+    </style>
     <div class="extruder_root">
         <div id="komposisi_tropodo" class="form" data-aos="fade-up">
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-md-3">
                     <span class="aligned-text">Komposisi:</span>
                 </div>
@@ -25,7 +57,7 @@
                 </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-md-3">
                     <span class="aligned-text">Mesin:</span>
                 </div>
@@ -41,7 +73,7 @@
                 </div>
             </div>
 
-            <div class="card mt-5">
+            <div class="card mt-2">
                 <div class="card-body">
                     <table id="table_komposisi" class="hover cell-border" tabindex="0">
                         <thead>
@@ -69,11 +101,12 @@
                         <tbody></tbody>
                     </table>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-md-7 form-group">
-                            <label for="nama_objek">Objek:</label>
+                            {{-- <label for="nama_objek">Objek:</label> --}}
                             <div class="input-group rounded">
-                                <input type="text" id="id_objek" class="form-control"
+                                <span class="input-group-text label-span">Objek:</span>
+                                <input type="text" id="id_objek" class="form-control rounded-start"
                                     style="max-width: 150px; border-right: none;" placeholder="ID">
                                 <input type="text" id="nama_objek" class="form-control"
                                     style="border-left: none; padding-left: 10px" placeholder="Pilih Objek..." disabled>
@@ -84,9 +117,10 @@
                         </div>
 
                         <div class="col-md-4 form-group">
-                            <label for="primer">Primer:</label>
+                            {{-- <label for="primer">Primer:</label> --}}
                             <div class="input-group">
-                                <input type="number" id="primer" class="form-control" style="border-right: none"
+                                <span class="input-group-text label-span-sm">Primer:</span>
+                                <input type="number" id="primer" class="form-control rounded-start" style="border-right: none"
                                     placeholder="0" disabled>
                                 <input type="text" id="sat_primer" class="form-control" style="border-left: none"
                                     disabled>
@@ -94,11 +128,12 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-md-7 form-group">
-                            <label for="nama_kelut">Kelompok Utama:</label>
+                            {{-- <label for="nama_kelut">Kelompok Utama:</label> --}}
                             <div class="input-group rounded">
-                                <input type="text" id="id_kelut" class="form-control"
+                                <span class="input-group-text label-span">Kelompok Utama:</span>
+                                <input type="text" id="id_kelut" class="form-control rounded-start"
                                     style="max-width: 150px; border-right: none;" placeholder="ID">
                                 <input type="text" id="nama_kelut" class="form-control"
                                     style="border-left: none; padding-left: 10px" placeholder="Pilih Kelompok Utama..."
@@ -110,9 +145,10 @@
                         </div>
 
                         <div class="col-md-4 form-group">
-                            <label for="sekunder">Sekunder:</label>
+                            {{-- <label for="sekunder">Sekunder:</label> --}}
                             <div class="input-group">
-                                <input type="number" id="sekunder" class="form-control" style="border-right: none"
+                                <span class="input-group-text label-span-sm">Sekunder:</span>
+                                <input type="number" id="sekunder" class="form-control rounded-start" style="border-right: none"
                                     placeholder="0" disabled>
                                 <input type="text" id="sat_sekunder" class="form-control" style="border-left: none"
                                     disabled>
@@ -120,11 +156,12 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-md-7 form-group">
-                            <label for="nama_kelompok">Kelompok:</label>
+                            {{-- <label for="nama_kelompok">Kelompok:</label> --}}
                             <div class="input-group rounded">
-                                <input type="text" id="id_kelompok" class="form-control"
+                                <span class="input-group-text label-span">Kelompok:</span>
+                                <input type="text" id="id_kelompok" class="form-control rounded-start"
                                     style="max-width: 150px; border-right: none;" placeholder="ID">
                                 <input type="text" id="nama_kelompok" class="form-control"
                                     style="border-left: none; padding-left: 10px" placeholder="Pilih Kelompok..."
@@ -137,9 +174,10 @@
                         </div>
 
                         <div class="col-md-4 form-group">
-                            <label for="tritier">Tritier:</label>
+                            {{-- <label for="tritier">Tritier:</label> --}}
                             <div class="input-group">
-                                <input type="number" id="tritier" class="form-control" style="border-right: none"
+                                <span class="input-group-text label-span-sm">Tritier:</span>
+                                <input type="number" id="tritier" class="form-control rounded-start" style="border-right: none"
                                     placeholder="0" disabled>
                                 <input type="text" id="sat_tritier" class="form-control" style="border-left: none"
                                     disabled>
@@ -147,11 +185,12 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-md-7 form-group">
-                            <label for="nama_subkel">Sub-kelompok:</label>
+                            {{-- <label for="nama_subkel">Sub-kelompok:</label> --}}
                             <div class="input-group rounded">
-                                <input type="text" id="id_subkel" class="form-control"
+                                <span class="input-group-text label-span">Sub-kelompok:</span>
+                                <input type="text" id="id_subkel" class="form-control rounded-start"
                                     style="max-width: 150px; border-right: none;" placeholder="ID">
                                 <input type="text" id="nama_subkel" class="form-control"
                                     style="border-left: none; padding-left: 10px;" placeholder="Pilih Sub-kelompok..."
@@ -164,21 +203,23 @@
                         </div>
 
                         <div class="col-md-2 form-group">
-                            <label for="persentase">Presentase:</label>
+                            {{-- <label for="persentase">Presentase:</label> --}}
                             <div class="input-group">
-                                <input type="number" id="persentase" class="form-control" placeholder="0" disabled>
+                                <span class="input-group-text label-span-sm">Persentase:</span>
+                                <input type="number" id="persentase" class="form-control rounded-start" placeholder="0" disabled>
                                 <span class="input-group-text">%</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-md-7 form-group">
-                            <label for="nama_type">Type:</label>
+                            {{-- <label for="nama_type">Type:</label> --}}
                             <div class="input-group rounded">
+                                <span class="input-group-text label-span">Type:</span>
                                 <input type="text" id="id_type" class="form-control"
                                     style="max-width: 150px; border-right: none;" placeholder="ID">
-                                <input type="text" id="nama_type" class="form-control"
+                                <input type="text" id="nama_type" class="form-control rounded-start"
                                     style="border-left: none; padding-left: 10px" placeholder="Pilih Type..." disabled>
                                 <button type="button" class="btn btn-secondary rounded-end" id="btn_lookup_type"
                                     disabled>
@@ -187,7 +228,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-md-6">
                             <div class="row mt-2">
                                 <div class="col-md-6" style="padding-left: 50px">BB: Bahan Baku</div>
@@ -213,7 +254,7 @@
                 </div>
             </div>
 
-            <div class="row mt-3 mb-5">
+            <div class="row mt-2 mb-5">
                 <div class="col-md-6 text-center">
                     <button type="button" id="btn_baru_master" class="btn btn-success">Komposisi Baru</button>
                     <button type="button" id="btn_koreksi_master" class="btn btn-warning">Koreksi</button>

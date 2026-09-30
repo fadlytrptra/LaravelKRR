@@ -1795,7 +1795,7 @@ function init() {
     tableKonversi = $("#table_konversi").DataTable({
         responsive: false,
         paging: false,
-        scrollY: "350px",
+        scrollY: "300px",
         scrollX: true,
         columns: colKonversi,
         searching: false,

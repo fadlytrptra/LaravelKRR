@@ -5,13 +5,18 @@
 @endsection
 
 @section('content')
+    <style>
+        .extruder_root {
+            zoom: 0.8;
+        }
+    </style>
     <div class="extruder_root">
         <input type="hidden" id="nama_gedung" value="{{ $formData['namaGedung'] ?? 'B' }}">
         <input type="hidden" id="form_rk_return">
 
         <div id="form_benang_mohon" class="form" data-aos="fade-up">
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-lg-7"></div>
                 <div class="col-lg-3">
                     <span class="aligned-text">Tanggal Mohon:</span>
@@ -21,9 +26,9 @@
                 </div>
             </div>
 
-            <div class="row mt-3 border-bottom"></div>
+            <div class="row mt-2 border-bottom"></div>
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-lg-1">
                     <span class="aligned-text">Tanggal:</span>
                 </div>
@@ -39,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-lg-1">
                     <span class="aligned-text">Nomor:</span>
                 </div>
@@ -70,7 +75,7 @@
                 </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-lg-1">
                     <span class="aligned-text">Shift:</span>
                 </div>
@@ -98,7 +103,7 @@
                 </div>
             </div>
 
-            <div class="card mt-3">
+            <div class="card mt-2">
                 <div class="card-header">Asal Konversi</div>
                 <div class="card-body">
                     <table id="table_asal" class="hover cell-border">
@@ -125,7 +130,7 @@
                 </div>
             </div>
 
-            <div class="card mt-3">
+            <div class="card mt-2">
                 <div class="card-header">Tujuan Konversi</div>
                 <div class="card-body">
                     <table id="table_tujuan" class="hover cell-border">
@@ -152,7 +157,7 @@
                 </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-md-5 text-center">
                     <button type="button" id="btn_isi" class="btn btn-success">Isi</button>
                     <button type="button" id="btn_koreksi" class="btn btn-warning">Koreksi</button>

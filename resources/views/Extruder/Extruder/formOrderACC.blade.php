@@ -19,7 +19,7 @@
                 <tbody></tbody>
             </table>
 
-            <div class="mt-4"></div>
+            <div class="mt-3"></div>
 
             <table id="table_detail_order" class="hover cell-border">
                 <thead>
@@ -36,7 +36,7 @@
                 <tbody></tbody>
             </table>
 
-            <div class="float-end mt-3 mb-3">
+            <div class="float-end mt-2 mb-3">
                 <button type="button" id="btn_proses" class="btn btn-success">Proses</button>
                 <button type="button" id="btn_keluar" class="btn btn-danger">Keluar</button>
             </div>

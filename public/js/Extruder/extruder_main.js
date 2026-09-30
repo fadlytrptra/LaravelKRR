@@ -147,13 +147,9 @@ function addTable_DataTable(
                 rowFun(index, data);
 
                 if (tableId !== "table_komposisi") {
-                    arrowNavigation_DataTable(
-                        table1,
-                        index,
-                        (index, data) => {
-                            rowFun(index, data, true);
-                        }
-                    );
+                    arrowNavigation_DataTable(table1, index, (index, data) => {
+                        rowFun(index, data, true);
+                    });
                 }
             });
     } else if (extra === "dom_empty") {
@@ -716,27 +712,117 @@ function formCursor(cursor_str) {
 // #region Generic Modal Lookup System
 let currentLookupData = [];
 let filteredLookupData = [];
+/*
 let currentPage = 1;
 let itemsPerPage = 10;
+*/
 let currentLookupConfig = {};
 let selectedRowIndex = 0;
+let currentLookupSort = { columnIndex: -1, direction: "asc" };
 
 async function openLookupModal(config) {
     try {
         currentLookupConfig = config;
+        currentLookupSort = { columnIndex: -1, direction: "asc" };
+        /*
         currentPage = 1;
 
         const showPageSelect = document.getElementById("showPerPage");
         itemsPerPage = parseInt(showPageSelect.value) || 10;
+        */
 
         document.getElementById("lookupTitle").innerHTML =
             `<i class="bi bi-view-list text-primary me-2"></i>${config.title}`;
 
         const trHeader = document.getElementById("lookupHeaders");
 
-        trHeader.innerHTML = config.headers
-            .map((h) => `<th>${h}</th>`)
-            .join("");
+        trHeader.replaceChildren();
+
+        config.headers.forEach((header, index) => {
+            const th = document.createElement("th");
+            th.scope = "col";
+            th.setAttribute("aria-sort", "none");
+
+            const sortButton = document.createElement("button");
+            sortButton.type = "button";
+            sortButton.className =
+                "btn btn-sm p-0 text-dark fw-semibold text-start";
+
+            sortButton.setAttribute(
+                "aria-label",
+                `Urutkan A-Z berdasarkan ${header}`,
+            );
+
+            const label = document.createElement("span");
+            label.textContent = header;
+
+            const sortIcon = document.createElement("i");
+            sortIcon.className = "bi bi-arrow-down-up ms-1";
+            sortIcon.setAttribute("aria-hidden", "true");
+
+            sortButton.append(label, sortIcon);
+            th.appendChild(sortButton);
+            trHeader.appendChild(th);
+
+            sortButton.addEventListener("click", () => {
+                if (index >= config.columns.length) {
+                    return;
+                }
+
+                if (currentLookupSort.columnIndex === index) {
+                    currentLookupSort.direction =
+                        currentLookupSort.direction === "asc"
+                            ? "desc"
+                            : "asc";
+                } else {
+                    currentLookupSort = {
+                        columnIndex: index,
+                        direction: "asc",
+                    };
+                }
+
+                trHeader
+                    .querySelectorAll("th")
+                    .forEach((headerCell, headerIndex) => {
+                        const button = headerCell.querySelector("button");
+                        const icon = button.querySelector("i");
+
+                        const isActive =
+                            headerIndex === currentLookupSort.columnIndex;
+
+                        const nextDirection =
+                            isActive &&
+                                currentLookupSort.direction === "asc"
+                                ? "Z-A"
+                                : "A-Z";
+
+                        headerCell.setAttribute(
+                            "aria-sort",
+                            isActive
+                                ? currentLookupSort.direction === "asc"
+                                    ? "ascending"
+                                    : "descending"
+                                : "none",
+                        );
+
+                        icon.className = isActive
+                            ? `bi bi-arrow-${currentLookupSort.direction === "asc"
+                                ? "up"
+                                : "down"
+                            } ms-1`
+                            : "bi bi-arrow-down-up ms-1";
+
+                        button.setAttribute(
+                            "aria-label",
+                            `Urutkan ${nextDirection} berdasarkan ${config.headers[headerIndex]}`,
+                        );
+                    });
+
+                selectedRowIndex = 0;
+
+                renderLookupTable();
+            });
+        });
 
         const tbody = document.getElementById("lookupBody");
 
@@ -749,16 +835,48 @@ async function openLookupModal(config) {
             </tr>
         `;
 
+        /*
         document.getElementById("paginationControls").innerHTML = "";
+        */
 
         const modalEl = document.getElementById("modalLookupGeneric");
 
-        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        const modalInstance =
+            bootstrap.Modal.getOrCreateInstance(modalEl);
 
-        const searchInput = document.getElementById("lookupSearch");
+        const searchInput =
+            document.getElementById("lookupSearch");
+
+        // ==========================================
+        // Hilangkan browser autocomplete/suggestions
+        // ==========================================
+
+        // Gunakan atribut langsung pada DOM
+        searchInput.setAttribute("autocomplete", "off");
+        searchInput.setAttribute("autocorrect", "off");
+        searchInput.setAttribute("autocapitalize", "off");
+        searchInput.setAttribute("spellcheck", "false");
+
+        // Hindari name yang umum digunakan browser untuk autocomplete
+        searchInput.setAttribute(
+            "name",
+            "lookup_search_unique_" + Date.now()
+        );
+
+        // Tambahan untuk memberitahu browser bahwa ini adalah search field
+        searchInput.setAttribute("inputmode", "search");
+
+        // Jangan gunakan password karena bisa memicu heuristik
+        searchInput.setAttribute("type", "search");
 
         // Reset search
         searchInput.value = "";
+
+        /*
+        // Jika browser masih menampilkan suggestion,
+        // readonly sementara sampai modal benar-benar terbuka.
+        */
+        searchInput.setAttribute("readonly", "readonly");
 
         let modalShown = false;
         let dataRendered = false;
@@ -769,7 +887,8 @@ async function openLookupModal(config) {
             }
 
             requestAnimationFrame(() => {
-                const input = document.getElementById("lookupSearch");
+                const input =
+                    document.getElementById("lookupSearch");
 
                 if (!input) {
                     return;
@@ -779,6 +898,11 @@ async function openLookupModal(config) {
                 if (!modalEl.classList.contains("show")) {
                     return;
                 }
+
+                // ==========================================
+                // Aktifkan kembali input setelah modal tampil
+                // ==========================================
+                input.removeAttribute("readonly");
 
                 input.focus();
                 input.select();
@@ -792,7 +916,16 @@ async function openLookupModal(config) {
             function () {
                 modalShown = true;
 
-                focusLookupSearch();
+                // Tunggu satu frame agar Chrome tidak menganggap
+                // input sebagai autocomplete target saat modal muncul
+                requestAnimationFrame(() => {
+                    searchInput.removeAttribute("readonly");
+
+                    searchInput.focus();
+                    searchInput.select();
+
+                    focusLookupSearch();
+                });
             },
             { once: true },
         );
@@ -806,7 +939,9 @@ async function openLookupModal(config) {
 
         renderLookupTable();
 
+        /*
         renderPagination();
+        */
 
         selectedRowIndex = 0;
 
@@ -814,6 +949,7 @@ async function openLookupModal(config) {
 
         focusLookupSearch();
 
+        /*
         searchInput.onkeydown = function (e) {
             if (e.key === "ArrowLeft") {
                 e.preventDefault();
@@ -839,7 +975,7 @@ async function openLookupModal(config) {
                 e.preventDefault();
 
                 const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage,
+                    filteredLookupData.length / itemsPerPage
                 );
 
                 if (currentPage < totalPages) {
@@ -859,17 +995,22 @@ async function openLookupModal(config) {
                 return;
             }
         };
+        */
 
         searchInput.onkeyup = function (e) {
             // ArrowLeft / ArrowRight
-            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            if (
+                e.key === "ArrowLeft" ||
+                e.key === "ArrowRight"
+            ) {
                 return;
             }
 
             if (e.key === "ArrowDown") {
                 e.preventDefault();
 
-                const rows = document.querySelectorAll("#lookupBody tr");
+                const rows =
+                    document.querySelectorAll("#lookupBody tr");
 
                 if (rows.length > 0) {
                     // Pastikan index tidak melebihi jumlah row
@@ -888,7 +1029,8 @@ async function openLookupModal(config) {
             if (e.key === "Enter") {
                 e.preventDefault();
 
-                const rows = document.querySelectorAll("#lookupBody tr");
+                const rows =
+                    document.querySelectorAll("#lookupBody tr");
 
                 if (rows.length > 0) {
                     if (selectedRowIndex >= rows.length) {
@@ -901,25 +1043,32 @@ async function openLookupModal(config) {
                 return;
             }
 
-            const keyword = this.value.toLowerCase().trim();
+            const keyword =
+                this.value.toLowerCase().trim();
 
-            filteredLookupData = currentLookupData.filter((row) => {
-                return config.columns.some((col) => {
-                    return String(row[col] || "")
-                        .toLowerCase()
-                        .includes(keyword);
+            filteredLookupData =
+                currentLookupData.filter((row) => {
+                    return config.columns.some((col) => {
+                        return String(row[col] || "")
+                            .toLowerCase()
+                            .includes(keyword);
+                    });
                 });
-            });
 
+            /*
             // Reset halaman
             currentPage = 1;
+            */
 
             // Reset selected row
             selectedRowIndex = 0;
 
             // Render ulang
             renderLookupTable();
+
+            /*
             renderPagination();
+            */
 
             // Tetap focus di search
             requestAnimationFrame(() => {
@@ -927,6 +1076,7 @@ async function openLookupModal(config) {
             });
         };
 
+        /*
         showPageSelect.onchange = function () {
             itemsPerPage = parseInt(this.value) || 10;
 
@@ -941,6 +1091,8 @@ async function openLookupModal(config) {
                 searchInput.focus();
             });
         };
+        */
+
     } catch (error) {
         Swal.fire(
             "Error",
@@ -951,7 +1103,9 @@ async function openLookupModal(config) {
 }
 
 function highlightSelectedRow() {
-    const rows = document.querySelectorAll("#lookupBody tr");
+    const rows =
+        document.querySelectorAll("#lookupBody tr");
+
     rows.forEach((row, index) => {
         if (index === selectedRowIndex) {
             row.classList.add("table-primary");
@@ -960,53 +1114,132 @@ function highlightSelectedRow() {
 }
 
 function renderLookupTable() {
-    const tbody = document.getElementById("lookupBody");
+    const tbody =
+        document.getElementById("lookupBody");
+
     const config = currentLookupConfig;
+
     tbody.innerHTML = "";
 
     if (filteredLookupData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${config.headers.length}" class="text-center text-danger">Data tidak ditemukan</td></tr>`;
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="${config.headers.length}"
+                    class="text-center text-danger">
+                    Data tidak ditemukan
+                </td>
+            </tr>
+        `;
+
         return;
     }
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedData = filteredLookupData.slice(startIndex, endIndex);
+    let sortedLookupData = filteredLookupData;
 
-    paginatedData.forEach((row) => {
+    if (currentLookupSort.columnIndex >= 0) {
+        const column =
+            config.columns[currentLookupSort.columnIndex];
+
+        const collator = new Intl.Collator(undefined, {
+            numeric: true,
+            sensitivity: "base",
+        });
+
+        sortedLookupData =
+            [...filteredLookupData].sort((rowA, rowB) => {
+                const valueA = rowA[column];
+                const valueB = rowB[column];
+
+                const comparison =
+                    typeof valueA === "number" &&
+                        typeof valueB === "number"
+                        ? valueA - valueB
+                        : collator.compare(
+                            valueA == null
+                                ? ""
+                                : String(valueA),
+                            valueB == null
+                                ? ""
+                                : String(valueB),
+                        );
+
+                return currentLookupSort.direction === "asc"
+                    ? comparison
+                    : -comparison;
+            });
+    }
+
+    /*
+     const startIndex = (currentPage - 1) * itemsPerPage;
+     const endIndex = startIndex + itemsPerPage;
+     const paginatedData = filteredLookupData.slice(startIndex, endIndex);
+ 
+     paginatedData.forEach((row) => ) {
+    */
+
+    sortedLookupData.forEach((row) => {
         const tr = document.createElement("tr");
+
         tr.style.cursor = "pointer";
         tr.tabIndex = 0;
 
         config.columns.forEach((col) => {
             const td = document.createElement("td");
-            td.textContent = row[col] || "-";
+
+            td.textContent =
+                row[col] || "-";
+
             tr.appendChild(td);
         });
 
         tr.addEventListener("click", () => {
-            const modalEl = document.getElementById("modalLookupGeneric");
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
+            const modalEl =
+                document.getElementById(
+                    "modalLookupGeneric"
+                );
+
+            const modalInstance =
+                bootstrap.Modal.getInstance(modalEl);
+
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
             config.onSelect(row);
         });
 
         tr.addEventListener("keydown", function (e) {
             if (e.key === "Enter") {
                 e.preventDefault();
+
                 this.click();
+
             } else if (e.key === "ArrowDown") {
                 e.preventDefault();
-                let nextRow = this.nextElementSibling;
-                if (nextRow) nextRow.focus();
+
+                let nextRow =
+                    this.nextElementSibling;
+
+                if (nextRow) {
+                    nextRow.focus();
+                }
+
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
-                let prevRow = this.previousElementSibling;
+
+                let prevRow =
+                    this.previousElementSibling;
+
                 if (prevRow) {
                     prevRow.focus();
                 } else {
-                    document.getElementById("lookupSearch").focus();
+                    document
+                        .getElementById("lookupSearch")
+                        .focus();
                 }
+            }
+
+            /*
             } else if (e.key === "ArrowLeft") {
                 e.preventDefault();
                 if (currentPage > 1) {
@@ -1019,7 +1252,7 @@ function renderLookupTable() {
             } else if (e.key === "ArrowRight") {
                 e.preventDefault();
                 const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage,
+                    filteredLookupData.length / itemsPerPage
                 );
                 if (currentPage < totalPages) {
                     currentPage++;
@@ -1029,13 +1262,16 @@ function renderLookupTable() {
                     if (firstRow) firstRow.focus();
                 }
             }
+            */
         });
 
         tbody.appendChild(tr);
     });
+
     highlightSelectedRow();
 }
 
+/*
 function renderPagination() {
     const paginationEl = document.getElementById("paginationControls");
     paginationEl.innerHTML = "";
@@ -1084,4 +1320,5 @@ function renderPagination() {
     };
     paginationEl.appendChild(nextLi);
 }
+*/
 //#endregion

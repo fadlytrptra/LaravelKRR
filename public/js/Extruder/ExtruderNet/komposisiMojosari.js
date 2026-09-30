@@ -958,6 +958,7 @@ btnTambahDetail.addEventListener("click", function () {
             clearDataDetail();
             btnLookupKelut.disabled = false;
             btnLookupKelut.focus();
+            btnLookupKelut.select();
         } else {
             btnProses.focus();
         }
@@ -1951,7 +1952,7 @@ function init() {
     $("#table_afalan").DataTable({
         responsive: true,
         paging: false,
-        scrollY: "250px",
+        scrollY: "150px",
         searching: false,
         info: false,
     });

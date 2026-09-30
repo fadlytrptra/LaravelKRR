@@ -13,6 +13,7 @@
 
                 <div class="modal-body p-4">
                     <div class="row g-3 align-items-center mb-3">
+                        {{--
                         <div class="col-12 col-md-auto">
                             <div class="d-flex align-items-center text-muted small">
                                 <span class="me-2">Tampilkan</span>
@@ -25,6 +26,7 @@
                                 <span class="ms-2">baris</span>
                             </div>
                         </div>
+                        --}}
                         <div class="col-12 col-md-auto ms-md-auto">
                             <div class="input-group input-group-sm shadow-sm">
                                 <span class="input-group-text bg-white text-muted border-end-0">
@@ -49,10 +51,12 @@
                 </div>
 
                 <div class="modal-footer d-flex flex-column flex-sm-row justify-content-between bg-light border-top">
+                    {{--
                     <nav aria-label="Navigasi Halaman" class="mb-3 mb-sm-0">
                         <ul class="pagination pagination-sm mb-0" id="paginationControls">
                         </ul>
                     </nav>
+                    --}}
                     <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">Tutup</button>
                 </div>
 

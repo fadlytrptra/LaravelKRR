@@ -9,7 +9,7 @@
         <input type="hidden" id="nama_gedung" value="{{ $formData['namaGedung'] }}">
 
         <div id="order_status" class="form" data-aos="fade-up">
-            <div class="form-group mt-3 row">
+            <div class="form-group mt-2 row">
                 <div class="col-lg-2"><span class="aligned-text">No. Order:</span></div>
                 <div class="col-lg-9">
                     <div class="input-group rounded">
@@ -23,7 +23,7 @@
 
             </div>
 
-            <div class="card mt-3 mb-4">
+            <div class="card mt-2 mb-4">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-2 aligned-text">Tanggal:</div>
@@ -32,14 +32,14 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-lg-2 aligned-text">Spek:</div>
                         <div class="col-lg-9">
                             <input type="text" id="spek" class="form-control" disabled>
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
 
                         <div class="col-lg-2 aligned-text">Jumlah Order:</div>
                         <div class="col-lg-3">
@@ -55,7 +55,7 @@
 
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-lg-2 aligned-text">Status:</div>
                         <div class="col-lg-3">
                             <select id="select_status" class="form-select">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-lg-2 aligned-text">Keterangan:</div>
                         <div class="col-lg-9">
                             <input type="text" id="keterangan" class="form-control">
@@ -88,7 +88,7 @@
                 <tbody></tbody>
             </table>
 
-            <div class="float-end mt-3 mb-3">
+            <div class="float-end mt-2 mb-3">
                 <button id="btn_proses" type="button" class="btn btn-success" disabled>Proses</button>
                 <button id="btn_keluar" type="button" class="btn btn-danger" style="margin-left: 25px">Keluar</button>
             </div>

@@ -402,10 +402,10 @@ a:hover {
     border: 1px black solid;
 }
 
-/* ===== MOVED_TABLE_STYLES_20260826 ===== */
+/* ===== STYLE TABLE, FORM, & LOOKUP ===== */
 
 .extruder_root table {
-    font-size: 14px;
+    font-size: 16px !important;
 }
 
 .extruder_root table.cell-border {
@@ -432,7 +432,7 @@ a:hover {
 }
 
 .extruder_root .sorting {
-    font-size: 14px;
+    font-size: 16px !important;
 }
 
 .extruder_root .card-body {
@@ -482,4 +482,3 @@ a:hover {
     color: white !important;
 }
 
-/* ===== END MOVED_TABLE_STYLES_20260826 ===== */
