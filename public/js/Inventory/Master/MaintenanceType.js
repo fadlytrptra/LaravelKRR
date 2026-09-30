@@ -121,6 +121,7 @@ function fillKodeBarang(tmpKode) {
         data: {
             _token: csrfToken,
             kdBarang: tmpKode,
+            divisiId: divisiId.value
         },
         timeout: 30000,
         success: function (response) {

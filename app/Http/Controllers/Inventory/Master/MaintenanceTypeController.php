@@ -165,11 +165,23 @@ class MaintenanceTypeController extends Controller
             return datatables($subKategori)->make(true);
 
         } else if ($id === 'getBarang') {
-            // mendapatkan daftar barang
-            // dd($no_subkategori);
-            $barang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_lihat_type @no_jns_1 = ?', [$no_subkategori]);
-            // dd($no_subkategori);
+
+            // KCC dan WKC menggunakan database KCN_PURCHASE
+            if (in_array(strtoupper(trim($divisiId)), ['KCC', 'WKC'])) {
+                $barang = DB::connection('ConnKCNPurchase')->select(
+                    'exec SP_1003_INV_lihat_type @no_jns_1 = ?',
+                    [$no_subkategori]
+                );
+            } else {
+                // Divisi selain KCC dan WKC tetap menggunakan PURCHASE
+                $barang = DB::connection('ConnPurchase')->select(
+                    'exec SP_1003_INV_lihat_type @no_jns_1 = ?',
+                    [$no_subkategori]
+                );
+            }
+
             $data_barang = [];
+
             foreach ($barang as $detail_barang) {
                 $data_barang[] = [
                     'KD_BRG' => $detail_barang->KD_BRG,
@@ -178,28 +190,37 @@ class MaintenanceTypeController extends Controller
             }
 
             return datatables($data_barang)->make(true);
-
         } else if ($id === 'getSatuanBarang') {
-            // auto fill satuan primer, sekunder, tritier dr kode barang
-            // auto fill satuan primer, sekunder, tritier dr kode barang
-            $satuanBarang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_KdBrg_Satuan_YBarang @KodeBarang = ?', [$kdBarang]);
-            // dd($kdBarang, $satuanBarang);
+            // KCC dan WKC menggunakan database KCN_PURCHASE
+            if (in_array(strtoupper(trim($divisiId)), ['KCC', 'WKC'])) {
+                $satuanBarang = DB::connection('ConnKCNPurchase')->select(
+                    'exec SP_1003_INV_KdBrg_Satuan_YBarang @KodeBarang = ?',
+                    [$kdBarang]
+                );
+            } else {
+                // Divisi selain KCC dan WKC tetap menggunakan PURCHASE
+                $satuanBarang = DB::connection('ConnPurchase')->select(
+                    'exec SP_1003_INV_KdBrg_Satuan_YBarang @KodeBarang = ?',
+                    [$kdBarang]
+                );
+            }
 
             $data_satuanBarang = [];
+
             foreach ($satuanBarang as $detail_satuanBarang) {
                 $data_satuanBarang[] = [
-                    'NmSat_Tri' => $detail_satuanBarang->NmSat_Tri,
-                    'ST_TRI' => $detail_satuanBarang->ST_TRI,
-                    'NmSat_Sek' => $detail_satuanBarang->NmSat_Sek,
-                    'ST_SEK' => $detail_satuanBarang->ST_SEK,
+                    'NmSat_Tri'  => $detail_satuanBarang->NmSat_Tri,
+                    'ST_TRI'     => $detail_satuanBarang->ST_TRI,
+                    'NmSat_Sek'  => $detail_satuanBarang->NmSat_Sek,
+                    'ST_SEK'     => $detail_satuanBarang->ST_SEK,
                     'NmSat_Prim' => $detail_satuanBarang->NmSat_Prim,
-                    'ST_PRIM' => $detail_satuanBarang->ST_PRIM
+                    'ST_PRIM'    => $detail_satuanBarang->ST_PRIM
                 ];
             }
-            // dd($data_satuanBarang);
 
-            return response()->json(['data_satuanBarang' => $data_satuanBarang]);
-
+            return response()->json([
+                'data_satuanBarang' => $data_satuanBarang
+            ]);
         } else if ($id === 'getSatuan') {
             // daftar satuan primer, sekunder, tritier
             $satuan = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_satuan');
@@ -291,7 +312,20 @@ class MaintenanceTypeController extends Controller
             }
 
         } else if ($id === 'fillKodeBarang') {
-            $fill = DB::connection('ConnPurchase')->select('exec SP_1003_INV_List_Detail_YTransType @kd_brg_1 = ?', [$kdBarang]);
+            if (in_array(strtoupper(trim($divisiId)), ['KCC', 'WKC'])) {
+
+                $fill = DB::connection('ConnKCNPurchase')->select(
+                    'exec SP_1003_INV_List_Detail_YTransType @kd_brg_1 = ?',
+                    [$kdBarang]
+                );
+
+            } else {
+
+                $fill = DB::connection('ConnPurchase')->select(
+                    'exec SP_1003_INV_List_Detail_YTransType @kd_brg_1 = ?',
+                    [$kdBarang]
+                );
+            }
 
             if (count($fill) > 0) {
                 $data_fill = [];
