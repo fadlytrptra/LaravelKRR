@@ -356,12 +356,23 @@ $(document).ready(function () {
                     TNilai_Penagihan = Math.round((value / 1.11) * 100) / 100; // Round to 2 decimals
                     TPPN = TNilai_Penagihan * 0.11;
                     TTot = Math.round(TNilai_Penagihan + TPPN);
-                } else if (Ppn.value.trim() === "12") {
+                }
+                // else if (Ppn.value.trim() === "12") {
+                //     TNilai_Penagihan = Math.round((value / 1.11) * 100) / 100;
+                //     dpp = Math.round((TNilai_Penagihan * 11) / 12);
+                //     TPPN = Math.round(dpp * 0.12);
+                //     TTot = Math.round(numeral(TNilai_Penagihan).value() + TPPN);
+                // }
+                else if (Ppn.value.trim() === "12") {
+                    const nilaiInput = value;
                     TNilai_Penagihan = Math.round((value / 1.11) * 100) / 100;
-                    dpp = Math.round((TNilai_Penagihan * 11) / 12);
-                    TPPN = Math.round(dpp * 0.12);
-                    TTot = Math.round(numeral(TNilai_Penagihan).value() + TPPN);
-                } else {
+                    dpp = (nilaiInput / 1.11) * (11 / 12);
+                    TPPN = dpp * 0.12;
+
+                    // Total mengikuti nilai input
+                    TTot = nilaiInput;
+                }
+                else {
                     TNilai_Penagihan = Math.round((value / 1.1) * 100) / 100; // Round to 2 decimals
                     TPPN = TNilai_Penagihan * 0.1;
                     TTot = Math.round(TNilai_Penagihan + TPPN);
