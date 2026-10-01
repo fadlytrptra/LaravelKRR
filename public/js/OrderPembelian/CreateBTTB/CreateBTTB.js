@@ -1046,7 +1046,7 @@ $(document).ready(function () {
         idr_harga_total.value = numeral(numeral(rowData[18]).value()).format("0,0.0000"); // prettier-ignore
         mata_uang.value = rowData[19];
         disc.value = numeral(numeral(rowData[20]).value()).format("0,0.00");
-        total_disc.value = numeral(numeral(rowData[21]).value()).format("0,0.0000"); // prettier-ignore
+        total_disc.value = numeral(numeral(rowData[22]).value()).format("0,0.0000"); // prettier-ignore
         idr_total_disc.value = numeral(numeral(rowData[22]).value()).format("0,0.0000"); // prettier-ignore
         qty_received.value = numeral(numeral(rowData[23]).value()).format("0,0.00"); // prettier-ignore
         fixValueQTYOrder = numeral(rowData[4]).value();
@@ -1269,7 +1269,7 @@ $(document).ready(function () {
         }
 
         // Panggil fungsi pembaruan setelah setiap perubahan input
-        updateDisc();
+        // updateDisc();
         updateIdrUnit();
         updateSubTotalDisc();
         updateIDRSubTotal();
