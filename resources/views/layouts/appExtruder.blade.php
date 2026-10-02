@@ -138,6 +138,8 @@
                 <h1><a>Pencatatan Daya Produksi Tropodo</a></h1>
             @elseif($formName == 'LaporanProduksiExtruder')
                 <h1><a>Laporan Produksi Extruder</a></h1>
+            @elseif($formName == 'MaintenanceSM')
+                <h1><a>Maintenance Setting Mesin</a></h1>
             @elseif($formName == 'ACCPengecekanMB')
                 <h1><a>ACC Pengecekan Mutu Benang</a></h1>
             @elseif($formName == 'ACCBenangNG')
@@ -420,8 +422,8 @@
     <!-- Template Main JS File -->
     <script src="{{ asset('js/Extruder/extruder_main.js') }}"></script>
 
-    <main id="main">
-        <div class="container">
+    <main data-aos="fade-up">
+        <div class="container-fluid px-4">
             @yield('content')
         </div>
     </main><!-- End #main -->
