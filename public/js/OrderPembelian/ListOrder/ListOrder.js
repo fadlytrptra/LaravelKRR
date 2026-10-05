@@ -1008,35 +1008,47 @@ btn_submit.addEventListener("click", function (event) {
 });
 
 btn_delete.addEventListener("click", function (event) {
-    $.ajax({
-        url: "/MaintenanceOrderPembeliann/Delete",
-        type: "DELETE",
-        headers: {
-            "X-CSRF-TOKEN": csrfToken,
-        },
-        data: {
-            noTrans: no_order.value.trim(),
-        },
-        success: function (response) {
-            Swal.fire({
-                icon: "success",
-                title: "No. Order " + no_order.value + " " + response.message,
-                showConfirmButton: false,
-                timer: "3000",
+    Swal.fire({
+        title: 'Apakah anda yakin ingin menghapus data?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Tidak',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/MaintenanceOrderPembeliann/Delete",
+                type: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                data: {
+                    noTrans: no_order.value.trim(),
+                },
+                success: function (response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "No. Order " + no_order.value + " " + response.message,
+                        showConfirmButton: false,
+                        timer: "3000",
+                    });
+                    setTimeout(function () {
+                        window.location.href = "/ListOrder";
+                    }, 4000);
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Data Tidak Berhasil DiHapus!",
+                        showConfirmButton: false,
+                        timer: "2000",
+                    });
+                    console.error("Error Send Data:", error);
+                },
             });
-            setTimeout(function () {
-                window.location.href = "/ListOrder";
-            }, 4000);
-        },
-        error: function (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Data Tidak Berhasil DiHapus!",
-                showConfirmButton: false,
-                timer: "2000",
-            });
-            console.error("Error Send Data:", error);
-        },
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+        }
     });
 });
 
