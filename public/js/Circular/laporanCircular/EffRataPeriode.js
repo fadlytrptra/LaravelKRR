@@ -7,6 +7,7 @@ jQuery(function ($) {
     let rb_order = document.getElementById("rb_order");
     let tgl_awal = document.getElementById("tgl_awal");
     let tgl_akhir = document.getElementById("tgl_akhir");
+    let rata_rpm = document.getElementById("rata_rpm");
     let total_meter = document.getElementById("total_meter");
     let total_kg = document.getElementById("total_kg");
     let rata_eff = document.getElementById("rata_eff");
@@ -252,22 +253,26 @@ jQuery(function ($) {
                     let totalMeter = 0;
                     let totalKg = 0;
                     let totalEff = 0;
+                    let totalRpm = 0;
 
                     let data = json.data;
                     let jumlahData = data.length;
-
+                    
                     data.forEach(function (item) {
                         totalMeter += parseFloat(item.Hasil_Meter) || 0;
                         totalKg += parseFloat(item.Hasil_Kg) || 0;
                         totalEff += parseFloat(item.Effisiensi) || 0;
+                        totalRpm += parseFloat(item.A_rpm) || 0;
                     });
 
                     let avgEff = jumlahData > 0 ? (totalEff / jumlahData) : 0;
+                    let avgRpm = jumlahData > 0 ? (totalRpm / jumlahData) : 0;
 
                     // isi ke input
                     $("#total_meter").val(totalMeter);
                     $("#total_kg").val(totalKg.toFixed(2));
                     $("#rata_eff").val(avgEff.toFixed(2));
+                    $("#rata_rpm").val(avgRpm.toFixed(2));
 
                     return data;
                 }
@@ -286,6 +291,7 @@ jQuery(function ($) {
                 { data: "Shift" },
                 { data: "Type_Mesin" },
                 { data: "Nama_mesin" },
+                { data: "A_rpm" },
                 { data: "NAMA_BRG" },
                 {
                     data: "AfalanWA",
@@ -301,7 +307,7 @@ jQuery(function ($) {
             ],
             columnDefs: [
                 {
-                    targets: 4,
+                    targets: 5,
                     width: "1000px"
                 }
             ],

@@ -116,6 +116,7 @@
                                         <th>Shift</th>
                                         <th>Type Mesin</th>
                                         <th>Nama Mesin</th>
+                                        <th>RPM</th>
                                         <th>Nama Barang</th>
                                         <th>Afalan WA</th>
                                         <th>Afalan WE</th>
@@ -134,11 +135,18 @@
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control" id="rata_eff" name="rata_eff" readonly>
                                 </div>
+                                <div class="col-sm-1">
+                                    <label for="rata_rpm" class="form-label">Rata-rata RPM</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="rata_rpm" name="rata_rpm" readonly>
+                                </div>
                                 <div class="col-sm-1 d-flex justify-content-end">
                                     <label for="total_meter" class="form-label">Total Meter</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="total_meter" name="total_meter" readonly>
+                                    <input type="text" class="form-control" id="total_meter" name="total_meter"
+                                        readonly>
                                 </div>
                                 <div class="col-sm-1 d-flex justify-content-end">
                                     <label for="total_kg" class="form-label">Total KG</label>
