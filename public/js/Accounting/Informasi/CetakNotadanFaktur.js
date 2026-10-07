@@ -1791,6 +1791,829 @@ function rpt_cetakNotaFaktur(result) {
 
                             printPreview("faktur3");
                         }
+
+                        if (result[0].NamaNPWP == "PT. OMYA INDONESIA" ||
+                            bankSelect.value == "7" || formatSelect.value == "2" && result.length > parseInt(item_halaman.value)) {
+                            // print faktur3
+                            var faktur_beneficiary3 = document.getElementById(
+                                "faktur_beneficiary3"
+                            );
+                            faktur_beneficiary3.style.visibility = "hidden";
+                            var faktur_applicant3 =
+                                document.getElementById("faktur_applicant3");
+                            faktur_applicant3.style.visibility = "hidden";
+                            var faktur_emptyBag3 =
+                                document.getElementById("faktur_emptyBag3");
+                            faktur_emptyBag3.style.visibility = "hidden";
+
+                            var faktur_IdPenagihan3 = document.getElementById(
+                                "faktur_IdPenagihan3"
+                            );
+                            faktur_IdPenagihan3.style.fontWeight = "bold";
+                            // var faktur_AreaPPNThnIdFakturPajak =
+                            //     document.getElementById(
+                            //         "faktur_AreaPPNThnIdFakturPajak"
+                            //     );
+                            // faktur_AreaPPNThnIdFakturPajak.style.fontWeight = "bold";
+                            var faktur_NamaNPWP3 =
+                                document.getElementById("faktur_NamaNPWP3");
+                            faktur_NamaNPWP3.style.fontWeight = "bold";
+                            var faktur_AlamatNPWP3 =
+                                document.getElementById("faktur_AlamatNPWP3");
+                            var faktur_NPWP3 =
+                                document.getElementById("faktur_NPWP3");
+                            var faktur_NamaKelompokUtama3 = document.getElementById(
+                                "faktur_NamaKelompokUtama3"
+                            );
+                            var faktur_SymbolGrand3 = document.getElementById(
+                                "faktur_SymbolGrand3"
+                            );
+                            var faktur_Grand3 =
+                                document.getElementById("faktur_Grand3");
+                            var faktur_SymbolUM3 =
+                                document.getElementById("faktur_SymbolUM3");
+                            var faktur_UM3 = document.getElementById("faktur_UM3");
+                            var faktur_SymbolDPP3 =
+                                document.getElementById("faktur_SymbolDPP3");
+                            var faktur_DPP3 =
+                                document.getElementById("faktur_DPP3");
+                            var faktur_SymbolPajak3 = document.getElementById(
+                                "faktur_SymbolPajak3"
+                            );
+                            var faktur_SymbolPPH3 = document.getElementById(
+                                "faktur_SymbolPPH3"
+                            );
+                            var faktur_Pajak3 =
+                                document.getElementById("faktur_Pajak3");
+                            var faktur_PPH3 =
+                                document.getElementById("faktur_PPH3");
+                            var faktur_Terbilang3 =
+                                document.getElementById("faktur_Terbilang3");
+                            var faktur_SymbolTerbayar3 = document.getElementById(
+                                "faktur_SymbolTerbayar3"
+                            );
+                            var faktur_Terbayar3 =
+                                document.getElementById("faktur_Terbayar3");
+                            var faktur_SyaratBayar3 = document.getElementById(
+                                "faktur_SyaratBayar3"
+                            );
+                            var faktur_TglBln3 =
+                                document.getElementById("faktur_TglBln3");
+                            var faktur_Thn3 =
+                                document.getElementById("faktur_Thn3");
+                            var faktur_PersenPPN3 =
+                                document.getElementById("faktur_PersenPPN3");
+                            var faktur_PersenPPH3 =
+                                document.getElementById("faktur_PersenPPH3");
+                            var faktur_Tempo3 =
+                                document.getElementById("faktur_Tempo3");
+                            var faktur_SuratJalan3 =
+                                document.getElementById("faktur_SuratJalan3");
+                            var faktur_SJ3 = document.getElementById("faktur_SJ3");
+                            var bankBayar3 = document.getElementById("bankBayar3");
+                            var ttdPimpinan3 =
+                                document.getElementById("ttdPimpinan3");
+
+                            if (result.length === 0) {
+                                const elements = [
+                                    "faktur_IdPenagihan3",
+                                    // "faktur_AreaPPNThnIdFakturPajak3",
+                                    "faktur_NamaNPWP3",
+                                    "faktur_AlamatNPWP3",
+                                    "faktur_NPWP3",
+                                    "faktur_NamaKelompokUtama3",
+                                    "faktur_SymbolGrand3",
+                                    "faktur_Grand3",
+                                    "faktur_SymbolUM3",
+                                    "faktur_UM3",
+                                    "faktur_SymbolDPP3",
+                                    "faktur_DPP3",
+                                    "faktur_SymbolPajak3",
+                                    "faktur_Pajak3",
+                                    "faktur_Terbilang3",
+                                    "faktur_SymbolTerbayar3",
+                                    "faktur_Terbayar3",
+                                    "faktur_SyaratBayar3",
+                                    "faktur_TglBln3",
+                                    "faktur_Thn3",
+                                    "faktur_PersenPPN3",
+                                    "faktur_Tempo3",
+                                    "faktur_SuratJalan3",
+                                    "faktur_SJ3",
+                                    "bankBayar3",
+                                    "ttdPimpinan3",
+                                ];
+
+                                elements.forEach((id) => {
+                                    const element = document.getElementById(id);
+                                    if (element) {
+                                        element.textContent = ""; // Set the value to empty string
+                                    }
+                                });
+
+                                // printPreview("faktur3");
+                            } else {
+
+                                if (result[0].PersenPPH == null) {
+                                    if (bankSelect.value == "1") {
+                                        bankBayar3.innerHTML =
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "BCA Cab. Galaxy - Surabaya" +
+                                            "<br>" +
+                                            "a/c. 788 010 1999 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "2") {
+                                        bankBayar3.innerHTML =
+                                            "Pembayaran melalui SCF ke Rekening:" +
+                                            "<br>" +
+                                            "BNI  Cabang Tropodo Sidoarjo" +
+                                            "<br>" +
+                                            "a/c. 6388888829 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "3") {
+                                        bankBayar3.innerHTML =
+                                            "Pembayaran melalui SCF ke Rekening:" +
+                                            "<br>" +
+                                            "Bank Mandiri  KCP Padang Indarung" +
+                                            "<br>" +
+                                            "a/c. 111 0007609759 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "4") {
+                                        bankBayar3.innerHTML =
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "Bank Mandiri  KCP Pondok Chandra Sidoarjo" +
+                                            "<br>" +
+                                            "a/c. 14200 5555 0007 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "5") {
+                                        bankBayar3.innerHTML =
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "Bank OCBC Cab. Diponegoro - Surabaya" +
+                                            "<br>" +
+                                            "a/c. 5578 0000 9333 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "6") {
+                                        faktur_beneficiary3.style.visibility =
+                                            "visible";
+                                        faktur_applicant3.style.visibility = "visible";
+                                        faktur_emptyBag3.style.visibility = "visible";
+                                        bankBayar3.innerHTML =
+                                            "TRADE TERM: " +
+                                            tradeTerm +
+                                            "<br>" +
+                                            "Documentary Credit Number: " +
+                                            dcn +
+                                            "<br>" +
+                                            "Date of Issue: " +
+                                            doi +
+                                            "<br>" +
+                                            "&nbsp;";
+                                    } else if (bankSelect.value == "7") {
+                                        bankBayar3.innerHTML =
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "Bank OCBC Cab. Diponegoro - Surabaya" +
+                                            "<br>" +
+                                            "a/c. 5578 0000 9333 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else {
+                                        bankBayar3.innerHTML =
+                                            "&nbsp;" +
+                                            "<br>" +
+                                            "&nbsp;" +
+                                            "<br>" +
+                                            "&nbsp;" +
+                                            "<br>" +
+                                            "&nbsp;";
+                                    }
+                                } else {
+                                    if (bankSelect.value == "1") {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 2px 5px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "BCA Cab. Galaxy - Surabaya" +
+                                            "<br>" +
+                                            "a/c. 788 010 1999 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "2") {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "Pembayaran melalui SCF ke Rekening:" +
+                                            "<br>" +
+                                            "BNI  Cabang Tropodo Sidoarjo" +
+                                            "<br>" +
+                                            "a/c. 6388888829 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "3") {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "Pembayaran melalui SCF ke Rekening:" +
+                                            "<br>" +
+                                            "Bank Mandiri  KCP Padang Indarung" +
+                                            "<br>" +
+                                            "a/c. 111 0007609759 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "4") {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "Bank Mandiri  KCP Pondok Chandra Sidoarjo" +
+                                            "<br>" +
+                                            "a/c. 14200 5555 0007 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "5") {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "Bank OCBC Cab. Diponegoro - Surabaya" +
+                                            "<br>" +
+                                            "a/c. 5578 0000 9333 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else if (bankSelect.value == "6") {
+                                        faktur_beneficiary3.style.visibility =
+                                            "visible";
+                                        faktur_applicant3.style.visibility = "visible";
+                                        faktur_emptyBag3.style.visibility = "visible";
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "TRADE TERM: " +
+                                            tradeTerm +
+                                            "<br>" +
+                                            "Documentary Credit Number: " +
+                                            dcn +
+                                            "<br>" +
+                                            "Date of Issue: " +
+                                            doi +
+                                            "<br>" +
+                                            "&nbsp;";
+                                    } else if (bankSelect.value == "7") {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "Pembayaran mohon ditransfer ke:" +
+                                            "<br>" +
+                                            "Bank OCBC Cab. Diponegoro - Surabaya" +
+                                            "<br>" +
+                                            "a/c. 5578 0000 9333 ( IDR )" +
+                                            "<br>" +
+                                            "a/n. PT. Kerta Rajasa Raya";
+                                    } else {
+                                        bankBayar3.innerHTML =
+                                            `<div style="
+                                    display: inline-block;
+                                    border: 2px solid black;
+                                    padding: 4px 10px;
+                                    font-weight: bold;
+                                    background-color: #f2f2f2;
+                                ">
+                                    MOHON DITERBITKAN BUKTI POTONG
+                                </div>
+                                <br>
+                                ` +
+                                            "&nbsp;" +
+                                            "<br>" +
+                                            "&nbsp;" +
+                                            "<br>" +
+                                            "&nbsp;" +
+                                            "<br>" +
+                                            "&nbsp;";
+                                    }
+                                }
+
+                                if (ttdSelect.value == "1") {
+                                    ttdPimpinan3.textContent = "TJAHYO SANTOSO";
+                                } else if (ttdSelect.value == "2") {
+                                    ttdPimpinan3.textContent = "RUDY SANTOSO";
+                                } else if (ttdSelect.value == "3") {
+                                    ttdPimpinan3.textContent = "YUDI SANTOSO";
+                                }
+
+                                faktur_IdPenagihan3.textContent =
+                                    decodeHtmlEntities(result[0].Id_Penagihan);
+
+                                if (bankSelect.value == "7") {
+                                    var date2 = isNaN(new Date(editDate).getTime())
+                                        ? new Date(result[0].Tgl_Penagihan)
+                                        : new Date(editDate);
+                                } else {
+                                    var date2 = new Date(result[0].Tgl_Penagihan);
+                                }
+                                // var date2 = new Date(result[0].Tgl_Penagihan);
+
+                                // var namaBulan = [
+                                //     "January",
+                                //     "February",
+                                //     "March",
+                                //     "April",
+                                //     "May",
+                                //     "June",
+                                //     "July",
+                                //     "August",
+                                //     "September",
+                                //     "October",
+                                //     "November",
+                                //     "December",
+                                // ];
+
+                                var namaBulan = [
+                                    "01",
+                                    "02",
+                                    "03",
+                                    "04",
+                                    "05",
+                                    "06",
+                                    "07",
+                                    "08",
+                                    "09",
+                                    "10",
+                                    "11",
+                                    "12",
+                                ];
+
+                                var tanggal = String(date2.getDate()).padStart(2, '0');
+                                var bulan = namaBulan[date2.getMonth()];
+                                var tahunLengkap = date2.getFullYear();
+                                var duaDigitTahun = tahunLengkap
+                                    .toString()
+                                    .slice(-2);
+                                // faktur_AreaPPNThnIdFakturPajak.textContent =
+                                //     decodeHtmlEntities(result[0].KdArea_Ppn) +
+                                //     " . 012 - " +
+                                //     duaDigitTahun +
+                                //     ". " +
+                                //     decodeHtmlEntities(result[0].IdFakturPajak);
+
+                                faktur_NamaNPWP3.textContent = decodeHtmlEntities(
+                                    result[0].NamaNPWP
+                                );
+                                faktur_AlamatNPWP3.textContent = decodeHtmlEntities(
+                                    result[0].AlamatNPWP
+                                );
+
+                                let npwp = result[0].NPWP;
+                                // let formattedNPWP =
+                                //     npwp.slice(0, 2) +
+                                //     " . " +
+                                //     npwp.slice(2, 5) +
+                                //     " . " +
+                                //     npwp.slice(5, 8) +
+                                //     " . " +
+                                //     npwp.slice(8, 9) +
+                                //     " - " +
+                                //     npwp.slice(9, 12) +
+                                //     " . " +
+                                //     npwp.slice(12, 15);
+                                faktur_NPWP3.textContent = npwp;
+
+                                // faktur_NamaKelompokUtama2.textContent =
+                                //     decodeHtmlEntities(result[0].NamaKelompokUtama);
+
+                                if (bankSelect.value == "6") {
+                                    faktur_NamaKelompokUtama3.innerHTML = "&nbsp;";
+                                } else {
+                                    faktur_NamaKelompokUtama3.textContent =
+                                        decodeHtmlEntities(
+                                            result[0].NamaKelompokUtama
+                                        );
+                                }
+
+                                let totalGrand = 0;
+                                let count = 0;
+                                var faktur_Detail3 =
+                                    document.getElementById("faktur_Detail3");
+
+                                faktur_Detail3.innerHTML = "";
+                                console.log(result.length > 4);
+
+                                result.forEach(function (item, index) {
+                                    var row = document.createElement("div");
+                                    row.classList.add("row", "small-font");
+                                    count += 1;
+
+                                    // Tampilkan item kelima dan seterusnya
+                                    if (index < parseInt(item_halaman.value)) {
+                                        row.style.display = "none"; // Sembunyikan item sebelum yang kelima
+                                    }
+
+                                    var coaCol = document.createElement("div");
+                                    coaCol.classList.add(
+                                        "col-sm-1",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    coaCol.textContent = count;
+                                    row.appendChild(coaCol);
+
+                                    var accountCol = document.createElement("div");
+                                    accountCol.classList.add(
+                                        "col-sm-5",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    accountCol.textContent = item.NamaType
+                                        ? decodeHtmlEntities(item.NamaType)
+                                        : "";
+                                    row.appendChild(accountCol);
+
+                                    var descriptionCol =
+                                        document.createElement("div");
+                                    descriptionCol.classList.add(
+                                        "col-sm-2",
+                                        "text-right",
+                                        "small-normal"
+                                    );
+                                    descriptionCol.textContent = item.Jml
+                                        ? numeral(item.Jml).format("0,0.00") +
+                                        item.Satuan
+                                        : "";
+                                    row.appendChild(descriptionCol);
+
+                                    var amountCol = document.createElement("div");
+                                    amountCol.classList.add(
+                                        "col-sm-2",
+                                        "text-right",
+                                        "small-normal"
+                                    );
+
+                                    if (bankSelect.value == "6") {
+                                        amountCol.textContent = item.HargaSatuan
+                                            ? "IDR " +
+                                            numeral(item.HargaSatuan).format(
+                                                "0,0.00"
+                                            )
+                                            : "0.00";
+                                    } else {
+                                        amountCol.textContent = item.HargaSatuan
+                                            ? decodeHtmlEntities(item.Symbol2) +
+                                            numeral(item.HargaSatuan).format(
+                                                "0,0.00"
+                                            )
+                                            : "0.00";
+                                    }
+                                    row.appendChild(amountCol);
+
+                                    var totalCol = document.createElement("div");
+                                    totalCol.classList.add(
+                                        "col-sm-3",
+                                        "text-center",
+                                        "small-normal",
+                                        "description-right"
+                                    );
+                                    let tempTotal =
+                                        numeral(item.Jml).value() *
+                                        numeral(item.HargaSatuan).value();
+
+                                    if (bankSelect.value == "6") {
+                                        totalCol.textContent = item.HargaSatuan
+                                            ? "IDR " +
+                                            numeral(tempTotal).format("0,0.00")
+                                            : "0.00";
+                                    } else {
+                                        totalCol.textContent = item.HargaSatuan
+                                            ? decodeHtmlEntities(item.Symbol2) +
+                                            numeral(tempTotal).format("0,0.00")
+                                            : "0.00";
+                                    }
+
+                                    row.appendChild(totalCol);
+                                    faktur_Detail3.appendChild(row);
+
+                                    totalGrand += numeral(tempTotal).value();
+
+                                    var additionalRow =
+                                        document.createElement("div");
+                                    additionalRow.classList.add(
+                                        "row",
+                                        "small-font"
+                                    );
+
+                                    if (index < parseInt(item_halaman.value)) {
+                                        additionalRow.style.display = "none";
+                                    }
+
+                                    var mantap = document.createElement("div");
+                                    mantap.classList.add(
+                                        "col-sm-1",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    additionalRow.appendChild(mantap);
+
+                                    var additionalCoaCol =
+                                        document.createElement("div");
+                                    additionalCoaCol.classList.add(
+                                        "col-sm-5",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    // additionalCoaCol.textContent = item.NO_PO
+                                    //     ? "PO : " + decodeHtmlEntities(item.NO_PO)
+                                    //     : "";
+                                    // additionalRow.appendChild(additionalCoaCol);
+
+                                    if (bankSelect.value == "6") {
+                                        additionalCoaCol.innerHTML = item.NO_PO
+                                            ? "PO : " +
+                                            decodeHtmlEntities(item.NO_PO) +
+                                            "<br>" +
+                                            "Jumlah Empty Bag yang dikirim: " +
+                                            decodeHtmlEntities(item.Jml) +
+                                            decodeHtmlEntities(item.Satuan)
+                                            : "";
+                                        additionalRow.appendChild(additionalCoaCol);
+                                    } else {
+                                        additionalCoaCol.textContent = item.NO_PO
+                                            ? "PO : " +
+                                            decodeHtmlEntities(item.NO_PO)
+                                            : "";
+                                        additionalRow.appendChild(additionalCoaCol);
+                                    }
+
+                                    faktur_Detail3.appendChild(additionalRow);
+                                });
+
+                                if (bankSelect.value == "6") {
+                                    faktur_SymbolGrand3.textContent = "IDR";
+                                    faktur_SymbolUM3.textContent = "IDR";
+                                    faktur_SymbolDPP3.textContent = "IDR";
+                                    faktur_SymbolPajak3.textContent = "IDR";
+                                    faktur_SymbolTerbayar3.textContent = "IDR";
+                                    faktur_SymbolPPH3.textContent = "-IDR";
+                                } else {
+                                    faktur_SymbolGrand3.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolUM3.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolDPP3.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolPajak3.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolTerbayar3.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolPPH3.textContent =
+                                        (result[0].PersenPPH != null ? "-" : "") +
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                }
+
+                                faktur_Grand3.textContent =
+                                    numeral(totalGrand).format("0,0.00");
+
+                                // if (
+                                //     result[0].NamaNPWP ==
+                                //     "PT. BLOOM TRADING INDONESIA"
+                                // ) {
+                                //     faktur_UM2.textContent = "";
+                                // } else {
+                                //     faktur_UM2.textContent = result[0].Nilai_UM
+                                //         ? numeral(
+                                //               (result[0].Nilai_UM * 11) / 12
+                                //           ).format("0,0.00")
+                                //         : "0.00";
+                                // }
+
+                                faktur_UM3.textContent = result[0].Nilai_UM
+                                    ? numeral(result[0].Nilai_UM).format("0,0.00")
+                                    : "0.00";
+                                // result[0].Nilai_UM
+                                //     ? numeral(
+                                //           (result[0].Nilai_UM * 11) / 12
+                                //       ).format("0,0.00")
+                                //     : "0.00";
+
+                                let dpp =
+                                    numeral(faktur_Grand3.textContent).value() -
+                                    numeral(result[0].Nilai_UM).value();
+                                if (
+                                    result[0].NamaNPWP ==
+                                    "PT. BLOOM TRADING INDONESIA"
+                                ) {
+                                    faktur_DPP3.textContent = "";
+                                } else if (duaDigitTahun > 24) {
+                                    faktur_DPP3.textContent = numeral(
+                                        (dpp * 11) / 12
+                                    ).format("0,0.00");
+                                } else {
+                                    faktur_DPP3.textContent =
+                                        numeral(dpp).format("0,0.00");
+                                }
+                                // if (duaDigitTahun > 24) {
+                                //     faktur_DPP2.textContent = numeral(
+                                //         (dpp * 11) / 12
+                                //     ).format("0,0.00");
+                                // } else {
+                                //     faktur_DPP2.textContent =
+                                //         numeral(dpp).format("0,0.00");
+                                // }
+                                let pph = (numeral(dpp).value() * numeral(result[0].PersenPPH).value()) / 100;
+                                faktur_PPH3.textContent = numeral(pph).format("0,0.00");
+                                let pajak =
+                                    (Math.round(numeral(dpp).value()) *
+                                        numeral(result[0].PersenPPN).value()) /
+                                    100;
+                                console.log(numeral(result[0].PersenPPN).value());
+
+                                if (duaDigitTahun > 24) {
+                                    faktur_Pajak3.textContent = numeral(
+                                        ((dpp * 11) / 12) * 0.12
+                                    ).format("0,0.00");
+                                } else {
+                                    faktur_Pajak3.textContent =
+                                        numeral(pajak).format("0,0.00");
+                                }
+
+                                if (duaDigitTahun > 24) {
+                                    let terbayar =
+                                        numeral(dpp).value() +
+                                        numeral(faktur_Pajak3.textContent).value() - numeral(pph).value();
+                                    faktur_Terbayar3.textContent =
+                                        numeral(terbayar).format("0,0.00");
+                                    TTerbilang = convertNumberToWordsRupiah(
+                                        numeral(
+                                            faktur_Terbayar3.textContent
+                                        ).value()
+                                    );
+                                    faktur_Terbilang3.innerHTML = decodeHtmlEntities(TTerbilang);
+                                    // faktur_Terbilang3.innerHTML =
+                                    //     "&emsp;" + decodeHtmlEntities(TTerbilang);
+                                } else {
+                                    let terbayar =
+                                        numeral(dpp).value() +
+                                        numeral(pajak).value();
+                                    faktur_Terbayar3.textContent =
+                                        numeral(terbayar).format("0,0.00");
+                                    faktur_Terbilang3.textContent =
+                                        decodeHtmlEntities(result[0].Terbilang);
+                                }
+
+                                if (bankSelect.value == "7") {
+                                    faktur_SyaratBayar3.innerHTML = "&nbsp;";
+                                } else {
+                                    faktur_SyaratBayar3.innerHTML =
+                                        "Syarat Pembayaran: &emsp;" +
+                                        decodeHtmlEntities(result[0].SyaratBayar) +
+                                        " Hari";
+                                }
+
+                                faktur_TglBln3.textContent = tanggal + "-" + bulan + "-20" + duaDigitTahun;
+                                // faktur_Thn3.textContent = " / 20" + duaDigitTahun;
+                                if (
+                                    result[0].NamaNPWP ==
+                                    "PT. BLOOM TRADING INDONESIA"
+                                ) {
+                                    faktur_PersenPPN3.innerHTML =
+                                        "<strong></strong>";
+                                } else if (duaDigitTahun > 24) {
+                                    faktur_PersenPPN3.innerHTML =
+                                        "<strong>12%</strong>";
+                                } else {
+                                    faktur_PersenPPN3.innerHTML =
+                                        "<strong>11%</strong>";
+                                }
+
+                                let persen = result[0].PersenPPH;
+                                if (persen == null) {
+                                    faktur_PersenPPH3.innerHTML = "<strong></strong>";
+                                } else {
+                                    faktur_PersenPPH3.innerHTML = "<strong>" + persen + "%</strong>";
+                                }
+
+                                let syaratBayar = result[0].SyaratBayar;
+                                let tglTerimaBarang = result[0].Tgl_Terima_Barang;
+                                let syaratBayarNumber = Number(syaratBayar);
+                                let date3 = new Date(tglTerimaBarang);
+                                let resultDate = new Date(date3);
+                                resultDate.setDate(
+                                    date3.getDate() + syaratBayarNumber
+                                );
+                                if (bankSelect.value == "7") {
+                                    faktur_Tempo3.innerHTML = "&nbsp;";
+                                    faktur_SuratJalan3.innerHTML = "&nbsp;";
+                                    faktur_SJ3.innerHTML = "&nbsp;";
+                                } else {
+                                    faktur_Tempo3.innerHTML =
+                                        "Jatuh Tempo: &emsp;" +
+                                        formatDateToMMDDYYYY(resultDate);
+
+                                    if (sFormula0.length > 255) {
+                                        faktur_SuratJalan3.innerHTML =
+                                            "Surat Jalan: &emsp;" +
+                                            sFormula0.slice(0, 252);
+                                        faktur_SJ3.textContent =
+                                            sFormula0.slice(252);
+                                    } else {
+                                        faktur_SuratJalan3.innerHTML =
+                                            "Surat Jalan: &emsp;" + sFormula0;
+                                        faktur_SJ3.textContent = "";
+                                    }
+                                }
+                                // faktur_Tempo2.innerHTML =
+                                //     "Jatuh Tempo: &emsp;&emsp; " +
+                                //     formatDateToMMDDYYYY(resultDate);
+
+                                // if (sFormula0.length > 255) {
+                                //     faktur_SuratJalan2.innerHTML =
+                                //         "Surat Jalan: &emsp;&emsp; " +
+                                //         sFormula0.slice(0, 252);
+                                //     faktur_SJ2.textContent = sFormula0.slice(252);
+                                // } else {
+                                //     faktur_SuratJalan2.innerHTML =
+                                //         "Surat Jalan: &emsp;&emsp; " + sFormula0;
+                                //     faktur_SJ2.textContent = "";
+                                // }
+
+                                printPreview("faktur3");
+                            }
+                        }
                     } else {
                         //#region Faktur
                         // print faktur
@@ -2383,630 +3206,632 @@ function rpt_cetakNotaFaktur(result) {
 
                             printPreview("faktur");
                         }
-                    }
 
-                    // print faktur2
-                    if (result.length > parseInt(item_halaman.value)) {
-                        //     // print faktur2
-                        var faktur_beneficiary2 = document.getElementById(
-                            "faktur_beneficiary2"
-                        );
-                        faktur_beneficiary2.style.visibility = "hidden";
-                        var faktur_applicant2 =
-                            document.getElementById("faktur_applicant2");
-                        faktur_applicant2.style.visibility = "hidden";
-                        var faktur_emptyBag2 =
-                            document.getElementById("faktur_emptyBag2");
-                        faktur_emptyBag2.style.visibility = "hidden";
 
-                        var faktur_IdPenagihan2 = document.getElementById(
-                            "faktur_IdPenagihan2"
-                        );
-                        faktur_IdPenagihan2.style.fontWeight = "bold";
-                        // var faktur_AreaPPNThnIdFakturPajak =
-                        //     document.getElementById(
-                        //         "faktur_AreaPPNThnIdFakturPajak"
-                        //     );
-                        // faktur_AreaPPNThnIdFakturPajak.style.fontWeight = "bold";
-                        var faktur_NamaNPWP2 =
-                            document.getElementById("faktur_NamaNPWP2");
-                        faktur_NamaNPWP2.style.fontWeight = "bold";
-                        var faktur_AlamatNPWP2 =
-                            document.getElementById("faktur_AlamatNPWP2");
-                        var faktur_NPWP2 =
-                            document.getElementById("faktur_NPWP2");
-                        var faktur_NamaKelompokUtama2 = document.getElementById(
-                            "faktur_NamaKelompokUtama2"
-                        );
-                        var faktur_SymbolGrand2 = document.getElementById(
-                            "faktur_SymbolGrand2"
-                        );
-                        var faktur_Grand2 =
-                            document.getElementById("faktur_Grand2");
-                        var faktur_SymbolUM2 =
-                            document.getElementById("faktur_SymbolUM2");
-                        var faktur_UM2 = document.getElementById("faktur_UM2");
-                        var faktur_SymbolDPP2 =
-                            document.getElementById("faktur_SymbolDPP2");
-                        var faktur_DPP2 =
-                            document.getElementById("faktur_DPP2");
-                        var faktur_SymbolPajak2 = document.getElementById(
-                            "faktur_SymbolPajak2"
-                        );
-                        var faktur_Pajak2 =
-                            document.getElementById("faktur_Pajak2");
-                        var faktur_Terbilang2 =
-                            document.getElementById("faktur_Terbilang2");
-                        var faktur_SymbolTerbayar2 = document.getElementById(
-                            "faktur_SymbolTerbayar2"
-                        );
-                        var faktur_Terbayar2 =
-                            document.getElementById("faktur_Terbayar2");
-                        var faktur_SyaratBayar2 = document.getElementById(
-                            "faktur_SyaratBayar2"
-                        );
-                        var faktur_TglBln2 =
-                            document.getElementById("faktur_TglBln2");
-                        var faktur_Thn2 =
-                            document.getElementById("faktur_Thn2");
-                        var faktur_PersenPPN2 =
-                            document.getElementById("faktur_PersenPPN2");
-                        var faktur_Tempo2 =
-                            document.getElementById("faktur_Tempo2");
-                        var faktur_SuratJalan2 =
-                            document.getElementById("faktur_SuratJalan2");
-                        var faktur_SJ2 = document.getElementById("faktur_SJ2");
-                        var bankBayar2 = document.getElementById("bankBayar2");
-                        var ttdPimpinan2 =
-                            document.getElementById("ttdPimpinan2");
-
-                        if (result.length === 0) {
-                            const elements = [
-                                "faktur_IdPenagihan2",
-                                // "faktur_AreaPPNThnIdFakturPajak2",
-                                "faktur_NamaNPWP2",
-                                "faktur_AlamatNPWP2",
-                                "faktur_NPWP2",
-                                "faktur_NamaKelompokUtama2",
-                                "faktur_SymbolGrand2",
-                                "faktur_Grand2",
-                                "faktur_SymbolUM2",
-                                "faktur_UM2",
-                                "faktur_SymbolDPP2",
-                                "faktur_DPP2",
-                                "faktur_SymbolPajak2",
-                                "faktur_Pajak2",
-                                "faktur_Terbilang2",
-                                "faktur_SymbolTerbayar2",
-                                "faktur_Terbayar2",
-                                "faktur_SyaratBayar2",
-                                "faktur_TglBln2",
-                                "faktur_Thn2",
-                                "faktur_PersenPPN2",
-                                "faktur_Tempo2",
-                                "faktur_SuratJalan2",
-                                "faktur_SJ2",
-                                "bankBayar2",
-                                "ttdPimpinan2",
-                            ];
-
-                            elements.forEach((id) => {
-                                const element = document.getElementById(id);
-                                if (element) {
-                                    element.textContent = ""; // Set the value to empty string
-                                }
-                            });
-
-                            // printPreview("faktur2");
-                        } else {
-                            if (bankSelect.value == "1") {
-                                bankBayar2.innerHTML =
-                                    "Pembayaran mohon ditransfer ke:" +
-                                    "<br>" +
-                                    "BCA Cab. Galaxy - Surabaya" +
-                                    "<br>" +
-                                    "a/c. 788 010 1999 ( IDR )" +
-                                    "<br>" +
-                                    "a/n. PT. Kerta Rajasa Raya";
-                            } else if (bankSelect.value == "2") {
-                                bankBayar2.innerHTML =
-                                    "Pembayaran melalui SCF ke Rekening:" +
-                                    "<br>" +
-                                    "BNI  Cabang Tropodo Sidoarjo" +
-                                    "<br>" +
-                                    "a/c. 6388888829 ( IDR )" +
-                                    "<br>" +
-                                    "a/n. PT. Kerta Rajasa Raya";
-                            } else if (bankSelect.value == "3") {
-                                bankBayar2.innerHTML =
-                                    "Pembayaran melalui SCF ke Rekening:" +
-                                    "<br>" +
-                                    "Bank Mandiri  KCP Padang Indarung" +
-                                    "<br>" +
-                                    "a/c. 111 0007609759 ( IDR )" +
-                                    "<br>" +
-                                    "a/n. PT. Kerta Rajasa Raya";
-                            } else if (bankSelect.value == "4") {
-                                bankBayar2.innerHTML =
-                                    "Pembayaran mohon ditransfer ke:" +
-                                    "<br>" +
-                                    "Bank Mandiri  KCP Pondok Chandra Sidoarjo" +
-                                    "<br>" +
-                                    "a/c. 14200 5555 0007 ( IDR )" +
-                                    "<br>" +
-                                    "a/n. PT. Kerta Rajasa Raya";
-                            } else if (bankSelect.value == "5") {
-                                bankBayar2.innerHTML =
-                                    "Pembayaran mohon ditransfer ke:" +
-                                    "<br>" +
-                                    "Bank OCBC Cab. Diponegoro - Surabaya" +
-                                    "<br>" +
-                                    "a/c. 5578 0000 9333 ( IDR )" +
-                                    "<br>" +
-                                    "a/n. PT. Kerta Rajasa Raya";
-                            } else if (bankSelect.value == "6") {
-                                faktur_beneficiary2.style.visibility =
-                                    "visible";
-                                faktur_applicant2.style.visibility = "visible";
-                                faktur_emptyBag2.style.visibility = "visible";
-                                bankBayar2.innerHTML =
-                                    "TRADE TERM: " +
-                                    tradeTerm +
-                                    "<br>" +
-                                    "Documentary Credit Number: " +
-                                    dcn +
-                                    "<br>" +
-                                    "Date of Issue: " +
-                                    doi +
-                                    "<br>" +
-                                    "&nbsp;";
-                            } else if (bankSelect.value == "7") {
-                                bankBayar2.innerHTML =
-                                    "Pembayaran mohon ditransfer ke:" +
-                                    "<br>" +
-                                    "Bank OCBC Cab. Diponegoro - Surabaya" +
-                                    "<br>" +
-                                    "a/c. 5578 0000 9333 ( IDR )" +
-                                    "<br>" +
-                                    "a/n. PT. Kerta Rajasa Raya";
-                            } else {
-                                bankBayar2.innerHTML =
-                                    "&nbsp;" +
-                                    "<br>" +
-                                    "&nbsp;" +
-                                    "<br>" +
-                                    "&nbsp;" +
-                                    "<br>" +
-                                    "&nbsp;";
-                            }
-
-                            if (ttdSelect.value == "1") {
-                                ttdPimpinan2.textContent = "TJAHYO SANTOSO";
-                            } else if (ttdSelect.value == "2") {
-                                ttdPimpinan2.textContent = "RUDY SANTOSO";
-                            } else if (ttdSelect.value == "3") {
-                                ttdPimpinan2.textContent = "YUDI SANTOSO";
-                            }
-
-                            faktur_IdPenagihan2.textContent =
-                                decodeHtmlEntities(result[0].Id_Penagihan);
-
-                            if (bankSelect.value == "7") {
-                                var date2 = isNaN(new Date(editDate).getTime())
-                                    ? new Date(result[0].Tgl_Penagihan)
-                                    : new Date(editDate);
-                            } else {
-                                var date2 = new Date(result[0].Tgl_Penagihan);
-                            }
-                            // var date2 = new Date(result[0].Tgl_Penagihan);
-
-                            var namaBulan = [
-                                "Januari",
-                                "Februari",
-                                "Maret",
-                                "April",
-                                "Mei",
-                                "Juni",
-                                "Juli",
-                                "Agustus",
-                                "September",
-                                "Oktober",
-                                "November",
-                                "Desember",
-                            ];
-
-                            var tanggal = date2.getDate();
-                            var bulan = namaBulan[date2.getMonth()];
-                            var tahunLengkap = date2.getFullYear();
-                            var duaDigitTahun = tahunLengkap
-                                .toString()
-                                .slice(-2);
-                            // faktur_AreaPPNThnIdFakturPajak.textContent =
-                            //     decodeHtmlEntities(result[0].KdArea_Ppn) +
-                            //     " . 012 - " +
-                            //     duaDigitTahun +
-                            //     ". " +
-                            //     decodeHtmlEntities(result[0].IdFakturPajak);
-
-                            faktur_NamaNPWP2.textContent = decodeHtmlEntities(
-                                result[0].NamaNPWP
+                        // print faktur2
+                        if (result.length > parseInt(item_halaman.value)) {
+                            //     // print faktur2
+                            var faktur_beneficiary2 = document.getElementById(
+                                "faktur_beneficiary2"
                             );
-                            faktur_AlamatNPWP2.textContent = decodeHtmlEntities(
-                                result[0].AlamatNPWP
+                            faktur_beneficiary2.style.visibility = "hidden";
+                            var faktur_applicant2 =
+                                document.getElementById("faktur_applicant2");
+                            faktur_applicant2.style.visibility = "hidden";
+                            var faktur_emptyBag2 =
+                                document.getElementById("faktur_emptyBag2");
+                            faktur_emptyBag2.style.visibility = "hidden";
+
+                            var faktur_IdPenagihan2 = document.getElementById(
+                                "faktur_IdPenagihan2"
                             );
+                            faktur_IdPenagihan2.style.fontWeight = "bold";
+                            // var faktur_AreaPPNThnIdFakturPajak =
+                            //     document.getElementById(
+                            //         "faktur_AreaPPNThnIdFakturPajak"
+                            //     );
+                            // faktur_AreaPPNThnIdFakturPajak.style.fontWeight = "bold";
+                            var faktur_NamaNPWP2 =
+                                document.getElementById("faktur_NamaNPWP2");
+                            faktur_NamaNPWP2.style.fontWeight = "bold";
+                            var faktur_AlamatNPWP2 =
+                                document.getElementById("faktur_AlamatNPWP2");
+                            var faktur_NPWP2 =
+                                document.getElementById("faktur_NPWP2");
+                            var faktur_NamaKelompokUtama2 = document.getElementById(
+                                "faktur_NamaKelompokUtama2"
+                            );
+                            var faktur_SymbolGrand2 = document.getElementById(
+                                "faktur_SymbolGrand2"
+                            );
+                            var faktur_Grand2 =
+                                document.getElementById("faktur_Grand2");
+                            var faktur_SymbolUM2 =
+                                document.getElementById("faktur_SymbolUM2");
+                            var faktur_UM2 = document.getElementById("faktur_UM2");
+                            var faktur_SymbolDPP2 =
+                                document.getElementById("faktur_SymbolDPP2");
+                            var faktur_DPP2 =
+                                document.getElementById("faktur_DPP2");
+                            var faktur_SymbolPajak2 = document.getElementById(
+                                "faktur_SymbolPajak2"
+                            );
+                            var faktur_Pajak2 =
+                                document.getElementById("faktur_Pajak2");
+                            var faktur_Terbilang2 =
+                                document.getElementById("faktur_Terbilang2");
+                            var faktur_SymbolTerbayar2 = document.getElementById(
+                                "faktur_SymbolTerbayar2"
+                            );
+                            var faktur_Terbayar2 =
+                                document.getElementById("faktur_Terbayar2");
+                            var faktur_SyaratBayar2 = document.getElementById(
+                                "faktur_SyaratBayar2"
+                            );
+                            var faktur_TglBln2 =
+                                document.getElementById("faktur_TglBln2");
+                            var faktur_Thn2 =
+                                document.getElementById("faktur_Thn2");
+                            var faktur_PersenPPN2 =
+                                document.getElementById("faktur_PersenPPN2");
+                            var faktur_Tempo2 =
+                                document.getElementById("faktur_Tempo2");
+                            var faktur_SuratJalan2 =
+                                document.getElementById("faktur_SuratJalan2");
+                            var faktur_SJ2 = document.getElementById("faktur_SJ2");
+                            var bankBayar2 = document.getElementById("bankBayar2");
+                            var ttdPimpinan2 =
+                                document.getElementById("ttdPimpinan2");
 
-                            let npwp = result[0].NPWP;
-                            // let formattedNPWP =
-                            //     npwp.slice(0, 2) +
-                            //     " . " +
-                            //     npwp.slice(2, 5) +
-                            //     " . " +
-                            //     npwp.slice(5, 8) +
-                            //     " . " +
-                            //     npwp.slice(8, 9) +
-                            //     " - " +
-                            //     npwp.slice(9, 12) +
-                            //     " . " +
-                            //     npwp.slice(12, 15);
-                            faktur_NPWP2.textContent = npwp;
+                            if (result.length === 0) {
+                                const elements = [
+                                    "faktur_IdPenagihan2",
+                                    // "faktur_AreaPPNThnIdFakturPajak2",
+                                    "faktur_NamaNPWP2",
+                                    "faktur_AlamatNPWP2",
+                                    "faktur_NPWP2",
+                                    "faktur_NamaKelompokUtama2",
+                                    "faktur_SymbolGrand2",
+                                    "faktur_Grand2",
+                                    "faktur_SymbolUM2",
+                                    "faktur_UM2",
+                                    "faktur_SymbolDPP2",
+                                    "faktur_DPP2",
+                                    "faktur_SymbolPajak2",
+                                    "faktur_Pajak2",
+                                    "faktur_Terbilang2",
+                                    "faktur_SymbolTerbayar2",
+                                    "faktur_Terbayar2",
+                                    "faktur_SyaratBayar2",
+                                    "faktur_TglBln2",
+                                    "faktur_Thn2",
+                                    "faktur_PersenPPN2",
+                                    "faktur_Tempo2",
+                                    "faktur_SuratJalan2",
+                                    "faktur_SJ2",
+                                    "bankBayar2",
+                                    "ttdPimpinan2",
+                                ];
 
-                            // faktur_NamaKelompokUtama2.textContent =
-                            //     decodeHtmlEntities(result[0].NamaKelompokUtama);
+                                elements.forEach((id) => {
+                                    const element = document.getElementById(id);
+                                    if (element) {
+                                        element.textContent = ""; // Set the value to empty string
+                                    }
+                                });
 
-                            if (bankSelect.value == "6") {
-                                faktur_NamaKelompokUtama2.innerHTML = "&nbsp;";
+                                // printPreview("faktur2");
                             } else {
-                                faktur_NamaKelompokUtama2.textContent =
-                                    decodeHtmlEntities(
-                                        result[0].NamaKelompokUtama
-                                    );
-                            }
-
-                            let totalGrand = 0;
-                            let count = 0;
-                            var faktur_Detail2 =
-                                document.getElementById("faktur_Detail2");
-
-                            faktur_Detail2.innerHTML = "";
-                            console.log(result.length > 3);
-
-                            result.forEach(function (item, index) {
-                                var row = document.createElement("div");
-                                row.classList.add("row", "small-font");
-                                count += 1;
-
-                                // Tampilkan item kelima dan seterusnya
-                                if (index < parseInt(item_halaman.value)) {
-                                    row.style.display = "none"; // Sembunyikan item sebelum yang kelima
-                                }
-
-                                var coaCol = document.createElement("div");
-                                coaCol.classList.add(
-                                    "col-sm-1",
-                                    "text-left",
-                                    "small-font",
-                                    "description-left"
-                                );
-                                coaCol.textContent = count;
-                                row.appendChild(coaCol);
-
-                                var accountCol = document.createElement("div");
-                                accountCol.classList.add(
-                                    "col-sm-5",
-                                    "text-left",
-                                    "small-font",
-                                    "description-left"
-                                );
-                                accountCol.textContent = item.NamaType
-                                    ? decodeHtmlEntities(item.NamaType)
-                                    : "";
-                                row.appendChild(accountCol);
-
-                                var descriptionCol =
-                                    document.createElement("div");
-                                descriptionCol.classList.add(
-                                    "col-sm-2",
-                                    "text-right",
-                                    "small-normal"
-                                );
-                                descriptionCol.textContent = item.Jml
-                                    ? numeral(item.Jml).format("0,0.00") +
-                                    item.Satuan
-                                    : "";
-                                row.appendChild(descriptionCol);
-
-                                var amountCol = document.createElement("div");
-                                amountCol.classList.add(
-                                    "col-sm-2",
-                                    "text-right",
-                                    "small-normal"
-                                );
-
-                                if (bankSelect.value == "6") {
-                                    amountCol.textContent = item.HargaSatuan
-                                        ? "IDR " +
-                                        numeral(item.HargaSatuan).format(
-                                            "0,0.00"
-                                        )
-                                        : "0.00";
-                                } else {
-                                    amountCol.textContent = item.HargaSatuan
-                                        ? decodeHtmlEntities(item.Symbol2) +
-                                        numeral(item.HargaSatuan).format(
-                                            "0,0.00"
-                                        )
-                                        : "0.00";
-                                }
-                                row.appendChild(amountCol);
-
-                                var totalCol = document.createElement("div");
-                                totalCol.classList.add(
-                                    "col-sm-3",
-                                    "text-center",
-                                    "small-normal",
-                                    "description-right"
-                                );
-                                let tempTotal =
-                                    numeral(item.Jml).value() *
-                                    numeral(item.HargaSatuan).value();
-
-                                if (bankSelect.value == "6") {
-                                    totalCol.textContent = item.HargaSatuan
-                                        ? "IDR " +
-                                        numeral(tempTotal).format("0,0.00")
-                                        : "0.00";
-                                } else {
-                                    totalCol.textContent = item.HargaSatuan
-                                        ? decodeHtmlEntities(item.Symbol2) +
-                                        numeral(tempTotal).format("0,0.00")
-                                        : "0.00";
-                                }
-
-                                row.appendChild(totalCol);
-                                faktur_Detail2.appendChild(row);
-
-                                totalGrand += numeral(tempTotal).value();
-
-                                var additionalRow =
-                                    document.createElement("div");
-                                additionalRow.classList.add(
-                                    "row",
-                                    "small-font"
-                                );
-
-                                if (index < parseInt(item_halaman.value)) {
-                                    additionalRow.style.display = "none";
-                                }
-
-                                var mantap = document.createElement("div");
-                                mantap.classList.add(
-                                    "col-sm-1",
-                                    "text-left",
-                                    "small-font",
-                                    "description-left"
-                                );
-                                additionalRow.appendChild(mantap);
-
-                                var additionalCoaCol =
-                                    document.createElement("div");
-                                additionalCoaCol.classList.add(
-                                    "col-sm-5",
-                                    "text-left",
-                                    "small-font",
-                                    "description-left"
-                                );
-                                // additionalCoaCol.textContent = item.NO_PO
-                                //     ? "PO : " + decodeHtmlEntities(item.NO_PO)
-                                //     : "";
-                                // additionalRow.appendChild(additionalCoaCol);
-
-                                if (bankSelect.value == "6") {
-                                    additionalCoaCol.innerHTML = item.NO_PO
-                                        ? "PO : " +
-                                        decodeHtmlEntities(item.NO_PO) +
+                                if (bankSelect.value == "1") {
+                                    bankBayar2.innerHTML =
+                                        "Pembayaran mohon ditransfer ke:" +
                                         "<br>" +
-                                        "Jumlah Empty Bag yang dikirim: " +
-                                        decodeHtmlEntities(item.Jml) +
-                                        decodeHtmlEntities(item.Satuan)
-                                        : "";
-                                    additionalRow.appendChild(additionalCoaCol);
+                                        "BCA Cab. Galaxy - Surabaya" +
+                                        "<br>" +
+                                        "a/c. 788 010 1999 ( IDR )" +
+                                        "<br>" +
+                                        "a/n. PT. Kerta Rajasa Raya";
+                                } else if (bankSelect.value == "2") {
+                                    bankBayar2.innerHTML =
+                                        "Pembayaran melalui SCF ke Rekening:" +
+                                        "<br>" +
+                                        "BNI  Cabang Tropodo Sidoarjo" +
+                                        "<br>" +
+                                        "a/c. 6388888829 ( IDR )" +
+                                        "<br>" +
+                                        "a/n. PT. Kerta Rajasa Raya";
+                                } else if (bankSelect.value == "3") {
+                                    bankBayar2.innerHTML =
+                                        "Pembayaran melalui SCF ke Rekening:" +
+                                        "<br>" +
+                                        "Bank Mandiri  KCP Padang Indarung" +
+                                        "<br>" +
+                                        "a/c. 111 0007609759 ( IDR )" +
+                                        "<br>" +
+                                        "a/n. PT. Kerta Rajasa Raya";
+                                } else if (bankSelect.value == "4") {
+                                    bankBayar2.innerHTML =
+                                        "Pembayaran mohon ditransfer ke:" +
+                                        "<br>" +
+                                        "Bank Mandiri  KCP Pondok Chandra Sidoarjo" +
+                                        "<br>" +
+                                        "a/c. 14200 5555 0007 ( IDR )" +
+                                        "<br>" +
+                                        "a/n. PT. Kerta Rajasa Raya";
+                                } else if (bankSelect.value == "5") {
+                                    bankBayar2.innerHTML =
+                                        "Pembayaran mohon ditransfer ke:" +
+                                        "<br>" +
+                                        "Bank OCBC Cab. Diponegoro - Surabaya" +
+                                        "<br>" +
+                                        "a/c. 5578 0000 9333 ( IDR )" +
+                                        "<br>" +
+                                        "a/n. PT. Kerta Rajasa Raya";
+                                } else if (bankSelect.value == "6") {
+                                    faktur_beneficiary2.style.visibility =
+                                        "visible";
+                                    faktur_applicant2.style.visibility = "visible";
+                                    faktur_emptyBag2.style.visibility = "visible";
+                                    bankBayar2.innerHTML =
+                                        "TRADE TERM: " +
+                                        tradeTerm +
+                                        "<br>" +
+                                        "Documentary Credit Number: " +
+                                        dcn +
+                                        "<br>" +
+                                        "Date of Issue: " +
+                                        doi +
+                                        "<br>" +
+                                        "&nbsp;";
+                                } else if (bankSelect.value == "7") {
+                                    bankBayar2.innerHTML =
+                                        "Pembayaran mohon ditransfer ke:" +
+                                        "<br>" +
+                                        "Bank OCBC Cab. Diponegoro - Surabaya" +
+                                        "<br>" +
+                                        "a/c. 5578 0000 9333 ( IDR )" +
+                                        "<br>" +
+                                        "a/n. PT. Kerta Rajasa Raya";
                                 } else {
-                                    additionalCoaCol.textContent = item.NO_PO
-                                        ? "PO : " +
-                                        decodeHtmlEntities(item.NO_PO)
-                                        : "";
-                                    additionalRow.appendChild(additionalCoaCol);
+                                    bankBayar2.innerHTML =
+                                        "&nbsp;" +
+                                        "<br>" +
+                                        "&nbsp;" +
+                                        "<br>" +
+                                        "&nbsp;" +
+                                        "<br>" +
+                                        "&nbsp;";
                                 }
 
-                                faktur_Detail2.appendChild(additionalRow);
-                            });
-
-                            if (bankSelect.value == "6") {
-                                faktur_SymbolGrand2.textContent = "IDR";
-                                faktur_SymbolUM2.textContent = "IDR";
-                                faktur_SymbolDPP2.textContent = "IDR";
-                                faktur_SymbolPajak2.textContent = "IDR";
-                                faktur_SymbolTerbayar2.textContent = "IDR";
-                            } else {
-                                faktur_SymbolGrand2.textContent =
-                                    decodeHtmlEntities(result[0].Symbol2);
-                                faktur_SymbolUM2.textContent =
-                                    decodeHtmlEntities(result[0].Symbol2);
-                                faktur_SymbolDPP2.textContent =
-                                    decodeHtmlEntities(result[0].Symbol2);
-                                faktur_SymbolPajak2.textContent =
-                                    decodeHtmlEntities(result[0].Symbol2);
-                                faktur_SymbolTerbayar2.textContent =
-                                    decodeHtmlEntities(result[0].Symbol2);
-                            }
-
-                            faktur_Grand2.textContent =
-                                numeral(totalGrand).format("0,0.00");
-
-                            // if (
-                            //     result[0].NamaNPWP ==
-                            //     "PT. BLOOM TRADING INDONESIA"
-                            // ) {
-                            //     faktur_UM2.textContent = "";
-                            // } else {
-                            //     faktur_UM2.textContent = result[0].Nilai_UM
-                            //         ? numeral(
-                            //               (result[0].Nilai_UM * 11) / 12
-                            //           ).format("0,0.00")
-                            //         : "0.00";
-                            // }
-
-                            faktur_UM2.textContent = result[0].Nilai_UM
-                                ? numeral(result[0].Nilai_UM).format("0,0.00")
-                                : "0.00";
-                            // result[0].Nilai_UM
-                            //     ? numeral(
-                            //           (result[0].Nilai_UM * 11) / 12
-                            //       ).format("0,0.00")
-                            //     : "0.00";
-
-                            let dpp =
-                                numeral(faktur_Grand2.textContent).value() -
-                                numeral(result[0].Nilai_UM).value();
-                            if (
-                                result[0].NamaNPWP ==
-                                "PT. BLOOM TRADING INDONESIA"
-                            ) {
-                                faktur_DPP2.textContent = "";
-                            } else if (duaDigitTahun > 24) {
-                                if (bankSelect.value == "6") {
-                                    let nilaiDPP = (dpp * 11) / 12;
-                                    let nilaiBulat = Math.round(nilaiDPP);
-                                    faktur_DPP2.textContent = numeral(nilaiBulat).format("0,0.00");
-                                } else {
-                                    faktur_DPP2.textContent = numeral(
-                                        (dpp * 11) / 12
-                                    ).format("0,0.00");
+                                if (ttdSelect.value == "1") {
+                                    ttdPimpinan2.textContent = "TJAHYO SANTOSO";
+                                } else if (ttdSelect.value == "2") {
+                                    ttdPimpinan2.textContent = "RUDY SANTOSO";
+                                } else if (ttdSelect.value == "3") {
+                                    ttdPimpinan2.textContent = "YUDI SANTOSO";
                                 }
-                            } else {
-                                faktur_DPP2.textContent =
-                                    numeral(dpp).format("0,0.00");
-                            }
-                            // if (duaDigitTahun > 24) {
-                            //     faktur_DPP2.textContent = numeral(
-                            //         (dpp * 11) / 12
-                            //     ).format("0,0.00");
-                            // } else {
-                            //     faktur_DPP2.textContent =
-                            //         numeral(dpp).format("0,0.00");
-                            // }
 
-                            let pajak =
-                                (Math.round(numeral(dpp).value()) *
-                                    numeral(result[0].PersenPPN).value()) /
-                                100;
-                            console.log(numeral(result[0].PersenPPN).value());
+                                faktur_IdPenagihan2.textContent =
+                                    decodeHtmlEntities(result[0].Id_Penagihan);
 
-                            if (duaDigitTahun > 24) {
-                                faktur_Pajak2.textContent = numeral(
-                                    ((dpp * 11) / 12) * 0.12
-                                ).format("0,0.00");
-                            } else {
-                                faktur_Pajak2.textContent =
-                                    numeral(pajak).format("0,0.00");
-                            }
+                                if (bankSelect.value == "7") {
+                                    var date2 = isNaN(new Date(editDate).getTime())
+                                        ? new Date(result[0].Tgl_Penagihan)
+                                        : new Date(editDate);
+                                } else {
+                                    var date2 = new Date(result[0].Tgl_Penagihan);
+                                }
+                                // var date2 = new Date(result[0].Tgl_Penagihan);
 
-                            if (duaDigitTahun > 24) {
-                                let terbayar =
-                                    numeral(dpp).value() +
-                                    numeral(faktur_Pajak2.textContent).value();
-                                faktur_Terbayar2.textContent =
-                                    numeral(terbayar).format("0,0.00");
-                                TTerbilang = convertNumberToWordsRupiah(
-                                    numeral(
-                                        faktur_Terbayar2.textContent
-                                    ).value()
+                                var namaBulan = [
+                                    "Januari",
+                                    "Februari",
+                                    "Maret",
+                                    "April",
+                                    "Mei",
+                                    "Juni",
+                                    "Juli",
+                                    "Agustus",
+                                    "September",
+                                    "Oktober",
+                                    "November",
+                                    "Desember",
+                                ];
+
+                                var tanggal = date2.getDate();
+                                var bulan = namaBulan[date2.getMonth()];
+                                var tahunLengkap = date2.getFullYear();
+                                var duaDigitTahun = tahunLengkap
+                                    .toString()
+                                    .slice(-2);
+                                // faktur_AreaPPNThnIdFakturPajak.textContent =
+                                //     decodeHtmlEntities(result[0].KdArea_Ppn) +
+                                //     " . 012 - " +
+                                //     duaDigitTahun +
+                                //     ". " +
+                                //     decodeHtmlEntities(result[0].IdFakturPajak);
+
+                                faktur_NamaNPWP2.textContent = decodeHtmlEntities(
+                                    result[0].NamaNPWP
                                 );
-                                faktur_Terbilang2.innerHTML =
-                                    "&emsp;" + decodeHtmlEntities(TTerbilang);
-                            } else {
-                                let terbayar =
-                                    numeral(dpp).value() +
-                                    numeral(pajak).value();
-                                faktur_Terbayar2.textContent =
-                                    numeral(terbayar).format("0,0.00");
-                                faktur_Terbilang2.textContent =
-                                    decodeHtmlEntities(result[0].Terbilang);
-                            }
+                                faktur_AlamatNPWP2.textContent = decodeHtmlEntities(
+                                    result[0].AlamatNPWP
+                                );
 
-                            if (bankSelect.value == "7") {
-                                faktur_SyaratBayar2.innerHTML = "";
-                            } else {
-                                faktur_SyaratBayar2.innerHTML =
-                                    "Syarat Pembayaran: &emsp;&emsp;" +
-                                    decodeHtmlEntities(result[0].SyaratBayar) +
-                                    " Hari";
-                            }
+                                let npwp = result[0].NPWP;
+                                // let formattedNPWP =
+                                //     npwp.slice(0, 2) +
+                                //     " . " +
+                                //     npwp.slice(2, 5) +
+                                //     " . " +
+                                //     npwp.slice(5, 8) +
+                                //     " . " +
+                                //     npwp.slice(8, 9) +
+                                //     " - " +
+                                //     npwp.slice(9, 12) +
+                                //     " . " +
+                                //     npwp.slice(12, 15);
+                                faktur_NPWP2.textContent = npwp;
 
-                            faktur_TglBln2.textContent = tanggal + " " + bulan;
-                            faktur_Thn2.textContent = duaDigitTahun;
-                            if (
-                                result[0].NamaNPWP ==
-                                "PT. BLOOM TRADING INDONESIA"
-                            ) {
-                                faktur_PersenPPN2.innerHTML =
-                                    "<strong></strong>";
-                            } else if (duaDigitTahun > 24) {
-                                faktur_PersenPPN2.innerHTML =
-                                    "<strong>12%</strong>";
-                            } else {
-                                faktur_PersenPPN2.innerHTML =
-                                    "<strong>11%</strong>";
-                            }
+                                // faktur_NamaKelompokUtama2.textContent =
+                                //     decodeHtmlEntities(result[0].NamaKelompokUtama);
 
-                            let syaratBayar = result[0].SyaratBayar;
-                            let tglTerimaBarang = result[0].Tgl_Terima_Barang;
-                            let syaratBayarNumber = Number(syaratBayar);
-                            let date3 = new Date(tglTerimaBarang);
-                            let resultDate = new Date(date3);
-                            resultDate.setDate(
-                                date3.getDate() + syaratBayarNumber
-                            );
-                            if (bankSelect.value == "7") {
-                                faktur_Tempo2.innerHTML = "";
-                                faktur_SuratJalan2.innerHTML = "";
-                                faktur_SJ2.textContent = "";
-                            } else {
-                                faktur_Tempo2.innerHTML =
-                                    "Jatuh Tempo: &emsp;&emsp; " +
-                                    formatDateToMMDDYYYY(resultDate);
-
-                                if (sFormula0.length > 255) {
-                                    faktur_SuratJalan2.innerHTML =
-                                        "Surat Jalan: &emsp;&emsp; " +
-                                        sFormula0.slice(0, 252);
-                                    faktur_SJ2.textContent =
-                                        sFormula0.slice(252);
+                                if (bankSelect.value == "6") {
+                                    faktur_NamaKelompokUtama2.innerHTML = "&nbsp;";
                                 } else {
-                                    faktur_SuratJalan2.innerHTML =
-                                        "Surat Jalan: &emsp;&emsp; " +
-                                        sFormula0;
-                                    faktur_SJ2.textContent = "";
+                                    faktur_NamaKelompokUtama2.textContent =
+                                        decodeHtmlEntities(
+                                            result[0].NamaKelompokUtama
+                                        );
                                 }
+
+                                let totalGrand = 0;
+                                let count = 0;
+                                var faktur_Detail2 =
+                                    document.getElementById("faktur_Detail2");
+
+                                faktur_Detail2.innerHTML = "";
+                                console.log(result.length > 3);
+
+                                result.forEach(function (item, index) {
+                                    var row = document.createElement("div");
+                                    row.classList.add("row", "small-font");
+                                    count += 1;
+
+                                    // Tampilkan item kelima dan seterusnya
+                                    if (index < parseInt(item_halaman.value)) {
+                                        row.style.display = "none"; // Sembunyikan item sebelum yang kelima
+                                    }
+
+                                    var coaCol = document.createElement("div");
+                                    coaCol.classList.add(
+                                        "col-sm-1",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    coaCol.textContent = count;
+                                    row.appendChild(coaCol);
+
+                                    var accountCol = document.createElement("div");
+                                    accountCol.classList.add(
+                                        "col-sm-5",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    accountCol.textContent = item.NamaType
+                                        ? decodeHtmlEntities(item.NamaType)
+                                        : "";
+                                    row.appendChild(accountCol);
+
+                                    var descriptionCol =
+                                        document.createElement("div");
+                                    descriptionCol.classList.add(
+                                        "col-sm-2",
+                                        "text-right",
+                                        "small-normal"
+                                    );
+                                    descriptionCol.textContent = item.Jml
+                                        ? numeral(item.Jml).format("0,0.00") +
+                                        item.Satuan
+                                        : "";
+                                    row.appendChild(descriptionCol);
+
+                                    var amountCol = document.createElement("div");
+                                    amountCol.classList.add(
+                                        "col-sm-2",
+                                        "text-right",
+                                        "small-normal"
+                                    );
+
+                                    if (bankSelect.value == "6") {
+                                        amountCol.textContent = item.HargaSatuan
+                                            ? "IDR " +
+                                            numeral(item.HargaSatuan).format(
+                                                "0,0.00"
+                                            )
+                                            : "0.00";
+                                    } else {
+                                        amountCol.textContent = item.HargaSatuan
+                                            ? decodeHtmlEntities(item.Symbol2) +
+                                            numeral(item.HargaSatuan).format(
+                                                "0,0.00"
+                                            )
+                                            : "0.00";
+                                    }
+                                    row.appendChild(amountCol);
+
+                                    var totalCol = document.createElement("div");
+                                    totalCol.classList.add(
+                                        "col-sm-3",
+                                        "text-center",
+                                        "small-normal",
+                                        "description-right"
+                                    );
+                                    let tempTotal =
+                                        numeral(item.Jml).value() *
+                                        numeral(item.HargaSatuan).value();
+
+                                    if (bankSelect.value == "6") {
+                                        totalCol.textContent = item.HargaSatuan
+                                            ? "IDR " +
+                                            numeral(tempTotal).format("0,0.00")
+                                            : "0.00";
+                                    } else {
+                                        totalCol.textContent = item.HargaSatuan
+                                            ? decodeHtmlEntities(item.Symbol2) +
+                                            numeral(tempTotal).format("0,0.00")
+                                            : "0.00";
+                                    }
+
+                                    row.appendChild(totalCol);
+                                    faktur_Detail2.appendChild(row);
+
+                                    totalGrand += numeral(tempTotal).value();
+
+                                    var additionalRow =
+                                        document.createElement("div");
+                                    additionalRow.classList.add(
+                                        "row",
+                                        "small-font"
+                                    );
+
+                                    if (index < parseInt(item_halaman.value)) {
+                                        additionalRow.style.display = "none";
+                                    }
+
+                                    var mantap = document.createElement("div");
+                                    mantap.classList.add(
+                                        "col-sm-1",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    additionalRow.appendChild(mantap);
+
+                                    var additionalCoaCol =
+                                        document.createElement("div");
+                                    additionalCoaCol.classList.add(
+                                        "col-sm-5",
+                                        "text-left",
+                                        "small-font",
+                                        "description-left"
+                                    );
+                                    // additionalCoaCol.textContent = item.NO_PO
+                                    //     ? "PO : " + decodeHtmlEntities(item.NO_PO)
+                                    //     : "";
+                                    // additionalRow.appendChild(additionalCoaCol);
+
+                                    if (bankSelect.value == "6") {
+                                        additionalCoaCol.innerHTML = item.NO_PO
+                                            ? "PO : " +
+                                            decodeHtmlEntities(item.NO_PO) +
+                                            "<br>" +
+                                            "Jumlah Empty Bag yang dikirim: " +
+                                            decodeHtmlEntities(item.Jml) +
+                                            decodeHtmlEntities(item.Satuan)
+                                            : "";
+                                        additionalRow.appendChild(additionalCoaCol);
+                                    } else {
+                                        additionalCoaCol.textContent = item.NO_PO
+                                            ? "PO : " +
+                                            decodeHtmlEntities(item.NO_PO)
+                                            : "";
+                                        additionalRow.appendChild(additionalCoaCol);
+                                    }
+
+                                    faktur_Detail2.appendChild(additionalRow);
+                                });
+
+                                if (bankSelect.value == "6") {
+                                    faktur_SymbolGrand2.textContent = "IDR";
+                                    faktur_SymbolUM2.textContent = "IDR";
+                                    faktur_SymbolDPP2.textContent = "IDR";
+                                    faktur_SymbolPajak2.textContent = "IDR";
+                                    faktur_SymbolTerbayar2.textContent = "IDR";
+                                } else {
+                                    faktur_SymbolGrand2.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolUM2.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolDPP2.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolPajak2.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                    faktur_SymbolTerbayar2.textContent =
+                                        decodeHtmlEntities(result[0].Symbol2);
+                                }
+
+                                faktur_Grand2.textContent =
+                                    numeral(totalGrand).format("0,0.00");
+
+                                // if (
+                                //     result[0].NamaNPWP ==
+                                //     "PT. BLOOM TRADING INDONESIA"
+                                // ) {
+                                //     faktur_UM2.textContent = "";
+                                // } else {
+                                //     faktur_UM2.textContent = result[0].Nilai_UM
+                                //         ? numeral(
+                                //               (result[0].Nilai_UM * 11) / 12
+                                //           ).format("0,0.00")
+                                //         : "0.00";
+                                // }
+
+                                faktur_UM2.textContent = result[0].Nilai_UM
+                                    ? numeral(result[0].Nilai_UM).format("0,0.00")
+                                    : "0.00";
+                                // result[0].Nilai_UM
+                                //     ? numeral(
+                                //           (result[0].Nilai_UM * 11) / 12
+                                //       ).format("0,0.00")
+                                //     : "0.00";
+
+                                let dpp =
+                                    numeral(faktur_Grand2.textContent).value() -
+                                    numeral(result[0].Nilai_UM).value();
+                                if (
+                                    result[0].NamaNPWP ==
+                                    "PT. BLOOM TRADING INDONESIA"
+                                ) {
+                                    faktur_DPP2.textContent = "";
+                                } else if (duaDigitTahun > 24) {
+                                    if (bankSelect.value == "6") {
+                                        let nilaiDPP = (dpp * 11) / 12;
+                                        let nilaiBulat = Math.round(nilaiDPP);
+                                        faktur_DPP2.textContent = numeral(nilaiBulat).format("0,0.00");
+                                    } else {
+                                        faktur_DPP2.textContent = numeral(
+                                            (dpp * 11) / 12
+                                        ).format("0,0.00");
+                                    }
+                                } else {
+                                    faktur_DPP2.textContent =
+                                        numeral(dpp).format("0,0.00");
+                                }
+                                // if (duaDigitTahun > 24) {
+                                //     faktur_DPP2.textContent = numeral(
+                                //         (dpp * 11) / 12
+                                //     ).format("0,0.00");
+                                // } else {
+                                //     faktur_DPP2.textContent =
+                                //         numeral(dpp).format("0,0.00");
+                                // }
+
+                                let pajak =
+                                    (Math.round(numeral(dpp).value()) *
+                                        numeral(result[0].PersenPPN).value()) /
+                                    100;
+                                console.log(numeral(result[0].PersenPPN).value());
+
+                                if (duaDigitTahun > 24) {
+                                    faktur_Pajak2.textContent = numeral(
+                                        ((dpp * 11) / 12) * 0.12
+                                    ).format("0,0.00");
+                                } else {
+                                    faktur_Pajak2.textContent =
+                                        numeral(pajak).format("0,0.00");
+                                }
+
+                                if (duaDigitTahun > 24) {
+                                    let terbayar =
+                                        numeral(dpp).value() +
+                                        numeral(faktur_Pajak2.textContent).value();
+                                    faktur_Terbayar2.textContent =
+                                        numeral(terbayar).format("0,0.00");
+                                    TTerbilang = convertNumberToWordsRupiah(
+                                        numeral(
+                                            faktur_Terbayar2.textContent
+                                        ).value()
+                                    );
+                                    faktur_Terbilang2.innerHTML =
+                                        "&emsp;" + decodeHtmlEntities(TTerbilang);
+                                } else {
+                                    let terbayar =
+                                        numeral(dpp).value() +
+                                        numeral(pajak).value();
+                                    faktur_Terbayar2.textContent =
+                                        numeral(terbayar).format("0,0.00");
+                                    faktur_Terbilang2.textContent =
+                                        decodeHtmlEntities(result[0].Terbilang);
+                                }
+
+                                if (bankSelect.value == "7") {
+                                    faktur_SyaratBayar2.innerHTML = "";
+                                } else {
+                                    faktur_SyaratBayar2.innerHTML =
+                                        "Syarat Pembayaran: &emsp;&emsp;" +
+                                        decodeHtmlEntities(result[0].SyaratBayar) +
+                                        " Hari";
+                                }
+
+                                faktur_TglBln2.textContent = tanggal + " " + bulan;
+                                faktur_Thn2.textContent = duaDigitTahun;
+                                if (
+                                    result[0].NamaNPWP ==
+                                    "PT. BLOOM TRADING INDONESIA"
+                                ) {
+                                    faktur_PersenPPN2.innerHTML =
+                                        "<strong></strong>";
+                                } else if (duaDigitTahun > 24) {
+                                    faktur_PersenPPN2.innerHTML =
+                                        "<strong>12%</strong>";
+                                } else {
+                                    faktur_PersenPPN2.innerHTML =
+                                        "<strong>11%</strong>";
+                                }
+
+                                let syaratBayar = result[0].SyaratBayar;
+                                let tglTerimaBarang = result[0].Tgl_Terima_Barang;
+                                let syaratBayarNumber = Number(syaratBayar);
+                                let date3 = new Date(tglTerimaBarang);
+                                let resultDate = new Date(date3);
+                                resultDate.setDate(
+                                    date3.getDate() + syaratBayarNumber
+                                );
+                                if (bankSelect.value == "7") {
+                                    faktur_Tempo2.innerHTML = "";
+                                    faktur_SuratJalan2.innerHTML = "";
+                                    faktur_SJ2.textContent = "";
+                                } else {
+                                    faktur_Tempo2.innerHTML =
+                                        "Jatuh Tempo: &emsp;&emsp; " +
+                                        formatDateToMMDDYYYY(resultDate);
+
+                                    if (sFormula0.length > 255) {
+                                        faktur_SuratJalan2.innerHTML =
+                                            "Surat Jalan: &emsp;&emsp; " +
+                                            sFormula0.slice(0, 252);
+                                        faktur_SJ2.textContent =
+                                            sFormula0.slice(252);
+                                    } else {
+                                        faktur_SuratJalan2.innerHTML =
+                                            "Surat Jalan: &emsp;&emsp; " +
+                                            sFormula0;
+                                        faktur_SJ2.textContent = "";
+                                    }
+                                }
+                                // faktur_Tempo2.innerHTML =
+                                //     "Jatuh Tempo: &emsp;&emsp; " +
+                                //     formatDateToMMDDYYYY(resultDate);
+
+                                // if (sFormula0.length > 255) {
+                                //     faktur_SuratJalan2.innerHTML =
+                                //         "Surat Jalan: &emsp;&emsp; " +
+                                //         sFormula0.slice(0, 252);
+                                //     faktur_SJ2.textContent = sFormula0.slice(252);
+                                // } else {
+                                //     faktur_SuratJalan2.innerHTML =
+                                //         "Surat Jalan: &emsp;&emsp; " + sFormula0;
+                                //     faktur_SJ2.textContent = "";
+                                // }
+
+                                printPreview("faktur2");
                             }
-                            // faktur_Tempo2.innerHTML =
-                            //     "Jatuh Tempo: &emsp;&emsp; " +
-                            //     formatDateToMMDDYYYY(resultDate);
-
-                            // if (sFormula0.length > 255) {
-                            //     faktur_SuratJalan2.innerHTML =
-                            //         "Surat Jalan: &emsp;&emsp; " +
-                            //         sFormula0.slice(0, 252);
-                            //     faktur_SJ2.textContent = sFormula0.slice(252);
-                            // } else {
-                            //     faktur_SuratJalan2.innerHTML =
-                            //         "Surat Jalan: &emsp;&emsp; " + sFormula0;
-                            //     faktur_SJ2.textContent = "";
-                            // }
-
-                            printPreview("faktur2");
                         }
                     }
+
                 }
             })
             .catch(function (error) {
@@ -4197,7 +5022,7 @@ function rpt_cetakNotaTunai(result) {
                     faktur_Pajak3.textContent =
                         numeral(tempPajak).format("0,0.00");
                 }
-                asasasa
+
                 if (duaDigitTahun > 24) {
                     let terbayar =
                         numeral(tempdpp).value() +
