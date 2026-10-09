@@ -1187,6 +1187,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('MaintenanceMesinJBB', App\Http\Controllers\JumboBag\MaintenanceMesinJBBController::class);
     //Transaksi
     Route::resource('MaintKegiatanMesinPotongJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPotongJBBController::class);
+    Route::resource('MaintKegiatanMesinPrintingJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPrintingJBBController::class);
     //Tabel Hitungan
     Route::resource('CopyKodeBarang', App\Http\Controllers\JumboBag\CopyKodeBarang::class);
     Route::resource('KebutuhanKomponenJBB', App\Http\Controllers\JumboBag\KebutuhanKomponenJBBController::class);
