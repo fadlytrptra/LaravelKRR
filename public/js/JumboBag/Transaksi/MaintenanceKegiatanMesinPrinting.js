@@ -1049,7 +1049,7 @@ jQuery(function ($) {
 
     button_modalProsesPrinting.addEventListener("click", async function (event) {
         event.preventDefault();
-        // button_modalProsesPrinting.disabled = true;
+        button_modalProsesPrinting.disabled = true;
         if (
             tanggalLog.value == "" || shiftPrinting.value == ""
         ) {
@@ -1060,7 +1060,7 @@ jQuery(function ($) {
                 showConfirmButton: true,
                 // timer: 2000
             });
-            // button_modalProsesPrinting.disabled = false;
+            button_modalProsesPrinting.disabled = false;
             return;
         }
 
@@ -1112,7 +1112,7 @@ jQuery(function ($) {
                         // id_setting = null
                         // btn_batal.click();
                         // btn_redisplay.click();
-                        // button_modalProsesPrinting.disabled = false;
+                        button_modalProsesPrinting.disabled = false;
                     });
                 } else if (response.error) {
                     Swal.fire({
@@ -1121,13 +1121,13 @@ jQuery(function ($) {
                         text: response.error,
                         showConfirmButton: false,
                     });
-                    // button_modalProsesPrinting.disabled = false;
+                    button_modalProsesPrinting.disabled = false;
                 }
             },
             error: function (xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
                 alert(err.Message);
-                // button_modalProsesPrinting.disabled = false;
+                button_modalProsesPrinting.disabled = false;
             },
         });
     });
