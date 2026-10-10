@@ -1,0 +1,24 @@
+#btn_isi,
+#btn_proses,
+#btn_batal,
+#btn_koreksi,
+#btn_hapus {
+    width: 8%;
+}
+
+input[type="text"] {
+    height: 30px;
+    font-size: 14px;
+}
+
+.input-group-append .btn {
+    padding: 15% 60%;
+    font-size: 14px;
+}
+
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}

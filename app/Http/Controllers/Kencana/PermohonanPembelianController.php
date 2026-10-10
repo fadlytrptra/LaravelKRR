@@ -28,12 +28,10 @@ class PermohonanPembelianController extends Controller
             'Qty' => 'required',
             'Pemesan' => 'required',
             'TglButuh' => 'required|date',
-
             'DokumentasiFile' => [
                 'nullable',
                 'array'
             ],
-
             'DokumentasiFile.*' => [
                 'file',
                 'mimes:jpg,jpeg,png,webp,pdf',
@@ -45,10 +43,6 @@ class PermohonanPembelianController extends Controller
 
         return $db->transaction(function () use ($request, $db) {
 
-            // ==========================================================
-            // Ambil nomor transaksi
-            // ==========================================================
-
             $counter = $db->table('YCounter')
                 ->lockForUpdate()
                 ->value('YTRANSBL');
@@ -59,11 +53,6 @@ class PermohonanPembelianController extends Controller
                 '0',
                 STR_PAD_LEFT
             );
-
-
-            // ==========================================================
-            // Jalankan SP LAMA - TIDAK DIUBAH
-            // ==========================================================
 
             $db->statement(
                 'EXEC spInsert_Permohonan_dotNet
@@ -91,19 +80,10 @@ class PermohonanPembelianController extends Controller
                 ]
             );
 
-
-            // ==========================================================
-            // SIMPAN MULTIPLE DOKUMENTASI
-            // ==========================================================
-
             if ($request->hasFile('DokumentasiFile')) {
-
                 $files = $request->file('DokumentasiFile');
-
                 $dokumentasi = [];
-
                 foreach ($files as $file) {
-
                     $dokumentasi[] = [
                         'nama' => $file->getClientOriginalName(),
                         'mime' => $file->getMimeType(),
@@ -113,18 +93,8 @@ class PermohonanPembelianController extends Controller
                     ];
                 }
 
-
-                // ======================================================
-                // JSON
-                // ======================================================
-
-                $json = json_encode(
-                    $dokumentasi,
-                    JSON_UNESCAPED_SLASHES
-                );
-
+                $json = json_encode($dokumentasi, JSON_UNESCAPED_SLASHES);
                 $hex = bin2hex($json);
-
                 $db->statement(
                     'UPDATE YTRANSBL
                     SET DokumentasiFile =
@@ -236,31 +206,30 @@ class PermohonanPembelianController extends Controller
             | Cek Warehouse
             |------------------------------------------------------------
             */
-            if ($barang->no_kat_utama != '009') {
-                $warehouse = DB::connection('ConnKCNPurchase')->selectOne(
-                    'exec spCek_Barang_diWarehouse_dotNet
-                        @kd_div=?,
-                        @kd_brg=?',
-                    [
-                        $request->KdDiv,
-                        $request->KdBarang
-                    ]
-                );
+            $warehouse = DB::connection('ConnKCNPurchase')->selectOne(
+                'exec spCek_Barang_diWarehouse_dotNet
+                    @kd_div=?,
+                    @kd_brg=?',
+                [
+                    $request->KdDiv,
+                    $request->KdBarang
+                ]
+            );
 
-                if ($warehouse && $warehouse->Return_Status == 0) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Barang belum ada di Warehouse.'
-                    ]);
+            // dd([
+            //     'KdDiv' => $request->KdDiv,
+            //     'KdBarang' => $request->KdBarang,
+            //     'Warehouse' => $warehouse,
+            //     'Return_Status' => $warehouse->Return_Status ?? null,
+            // ]);
 
-                }
+            if ($warehouse && $warehouse->Return_Status == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Barang belum ada di Warehouse.'
+                ]);
+
             }
-
-            /*
-            |------------------------------------------------------------
-            | Saldo
-            |------------------------------------------------------------
-            */
 
             $kode = 1;
 
@@ -293,24 +262,11 @@ class PermohonanPembelianController extends Controller
                 ];
             }
 
-            /*
-            |------------------------------------------------------------
-            | Foto -> Base64
-            |------------------------------------------------------------
-            */
-
             $foto = null;
 
             if (!empty($barang->FOTO)) {
                 $foto = base64_encode($barang->FOTO);
             }
-
-            /*
-            |------------------------------------------------------------
-            | Return JSON
-            |------------------------------------------------------------
-            */
-
 
             return response()->json([
                 'success' => true,
@@ -334,7 +290,6 @@ class PermohonanPembelianController extends Controller
                 ]
             ]);
         } else if ($id == 'getGolongan') {
-
             $golongan = DB::connection('ConnKCNPurchase')->select(
                 'exec spSelect_GolonganByDivisi_dotNet @kd_div = ?',
                 [
@@ -348,7 +303,6 @@ class PermohonanPembelianController extends Controller
             ]);
 
         } else if ($id == 'getMesin') {
-
             $mesin = DB::connection('ConnKCNPurchase')->select(
                 'exec spSelect_MesinByGolongan_dotNet @no_gol = ?',
                 [
@@ -361,12 +315,6 @@ class PermohonanPembelianController extends Controller
                 'data' => $mesin
             ]);
         } else if ($id == 'getKoreksi') {
-            /*
-            |------------------------------------------------------------
-            | Cek Data Transaksi
-            |------------------------------------------------------------
-            */
-
             $trans = DB::connection('ConnKCNPurchase')
                 ->table('YTRANSBL')
                 ->select(
@@ -388,39 +336,20 @@ class PermohonanPembelianController extends Controller
                 ]);
             }
 
-            /*
-            |------------------------------------------------------------
-            | Cek Operator
-            |------------------------------------------------------------
-            */
-
             if (trim($trans->Operator) != trim(auth()->user()->NomorUser)) {
-
                 return response()->json([
                     'success' => false,
                     'message' => 'Data tidak boleh dikoreksi karena bukan Anda yang input.'
                 ]);
             }
 
-            /*
-            |------------------------------------------------------------
-            | Cek Status ACC
-            |------------------------------------------------------------
-            */
 
             if (!empty($trans->Tgl_acc) || !empty($trans->Tgl_Direktur)) {
-
                 return response()->json([
                     'success' => false,
                     'message' => 'Data tidak boleh dikoreksi karena sudah di-ACC.'
                 ]);
             }
-
-            /*
-            |------------------------------------------------------------
-            | Ambil Data Edit
-            |------------------------------------------------------------
-            */
 
             $data = DB::connection('ConnKCNPurchase')->selectOne(
                 'exec spSelect_EditPermohonan_dotNet @noTrans=?',
@@ -434,14 +363,7 @@ class PermohonanPembelianController extends Controller
                 ]);
             }
 
-            /*
-            |------------------------------------------------------------
-            | Foto
-            |------------------------------------------------------------
-            */
-
             $foto = null;
-
             if (!empty($data->FOTO)) {
                 $foto = base64_encode($data->FOTO);
             }
@@ -451,21 +373,17 @@ class PermohonanPembelianController extends Controller
 
                     $binary = $trans->DokumentasiFile;
 
-                    // Jika SQL Server mengembalikan resource
                     if (is_resource($binary)) {
                         $binary = stream_get_contents($binary);
                     }
 
-                    // Pastikan menjadi string
                     $binary = (string) $binary;
 
-                    // Coba decode langsung
                     $dokumentasi = json_decode(
                         $binary,
                         true
                     );
 
-                    // Jika gagal, kemungkinan data tersimpan sebagai UTF-16
                     if (!is_array($dokumentasi)) {
 
                         $utf8 = mb_convert_encoding(
@@ -480,57 +398,36 @@ class PermohonanPembelianController extends Controller
                         );
                     }
 
-                    // Jika tetap gagal
                     if (!is_array($dokumentasi)) {
                         $dokumentasi = [];
                     }
                 }
 
-            /*
-            |------------------------------------------------------------
-            | Return
-            |------------------------------------------------------------
-            */
-
             return response()->json([
                 'success' => true,
                 'data' => [
-
                     'NoTrans' => $data->No_trans,
-
                     'KdBarang' => $data->KD_BRG,
-
                     'NoKategoriUtama' => $data->no_kat_utama,
                     'KategoriUtama' => trim($data->nama),
-
                     'NoKategori' => $data->no_kategori,
                     'Kategori' => trim($data->nama_kategori),
-
                     'NoSubKategori' => $data->no_sub_kategori,
                     'SubKategori' => trim($data->nama_sub_kategori),
-
                     'NamaBarang' => trim($data->NAMA_BRG),
                     'KetBarang' => trim($data->KET),
-
                     'NoGol' => $data->NO_GOL,
                     'Golongan' => trim($data->NM_GOL),
-
                     'NoMesin' => $data->NO_MSN,
                     'Mesin' => trim($data->NM_MSN),
-
                     'Keterangan' => $data->keterangan,
                     'Qty' => $data->Qty,
-
                     'NoSatuan' => $data->NoSatuan,
                     'NamaSatuan' => trim($data->Nama_satuan),
-
                     'Pemesan' => $data->Pemesan,
-
-                    // Diambil dari YTRANSBL
                     'TglDibutuhkan' => optional($trans->Tgl_Dibutuhkan)
                         ? date('Y-m-d', strtotime($trans->Tgl_Dibutuhkan))
                         : null,
-
                     'Foto' => $foto,
                     'DokumentasiFile' => $dokumentasi
                 ]
@@ -545,21 +442,15 @@ class PermohonanPembelianController extends Controller
 
     public function update(Request $request, $id)
     {
-        // ==========================================================
-        // VALIDASI
-        // ==========================================================
-
         $request->validate([
             'KdBarang' => 'required',
             'Qty' => 'required',
             'Pemesan' => 'required',
             'TglButuh' => 'required|date',
-
             'DokumentasiFile' => [
                 'nullable',
                 'array'
             ],
-
             'DokumentasiFile.*' => [
                 'file',
                 'mimes:jpg,jpeg,png,webp,pdf',
@@ -567,18 +458,7 @@ class PermohonanPembelianController extends Controller
             ],
         ]);
 
-
-        // ==========================================================
-        // CONNECTION
-        // ==========================================================
-
         $db = DB::connection('ConnKCNPurchase');
-
-
-        // ==========================================================
-        // UPDATE DATA PERMOHONAN
-        // SP TETAP TIDAK DIUBAH
-        // ==========================================================
 
         $db->statement(
             'EXEC spUpdate_Permohonan_dotNet
@@ -606,12 +486,6 @@ class PermohonanPembelianController extends Controller
             ]
         );
 
-
-        // ==========================================================
-        // UPDATE DOKUMENTASI
-        // ==========================================================
-
-        // File lama yang masih dipertahankan
         $dokumentasi = json_decode(
             $request->input('DokumentasiLama', '[]'),
             true
@@ -621,15 +495,8 @@ class PermohonanPembelianController extends Controller
             $dokumentasi = [];
         }
 
-
-        // ==========================================================
-        // TAMBAHKAN FILE BARU
-        // ==========================================================
-
         if ($request->hasFile('DokumentasiFile')) {
-
             foreach ($request->file('DokumentasiFile') as $file) {
-
                 $dokumentasi[] = [
                     'nama' => $file->getClientOriginalName(),
                     'mime' => $file->getMimeType(),
@@ -640,23 +507,9 @@ class PermohonanPembelianController extends Controller
             }
         }
 
-
-        // ==========================================================
-        // SIMPAN DOKUMENTASI
-        // ==========================================================
-
-        if (
-            $request->has('DokumentasiLama') ||
-            $request->hasFile('DokumentasiFile')
-        ) {
-
-            $json = json_encode(
-                $dokumentasi,
-                JSON_UNESCAPED_SLASHES
-            );
-
+        if ($request->has('DokumentasiLama') || $request->hasFile('DokumentasiFile')) {
+            $json = json_encode($dokumentasi, JSON_UNESCAPED_SLASHES);
             $hex = bin2hex($json);
-
             $db->statement(
                 'UPDATE YTRANSBL
                 SET DokumentasiFile = CONVERT(VARBINARY(MAX), ?, 2)
@@ -668,11 +521,6 @@ class PermohonanPembelianController extends Controller
             );
         }
 
-
-        // ==========================================================
-        // RESPONSE
-        // ==========================================================
-
         return response()->json([
             'success' => true,
             'message' => 'Permohonan berhasil dikoreksi.'
@@ -681,12 +529,6 @@ class PermohonanPembelianController extends Controller
 
    public function destroy($id)
     {
-        /*
-        |----------------------------------------------------------
-        | Cek Data
-        |----------------------------------------------------------
-        */
-
         $trans = DB::connection('ConnKCNPurchase')
             ->table('YTRANSBL')
             ->select(
@@ -706,14 +548,7 @@ class PermohonanPembelianController extends Controller
 
         }
 
-        /*
-        |----------------------------------------------------------
-        | Cek Operator
-        |----------------------------------------------------------
-        */
-
         if (trim($trans->Operator) != trim(auth()->user()->NomorUser)) {
-
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak boleh dihapus karena bukan Anda yang input.'
@@ -721,26 +556,13 @@ class PermohonanPembelianController extends Controller
 
         }
 
-        /*
-        |----------------------------------------------------------
-        | Cek ACC
-        |----------------------------------------------------------
-        */
-
         if (!empty($trans->Tgl_acc) || !empty($trans->Tgl_Direktur)) {
-
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak boleh dihapus karena sudah di-ACC.'
             ],422);
 
         }
-
-        /*
-        |----------------------------------------------------------
-        | Hapus
-        |----------------------------------------------------------
-        */
 
         DB::connection('ConnKCNPurchase')->statement(
             'EXEC spDelete_Permohonan_dotNet @No_Trans=?',

@@ -89,7 +89,7 @@ $(document).ready(function () {
                 data: 'No_trans',
                 name: 'No_trans'
             }
-        ], 
+        ],
 
         rowCallback: function (row, data) {
 
@@ -140,7 +140,6 @@ $(document).ready(function () {
                 warna = '#000000';
             }
 
-            // Terapkan warna ke seluruh tulisan dalam baris
             $(row).find('td').css('color', warna);
         }
     });
@@ -341,11 +340,8 @@ $(document).ready(function () {
         $('#KdBarang').val(kode);
 
         $.ajax({
-
             url: '/Kencana/PermohonanPembelian/getBarang',
-
             type: 'GET',
-
             data: {
                 KdBarang: kode,
                 KdDiv: $('#divisi').val()
@@ -354,7 +350,7 @@ $(document).ready(function () {
             success: function (res) {
                 console.log(res);
                 if (!res.success) {
-                    alert('Kode barang tidak ditemukan.');
+                    alert(res.message || 'Gagal mengambil data barang.');
                     return;
                 }
 
@@ -366,27 +362,20 @@ $(document).ready(function () {
                 $('#modalKetKhusus').val(d.KetKhusus ?? '-');
                 $('#modalNamaBarang').val(d.NamaBarang);
                 $('#modalKetBarang').val(d.KetBarang);
-
                 $('#modalstokPrimer').text(d.Primer);
                 $('#modalsatPrimer').text(d.SatPrimer);
-
                 $('#modalstokSekunder').text(d.Sekunder);
                 $('#modalsatSekunder').text(d.SatSekunder);
-
                 $('#modalstokTritier').text(d.Tritier);
                 $('#modalsatTritier').text(d.SatTritier);
-
                 $('#NoSatuan').val(d.NoSatuan);
-
                 $('#modalFotoBarang').attr(
                     'src',
                     d.Foto
                         ? 'data:image/jpeg;base64,' + d.Foto
                         : '/images/no-image.png'
                 );
-
                 $('#modalGolongan').focus();
-
             }
         });
 
@@ -610,10 +599,6 @@ $(document).ready(function () {
 
     $('#btnIsi').on('click', function (e) {
         e.preventDefault();
-        // ==========================================================
-        // BATALKAN AJAX LAMA
-        // ==========================================================
-
         if (xhrLoadBarang) {
             xhrLoadBarang.abort();
             xhrLoadBarang = null;
@@ -624,117 +609,45 @@ $(document).ready(function () {
             xhrLoadMesin = null;
         }
 
-
-        // ==========================================================
-        // MODE INSERT DULU
-        // ==========================================================
-
         $('#modalMode').val('insert');
         $('#modalNoTrans').val('');
-
-
-        // ==========================================================
-        // RESET KODE BARANG
-        // ==========================================================
-
         $('#KdBarang').val('');
-
-
-        // ==========================================================
-        // RESET INFORMASI BARANG
-        // ==========================================================
-
         $('#modalKategoriUtama').val('');
         $('#modalKategori').val('');
         $('#modalSubKategori').val('');
         $('#modalKetKhusus').val('');
         $('#modalNamaBarang').val('');
         $('#modalKetBarang').val('');
-
-
-        // ==========================================================
-        // RESET GOLONGAN & MESIN
-        // ==========================================================
-
         $('#modalGolongan').val('');
-
         $('#modalMesin')
             .empty()
             .append(
                 '<option value="">-- Pilih Mesin --</option>'
             );
-
-
-        // ==========================================================
-        // RESET KETERANGAN
-        // ==========================================================
-
         $('#modalKetOrder').val('');
-
-
-        // ==========================================================
-        // RESET QTY & PEMESAN
-        // ==========================================================
-
         $('#modalQty').val('');
         $('#modalPemesan').val('');
         $('#NoSatuan').val('');
-
-
-        // ==========================================================
-        // RESET DOKUMENTASI
-        // ==========================================================
-
         dokumentasiFiles = [];
         dokumentasiLama = [];
-
         $('#modalDokumentasi').val('');
         $('#fileDokumentasiInfo').empty();
-
-
-        // ==========================================================
-        // RESET FOTO
-        // ==========================================================
-
         $('#modalFotoBarang').attr(
             'src',
             '/images/no-image.png'
         );
-
-
-        // ==========================================================
-        // RESET STOCK
-        // ==========================================================
-
         $('#modalstokPrimer').text('0');
         $('#modalsatPrimer').text('');
-
         $('#modalstokSekunder').text('0');
         $('#modalsatSekunder').text('');
-
         $('#modalstokTritier').text('0');
         $('#modalsatTritier').text('');
-
-
-        // ==========================================================
-        // TANGGAL = HARI INI + 7
-        // ==========================================================
-
         let tgl = new Date();
 
-        tgl.setDate(
-            tgl.getDate() + 7
-        );
-
+        tgl.setDate(tgl.getDate() + 7);
         $('#modalTglButuh').val(
             tgl.toISOString().split('T')[0]
         );
-
-
-        // ==========================================================
-        // TAMPILKAN MODAL
-        // ==========================================================
-
         $('#modalPermohonan').modal('show');
     });
 
@@ -743,23 +656,16 @@ $(document).ready(function () {
     $('#KdBarang').on('keydown', function (e) {
         if (e.key !== 'Enter')
             return;
-
         e.preventDefault();
-
         loadBarang($(this).val());
-
     });
 
     $('#btnCariBarang').click(function () {
-
         loadBarang($('#KdBarang').val());
-
     });
 
     $('#btnProses').on('click', function () {
         let mode = $('#modalMode').val();
-
-        // Ambil semua file yang sudah dipilih
         let files = dokumentasiFiles;
 
         let data = {
@@ -775,11 +681,6 @@ $(document).ready(function () {
             TglButuh: $('#modalTglButuh').val()
         };
 
-
-        // ==========================================================
-        // JIKA ADA FILE
-        // ==========================================================
-
         if (files.length > 0 || mode === 'edit') {
 
             let allowedTypes = [
@@ -789,16 +690,8 @@ $(document).ready(function () {
                 'application/pdf'
             ];
 
-
-            // ======================================================
-            // VALIDASI SEMUA FILE
-            // ======================================================
-
             for (let file of files) {
-
-                // Maksimal 10 MB per file
                 if (file.size > 10 * 1024 * 1024) {
-
                     alert(
                         'File "' + file.name +
                         '" melebihi ukuran maksimal 10 MB.'
@@ -807,10 +700,7 @@ $(document).ready(function () {
                     return;
                 }
 
-
-                // Validasi format
                 if (!allowedTypes.includes(file.type)) {
-
                     alert(
                         'Format file "' + file.name +
                         '" tidak diperbolehkan.\n\n' +
@@ -822,21 +712,12 @@ $(document).ready(function () {
                 }
             }
 
-
-            // ======================================================
-            // FORM DATA
-            // ======================================================
-
             let formData = new FormData();
 
-
-            // Data permohonan
             $.each(data, function (key, value) {
                 formData.append(key, value ?? '');
             });
 
-
-            // File lama yang masih dipertahankan
             if (mode === 'edit') {
                 formData.append(
                     'DokumentasiLama',
@@ -851,11 +732,6 @@ $(document).ready(function () {
                 );
 
             });
-
-
-            // ======================================================
-            // KOREKSI + FILE
-            // ======================================================
 
             if (mode === 'edit') {
                 formData.append('_method', 'PUT');
@@ -880,13 +756,7 @@ $(document).ready(function () {
                 });
             }
 
-
-            // ======================================================
-            // ISI + FILE
-            // ======================================================
-
             else {
-
                 $.ajax({
                     url: '/Kencana/PermohonanPembelian',
                     type: 'POST',
@@ -909,75 +779,40 @@ $(document).ready(function () {
             return;
         }
 
-
-        // ==========================================================
-        // TIDAK ADA FILE
-        // ALUR LAMA TETAP DIPERTAHANKAN
-        // ==========================================================
-
         if (mode === 'edit') {
-
             $.ajax({
-
-                url: '/Kencana/PermohonanPembelian/' +
-                    $('#modalNoTrans').val(),
-
+                url: '/Kencana/PermohonanPembelian/' + $('#modalNoTrans').val(),
                 type: 'PUT',
-
                 data: data,
-
                 success: function (res) {
-
                     alert(res.message);
-
                     $('#modalPermohonan').modal('hide');
-
                     table.ajax.reload();
-
                 },
 
                 error: function (xhr) {
-
                     console.log(xhr);
-
                     alert('Gagal mengoreksi data.');
-
                 }
-
             });
 
         } else {
-
             $.ajax({
-
                 url: '/Kencana/PermohonanPembelian',
-
                 type: 'POST',
-
                 data: data,
-
                 success: function (res) {
-
                     alert(res.message);
-
                     $('#modalPermohonan').modal('hide');
-
                     table.ajax.reload();
-
                 },
 
                 error: function (xhr) {
-
                     console.log(xhr);
-
                     alert('Gagal menyimpan.');
-
                 }
-
             });
-
         }
-
     });
 
     $('#btn-koreksi').on('click', function () {
@@ -1034,18 +869,14 @@ $(document).ready(function () {
                 return;
 
             $.ajax({
-
                 url: '/Kencana/PermohonanPembelian/' + selectedData.No_trans,
-
                 type: 'POST',
-
                 data: {
                     _method: 'DELETE',
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
 
                 success: function (res) {
-
                     Swal.fire({
                         icon: 'success',
                         title: res.message
@@ -1056,9 +887,7 @@ $(document).ready(function () {
                 },
 
                 error: function (xhr) {
-
                     if (xhr.responseJSON) {
-
                         Swal.fire({
                             icon: 'warning',
                             title: xhr.responseJSON.message
@@ -1140,8 +969,6 @@ $(document).ready(function () {
 
         tampilkanListDokumentasi();
 
-        // Kosongkan input supaya file yang sama
-        // tetap bisa dipilih kembali
         this.value = '';
 
     });

@@ -68,7 +68,7 @@
             <br>
             <br>
             Yang perlu dilakukan: <br>
-            - Copy address website Kerta Rajasa Raya <b>http://krr.local</b> atau <b>http://192.168.99.91</b><br>
+            - Copy address website Kerta Rajasa Raya <b>https://internal.mykrr.co.id</b><br>
             - Buka link yang sudah diberikan diatas<br>
             - Salin address website pada bagian Insecure origins treated as secure<br>
             - Kemudian pilih Enabled pada bagian kanan<br>

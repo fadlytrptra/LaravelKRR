@@ -103,6 +103,30 @@ use App\Http\Controllers\WORKSHOP\Workshop\Informasi\OrderProyek;
 use App\Http\Controllers\Beli\Transaksi\MaintenanceOrderPembelianController;
 use App\Http\Controllers\Beli\Transaksi\FinalApproveController;
 
+use App\Http\Controllers\Kencana\Inventory\TerimaPurchasingKencanaController;
+use App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\AccKonversiBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\PenyesuaianBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\PenghangusanBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\PermohonanSatuDivisiKencanaController;
+use App\Http\Controllers\Kencana\Inventory\AccSatuDivisiKencanaController;
+use App\Http\Controllers\Kencana\Inventory\MhnPenerimaKencanaController;
+use App\Http\Controllers\Kencana\Inventory\AccMhnPenerimaKencanaController;
+use App\Http\Controllers\Kencana\Inventory\AccPemberiBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\PemberiBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\MhnPemberiKencanaController;
+use App\Http\Controllers\Kencana\Inventory\PermohonanPenerimaKencanaController;
+use App\Http\Controllers\Kencana\Inventory\PermohonanPenerimaBenangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\KodePerkiraanKencanaController;
+use App\Http\Controllers\Kencana\Inventory\MaintenanceObjekKencanaController;
+use App\Http\Controllers\Kencana\Inventory\MaintenanceTypeKencanaController;
+use App\Http\Controllers\Kencana\Inventory\StokBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\CariKodeBarangKencanaController;
+use App\Http\Controllers\Kencana\Inventory\KartuStokKencanaController;
+use App\Http\Controllers\Kencana\Inventory\ListDetailTransaksiKencanaController;
+use App\Http\Controllers\Kencana\Inventory\LacakTransaksiKencanaController;
+use App\Http\Controllers\Kencana\Inventory\TransaksiBulananKencanaController;
+use App\Http\Controllers\Kencana\Inventory\TransaksiHarianKencanaController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -1889,10 +1913,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/Kencana/SppbPembelian/sendEmailSupplier', [App\Http\Controllers\Kencana\SppbPembelianController::class, 'sendEmailSupplier'])->name('SppbPembelian.sendEmailSupplier');
     Route::resource('Kencana/SppbPembelian', App\Http\Controllers\Kencana\SppbPembelianController::class);
     Route::resource('Kencana/BttbPembelian', App\Http\Controllers\Kencana\BttbPembelianController::class);
-    Route::get(
-        'Kencana/TransferBarang/action/{action}',
-        [App\Http\Controllers\Kencana\TransferBarangController::class, 'show']
-    )->name('Kencana.TransferBarang.action');
+    Route::get('Kencana/TransferBarang/action/{action}', [App\Http\Controllers\Kencana\TransferBarangController::class, 'show'])->name('Kencana.TransferBarang.action');
     Route::resource('Kencana/TransferBarang', App\Http\Controllers\Kencana\TransferBarangController::class);
     Route::get('/Kencana/FinalApproveKencana/dokumentasi/{noTrans}', [App\Http\Controllers\Kencana\FinalApproveKencanaController::class, 'downloadDokumentasi'])->name('FinalApprove.downloadDokumentasi');
     Route::resource('Kencana/FinalApprove', App\Http\Controllers\Kencana\FinalApproveKencanaController::class);
@@ -1984,7 +2005,44 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('Kencana/MaintenanceMataUang', App\Http\Controllers\Kencana\Accounting\MaintenanceMataUangKencanaController::class);
     Route::resource('Kencana/MaintenanceStatusSupplier', App\Http\Controllers\Kencana\Accounting\MaintenanceStatusSupplierKencanaController::class);
     Route::resource('Kencana/MaintenancePenagihanKencana', App\Http\Controllers\Kencana\Accounting\MaintenancePenagihanKencanaController::class);
+    Route::resource('Kencana/BatalPenagihanKencana', App\Http\Controllers\Kencana\Accounting\BatalPenagihanKencanaController::class);
+    Route::get('detailpenagihan/{idPenagihan}', 'App\Http\Controllers\Accounting\Hutang\BatalPenagihanController@getDataPenagihan');
+    Route::resource('Kencana/ACCSerahTerimaPenagihan', App\Http\Controllers\Kencana\Accounting\ACCSerahTerimaPenagihanKencanaController::class);
 
+
+    #region Kencana Inventory
+    Route::resource('Kencana/TerimaBarangKencana', TerimaPurchasingKencanaController::class);
+    Route::get('Kencana/TerimaBarangKencana/downloadPdf/{no_po}', [TerimaPurchasingKencanaController::class, 'downloadPdf'])->name('Kencana/TerimaBarangKencana.downloadPdf');
+    Route::resource('Kencana/KonversiBarangKencana', KonversiBarangKencanaController::class);
+    Route::get('getObjekSelect/{divisi}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getObjekSelect');
+    Route::get('getKelompokUtamaSelect/{objek}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getKelompokUtamaSelect');
+    Route::get('getKelompokSelect/{kelompokUtama}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getKelompokSelect');
+    Route::get('getSubKelompokSelect/{kelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getSubKelompokSelect');
+    Route::get('getIdTypeSelect/{subKelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getIdTypeSelect');
+    Route::get('getTypeABMSelect/{subKelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getTypeABMSelect');
+    Route::get('getTypeCIRSelect', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getTypeCIRSelect');
+    Route::resource('Kencana/AccKonversiBarangKencana', AccKonversiBarangKencanaController::class);
+    Route::resource('Kencana/PenyesuaianBarangKencana', PenyesuaianBarangKencanaController::class);
+    Route::resource('Kencana/PenghangusanBarangKencana', PenghangusanBarangKencanaController::class);
+    Route::resource('Kencana/PermohonanSatuDivisiKencana', PermohonanSatuDivisiKencanaController::class);
+    Route::resource('Kencana/AccSatuDivisiKencana', AccSatuDivisiKencanaController::class);
+    Route::resource('Kencana/MhnPenerimaKencana', MhnPenerimaKencanaController::class);
+    Route::resource('Kencana/AccMhnPenerimaKencana', AccMhnPenerimaKencanaController::class);
+    Route::resource('Kencana/AccPemberiBarangKencana', AccPemberiBarangKencanaController::class);
+    Route::resource('Kencana/PemberiBarangKencana', PemberiBarangKencanaController::class);
+    Route::resource('Kencana/MhnPemberiKencana', MhnPemberiKencanaController::class);
+    Route::resource('Kencana/PermohonanPenerimaKencana', PermohonanPenerimaKencanaController::class);
+    Route::resource('Kencana/PermohonanPenerimaBenangKencana', PermohonanPenerimaBenangKencanaController::class);
+    Route::resource('Kencana/KodePerkiraanKencana', KodePerkiraanKencanaController::class);
+    Route::resource('Kencana/MaintenanceObjekKencana', MaintenanceObjekKencanaController::class);
+    Route::resource('Kencana/MaintenanceTypeKencana', MaintenanceTypeKencanaController::class);
+    Route::resource('Kencana/StokBarangKencana', StokBarangKencanaController::class);
+    Route::resource('Kencana/CariKodeBarangKencana', CariKodeBarangKencanaController::class);
+    Route::resource('Kencana/KartuStokKencana', KartuStokKencanaController::class);
+    Route::resource('Kencana/ListDetailTransaksiKencana', ListDetailTransaksiKencanaController::class);
+    Route::resource('Kencana/LacakTransaksiKencana', LacakTransaksiKencanaController::class);
+    Route::resource('Kencana/TransaksiBulananKencana', TransaksiBulananKencanaController::class);
+    Route::resource('Kencana/TransaksiHarianKencana', TransaksiHarianKencanaController::class);
     #endregion
 
     #region Company Profile

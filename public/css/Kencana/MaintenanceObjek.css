@@ -1,0 +1,17 @@
+#table_divisi th, 
+#table_divisi td,
+#table_Objek th, 
+#table_Objek td,
+#table_kelUtama th, 
+#table_kelUtama td,
+#table_kel th, 
+#table_kel td,
+#table_subKel th, 
+#table_subKel td,
+#table_Perkiraan th, 
+#table_Perkiraan td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}
+

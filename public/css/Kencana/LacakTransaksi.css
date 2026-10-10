@@ -1,0 +1,109 @@
+/* .baris-1 {
+    margin-right: 30px;
+    padding: 1px;
+} */
+
+.col-md-1,
+.col-md-9 {
+    padding-left: 0;
+}
+
+.bordered {
+    border: black 1px solid;
+}
+
+.baris-1 .col-md-2,
+.col-md-3 {
+    padding: 2px 2px;
+}
+
+.baris-2 .col-md-9 {
+    padding: 2px 0;
+}
+
+.baris-3 .row {
+    padding: 2px 0;
+}
+
+.baris-1,
+.baris-2,
+.baris-3,
+.baris-4 {
+    outline: 1px solid #bbb;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.baris-4 .col-md-3,
+.baris-4 label {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 5px 0;
+}
+
+input {
+    padding: 0;
+}
+
+#btn_isi,
+#btn_proses,
+#btn_batal,
+#btn_koreksi,
+#btn_hapus {
+    width: 8%;
+}
+
+input[type="text"] {
+    height: 30px;
+    font-size: 14px;
+}
+
+.input-group-append .btn {
+    padding: 15% 60%;
+    font-size: 14px;
+}
+
+.table-responsive.fixed-height tbody {
+    background-color: white;
+}
+
+.table-responsive.fixed-height {
+    /* overflow-y: auto; */
+    /* position: relative; */
+    border-radius: 8px;
+    border: 2px solid black;
+    /* width: 100%; */
+    /* table-layout: fixed; */
+    background-color: white;
+}
+
+.no-wrap-header thead th {
+    white-space: nowrap;
+    background-color: lightgoldenrodyellow;
+    padding: 0;
+}
+
+.table-responsive.fixed-height tbody td {
+    background-color: white;
+    padding: 4px 5px;
+}
+
+.fixed-width {
+    white-space: nowrap;    /* Prevent text wrapping */
+    overflow: hidden;       /* Hide overflow text */
+    text-overflow: ellipsis; /* Show "..." when the text overflows */
+    padding: 0;
+}
+
+table.dataTable {
+    table-layout: fixed;    /* Ensure table uses fixed layout */
+    width: 100%;            /* Ensure the table takes up the full width */
+}
+
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}

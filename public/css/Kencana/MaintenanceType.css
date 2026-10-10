@@ -1,0 +1,64 @@
+
+.col-md-1, .col-md-9{
+    padding-left: 0;
+}
+
+.baris-1 .col-md-2,
+.col-md-3 {
+    padding: 2px 2px;
+}
+
+.baris-2 .col-md-9 {
+    padding: 2px 0;
+}
+
+.baris-3 .row{
+    padding: 2px 0;
+}
+
+.baris-1,
+.baris-2,
+.baris-3,
+.baris-4 {
+    outline: 1px solid #bbb;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.baris-4 .col-md-3,
+.baris-4 label {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 5px 0;
+}
+
+#btn_isi,
+#btn_proses,
+#btn_batal,
+#btn_koreksi,
+#btn_hapus {
+    width: 8%;
+}
+
+input[type="text"] {
+    height: 25px;
+    font-size: 14px;
+}
+
+#satuan {
+    font-size: 14px;
+    height: 30px;
+}
+
+.input-group-append .btn {
+    padding: 5% 60%;
+    font-size: 12px;
+}
+
+#table_list th,
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 14px;
+}

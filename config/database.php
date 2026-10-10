@@ -349,6 +349,36 @@ return [
             'trust_server_certificate' => true,
         ],
 
+        'ConnKCNAccounting' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_NINETEENTH', '127.0.0.1'),
+            'port' => env('DB_PORT_NINETEENTH', '1433'),
+            'database' => env('DB_DATABASE_NINETEENTH', 'forge'),
+            'username' => env('DB_USERNAME_NINETEENTH', 'forge'),
+            'password' => env('DB_PASSWORD_NINETEENTH', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => 'yes',
+            'trust_server_certificate' => true,
+        ],
+
+        'ConnKCNInventory' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_TWENTY', '127.0.0.1'),
+            'port' => env('DB_PORT_TWENTY', '1433'),
+            'database' => env('DB_DATABASE_TWENTY', 'forge'),
+            'username' => env('DB_USERNAME_TWENTY', 'forge'),
+            'password' => env('DB_PASSWORD_TWENTY', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => 'yes',
+            'trust_server_certificate' => true,
+        ],
+
 
     ],
 

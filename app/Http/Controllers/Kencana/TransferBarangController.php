@@ -119,7 +119,7 @@ class TransferBarangController extends Controller
                 ]);
 
             case 'konversi':
-                $data = DB::connection('ConnInventory')->select(
+                $data = DB::connection('ConnKCNInventory')->select(
                     "EXEC SP_7775_PBL_CEK_KONVERSI
                         @kd_brg=?,
                         @idtype=?,
@@ -220,7 +220,28 @@ class TransferBarangController extends Controller
                 $exchangeRate * $currencyPrice;
 
             // 4. Masukkan ke Inventory
-            DB::connection('ConnInventory')->statement(
+            $dbInventory = DB::connection('ConnKCNInventory');
+            $info = $dbInventory->selectOne("
+                SELECT
+                    DB_NAME() AS DatabaseName,
+                    @@SERVERNAME AS ServerName
+            ");
+
+            // dd([
+            //     'Connection' => 'ConnKCNInventory',
+
+            //     'Config' => [
+            //         'host' => config('database.connections.ConnKCNInventory.host'),
+            //         'database' => config('database.connections.ConnKCNInventory.database'),
+            //         'username' => config('database.connections.ConnKCNInventory.username'),
+            //     ],
+
+            //     'SQLServer' => [
+            //         'ServerName' => $info->ServerName,
+            //         'DatabaseName' => $info->DatabaseName,
+            //     ],
+            // ]);
+            DB::connection('ConnKCNInventory')->statement(
                 "EXEC SP_7775_INV_DISPRESIASI_TEMP
                     @NoTempTrans=?,
                     @KdBarang=?,
