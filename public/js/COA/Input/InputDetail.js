@@ -584,6 +584,11 @@ function focusAndControlReinforced(index) {
     });
 }
 
+function formatDateInput(value) {
+    if (!value) return "";
+    return String(value).substring(0, 10);
+}
+
 // button ref no
 btn_RefNo.addEventListener("click", function (e) {
     try {
@@ -707,22 +712,33 @@ btn_RefNo.addEventListener("click", function (e) {
                             );
                         }
 
-                        tanggal.value = new Date(result[0].Tanggal)
-                            .toISOString()
-                            .split("T")[0];
-                        tahun.value = new Date(result[0].Tanggal)
-                            .getFullYear()
-                            .toString();
-                        customer.value = result[0].Customer.trim();
-                        bagCode.value = result[0].Bag_Code.trim();
-                        bagType.value = result[0].Bag_Type.trim();
-                        poNo.value = result[0].PO_No.trim();
-                        prodDate.value = new Date(result[0].Tanggal_Prod)
-                            .toISOString()
-                            .split("T")[0];
-                        testingDate.value = new Date(result[0].Tanggal_Testing)
-                            .toISOString()
-                            .split("T")[0];
+
+                        tanggal.value = formatDateInput(result[0].Tanggal);
+
+                        tahun.value = tanggal.value
+                            ? tanggal.value.substring(0, 4)
+                            : "";
+
+                        customer.value = result[0].Customer
+                            ? result[0].Customer.trim()
+                            : "";
+
+                        bagCode.value = result[0].Bag_Code
+                            ? result[0].Bag_Code.trim()
+                            : "";
+
+                        bagType.value = result[0].Bag_Type
+                            ? result[0].Bag_Type.trim()
+                            : "";
+
+                        poNo.value = result[0].PO_No
+                            ? result[0].PO_No.trim()
+                            : "";
+
+                        prodDate.value = formatDateInput(result[0].Tanggal_Prod);
+
+                        testingDate.value = formatDateInput(result[0].Tanggal_Testing);
+
                         size.value = result[0].Size.trim();
                         colour.value = result[0].Colour.trim();
                         swl.value = result[0].SWL.trim();
