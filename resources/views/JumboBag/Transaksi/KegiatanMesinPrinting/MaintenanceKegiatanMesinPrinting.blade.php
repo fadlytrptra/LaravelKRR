@@ -62,6 +62,32 @@
                         </div>
                     </div>
                     <br>
+                    {{-- <div class="row">
+                        <div class="col-5">
+                            <label for="radiobutton" class="form-check-label" id="labelRedisplay">Tanggal
+                                Pemeriksaan</label>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="date" class="form-control font-weight-bold" id="tgl_awal"
+                                        name="tgl_awal">
+                                    <label for="tgl_awal" class="form-label"></label>
+                                </div>
+                                <div>
+                                    <label for="sampai_dengan">s/d</label>
+                                </div>
+                                <div class="col">
+                                    <input type="date" class="form-control font-weight-bold" id="tgl_akhir"
+                                        name="tgl_akhir">
+                                    <label for="tgl_akhir" class="form-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="col-12">
+                                <button class="btn btn-info mt-4 w-100" id="btn_redisplay">Redisplay</button>
+                            </div>
+                        </div>
+                    </div> --}}
                     <table id="table_logMesin" class="table table-bordered table-striped" style="width:100%">
                         <thead class="thead-dark">
                             <tr>
@@ -69,10 +95,13 @@
                                 <th>Tgl Log</th>
                                 <th>Mesin</th>
                                 <th>Shift</th>
-                                <th>KB Tabel Hit.</th>
-                                <th>Pemakaian Tinta (Warna)</th>
-                                <th>Berat Kain KG</th>
-                                <th>Afalan Printing KG</th>
+                                <th>Total Berat Tinta Awal (KG)</th>
+                                <th>Total Berat Tinta Akhir (KG)</th>
+                                <th>Total Jumlah Kain (PCS)</th>
+                                <th>Total Hasil Printing (PCS)</th>
+                                <th>Total Berat Kain (KG)</th>
+                                <th>Total Afalan Printing (KG)</th>
+                                <th>User Input</th>
                                 <th>Action</th>
                                 {{-- @if ($user == '4405' || $user == '4221' || $user == '4259' || $user == '8982' || $user == '4451' || $user == '4384' || $user == '4199')
                                     <th>Action</th>

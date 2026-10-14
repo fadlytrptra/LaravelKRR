@@ -53,6 +53,16 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
         $buangAfalanTintaPail = $request->input('buangAfalanTintaPail');
         $buangAfalanTintaKG = $request->input('buangAfalanTintaKG');
         $keterangan_kegiatan = $request->input('keterangan_kegiatan');
+        $total_beratTintaAwal = $request->input('total_beratTintaAwal');
+        $total_beratTintaAkhir = $request->input('total_beratTintaAkhir');
+        $total_jumlahKain = $request->input('total_jumlahKain');
+        $total_hasilPrinting = $request->input('total_hasilPrinting');
+        $total_beratKain = $request->input('total_beratKain');
+        $total_afalanPrinting = $request->input('total_afalanPrinting');
+        $persen1 = $request->input('persen1');
+        $persen2 = $request->input('persen2');
+        $persen3 = $request->input('persen3');
+        $allRowsDataDetail = $request->input('allRowsDataDetail');
         $user = trim(Auth::user()->NomorUser);
         // dd($request->all());
         try {
@@ -68,24 +78,19 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                         @lokasi = ?,
                         @noMesin = ?,
                         @shiftPrinting = ?,
-                        @customer = ?,
-                        @kodeBarang = ?,
-                        @komponen = ?,
-                        @jenisPotongan = ?,
-                        @ukuranPanjang = ?,
-                        @ukuranLebar = ?,
-                        @warnaTinta = ?,
-                        @beratTintaAwal = ?,
-                        @beratTintaAkhir = ?,
-                        @jumlahKain = ?,
-                        @hasilPrinting = ?,
-                        @beratKain = ?,
-                        @afalanPrinting = ?,
                         @pemakaianReduser = ?,
                         @pembersihan = ?,
                         @buangAfalanTintaPail = ?,
                         @buangAfalanTintaKG = ?,
-                        @keterangan_kegiatan = ?,
+                        @total_beratTintaAwal = ?,
+                        @total_beratTintaAkhir = ?,
+                        @total_jumlahKain = ?,
+                        @total_hasilPrinting = ?,
+                        @total_beratKain = ?,
+                        @total_afalanPrinting = ?,
+                        @persen1 = ?,
+                        @persen2 = ?,
+                        @persen3 = ?,
                         @user = ?',
                             [
                                 1,
@@ -93,27 +98,76 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                 $lokasi,
                                 $noMesin,
                                 $shiftPrinting,
-                                $customer,
-                                $kodeBarang,
-                                $komponen,
-                                $jenisPotongan,
-                                $ukuranPanjang,
-                                $ukuranLebar,
-                                $warnaTinta,
-                                $beratTintaAwal,
-                                $beratTintaAkhir,
-                                $jumlahKain,
-                                $hasilPrinting,
-                                $beratKain,
-                                $afalanPrinting,
                                 $pemakaianReduser,
                                 $pembersihan,
                                 $buangAfalanTintaPail,
                                 $buangAfalanTintaKG,
-                                $keterangan_kegiatan,
+                                $total_beratTintaAwal,
+                                $total_beratTintaAkhir,
+                                $total_jumlahKain,
+                                $total_hasilPrinting,
+                                $total_beratKain,
+                                $total_afalanPrinting,
+                                $persen1,
+                                $persen2,
+                                $persen3,
                                 $user
                             ]
                         );
+
+                    $idLogResult = DB::connection('ConnJumboBag')->select(
+                        'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB
+                        @kode = ?,
+                        @user = ?',
+                        [
+                            6,
+                            $user,
+                        ]
+                    );
+                    $idLogResult = $idLogResult[0]->idLog;
+
+                    if ($idLogResult) {
+                        foreach ($allRowsDataDetail as $row) {
+                            DB::connection('ConnJumboBag')
+                                ->statement(
+                                    'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB 
+                                        @kode = ?,
+                                        @idLog = ?,
+                                        @customer = ?,
+                                        @kodeBarang = ?,
+                                        @komponen = ?,
+                                        @jenisPotongan = ?,
+                                        @ukuranPanjang = ?,
+                                        @ukuranLebar = ?,
+                                        @warnaTinta = ?,
+                                        @beratTintaAwal = ?,
+                                        @beratTintaAkhir = ?,
+                                        @jumlahKain = ?,
+                                        @hasilPrinting = ?,
+                                        @beratKain = ?,
+                                        @afalanPrinting = ?,
+                                        @keterangan_kegiatan = ?',
+                                    [
+                                        7,
+                                        $idLogResult,
+                                        $row[1],
+                                        $row[2],
+                                        $row[3],
+                                        $row[4],
+                                        $row[5],
+                                        $row[6],
+                                        $row[7],
+                                        $row[8],
+                                        $row[9],
+                                        $row[10],
+                                        $row[11],
+                                        $row[12],
+                                        $row[13],
+                                        $row[14]
+                                    ]
+                                );
+                        }
+                    }
 
                     return response()->json(['message' => 'Data berhasil disimpan!']);
 
@@ -126,57 +180,131 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                         @kode = ?,
                         @idLog = ?,
                         @shiftPrinting = ?,
-                        @customer = ?,
-                        @kodeBarang = ?,
-                        @komponen = ?,
-                        @jenisPotongan = ?,
-                        @ukuranPanjang = ?,
-                        @ukuranLebar = ?,
-                        @warnaTinta = ?,
-                        @beratTintaAwal = ?,
-                        @beratTintaAkhir = ?,
-                        @jumlahKain = ?,
-                        @hasilPrinting = ?,
-                        @beratKain = ?,
-                        @afalanPrinting = ?,
                         @pemakaianReduser = ?,
                         @pembersihan = ?,
                         @buangAfalanTintaPail = ?,
                         @buangAfalanTintaKG = ?,
-                        @keterangan_kegiatan = ?,
+                        @total_beratTintaAwal = ?,
+                        @total_beratTintaAkhir = ?,
+                        @total_jumlahKain = ?,
+                        @total_hasilPrinting = ?,
+                        @total_beratKain = ?,
+                        @total_afalanPrinting = ?,
+                        @persen1 = ?,
+                        @persen2 = ?,
+                        @persen3 = ?,
                         @user = ?',
                             [
                                 2,
                                 $idLog,
                                 $shiftPrinting,
-                                $customer,
-                                $kodeBarang,
-                                $komponen,
-                                $jenisPotongan,
-                                $ukuranPanjang,
-                                $ukuranLebar,
-                                $warnaTinta,
-                                $beratTintaAwal,
-                                $beratTintaAkhir,
-                                $jumlahKain,
-                                $hasilPrinting,
-                                $beratKain,
-                                $afalanPrinting,
                                 $pemakaianReduser,
                                 $pembersihan,
                                 $buangAfalanTintaPail,
                                 $buangAfalanTintaKG,
-                                $keterangan_kegiatan,
+                                $total_beratTintaAwal,
+                                $total_beratTintaAkhir,
+                                $total_jumlahKain,
+                                $total_hasilPrinting,
+                                $total_beratKain,
+                                $total_afalanPrinting,
+                                $persen1,
+                                $persen2,
+                                $persen3,
                                 $user
                             ]
                         );
+
+                    foreach ($allRowsDataDetail as $row) {
+                        // JIKA ID DETAIL KOSONG (DATA BARU)
+                        if ($row[0] == '' || $row[0] === null) {
+                            DB::connection('ConnJumboBag')
+                                ->statement(
+                                    'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB 
+                                        @kode = ?,
+                                        @idLog = ?,
+                                        @customer = ?,
+                                        @kodeBarang = ?,
+                                        @komponen = ?,
+                                        @jenisPotongan = ?,
+                                        @ukuranPanjang = ?,
+                                        @ukuranLebar = ?,
+                                        @warnaTinta = ?,
+                                        @beratTintaAwal = ?,
+                                        @beratTintaAkhir = ?,
+                                        @jumlahKain = ?,
+                                        @hasilPrinting = ?,
+                                        @beratKain = ?,
+                                        @afalanPrinting = ?,
+                                        @keterangan_kegiatan = ?',
+                                    [
+                                        7,
+                                        $idLog,
+                                        $row[1],
+                                        $row[2],
+                                        $row[3],
+                                        $row[4],
+                                        $row[5],
+                                        $row[6],
+                                        $row[7],
+                                        $row[8],
+                                        $row[9],
+                                        $row[10],
+                                        $row[11],
+                                        $row[12],
+                                        $row[13],
+                                        $row[14]
+                                    ]
+                                );
+                        } else {
+                            // JIKA ID DETAIL ADA (UPDATE)
+                            DB::connection('ConnJumboBag')
+                                ->statement(
+                                    'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB 
+                                        @kode = ?,
+                                        @idDetail = ?,
+                                        @customer = ?,
+                                        @kodeBarang = ?,
+                                        @komponen = ?,
+                                        @jenisPotongan = ?,
+                                        @ukuranPanjang = ?,
+                                        @ukuranLebar = ?,
+                                        @warnaTinta = ?,
+                                        @beratTintaAwal = ?,
+                                        @beratTintaAkhir = ?,
+                                        @jumlahKain = ?,
+                                        @hasilPrinting = ?,
+                                        @beratKain = ?,
+                                        @afalanPrinting = ?,
+                                        @keterangan_kegiatan = ?',
+                                    [
+                                        9,
+                                        $row[0],
+                                        $row[1],
+                                        $row[2],
+                                        $row[3],
+                                        $row[4],
+                                        $row[5],
+                                        $row[6],
+                                        $row[7],
+                                        $row[8],
+                                        $row[9],
+                                        $row[10],
+                                        $row[11],
+                                        $row[12],
+                                        $row[13],
+                                        $row[14]
+                                    ]
+                                );
+                        }
+                    }
 
                     return response()->json(['message' => 'Data berhasil diupdate!']);
 
                 case 3:
                     // Delete
                     // dd($request->all());
-                     DB::connection('ConnJumboBag')
+                    DB::connection('ConnJumboBag')
                         ->statement(
                             'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB 
                         @kode = ?,
@@ -186,6 +314,23 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                 5,
                                 $idLog,
                                 $user
+                            ]
+                        );
+
+                    return response()->json(['message' => 'Data berhasil dihapus!']);
+
+                case 4:
+                    // Delete Detail
+                    // dd($request->all());
+                    $idDetail = $request->input('idDetail');
+                    DB::connection('ConnJumboBag')
+                        ->statement(
+                            'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB 
+                        @kode = ?,
+                        @idDetail = ?',
+                            [
+                                10,
+                                $idDetail
                             ]
                         );
 
@@ -249,10 +394,14 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                     'idLog' => trim($row->idLog),
                     'noMesin' => trim($row->noMesin),
                     'shiftPrinting' => trim($row->shiftPrinting),
-                    'kodeBarang' => trim($row->kodeBarang),
-                    'warnaTinta' => trim($row->warnaTinta),
-                    'beratKain' => trim($row->beratKain),
-                    'afalanPrinting' => trim($row->afalanPrinting),
+                    'total_beratTintaAwal' => $row->total_beratTintaAwal,
+                    'total_beratTintaAkhir' => $row->total_beratTintaAkhir,
+                    'total_jumlahKain' => $row->total_jumlahKain,
+                    'total_hasilPrinting' => $row->total_hasilPrinting,
+                    'total_beratKain' => $row->total_beratKain,
+                    'total_afalanPrinting' => $row->total_afalanPrinting,
+                    'NamaUser' => trim($row->NamaUser),
+                    'NomorUser' => trim($row->NomorUser),
                 ];
             }
             // dd($response);
@@ -268,22 +417,17 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                 ->select('EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB @kode = ?, @idLog = ?', [4, $idLog]);
 
             return response()->json($results, 200);
-            // dd($results);
-            // $response = [];
-            // foreach ($results as $row) {
-            //     $response[] = [
-            //         'tanggalLog' => Carbon::parse($row->tanggalLog)->format('m/d/Y'),
-            //         'tanggalLog_raw' => Carbon::parse($row->tanggalLog)->format('Y-m-d'),
-            //         'idLog' => trim($row->idLog),
-            //         'noMesin' => trim($row->noMesin),
-            //         'shiftPrinting' => trim($row->shiftPrinting),
-            //         'kodeBarang' => trim($row->kodeBarang),
-            //         'warnaTinta' => trim($row->warnaTinta),
-            //         'beratKain' => trim($row->beratKain),
-            //         'afalanPrinting' => trim($row->afalanPrinting),
-            //     ];
-            // }
-            // return datatables($response)->make(true);
+
+        } else if ($id == 'getDataEditDetail') {
+            // dd($request->all());
+            $idLog = $request->input('idLog');
+            $lokasi = $request->input('lokasi');
+            $user = trim(Auth::user()->NomorUser);
+
+            $results = DB::connection('ConnJumboBag')
+                ->select('EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB @kode = ?, @idLog = ?', [8, $idLog]);
+
+            return datatables($results)->make(true);
 
         }
     }

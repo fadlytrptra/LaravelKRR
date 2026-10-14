@@ -1,3 +1,20 @@
+<style>
+    #table_detail {
+        width: 100% !important;
+        white-space: nowrap;
+    }
+
+    #table_detail th,
+    #table_detail td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+</style>
 <!-- Modal untuk Tambah Permohonan Order Kerja -->
 <div class="modal fade" id="tambahKegiatanMesinPrintingModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog" style="max-width: 95%">
@@ -33,6 +50,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="table-container">
+                        <table class="table table-bordered" id="table_detail" style="width: 100%">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID Detail</th>
+                                    <th>Customer</th>
+                                    <th>Kode Barang Tabel Hit.</th>
+                                    <th>Kode Komponen</th>
+                                    <th>Komponen Tabel Hit.</th>
+                                    <th>Ukuran Panjang (CM)</th>
+                                    <th>Ukuran Lebar (CM)</th>
+                                    <th>Pemakaian Tinta (Warna)</th>
+                                    <th>Berat Tinta Awal (KG)</th>
+                                    <th>Berat Tinta Akhir (KG)</th>
+                                    <th>Jumlah Kain (PCS)</th>
+                                    <th>Hasil Printing (PCS)</th>
+                                    <th>Berat Kain (KG)</th>
+                                    <th>Afalan Printing (KG)</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
                         <div class="form-group"style="flex: 0.6" id="div_parentSelectCustomerTableHit">
                             <label for="customer_tableHit">Customer</label>
@@ -116,7 +159,7 @@
                         </div>
                     </div>
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
-                        <div class="form-group"style="flex: 0.155" id="div_afalanLamiKG">
+                        <div class="form-group"style="flex: 0.18" id="div_afalanLamiKG">
                             <label for="beratKain">Berat Kain (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="beratKain" id="beratKain" class="form-control"
@@ -126,7 +169,7 @@
                         <div class="form-group" style="width: 8%;align-content: end" id="div_btnafalanLamiKG">
                             <button class="btn btn-warning w-100" id="btn_timbangBeratKain">Timbang</button>
                         </div>
-                        <div class="form-group"style="flex: 0.15" id="div_afalanTepiKG">
+                        <div class="form-group"style="flex: 0.18" id="div_afalanTepiKG">
                             <label for="afalanPrinting">Afalan Printing (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="afalanPrinting" id="afalanPrinting" class="form-control"
@@ -136,6 +179,21 @@
                         <div class="form-group" style="width: 8%;align-content: end" id="div_btnafalanTepiKG">
                             <button class="btn btn-warning w-100" id="btn_timbangAfalanPrinting">Timbang</button>
                         </div>
+                        <div class="form-group"style="flex: 0.7">
+                            <label for="keterangan_kegiatan">Keterangan</label>
+                            <div class="input-group">
+                                <input type="text" name="keterangan_kegiatan" id="keterangan_kegiatan"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="d-flex align-self-center">
+                            <button type="button" class="btn btn-primary h-25" id="btn_add">Add</button>
+                            <button type="button" class="btn btn-warning h-25" id="btn_update">Update</button>
+                            <button type="button" class="btn btn-danger h-25" id="btn_delete">Delete</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
                         <div class="form-group"style="flex: 0.185" id="div_afalanWSettingBR">
                             <label for="pemakaianReduser">Pemakaian Reduser (KG)</label>
                             <div class="input-group">
@@ -164,36 +222,71 @@
                                     class="form-control" min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex" style="gap: 0.5%;width: 100%">
-                        <div class="form-group"style="flex: 0.6">
-                            <label for="keterangan_kegiatan">Keterangan</label>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="total_beratTintaAwal">Total Berat Tinta Awal (KG)</label>
                             <div class="input-group">
-                                <input type="text" name="keterangan_kegiatan" id="keterangan_kegiatan"
-                                    class="form-control" min="0" enterkeyhint="enter">
-                            </div>
-                        </div>
-                        {{-- <div class="form-group"style="flex: 0.15">
-                            <label for="afalan_totalLBR">Persen 1</label>
-                            <div class="input-group">
-                                <input type="number" name="afalan_totalLBR" id="afalan_totalLBR"
+                                <input type="number" name="total_beratTintaAwal" id="total_beratTintaAwal"
                                     class="form-control" min="0" enterkeyhint="enter" readonly>
                             </div>
                         </div>
                         <div class="form-group"style="flex: 0.15">
-                            <label for="afalan_totalKG">Persen 2</label>
+                            <label for="total_beratTintaAkhir">Total Berat Tinta Akhir (KG)</label>
                             <div class="input-group">
-                                <input type="number" name="afalan_totalKG" id="afalan_totalKG" class="form-control"
+                                <input type="number" name="total_beratTintaAkhir" id="total_beratTintaAkhir"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="total_jumlahKain">Total Jumlah Kain (PCS)</label>
+                            <div class="input-group">
+                                <input type="number" name="total_jumlahKain" id="total_jumlahKain"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="total_hasilPrinting">Total Hasil Printing (PCS)</label>
+                            <div class="input-group">
+                                <input type="number" name="total_hasilPrinting" id="total_hasilPrinting"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="total_beratKain">Total Berat Kain (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="total_beratKain" id="total_beratKain"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="total_afalanPrinting">Total Afalan Printing (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="total_afalanPrinting" id="total_afalanPrinting"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="persen1">Persen 1</label>
+                            <div class="input-group">
+                                <input type="number" name="persen1" id="persen1" class="form-control"
                                     min="0" enterkeyhint="enter" readonly>
                             </div>
                         </div>
                         <div class="form-group"style="flex: 0.15">
-                            <label for="afalan_totalKG">Persen 3</label>
+                            <label for="persen2">Persen 2</label>
                             <div class="input-group">
-                                <input type="number" name="afalan_totalKG" id="afalan_totalKG" class="form-control"
+                                <input type="number" name="persen2" id="persen2" class="form-control"
                                     min="0" enterkeyhint="enter" readonly>
                             </div>
-                        </div> --}}
+                        </div>
+                        <div class="form-group"style="flex: 0.15">
+                            <label for="persen3">Persen 3</label>
+                            <div class="input-group">
+                                <input type="number" name="persen3" id="persen3" class="form-control"
+                                    min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
                     </div>
                     @if (
                         $user == '4405' ||
@@ -207,43 +300,6 @@
                         @else
                             <div style="display:none">
                     @endif
-                    {{-- <div class="form-group"style="flex: 0.2">
-                        <label for="panjangPemakaian">Panjang Pemakaian (MTR)</label>
-                        <div class="input-group">
-                            <input type="number" name="panjangPemakaian" id="panjangPemakaian" class="form-control"
-                                min="0" enterkeyhint="enter" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group"style="flex: 0.16">
-                        <label for="beratPemakaian">Berat Pemakaian (KG)</label>
-                        <div class="input-group">
-                            <input type="number" name="beratPemakaian" id="beratPemakaian" class="form-control"
-                                min="0" enterkeyhint="enter" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group"style="flex: 0.24">
-                        <label for="selisihPanjang">Selisih Panjang Pemakaian (MTR)</label>
-                        <div class="input-group">
-                            <input type="number" name="selisihPanjang" id="selisihPanjang" class="form-control"
-                                min="0" enterkeyhint="enter" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group"style="flex: 0.2">
-                        <label for="selisihBerat">Selisih Berat Pemakaian (KG)</label>
-                        <div class="input-group">
-                            <input type="number" name="selisihBerat" id="selisihBerat" class="form-control"
-                                min="0" enterkeyhint="enter" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group"style="flex: 0.17">
-                        <label for="afalan_persentaseKG">Persentase Afalan (KG)</label>
-                        <div class="input-group">
-                            <input type="number" name="afalan_persentaseKG" id="afalan_persentaseKG"
-                                class="form-control" min="0" enterkeyhint="enter" readonly>
-                            &nbsp;
-                            <span style="font-size: large; align-self: center;">%</span>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
             <div class="py-2" id="div_alasanEditPotong" style="display: none">
