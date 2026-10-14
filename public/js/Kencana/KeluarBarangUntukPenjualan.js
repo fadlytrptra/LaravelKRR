@@ -43,6 +43,7 @@ $(document).ready(function () {
         columns: [
             { title: "IdType" },
             { title: "IdTransaksi" },
+            { title: "Kode Barang" },
             { title: "Nama Type" },
             { title: "Primer" },
             { title: "Sekunder" },
@@ -80,12 +81,13 @@ $(document).ready(function () {
         autoWidth: false,
         scrollX: "100%",
         columnDefs: [
-            { targets: [0], width: "15%", className: "fixed-width" },
-            { targets: [1], width: "15%", className: "fixed-width" },
-            { targets: [2], width: "40%", className: "fixed-width" },
-            { targets: [3], width: "10%", className: "fixed-width" },
-            { targets: [4], width: "10%", className: "fixed-width" },
-            { targets: [5], width: "10%", className: "fixed-width" },
+            { targets: [0], width: "16%", className: "fixed-width" },
+            { targets: [1], width: "12%", className: "fixed-width" },
+            { targets: [2], width: "15%", className: "fixed-width" },
+            { targets: [3], width: "30%", className: "fixed-width" },
+            { targets: [4], width: "9%", className: "fixed-width" },
+            { targets: [5], width: "9%", className: "fixed-width" },
+            { targets: [6], width: "9%", className: "fixed-width" },
         ],
     });
 });
@@ -137,6 +139,7 @@ function updateDataTable(data) {
         table.row.add([
             escapeHtml(item.IdType),
             escapeHtml(item.IdTransaksi),
+            escapeHtml(String(item.KodeBarang ?? "")),
             escapeHtml(item.NamaType),
             formatNumber(item.Primer),
             formatNumber(item.Sekunder),
