@@ -64,6 +64,7 @@
                                     <th>Pemakaian Tinta (Warna)</th>
                                     <th>Berat Tinta Awal (KG)</th>
                                     <th>Berat Tinta Akhir (KG)</th>
+                                    <th>Berat Pemakaian Tinta (KG)</th>
                                     <th>Jumlah Kain (PCS)</th>
                                     <th>Hasil Printing (PCS)</th>
                                     <th>Berat Kain (KG)</th>
@@ -143,6 +144,13 @@
                                     class="form-control" min="0" enterkeyhint="enter">
                             </div>
                         </div>
+                        <div class="form-group"style="flex: 0.15" id="div_afalanWAKG">
+                            <label for="beratPemakaianTinta">Berat Pemakaian Tinta (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="beratPemakaianTinta" id="beratPemakaianTinta"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
                         <div class="form-group"style="flex: 0.15" id="div_afalanWELBR">
                             <label for="jumlahKain">Jumlah Kain (PCS)</label>
                             <div class="input-group">
@@ -188,34 +196,34 @@
                         </div>
                         <div class="d-flex align-self-center">
                             <button type="button" class="btn btn-primary h-25" id="btn_add">Add</button>
-                            <button type="button" class="btn btn-warning h-25" id="btn_update">Update</button>
+                            <button type="button" class="btn btn-warning h-25" id="btn_update">Edit</button>
                             <button type="button" class="btn btn-danger h-25" id="btn_delete">Delete</button>
                         </div>
                     </div>
                     <hr>
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
-                        <div class="form-group"style="flex: 0.185" id="div_afalanWSettingBR">
+                        <div class="form-group"style="flex: 0.15" id="div_afalanWSettingBR">
                             <label for="pemakaianReduser">Pemakaian Reduser (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="pemakaianReduser" id="pemakaianReduser"
                                     class="form-control" min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.18" id="div_afalanSettingKG">
+                        <div class="form-group"style="flex: 0.15" id="div_afalanSettingKG">
                             <label for="pembersihan">Reduser untuk Pembersihan (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="pembersihan" id="pembersihan" class="form-control"
                                     min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.18" id="div_afalanSettingKG">
+                        <div class="form-group"style="flex: 0.15" id="div_afalanSettingKG">
                             <label for="buangAfalanTintaPail">Buang Afalan Tinta (PAIL)</label>
                             <div class="input-group">
                                 <input type="number" name="buangAfalanTintaPail" id="buangAfalanTintaPail"
                                     class="form-control" min="0" enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.18" id="div_afalanSettingKG">
+                        <div class="form-group"style="flex: 0.15" id="div_afalanSettingKG">
                             <label for="buangAfalanTintaKG">Buang Afalan Tinta (KG)</label>
                             <div class="input-group">
                                 <input type="number" name="buangAfalanTintaKG" id="buangAfalanTintaKG"
@@ -237,14 +245,21 @@
                             </div>
                         </div>
                         <div class="form-group"style="flex: 0.15">
+                            <label for="total_beratPemakaianTinta">Total Berat Pemakaian Tinta (KG)</label>
+                            <div class="input-group">
+                                <input type="number" name="total_beratPemakaianTinta" id="total_beratPemakaianTinta"
+                                    class="form-control" min="0" enterkeyhint="enter" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        <div class="form-group"style="flex: 0.15">
                             <label for="total_jumlahKain">Total Jumlah Kain (PCS)</label>
                             <div class="input-group">
                                 <input type="number" name="total_jumlahKain" id="total_jumlahKain"
                                     class="form-control" min="0" enterkeyhint="enter" readonly>
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex" style="gap: 0.5%;width: 100%">
                         <div class="form-group"style="flex: 0.15">
                             <label for="total_hasilPrinting">Total Hasil Printing (PCS)</label>
                             <div class="input-group">

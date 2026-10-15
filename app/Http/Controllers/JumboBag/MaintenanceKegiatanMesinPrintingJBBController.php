@@ -55,6 +55,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
         $keterangan_kegiatan = $request->input('keterangan_kegiatan');
         $total_beratTintaAwal = $request->input('total_beratTintaAwal');
         $total_beratTintaAkhir = $request->input('total_beratTintaAkhir');
+        $total_beratPemakaianTinta = $request->input('total_beratPemakaianTinta');
         $total_jumlahKain = $request->input('total_jumlahKain');
         $total_hasilPrinting = $request->input('total_hasilPrinting');
         $total_beratKain = $request->input('total_beratKain');
@@ -84,6 +85,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                         @buangAfalanTintaKG = ?,
                         @total_beratTintaAwal = ?,
                         @total_beratTintaAkhir = ?,
+                        @total_beratPemakaianTinta = ?,
                         @total_jumlahKain = ?,
                         @total_hasilPrinting = ?,
                         @total_beratKain = ?,
@@ -104,6 +106,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                 $buangAfalanTintaKG,
                                 $total_beratTintaAwal,
                                 $total_beratTintaAkhir,
+                                $total_beratPemakaianTinta,
                                 $total_jumlahKain,
                                 $total_hasilPrinting,
                                 $total_beratKain,
@@ -142,6 +145,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                         @warnaTinta = ?,
                                         @beratTintaAwal = ?,
                                         @beratTintaAkhir = ?,
+                                        @beratPemakaianTinta = ?,
                                         @jumlahKain = ?,
                                         @hasilPrinting = ?,
                                         @beratKain = ?,
@@ -163,7 +167,8 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                         $row[11],
                                         $row[12],
                                         $row[13],
-                                        $row[14]
+                                        $row[14],
+                                        $row[15],
                                     ]
                                 );
                         }
@@ -174,9 +179,10 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                 case 2:
                     // Koreksi
                     // dd($request->all());
+                    // dd($total_beratPemakaianTinta);
                     DB::connection('ConnJumboBag')
                         ->statement(
-                            'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB 
+                            'EXEC SP_4451_JBB_Maintenance_Log_Mesin_Printing_JBB
                         @kode = ?,
                         @idLog = ?,
                         @shiftPrinting = ?,
@@ -186,6 +192,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                         @buangAfalanTintaKG = ?,
                         @total_beratTintaAwal = ?,
                         @total_beratTintaAkhir = ?,
+                        @total_beratPemakaianTinta = ?,
                         @total_jumlahKain = ?,
                         @total_hasilPrinting = ?,
                         @total_beratKain = ?,
@@ -204,6 +211,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                 $buangAfalanTintaKG,
                                 $total_beratTintaAwal,
                                 $total_beratTintaAkhir,
+                                $total_beratPemakaianTinta,
                                 $total_jumlahKain,
                                 $total_hasilPrinting,
                                 $total_beratKain,
@@ -232,6 +240,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                         @warnaTinta = ?,
                                         @beratTintaAwal = ?,
                                         @beratTintaAkhir = ?,
+                                        @beratPemakaianTinta = ?,
                                         @jumlahKain = ?,
                                         @hasilPrinting = ?,
                                         @beratKain = ?,
@@ -253,7 +262,8 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                         $row[11],
                                         $row[12],
                                         $row[13],
-                                        $row[14]
+                                        $row[14],
+                                        $row[15]
                                     ]
                                 );
                         } else {
@@ -272,6 +282,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                         @warnaTinta = ?,
                                         @beratTintaAwal = ?,
                                         @beratTintaAkhir = ?,
+                                        @beratPemakaianTinta = ?,
                                         @jumlahKain = ?,
                                         @hasilPrinting = ?,
                                         @beratKain = ?,
@@ -293,7 +304,8 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                                         $row[11],
                                         $row[12],
                                         $row[13],
-                                        $row[14]
+                                        $row[14],
+                                        $row[15]
                                     ]
                                 );
                         }
@@ -394,8 +406,12 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
                     'idLog' => trim($row->idLog),
                     'noMesin' => trim($row->noMesin),
                     'shiftPrinting' => trim($row->shiftPrinting),
+                    'kodeBarang' => $row->kodeBarang,
+                    'jenisPotongan' => $row->jenisPotongan,
+                    'warnaTinta' => $row->warnaTinta,
                     'total_beratTintaAwal' => $row->total_beratTintaAwal,
                     'total_beratTintaAkhir' => $row->total_beratTintaAkhir,
+                    'total_beratPemakaianTinta' => $row->total_beratPemakaianTinta,
                     'total_jumlahKain' => $row->total_jumlahKain,
                     'total_hasilPrinting' => $row->total_hasilPrinting,
                     'total_beratKain' => $row->total_beratKain,

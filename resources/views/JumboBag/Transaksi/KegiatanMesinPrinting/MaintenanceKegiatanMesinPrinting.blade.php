@@ -32,6 +32,28 @@
     #table_logMesin th {
         white-space: nowrap;
     }
+
+    #table_logMesin {
+        width: 100% !important;
+    }
+
+    #table_logMesin th:nth-child(6),
+    #table_logMesin td:nth-child(6) {
+        min-width: 250px !important;
+        width: 250px !important;
+        max-width: 250px !important;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    #table_logMesin th:nth-child(5),
+    #table_logMesin td:nth-child(5) {
+        min-width: 150px !important;
+        width: 150px !important;
+        max-width: 150px !important;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 </style>
 <link href="{{ asset('css/ABM/MaintenanceKegiatanMesin.css') }}" rel="stylesheet">
 <link href="{{ asset('css/style.css') }}" rel="stylesheet">
@@ -95,12 +117,15 @@
                                 <th>Tgl Log</th>
                                 <th>Mesin</th>
                                 <th>Shift</th>
-                                <th>Total Berat Tinta Awal (KG)</th>
-                                <th>Total Berat Tinta Akhir (KG)</th>
-                                <th>Total Jumlah Kain (PCS)</th>
-                                <th>Total Hasil Printing (PCS)</th>
-                                <th>Total Berat Kain (KG)</th>
-                                <th>Total Afalan Printing (KG)</th>
+                                <th>KB Tabel Hit.</th>
+                                <th>Warna Tinta</th>
+                                <th>Tot. Berat Tinta Awal (KG)</th>
+                                <th>Tot. Berat Tinta Akhir (KG)</th>
+                                <th>Tot. Berat Pemakaian Tinta (KG)</th>
+                                <th>Tot. Jumlah Kain (PCS)</th>
+                                <th>Tot. Hasil Printing (PCS)</th>
+                                <th>Tot. Berat Kain (KG)</th>
+                                <th>Tot. Afalan Printing (KG)</th>
                                 <th>User Input</th>
                                 <th>Action</th>
                                 {{-- @if ($user == '4405' || $user == '4221' || $user == '4259' || $user == '8982' || $user == '4451' || $user == '4384' || $user == '4199')

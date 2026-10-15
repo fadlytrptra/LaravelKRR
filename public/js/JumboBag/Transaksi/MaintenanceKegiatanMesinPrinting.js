@@ -12,6 +12,7 @@ jQuery(function ($) {
     let warnaTinta = document.getElementById("warnaTinta");
     let beratTintaAwal = document.getElementById("beratTintaAwal");
     let beratTintaAkhir = document.getElementById("beratTintaAkhir");
+    let beratPemakaianTinta = document.getElementById("beratPemakaianTinta");
     let jumlahKain = document.getElementById("jumlahKain");
     let hasilPrinting = document.getElementById("hasilPrinting");
     let beratKain = document.getElementById("beratKain");
@@ -27,6 +28,7 @@ jQuery(function ($) {
     let btn_timbangAfalanPrinting = document.getElementById("btn_timbangAfalanPrinting");
     let total_beratTintaAwal = document.getElementById("total_beratTintaAwal");
     let total_beratTintaAkhir = document.getElementById("total_beratTintaAkhir");
+    let total_beratPemakaianTinta = document.getElementById("total_beratPemakaianTinta");
     let total_jumlahKain = document.getElementById("total_jumlahKain");
     let total_hasilPrinting = document.getElementById("total_hasilPrinting");
     let total_beratKain = document.getElementById("total_beratKain");
@@ -98,10 +100,13 @@ jQuery(function ($) {
     ];
 
     table_logMesin = $("#table_logMesin").DataTable({
-        responsive: true,
+        responsive: false,
         processing: true,
         serverSide: true,
         destroy: true,
+        autoWidth: false,
+        scrollX: true,
+
         ajax: {
             url: "MaintKegiatanMesinPrintingJBB/getData",
             dataType: "json",
@@ -109,54 +114,82 @@ jQuery(function ($) {
             data: function (d) {
                 return $.extend({}, d, {
                     _token: csrfToken,
-                    // tgl_awal: tgl_awal.value,
-                    // tgl_akhir: tgl_akhir.value,
                     lokasi: $("#" + slcLokasi.id).val(),
                 });
             },
         },
+
         columns: [
             { data: "idLog" },
             {
-                data: "tanggalLog_raw", // Data asli untuk sorting
+                data: "tanggalLog_raw",
                 render: function (data, type, row) {
-                    // type === 'display' digunakan saat menampilkan di tabel
                     if (type === "display") {
-                        return row.tanggalLog; // tampilkan versi m/d/Y
+                        return row.tanggalLog;
                     }
-                    return data; // untuk sorting & filtering (yyyy-mm-dd)
+                    return data;
                 },
             },
             { data: "noMesin" },
             { data: "shiftPrinting" },
-            { data: "total_beratTintaAwal" },
-            { data: "total_beratTintaAkhir" },
-            { data: "total_jumlahKain" },
-            { data: "total_hasilPrinting" },
-            { data: "total_beratKain" },
-            { data: "total_afalanPrinting" },
+            { data: "kodeBarang", width: "250px" },
+            { data: "warnaTinta", width: "150px" },
+            {
+                data: "total_beratTintaAwal",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
+            {
+                data: "total_beratTintaAkhir",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
+            {
+                data: "total_beratPemakaianTinta",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
+            {
+                data: "total_jumlahKain",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
+            {
+                data: "total_hasilPrinting",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
+            {
+                data: "total_beratKain",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
+            {
+                data: "total_afalanPrinting",
+                render: function (data) {
+                    return numeral(data || 0).format("0.00");
+                }
+            },
             { data: "NomorUser" },
             {
                 data: null,
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-
-                    // if (!userAction.includes(nomorUser)) {
-                    //     return "";
-                    // }
-
                     return `
-                    <button
-                        class="btn btn-sm btn-warning btn-edit"
-                        style="width: 150px;"
+                    <button class="btn btn-sm btn-warning btn-edit"
+                        style="width:150px"
                         data-id="${row.idLog}">
                         <i class="fa fa-edit"></i> Edit
                     </button>
-                        
-                    <button
-                        class="btn btn-sm btn-danger btn-delete"
-                        style="width: 150px;"
+                    <button class="btn btn-sm btn-danger btn-delete"
+                        style="width:150px"
                         data-id="${row.idLog}">
                         <i class="fa fa-trash"></i> Delete
                     </button>
@@ -164,32 +197,33 @@ jQuery(function ($) {
                 },
             },
         ],
-        createdRow: function (row, data, dataIndex) {
-            $(row)
-                .find("td")
-                .css({
-                    "font-family": "Arial",
-                    "font-size": "14px",
-                    "text-align": "center",
-                    "vertical-align": "middle"
-                });
+
+        columnDefs: [
+            {
+                targets: 4,
+                width: "150px"
+            },
+            {
+                targets: 5,
+                width: "250px"
+            }
+        ],
+
+        createdRow: function (row) {
+            $(row).find("td").css({
+                "font-family": "Arial",
+                "font-size": "14px",
+                "text-align": "center",
+                "vertical-align": "middle"
+            });
         },
-        headerCallback: function (thead, data, start, end, display, tdata) {
-            $(thead, tdata)
-                .find("th")
-                .css("font-family", "Arial")
-                .css("font-size", "14px")
-                .css("text-align", "center");
-        },
+
         order: [[1, "asc"]],
-        // paging: false,
-        // scrollY: "400px",
-        // scrollCollapse: true,
     });
 
     $("#table_logMesin").on("click", ".btn-edit", function () {
         const id = $(this).data("id");
-
+        idLog = id;
         // Ambil data baris yang dipilih
         const table = $("#table_logMesin").DataTable();
         const rowData = table.row($(this).closest("tr")).data();
@@ -232,21 +266,22 @@ jQuery(function ($) {
                 }
 
                 shiftPrinting.value = data[0].shiftPrinting;
-                pemakaianReduser.value = data[0].pemakaianReduser;
-                pembersihan.value = data[0].pembersihan;
-                buangAfalanTintaPail.value = data[0].buangAfalanTintaPail;
-                buangAfalanTintaKG.value = data[0].buangAfalanTintaKG;
+                pemakaianReduser.value = numeral(data[0].pemakaianReduser).format('0.00');
+                pembersihan.value = numeral(data[0].pembersihan).format('0.00');
+                buangAfalanTintaPail.value = numeral(data[0].buangAfalanTintaPail).format('0.00');
+                buangAfalanTintaKG.value = numeral(data[0].buangAfalanTintaKG).format('0.00');
 
-                total_beratTintaAwal.value = data[0].total_beratTintaAwal;
-                total_beratTintaAkhir.value = data[0].total_beratTintaAkhir;
-                total_jumlahKain.value = data[0].total_jumlahKain;
-                total_hasilPrinting.value = data[0].total_hasilPrinting;
-                total_beratKain.value = data[0].total_beratKain;
-                total_afalanPrinting.value = data[0].total_afalanPrinting;
+                total_beratTintaAwal.value = numeral(data[0].total_beratTintaAwal).format('0.00');
+                total_beratTintaAkhir.value = numeral(data[0].total_beratTintaAkhir).format('0.00');
+                total_beratPemakaianTinta.value = numeral(data[0].total_beratPemakaianTinta).format('0.00');
+                total_jumlahKain.value = numeral(data[0].total_jumlahKain).format('0.00');
+                total_hasilPrinting.value = numeral(data[0].total_hasilPrinting).format('0.00');
+                total_beratKain.value = numeral(data[0].total_beratKain).format('0.00');
+                total_afalanPrinting.value = numeral(data[0].total_afalanPrinting).format('0.00');
 
-                persen1.value = data[0].persen1;
-                persen2.value = data[0].persen2;
-                persen3.value = data[0].persen3;
+                persen1.value = numeral(data[0].persen1).format('0.00');
+                persen2.value = numeral(data[0].persen2).format('0.00');
+                persen3.value = numeral(data[0].persen3).format('0.00');
             },
             error: function (xhr) {
                 console.error("Gagal mengambil header:", xhr.responseText);
@@ -286,12 +321,13 @@ jQuery(function ($) {
                         ukuranPanjang: row.ukuranPanjang,
                         ukuranLebar: row.ukuranLebar,
                         warnaTinta: row.warnaTinta,
-                        beratTintaAwal: row.beratTintaAwal,
-                        beratTintaAkhir: row.beratTintaAkhir,
-                        jumlahKain: row.jumlahKain,
-                        hasilPrinting: row.hasilPrinting,
-                        beratKain: row.beratKain,
-                        afalanPrinting: row.afalanPrinting,
+                        beratTintaAwal: numeral(row.beratTintaAwal).format('0.00'),
+                        beratTintaAkhir: numeral(row.beratTintaAkhir).format('0.00'),
+                        beratPemakaianTinta: numeral(row.beratPemakaianTinta).format('0.00'),
+                        jumlahKain: numeral(row.jumlahKain).format('0.00'),
+                        hasilPrinting: numeral(row.hasilPrinting).format('0.00'),
+                        beratKain: numeral(row.beratKain).format('0.00'),
+                        afalanPrinting: numeral(row.afalanPrinting).format('0.00'),
                         keterangan_kegiatan: row.keterangan,
                     };
 
@@ -308,6 +344,7 @@ jQuery(function ($) {
                         newRow.warnaTinta,
                         newRow.beratTintaAwal,
                         newRow.beratTintaAkhir,
+                        newRow.beratPemakaianTinta,
                         newRow.jumlahKain,
                         newRow.hasilPrinting,
                         newRow.beratKain,
@@ -544,11 +581,13 @@ jQuery(function ($) {
         warnaTinta.value = data[7];
         beratTintaAwal.value = data[8];
         beratTintaAkhir.value = data[9];
-        jumlahKain.value = data[10];
-        hasilPrinting.value = data[11];
-        beratKain.value = data[12];
-        afalanPrinting.value = data[13];
-        keterangan_kegiatan.value = data[14];
+        beratTintaAkhir.dispatchEvent(new Event("input"));
+        // beratPemakaianTinta.value = data[10];
+        jumlahKain.value = data[11];
+        hasilPrinting.value = data[12];
+        beratKain.value = data[13];
+        afalanPrinting.value = data[14];
+        keterangan_kegiatan.value = data[15];
     });
 
     let tableData = [];
@@ -586,6 +625,7 @@ jQuery(function ($) {
                 warnaTinta: warnaTinta.value,
                 beratTintaAwal: beratTintaAwal.value,
                 beratTintaAkhir: beratTintaAkhir.value,
+                beratPemakaianTinta: beratPemakaianTinta.value,
                 jumlahKain: jumlahKain.value,
                 hasilPrinting: hasilPrinting.value,
                 beratKain: beratKain.value,
@@ -604,6 +644,7 @@ jQuery(function ($) {
                 warnaTinta: warnaTinta.value,
                 beratTintaAwal: beratTintaAwal.value,
                 beratTintaAkhir: beratTintaAkhir.value,
+                beratPemakaianTinta: beratPemakaianTinta.value,
                 jumlahKain: jumlahKain.value,
                 hasilPrinting: hasilPrinting.value,
                 beratKain: beratKain.value,
@@ -624,6 +665,7 @@ jQuery(function ($) {
                 warnaTinta: warnaTinta.value,
                 beratTintaAwal: beratTintaAwal.value,
                 beratTintaAkhir: beratTintaAkhir.value,
+                beratPemakaianTinta: beratPemakaianTinta.value,
                 jumlahKain: jumlahKain.value,
                 hasilPrinting: hasilPrinting.value,
                 beratKain: beratKain.value,
@@ -650,6 +692,7 @@ jQuery(function ($) {
                     newRow.warnaTinta,
                     newRow.beratTintaAwal,
                     newRow.beratTintaAkhir,
+                    newRow.beratPemakaianTinta,
                     newRow.jumlahKain,
                     newRow.hasilPrinting,
                     newRow.beratKain,
@@ -691,6 +734,7 @@ jQuery(function ($) {
             warnaTinta.value,
             beratTintaAwal.value,
             beratTintaAkhir.value,
+            beratPemakaianTinta.value,
             jumlahKain.value,
             hasilPrinting.value,
             beratKain.value,
@@ -713,11 +757,12 @@ jQuery(function ($) {
             warnaTinta: updatedRow[7],
             beratTintaAwal: updatedRow[8],
             beratTintaAkhir: updatedRow[9],
-            jumlahKain: updatedRow[10],
-            hasilPrinting: updatedRow[11],
-            beratKain: updatedRow[12],
-            afalanPrinting: updatedRow[13],
-            keterangan_kegiatan: updatedRow[14],
+            beratPemakaianTinta: updatedRow[10],
+            jumlahKain: updatedRow[11],
+            hasilPrinting: updatedRow[12],
+            beratKain: updatedRow[13],
+            afalanPrinting: updatedRow[14],
+            keterangan_kegiatan: updatedRow[15],
         };
 
         if (isNew && rowIndex >= 0 && rowIndex < tableData.length) {
@@ -876,6 +921,7 @@ jQuery(function ($) {
         warnaTinta.value = "";
         beratTintaAwal.value = "";
         beratTintaAkhir.value = "";
+        beratPemakaianTinta.value = "";
         jumlahKain.value = "";
         hasilPrinting.value = "";
         beratKain.value = "";
@@ -898,6 +944,7 @@ jQuery(function ($) {
         const total = {
             beratTintaAwal: 0,
             beratTintaAkhir: 0,
+            beratPemakaianTinta: 0,
             jumlahKain: 0,
             hasilPrinting: 0,
             beratKain: 0,
@@ -907,6 +954,7 @@ jQuery(function ($) {
         tableData.forEach((row) => {
             total.beratTintaAwal += parseFloat(row.beratTintaAwal) || 0;
             total.beratTintaAkhir += parseFloat(row.beratTintaAkhir) || 0;
+            total.beratPemakaianTinta += parseFloat(row.beratPemakaianTinta) || 0;
             total.jumlahKain += parseFloat(row.jumlahKain) || 0;
             total.hasilPrinting += parseFloat(row.hasilPrinting) || 0;
             total.beratKain += parseFloat(row.beratKain) || 0;
@@ -915,6 +963,7 @@ jQuery(function ($) {
 
         total_beratTintaAwal.value = total.beratTintaAwal.toFixed(2);
         total_beratTintaAkhir.value = total.beratTintaAkhir.toFixed(2);
+        total_beratPemakaianTinta.value = total.beratPemakaianTinta.toFixed(2);
         total_jumlahKain.value = total.jumlahKain.toFixed(2);
         total_hasilPrinting.value = total.hasilPrinting.toFixed(2);
         total_beratKain.value = total.beratKain.toFixed(2);
@@ -1010,6 +1059,19 @@ jQuery(function ($) {
     }
 
     //#region Enter
+    beratTintaAwal.addEventListener("input", function () {
+        let awal = parseFloat(beratTintaAwal.value) || 0;
+        let akhir = parseFloat(beratTintaAkhir.value) || 0;
+
+        beratPemakaianTinta.value = (awal - akhir).toFixed(2);
+    });
+
+    beratTintaAkhir.addEventListener("input", function () {
+        let awal = parseFloat(beratTintaAwal.value) || 0;
+        let akhir = parseFloat(beratTintaAkhir.value) || 0;
+
+        beratPemakaianTinta.value = (awal - akhir).toFixed(2);
+    });
 
     tanggalLog.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
@@ -1155,10 +1217,13 @@ jQuery(function ($) {
                 // $("#labelProses").text("Input Data");
                 // $("#btn_proses").text("PROSES");
                 table_logMesin = $("#table_logMesin").DataTable({
-                    responsive: true,
+                    responsive: false,
                     processing: true,
                     serverSide: true,
                     destroy: true,
+                    autoWidth: false,
+                    scrollX: true,
+
                     ajax: {
                         url: "MaintKegiatanMesinPrintingJBB/getData",
                         dataType: "json",
@@ -1166,54 +1231,82 @@ jQuery(function ($) {
                         data: function (d) {
                             return $.extend({}, d, {
                                 _token: csrfToken,
-                                // tgl_awal: tgl_awal.value,
-                                // tgl_akhir: tgl_akhir.value,
                                 lokasi: $("#" + slcLokasi.id).val(),
                             });
                         },
                     },
+
                     columns: [
                         { data: "idLog" },
                         {
-                            data: "tanggalLog_raw", // Data asli untuk sorting
+                            data: "tanggalLog_raw",
                             render: function (data, type, row) {
-                                // type === 'display' digunakan saat menampilkan di tabel
                                 if (type === "display") {
-                                    return row.tanggalLog; // tampilkan versi m/d/Y
+                                    return row.tanggalLog;
                                 }
-                                return data; // untuk sorting & filtering (yyyy-mm-dd)
+                                return data;
                             },
                         },
                         { data: "noMesin" },
                         { data: "shiftPrinting" },
-                        { data: "total_beratTintaAwal" },
-                        { data: "total_beratTintaAkhir" },
-                        { data: "total_jumlahKain" },
-                        { data: "total_hasilPrinting" },
-                        { data: "total_beratKain" },
-                        { data: "total_afalanPrinting" },
+                        { data: "kodeBarang", width: "250px" },
+                        { data: "warnaTinta", width: "150px" },
+                        {
+                            data: "total_beratTintaAwal",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_beratTintaAkhir",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_beratPemakaianTinta",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_jumlahKain",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_hasilPrinting",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_beratKain",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_afalanPrinting",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
                         { data: "NomorUser" },
                         {
                             data: null,
                             orderable: false,
                             searchable: false,
                             render: function (data, type, row) {
-
-                                // if (!userAction.includes(nomorUser)) {
-                                //     return "";
-                                // }
-
                                 return `
-                    <button
-                        class="btn btn-sm btn-warning btn-edit"
-                        style="width: 150px;"
+                    <button class="btn btn-sm btn-warning btn-edit"
+                        style="width:150px"
                         data-id="${row.idLog}">
                         <i class="fa fa-edit"></i> Edit
                     </button>
-                        
-                    <button
-                        class="btn btn-sm btn-danger btn-delete"
-                        style="width: 150px;"
+                    <button class="btn btn-sm btn-danger btn-delete"
+                        style="width:150px"
                         data-id="${row.idLog}">
                         <i class="fa fa-trash"></i> Delete
                     </button>
@@ -1221,27 +1314,28 @@ jQuery(function ($) {
                             },
                         },
                     ],
-                    createdRow: function (row, data, dataIndex) {
-                        $(row)
-                            .find("td")
-                            .css({
-                                "font-family": "Arial",
-                                "font-size": "14px",
-                                "text-align": "center",
-                                "vertical-align": "middle"
-                            });
+
+                    columnDefs: [
+                        {
+                            targets: 4,
+                            width: "150px"
+                        },
+                        {
+                            targets: 5,
+                            width: "250px"
+                        }
+                    ],
+
+                    createdRow: function (row) {
+                        $(row).find("td").css({
+                            "font-family": "Arial",
+                            "font-size": "14px",
+                            "text-align": "center",
+                            "vertical-align": "middle"
+                        });
                     },
-                    headerCallback: function (thead, data, start, end, display, tdata) {
-                        $(thead, tdata)
-                            .find("th")
-                            .css("font-family", "Arial")
-                            .css("font-size", "14px")
-                            .css("text-align", "center");
-                    },
+
                     order: [[1, "asc"]],
-                    // paging: false,
-                    // scrollY: "400px",
-                    // scrollCollapse: true,
                 });
                 break;
 
@@ -1255,10 +1349,13 @@ jQuery(function ($) {
                 // $("#labelProses").text("Input Data");
                 // $("#btn_proses").text("PROSES");
                 table_logMesin = $("#table_logMesin").DataTable({
-                    responsive: true,
+                    responsive: false,
                     processing: true,
                     serverSide: true,
                     destroy: true,
+                    autoWidth: false,
+                    scrollX: true,
+
                     ajax: {
                         url: "MaintKegiatanMesinPrintingJBB/getData",
                         dataType: "json",
@@ -1266,54 +1363,82 @@ jQuery(function ($) {
                         data: function (d) {
                             return $.extend({}, d, {
                                 _token: csrfToken,
-                                // tgl_awal: tgl_awal.value,
-                                // tgl_akhir: tgl_akhir.value,
                                 lokasi: $("#" + slcLokasi.id).val(),
                             });
                         },
                     },
+
                     columns: [
                         { data: "idLog" },
                         {
-                            data: "tanggalLog_raw", // Data asli untuk sorting
+                            data: "tanggalLog_raw",
                             render: function (data, type, row) {
-                                // type === 'display' digunakan saat menampilkan di tabel
                                 if (type === "display") {
-                                    return row.tanggalLog; // tampilkan versi m/d/Y
+                                    return row.tanggalLog;
                                 }
-                                return data; // untuk sorting & filtering (yyyy-mm-dd)
+                                return data;
                             },
                         },
                         { data: "noMesin" },
                         { data: "shiftPrinting" },
-                        { data: "total_beratTintaAwal" },
-                        { data: "total_beratTintaAkhir" },
-                        { data: "total_jumlahKain" },
-                        { data: "total_hasilPrinting" },
-                        { data: "total_beratKain" },
-                        { data: "total_afalanPrinting" },
+                        { data: "kodeBarang", width: "250px" },
+                        { data: "warnaTinta", width: "150px" },
+                        {
+                            data: "total_beratTintaAwal",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_beratTintaAkhir",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_beratPemakaianTinta",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_jumlahKain",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_hasilPrinting",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_beratKain",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
+                        {
+                            data: "total_afalanPrinting",
+                            render: function (data) {
+                                return numeral(data || 0).format("0.00");
+                            }
+                        },
                         { data: "NomorUser" },
                         {
                             data: null,
                             orderable: false,
                             searchable: false,
                             render: function (data, type, row) {
-
-                                // if (!userAction.includes(nomorUser)) {
-                                //     return "";
-                                // }
-
                                 return `
-                    <button
-                        class="btn btn-sm btn-warning btn-edit"
-                        style="width: 150px;"
+                    <button class="btn btn-sm btn-warning btn-edit"
+                        style="width:150px"
                         data-id="${row.idLog}">
                         <i class="fa fa-edit"></i> Edit
                     </button>
-                        
-                    <button
-                        class="btn btn-sm btn-danger btn-delete"
-                        style="width: 150px;"
+                    <button class="btn btn-sm btn-danger btn-delete"
+                        style="width:150px"
                         data-id="${row.idLog}">
                         <i class="fa fa-trash"></i> Delete
                     </button>
@@ -1321,27 +1446,28 @@ jQuery(function ($) {
                             },
                         },
                     ],
-                    createdRow: function (row, data, dataIndex) {
-                        $(row)
-                            .find("td")
-                            .css({
-                                "font-family": "Arial",
-                                "font-size": "14px",
-                                "text-align": "center",
-                                "vertical-align": "middle"
-                            });
+
+                    columnDefs: [
+                        {
+                            targets: 4,
+                            width: "150px"
+                        },
+                        {
+                            targets: 5,
+                            width: "250px"
+                        }
+                    ],
+
+                    createdRow: function (row) {
+                        $(row).find("td").css({
+                            "font-family": "Arial",
+                            "font-size": "14px",
+                            "text-align": "center",
+                            "vertical-align": "middle"
+                        });
                     },
-                    headerCallback: function (thead, data, start, end, display, tdata) {
-                        $(thead, tdata)
-                            .find("th")
-                            .css("font-family", "Arial")
-                            .css("font-size", "14px")
-                            .css("text-align", "center");
-                    },
+
                     order: [[1, "asc"]],
-                    // paging: false,
-                    // scrollY: "400px",
-                    // scrollCollapse: true,
                 });
                 break;
         }
@@ -1657,6 +1783,7 @@ jQuery(function ($) {
                 keterangan_kegiatan: keterangan_kegiatan.value,
                 total_beratTintaAwal: total_beratTintaAwal.value,
                 total_beratTintaAkhir: total_beratTintaAkhir.value,
+                total_beratPemakaianTinta: total_beratPemakaianTinta.value,
                 total_jumlahKain: total_jumlahKain.value,
                 total_hasilPrinting: total_hasilPrinting.value,
                 total_beratKain: total_beratKain.value,
