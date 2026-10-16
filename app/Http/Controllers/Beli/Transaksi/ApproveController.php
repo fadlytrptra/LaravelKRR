@@ -56,58 +56,119 @@ class ApproveController extends Controller
 
     public function show($id)
     {
-        $data = TransBL::select('Y_KATEGORI_UTAMA.nama as KatUtama', 'Y_KATEGORY.nama_kategori as kategori', 'Y_KATEGORI_SUB.nama_sub_kategori as SubKat', 'Y_BARANG.NAMA_BRG as NamaBarang', 'Qty', 'Nama_satuan', 'Pemesan', 'YUSER.Nama as User', 'StatusBeli', 'Tgl_Dibutuhkan', 'Ket_Internal', 'keterangan', 'Kd_div')
-            ->leftJoin('Y_BARANG', 'Y_BARANG.KD_BRG', 'YTRANSBL.Kd_brg')
-            ->leftJoin('YUSER', 'YUSER.kd_user', 'YTRANSBL.Operator')
-            ->leftJoin('YSATUAN','YSATUAN.No_satuan','YTRANSBL.NoSatuan')
-            ->leftJoin('STATUS_ORDER','STATUS_ORDER.KdStatus','YTRANSBL.StatusOrder')
-            ->leftJoin('Y_KATEGORI_SUB','Y_KATEGORI_SUB.no_sub_kategori','Y_BARANG.NO_SUB_KATEGORI')
-            ->leftJoin('Y_KATEGORY','Y_KATEGORY.no_kategori','Y_KATEGORI_SUB.no_kategori')
-            ->leftJoin('Y_KATEGORI_UTAMA','Y_KATEGORI_UTAMA.no_kat_utama','Y_KATEGORY.no_kat_utama')
+        $data = TransBL::select(
+            'Y_KATEGORI_UTAMA.nama as KatUtama',
+            'Y_KATEGORY.nama_kategori as kategori',
+            'Y_KATEGORI_SUB.nama_sub_kategori as SubKat',
+            'Y_BARANG.NAMA_BRG as NamaBarang',
+            'YTRANSBL.Qty',
+            'YSATUAN.Nama_satuan',
+            'YTRANSBL.Pemesan',
+            'YUSER.Nama as User',
+            'YTRANSBL.StatusBeli',
+            'YTRANSBL.Tgl_Dibutuhkan',
+            'YTRANSBL.Ket_Internal',
+            'YTRANSBL.keterangan',
+            'YTRANSBL.Kd_div'
+        )
+            ->leftJoin(
+                'Y_BARANG',
+                'Y_BARANG.KD_BRG',
+                '=',
+                'YTRANSBL.Kd_brg'
+            )
+            ->leftJoin(
+                'YUSER',
+                'YUSER.kd_user',
+                '=',
+                'YTRANSBL.Operator'
+            )
+            ->leftJoin(
+                'YSATUAN',
+                'YSATUAN.No_satuan',
+                '=',
+                'YTRANSBL.NoSatuan'
+            )
+            ->leftJoin(
+                'STATUS_ORDER',
+                'STATUS_ORDER.KdStatus',
+                '=',
+                'YTRANSBL.StatusOrder'
+            )
+            ->leftJoin(
+                'Y_KATEGORI_SUB',
+                'Y_KATEGORI_SUB.no_sub_kategori',
+                '=',
+                'Y_BARANG.NO_SUB_KATEGORI'
+            )
+            ->leftJoin(
+                'Y_KATEGORY',
+                'Y_KATEGORY.no_kategori',
+                '=',
+                'Y_KATEGORI_SUB.no_kategori'
+            )
+            ->leftJoin(
+                'Y_KATEGORI_UTAMA',
+                'Y_KATEGORI_UTAMA.no_kat_utama',
+                '=',
+                'Y_KATEGORY.no_kat_utama'
+            )
+            ->where('YTRANSBL.No_trans', $id)
+            ->first();
+
+        // ============================================
+// AMBIL KODE BARANG
+// ============================================
+
+        $getKD_Barang = TransBL::select('Kd_brg')
             ->where('No_trans', $id)
             ->first();
 
-        $getKD_Barang = TransBL::select('Kd_brg')->where('No_trans', $id)->first();
+        // ============================================
+// AMBIL DATA PEMBELIAN TERAKHIR
+// ============================================
 
-        $dataBeliTerakhir = TransBL::select()
-            ->leftJoin('YSUPPLIER', 'YSUPPLIER.NO_SUP', '=', 'YTRANSBL.supplier')
-            ->where('Kd_brg', $getKD_Barang->Kd_brg)
-            ->whereIn('StatusOrder', [4, 5, 8, 10, 11])
-            ->orderBy('No_trans', 'desc')
-            ->limit(1)
-            ->get();
+        $dataBeliTerakhir = collect();
 
-        $dataBeliTerakhir->transform(function ($item) {
-            if (!empty($item->DokumentasiFile)) {
-                $item->DokumentasiFile = base64_encode($item->DokumentasiFile);
-            }
+        if ($getKD_Barang) {
+            $dataBeliTerakhir = TransBL::select('YTRANSBL.*', 'YSUPPLIER.*')
+                ->leftJoin(
+                    'YSUPPLIER',
+                    'YSUPPLIER.NO_SUP',
+                    '=',
+                    'YTRANSBL.supplier'
+                )
+                ->where('YTRANSBL.Kd_brg', $getKD_Barang->Kd_brg)
+                ->whereIn('YTRANSBL.StatusOrder', [4, 5, 8, 10, 11])
+                ->orderBy('YTRANSBL.No_trans', 'desc')
+                ->limit(1)
+                ->get();
 
-            return $item;
-        });
+            // Ubah data dokumentasi biner menjadi Base64
+            $dataBeliTerakhir->transform(function ($item) {
+                if (!empty($item->DokumentasiFile)) {
+                    $item->DokumentasiFile = base64_encode(
+                        $item->DokumentasiFile
+                    );
+                }
 
-        $dataBeliTerakhir = TransBL::select()
-            ->leftJoin(
-                'YSUPPLIER',
-                'YSUPPLIER.NO_SUP',
-                'YTRANSBL.supplier'
-            )
-            ->where('Kd_brg', $getKD_Barang->Kd_brg)
-            ->whereIn('StatusOrder', [4, 5, 8, 10, 11])
-            ->orderBy('No_trans', 'desc')
-            ->offset(0)
-            ->limit(1)
-            ->get();
-
+                return $item;
+            });
+        }
 
         // ============================================
-        // AMBIL FOTO BARANG
-        // ============================================
+// AMBIL FOTO BARANG
+// ============================================
 
-        $fotoBarang = DB::connection('ConnPurchase')
-            ->table('Y_FOTO')
-            ->select('FOTO')
-            ->where('KD_BARANG', $getKD_Barang->Kd_brg)
-            ->first();
+        $fotoBarang = null;
+
+        if ($getKD_Barang) {
+            $fotoBarang = DB::connection('ConnPurchase')
+                ->table('Y_FOTO')
+                ->select('FOTO')
+                ->where('KD_BARANG', $getKD_Barang->Kd_brg)
+                ->first();
+        }
 
         $fotoBase64 = null;
 
@@ -117,19 +178,25 @@ class ApproveController extends Controller
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($binary);
 
-            $fotoBase64 =
-                'data:' .
-                $mimeType .
-                ';base64,' .
-                base64_encode($binary);
+            if ($mimeType !== false && strpos($mimeType, 'image/') === 0) {
+                $fotoBase64 = 'data:' . $mimeType . ';base64,' . base64_encode($binary);
+            }
         }
 
+        // ============================================
+// RETURN JSON
+// ============================================
 
-        return compact(
-            'data',
-            'dataBeliTerakhir',
-            'getKD_Barang',
-            'fotoBase64'
+        return response()->json(
+            compact(
+                'data',
+                'dataBeliTerakhir',
+                'getKD_Barang',
+                'fotoBase64'
+            ),
+            200,
+            [],
+            JSON_INVALID_UTF8_SUBSTITUTE
         );
     }
 
