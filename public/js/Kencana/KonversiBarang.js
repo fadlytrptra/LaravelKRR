@@ -756,7 +756,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 StKonversi === 2 ||
                 StKonversi === 5
             ) {
-                fetchDataKelUt("/getKelompokUtamaSelect/" + objekSelect.val());
+                fetchDataKelUt("/getKelompokUtamaSelectKCN/" + objekSelect.val());
             }
         }
     });
@@ -819,7 +819,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 StKonversi === 5
             ) {
                 fetchDataKelompok(
-                    "/getKelompokSelect/" + kelompokUtamaSelect.val(),
+                    "/getKelompokSelectKCN/" + kelompokUtamaSelect.val(),
                 );
             }
         }
@@ -882,7 +882,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 StKonversi === 5
             ) {
                 fetchDataSubKelompok(
-                    "/getSubKelompokSelect/" + kelompokSelect.val(),
+                    "/getSubKelompokSelectKCN/" + kelompokSelect.val(),
                 );
             }
         }
@@ -1002,7 +1002,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             if (StKonversi === 1 || StKonversi === 4) {
                 fetchDataLoad_Type_ABM(
-                    "/getTypeABMSelect/" + subKelompokSelect.val(),
+                    "/getTypeABMSelectKCN/" + subKelompokSelect.val(),
                 );
             } else if (
                 StKonversi === 2 ||
@@ -1011,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 StKonversi === 6
             ) {
                 fetchDataLoad_Type_ABM(
-                    "/getTypeABMSelect/" + subKelompok,
+                    "/getTypeABMSelectKCN/" + subKelompok,
                     idType,
                 );
             }
@@ -1172,7 +1172,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             if (StKonversi === 1 || StKonversi === 4) {
                 fetchDataLoad_Type_CIR(
-                    "/getTypeCIRSelect/" + subKelompokSelect.val(),
+                    "/getTypeCIRSelectKCN/" + subKelompokSelect.val(),
                 );
             } else if (
                 StKonversi === 2 ||
@@ -1181,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 StKonversi === 6
             ) {
                 fetchDataLoad_Type_CIR(
-                    "/getTypeCIRSelect/" + subKelompok,
+                    "/getTypeCIRSelectKCN/" + subKelompok,
                     idType,
                 );
             }
@@ -1574,14 +1574,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 stSelect = 0;
                 if (StKonversi === 1) {
                     fetchDataIdType(
-                        "/getIdTypeSelect/" + subKelompokSelect.val(),
+                        "/getIdTypeSelectKCN/" + subKelompokSelect.val(),
                     );
                 } else if (StKonversi === 2 || StKonversi === 3) {
-                    fetchDataIdType("/getIdTypeSelect/" + subKelompok, idType);
+                    fetchDataIdType("/getIdTypeSelectKCN/" + subKelompok, idType);
                 }
 
                 // fetchDataNamaType(
-                //     "/getIdTypeSelect/" + subKelompokSelect.val()
+                //     "/getIdTypeSelectKCN/" + subKelompokSelect.val()
                 // );
                 // Swal.fire({
                 //     title: "Kode Type",
@@ -1790,17 +1790,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 stSelect = 0;
                 if (StKonversi === 4) {
                     fetchDataIdType2(
-                        "/getIdTypeSelect/" + subKelompokSelect.val(),
+                        "/getIdTypeSelectKCN/" + subKelompokSelect.val(),
                     );
                 } else if (StKonversi === 5 || StKonversi === 6) {
                     console.log(subKelompok);
                     fetchDataIdType2(
-                        "/getIdTypeSelect/" + subKelompokSelect.val(),
+                        "/getIdTypeSelectKCN/" + subKelompokSelect.val(),
                         idType,
                     );
                 }
                 // fetchDataNamaType(
-                //     "/getIdTypeSelect/" + subKelompokSelect.val()
+                //     "/getIdTypeSelectKCN/" + subKelompokSelect.val()
                 // );
                 // Swal.fire({
                 //     title: "Kode Type",
@@ -1927,9 +1927,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function only_BKL(subKelompok, idType) {
         try {
             if (StKonversi === 4) {
-                fetchDataIdType2("/getIdTypeSelect/" + subKelompokSelect.val());
+                fetchDataIdType2("/getIdTypeSelectKCN/" + subKelompokSelect.val());
             } else if (StKonversi === 5 || StKonversi === 6) {
-                fetchDataIdType2("/getIdTypeSelect/" + subKelompok, idType);
+                fetchDataIdType2("/getIdTypeSelectKCN/" + subKelompok, idType);
             }
 
             // Swal.fire({
@@ -2222,8 +2222,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         asalAtauTujuan.innerHTML = "Asal Konversi";
                         $(".kodeTujuan").hide();
                         $(".kodeAsal").show();
-                        fetchDataObjek("/getObjekSelect/" + divisiId.value);
-                        // fetchDataObjek("/getObjekSelect/" + divisiId.value).done(function () {
+                        fetchDataObjek("/getObjekSelectKCN/" + divisiId.value);
+                        // fetchDataObjek("/getObjekSelectKCN/" + divisiId.value).done(function () {
                         //     if (StKonversi === 1 || StKonversi === 4) {
                         //         objekSelect.select2("open");
                         //     }
@@ -2274,7 +2274,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 $(".kodeTujuan").hide();
                                 $(".kodeAsal").show();
                                 fetchDataObjek(
-                                    "/getObjekSelect/" + divisiId.value,
+                                    "/getObjekSelectKCN/" + divisiId.value,
                                 );
                             });
                     });
@@ -2355,7 +2355,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     asalAtauTujuan.innerHTML = "Tujuan Konversi";
                     $(".kodeTujuan").show();
                     $(".kodeAsal").hide();
-                    fetchDataObjek("/getObjekSelect/" + divisiId.value);
+                    fetchDataObjek("/getObjekSelectKCN/" + divisiId.value);
                 });
             });
         }
@@ -2430,31 +2430,31 @@ document.addEventListener("DOMContentLoaded", function () {
                             result[0].NamaDivisi,
                         );
 
-                        // fetchDataObjek("/getObjekSelect/" + divisiIdAsal.value); // prettier-ignore
-                        // fetchDataKelUt("/getKelompokUtamaSelect/" + result[0].IdObjek, result[0].IdKelompokUtama); // prettier-ignore
-                        // fetchDataKelompok("/getKelompokSelect/" + result[0].IdKelompokUtama, result[0].IdKelompok); // prettier-ignore
-                        // fetchDataSubKelompok("/getSubKelompokSelect/" + result[0].IdKelompok, result[0].IdSubkelompok); // prettier-ignore
+                        // fetchDataObjek("/getObjekSelectKCN/" + divisiIdAsal.value); // prettier-ignore
+                        // fetchDataKelUt("/getKelompokUtamaSelectKCN/" + result[0].IdObjek, result[0].IdKelompokUtama); // prettier-ignore
+                        // fetchDataKelompok("/getKelompokSelectKCN/" + result[0].IdKelompokUtama, result[0].IdKelompok); // prettier-ignore
+                        // fetchDataSubKelompok("/getSubKelompokSelectKCN/" + result[0].IdKelompok, result[0].IdSubkelompok); // prettier-ignore
                         fetchDataObjek(
-                            "/getObjekSelect/" + divisiIdAsal.value,
+                            "/getObjekSelectKCN/" + divisiIdAsal.value,
                         ).then(() => {
                             objekSelect
                                 .val(result[0].IdObjek)
                                 .trigger("change.select2");
                             fetchDataKelUt(
-                                "/getKelompokUtamaSelect/" + result[0].IdObjek,
+                                "/getKelompokUtamaSelectKCN/" + result[0].IdObjek,
                             ).then(() => {
                                 kelompokUtamaSelect
                                     .val(result[0].IdKelompokUtama)
                                     .trigger("change");
                                 fetchDataKelompok(
-                                    "/getKelompokSelect/" +
+                                    "/getKelompokSelectKCN/" +
                                         result[0].IdKelompokUtama,
                                 ).then(() => {
                                     kelompokSelect
                                         .val(result[0].IdKelompok)
                                         .trigger("change");
                                     fetchDataSubKelompok(
-                                        "/getSubKelompokSelect/" +
+                                        "/getSubKelompokSelectKCN/" +
                                             result[0].IdKelompok,
                                     ).then(() => {
                                         subKelompokSelect
@@ -2568,26 +2568,26 @@ document.addEventListener("DOMContentLoaded", function () {
                         );
 
                         fetchDataObjek(
-                            "/getObjekSelect/" + divisiIdAsal.value,
+                            "/getObjekSelectKCN/" + divisiIdAsal.value,
                         ).then(() => {
                             objekSelect
                                 .val(result[0].IdObjek)
                                 .trigger("change.select2");
                             fetchDataKelUt(
-                                "/getKelompokUtamaSelect/" + result[0].IdObjek,
+                                "/getKelompokUtamaSelectKCN/" + result[0].IdObjek,
                             ).then(() => {
                                 kelompokUtamaSelect
                                     .val(result[0].IdKelompokUtama)
                                     .trigger("change");
                                 fetchDataKelompok(
-                                    "/getKelompokSelect/" +
+                                    "/getKelompokSelectKCN/" +
                                         result[0].IdKelompokUtama,
                                 ).then(() => {
                                     kelompokSelect
                                         .val(result[0].IdKelompok)
                                         .trigger("change");
                                     fetchDataSubKelompok(
-                                        "/getSubKelompokSelect/" +
+                                        "/getSubKelompokSelectKCN/" +
                                             result[0].IdKelompok,
                                     ).then(() => {
                                         subKelompokSelect
@@ -2678,10 +2678,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             result[0].NamaDivisi,
                         );
 
-                        fetchDataObjek("/getObjekSelect/" + divisiIdAsal.value); // prettier-ignore
-                        fetchDataKelUt("/getKelompokUtamaSelect/" + result[0].IdObjek, result[0].IdKelompokUtama); // prettier-ignore
-                        fetchDataKelompok("/getKelompokSelect/" + result[0].IdKelompokUtama, result[0].IdKelompok); // prettier-ignore
-                        fetchDataSubKelompok("/getSubKelompokSelect/" + result[0].IdKelompok, result[0].IdSubkelompok); // prettier-ignore
+                        fetchDataObjek("/getObjekSelectKCN/" + divisiIdAsal.value); // prettier-ignore
+                        fetchDataKelUt("/getKelompokUtamaSelectKCN/" + result[0].IdObjek, result[0].IdKelompokUtama); // prettier-ignore
+                        fetchDataKelompok("/getKelompokSelectKCN/" + result[0].IdKelompokUtama, result[0].IdKelompok); // prettier-ignore
+                        fetchDataSubKelompok("/getSubKelompokSelectKCN/" + result[0].IdKelompok, result[0].IdSubkelompok); // prettier-ignore
                         // objekIdAsal.value = decodeHtmlEntities(
                         //     result[0].IdObjek
                         // );
@@ -2819,10 +2819,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             result[0].NamaDivisi,
                         );
 
-                        fetchDataObjek("/getObjekSelect/" + divisiIdAsal.value); // prettier-ignore
-                        fetchDataKelUt("/getKelompokUtamaSelect/" + result[0].IdObjek, result[0].IdKelompokUtama); // prettier-ignore
-                        fetchDataKelompok("/getKelompokSelect/" + result[0].IdKelompokUtama, result[0].IdKelompok); // prettier-ignore
-                        fetchDataSubKelompok("/getSubKelompokSelect/" + result[0].IdKelompok, result[0].IdSubkelompok); // prettier-ignore
+                        fetchDataObjek("/getObjekSelectKCN/" + divisiIdAsal.value); // prettier-ignore
+                        fetchDataKelUt("/getKelompokUtamaSelectKCN/" + result[0].IdObjek, result[0].IdKelompokUtama); // prettier-ignore
+                        fetchDataKelompok("/getKelompokSelectKCN/" + result[0].IdKelompokUtama, result[0].IdKelompok); // prettier-ignore
+                        fetchDataSubKelompok("/getSubKelompokSelectKCN/" + result[0].IdKelompok, result[0].IdSubkelompok); // prettier-ignore
                         // objekIdAsal.value = decodeHtmlEntities(
                         //     result[0].IdObjek
                         // );

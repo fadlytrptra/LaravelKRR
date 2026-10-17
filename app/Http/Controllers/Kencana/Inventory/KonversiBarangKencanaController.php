@@ -17,33 +17,33 @@ class KonversiBarangKencanaController extends Controller
         return view('Kencana.Inventory.KonversiBarang', compact('access'));
     }
 
-    public function getObjekSelect($divisi)
+    public function getObjekSelectKCN($divisi)
     {
         $user = Auth::user()->NomorUser;
         $data = DB::connection('ConnKCNInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $divisi]);
         return response()->json($data);
     }
 
-    public function getKelompokUtamaSelect($objek)
+    public function getKelompokUtamaSelectKCN($objek)
     {
         $data = DB::connection('ConnKCNInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$objek]);
         return response()->json($data);
     }
 
-    public function getKelompokSelect($kelompokUtama)
+    public function getKelompokSelectKCN($kelompokUtama)
     {
         $data = DB::connection('ConnKCNInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$kelompokUtama]);
         return response()->json($data);
     }
 
-    public function getSubKelompokSelect($kelompok)
+    public function getSubKelompokSelectKCN($kelompok)
     {
         $kelompok = $kelompok ?? '0';
         $data = DB::connection('ConnKCNInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$kelompok]);
         return response()->json($data);
     }
 
-    public function getIdTypeSelect($subKelompok)
+    public function getIdTypeSelectKCN($subKelompok)
     {
         // dd($subKelompok);
         $data = DB::connection('ConnKCNInventory')->select('exec SP_1003_INV_idsubkelompok_type @XIdSubKelompok_Type = ?', [$subKelompok]);
@@ -51,13 +51,13 @@ class KonversiBarangKencanaController extends Controller
         return response()->json($data);
     }
 
-    public function getTypeABMSelect($subKelompok)
+    public function getTypeABMSelectKCN($subKelompok)
     {
         $data = DB::connection('ConnKCNInventory')->select('exec SP_4451_INV_idsubkelompok_type_ABM @XIdSubKelompok_Type = ?', [$subKelompok]);
         return response()->json($data);
     }
 
-    public function getTypeCIRSelect()
+    public function getTypeCIRSelectKCN()
     {
         $data = DB::connection('ConnKCNInventory')->select('exec SP_4451_INV_list_type_perukuran');
         return response()->json($data);
