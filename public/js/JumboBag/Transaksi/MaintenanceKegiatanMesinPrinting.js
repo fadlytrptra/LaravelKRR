@@ -43,7 +43,7 @@ jQuery(function ($) {
     // let tgl_akhir = document.getElementById("tgl_akhir");
     let table_detail = $("#table_detail").DataTable({
         paging: false,
-        scrollY: "300px",
+        scrollY: "500px",
         scrollX: true,
         scrollCollapse: true,
         autoWidth: false,
@@ -105,7 +105,11 @@ jQuery(function ($) {
         serverSide: true,
         destroy: true,
         autoWidth: false,
-        scrollX: true,
+        paging: false,
+        // scrollX: true,
+        scrollX: "500px",
+        scrollY: "500px", // Mengatur tinggi tabel
+        scrollCollapse: true,
 
         ajax: {
             url: "MaintKegiatanMesinPrintingJBB/getData",
@@ -218,7 +222,7 @@ jQuery(function ($) {
             });
         },
 
-        order: [[1, "asc"]],
+        order: [[0, "desc"]],
     });
 
     $("#table_logMesin").on("click", ".btn-edit", function () {
@@ -1197,7 +1201,7 @@ jQuery(function ($) {
         }
     });
 
-    //#region Select2
+    // #region Select 2
 
     $("#" + slcLokasi.id).select2({
         placeholder: "-- Pilih Lokasi --"
@@ -1222,7 +1226,11 @@ jQuery(function ($) {
                     serverSide: true,
                     destroy: true,
                     autoWidth: false,
-                    scrollX: true,
+                    paging: false,
+                    // scrollX: true,
+                    scrollX: "500px",
+                    scrollY: "500px", // Mengatur tinggi tabel
+                    scrollCollapse: true,
 
                     ajax: {
                         url: "MaintKegiatanMesinPrintingJBB/getData",
@@ -1335,7 +1343,7 @@ jQuery(function ($) {
                         });
                     },
 
-                    order: [[1, "asc"]],
+                    order: [[0, "desc"]],
                 });
                 break;
 
@@ -1354,7 +1362,11 @@ jQuery(function ($) {
                     serverSide: true,
                     destroy: true,
                     autoWidth: false,
-                    scrollX: true,
+                    paging: false,
+                    // scrollX: true,
+                    scrollX: "500px",
+                    scrollY: "500px", // Mengatur tinggi tabel
+                    scrollCollapse: true,
 
                     ajax: {
                         url: "MaintKegiatanMesinPrintingJBB/getData",
@@ -1467,7 +1479,7 @@ jQuery(function ($) {
                         });
                     },
 
-                    order: [[1, "asc"]],
+                    order: [[0, "desc"]],
                 });
                 break;
         }
