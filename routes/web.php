@@ -1864,9 +1864,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('ViewPemeriksaanBarang', App\Http\Controllers\Guard\Pemeriksaan\ViewPemeriksaanBarangController::class);
     Route::resource('SJSudahKirimCustomer', App\Http\Controllers\Guard\Pemeriksaan\SJSudahKirimCustomerController::class);
     Route::get('PemeriksaanBarang/download/{id}', [App\Http\Controllers\Guard\Pemeriksaan\PemeriksaanBarangController::class, 'downloadPdf']);
-    // Route::resource('FormDaftarTamu', App\Http\Controllers\Guard\DaftarTamu\FormDaftarTamuController::class);
-    // Route::resource('ListDaftarTamu', App\Http\Controllers\Guard\DaftarTamu\ListDaftarTamuController::class);
-
+    Route::resource('FormDaftarTamu', App\Http\Controllers\Guard\DaftarTamu\FormDaftarTamuController::class);
+    Route::resource('ListDaftarTamu', App\Http\Controllers\Guard\DaftarTamu\ListDaftarTamuController::class);
+    Route::get('/daftar-tamu/foto/{id}/{jenis}', [App\Http\Controllers\Guard\DaftarTamu\ListDaftarTamuController::class,'foto'])->name('daftar-tamu.foto');
 
     #region COA
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
