@@ -1,6 +1,6 @@
 @extends('layouts.appJumboBag')
 @section('content')
-@section('title', 'Maintenance Kegiatan Mesin ABM')
+@section('title', 'Maintenance Kegiatan Mesin Potong JBB')
 
 <style>
     .input-error {
