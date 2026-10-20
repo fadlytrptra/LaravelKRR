@@ -561,14 +561,11 @@ function focusAndControlReinforced(index) {
         } else if (event.key === "Enter") {
             event.preventDefault();
 
-            if (
-                reinforced.value.trim() === "" ||
-                reinforced.selectedIndex === 0
-            ) {
+            if (reinforced.value.trim() === "") {
                 Swal.fire({
                     icon: "warning",
                     title: "Peringatan",
-                    text: "Pilih Reinforced terlebih dahulu (Yes / No)!",
+                    text: "Pilih Reinforced terlebih dahulu!",
                     returnFocus: false,
                 }).then(() => {
                     reinforced.focus();
@@ -745,11 +742,10 @@ btn_RefNo.addEventListener("click", function (e) {
                         sf.value = result[0].SF.trim();
 
                         let reinforcedValue =
-                            result[0].Reinforced?.trim().toLowerCase();
-                        if (reinforcedValue === "yes") {
-                            reinforced.value = "Yes";
-                        } else if (reinforcedValue === "no") {
-                            reinforced.value = "No";
+                            result[0].Reinforced?.trim();
+
+                        if (["Yes", "No", "-"].includes(reinforcedValue)) {
+                            reinforced.value = reinforcedValue;
                         }
 
                         reinforced.disabled = false;
@@ -1476,8 +1472,8 @@ btn_isi.addEventListener("click", function () {
     enableKetik();
     tanggal.value = todayString;
     tahun.value = new Date(tanggal.value).getFullYear();
-    prodDate.value = todayString;
-    testingDate.value = todayString;
+    prodDate.value = "";
+    testingDate.value = "";
 
     // tahun mengikuti tanggal
     tanggal.addEventListener("change", function () {

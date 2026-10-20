@@ -172,6 +172,29 @@ document.addEventListener("DOMContentLoaded", function () {
         return parseFloat(value).toFixed(2);
     }
 
+    function formatTanggal(value) {
+        if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === ""
+        ) {
+            return "-";
+        }
+
+        const tanggal = new Date(value);
+
+        if (isNaN(tanggal.getTime())) {
+            return "-";
+        }
+
+        return tanggal.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            timeZone: "Asia/Jakarta"
+        });
+    }
+
     function handleTableKeydown(e, tableId) {
         const table = $(`#${tableId}`).DataTable();
         const rows = $(`#${tableId} tbody tr`);
@@ -430,23 +453,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             bagType.textContent = result[0].Bag_Type;
                             poNo.textContent = result[0].PO_No;
 
-                            var prodDateObj = new Date(result[0].Tanggal_Prod);
-                            var testingDateObj = new Date(
-                                result[0].Tanggal_Testing,
-                            );
 
-                            prodDate.textContent =
-                                prodDateObj.toLocaleDateString("en-US", {
-                                    month: "long",
-                                    day: "numeric",
-                                    year: "numeric",
-                                });
-                            testingDate.textContent =
-                                testingDateObj.toLocaleDateString("en-US", {
-                                    month: "long",
-                                    day: "numeric",
-                                    year: "numeric",
-                                });
+                            prodDate.textContent = formatTanggal(result[0].Tanggal_Prod);
+                            testingDate.textContent = formatTanggal(result[0].Tanggal_Testing);
+
 
                             // box kanan info
                             size.textContent = result[0].Size + " CM";

@@ -96,7 +96,7 @@
                                 <div class="form-group">
                                     <label for="reinforced">Reinforced</label>
                                     <select class="form-control" id="reinforced" name="reinforced">
-                                        <option value="blank">-</option>
+                                        <option value="-">-</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
                                     </select>

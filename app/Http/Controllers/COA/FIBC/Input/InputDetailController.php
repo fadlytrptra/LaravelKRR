@@ -381,8 +381,8 @@ class InputDetailController extends Controller
             $Bag_Code = $request->input('bagCode');
             $Bag_Type = $request->input('bagType');
             $PO_No = $request->input('poNo');
-            $Tanggal_Prod = $request->input('prodDate');
-            $Tanggal_Testing = $request->input('testingDate');
+            $Tanggal_Prod = $request->input('prodDate') ?: null;
+            $Tanggal_Testing = $request->input('testingDate') ?: null;
             $Size = $request->input('size');
             $Reinforced = $request->input('reinforced');
             $Colour = $request->input('colour');
