@@ -248,9 +248,14 @@ inputs.forEach((masuk, index) => {
         // ======================
         if (masuk.value.trim() === "") {
             if (masuk.id === "po-no") {
-                masuk.value = "";
                 prodDate.disabled = false;
                 prodDate.focus();
+            } else if (masuk.id === "prod-date") {
+                testingDate.disabled = false;
+                testingDate.focus();
+            } else if (masuk.id === "testing-date") {
+                size.disabled = false;
+                size.focus();
             }
 
             return;
@@ -950,14 +955,8 @@ btn_BagCode.addEventListener("click", function (e) {
                             bagCode.value = result[0].Bag_Code.trim();
                             bagType.value = result[0].Bag_Type.trim();
                             poNo.value = result[0].PO_No.trim();
-                            prodDate.value = new Date(result[0].Tanggal_Prod)
-                                .toISOString()
-                                .split("T")[0];
-                            testingDate.value = new Date(
-                                result[0].Tanggal_Testing,
-                            )
-                                .toISOString()
-                                .split("T")[0];
+                            prodDate.value = formatDateInput(result[0].Tanggal_Prod);
+                            testingDate.value = formatDateInput(result[0].Tanggal_Testing);
                             size.value = result[0].Size.trim();
                             reinforced.value = result[0].Reinforced;
                             colour.value = result[0].Colour.trim();
