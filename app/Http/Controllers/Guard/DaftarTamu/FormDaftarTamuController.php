@@ -147,56 +147,44 @@ class FormDaftarTamuController extends Controller
                     // pada tabel SQL Server berjalan otomatis.
                 ]);
 
+            // Ambil tanggal dan jam pendaftaran
+            $tanggal = now('Asia/Jakarta')->format('d/m/Y');
+            $jam = now('Asia/Jakarta')->format('H:i:s');
+
+            // Template pesan WhatsApp
+            $message = "*PENDAFTARAN TAMU DI POS KEAMANAN PT. KERTA RAJASA RAYA (TROPODO)*\n\n"
+                . "Tanggal: " . $tanggal . "\n"
+                . "Jam: " . $jam . "\n"
+                . "Nama Tamu: " . trim($request->NamaTamu) . "\n"
+                . "Instansi: " . trim($request->Instansi) . "\n"
+                . "Bertemu Dengan: " . trim($request->BertemuDengan) . "\n"
+                . "Keperluan: " . trim($request->Keperluan) . "\n\n"
+                . "Mohon " . trim($request->BertemuDengan)
+                . " segera menemui " . trim($request->NamaTamu)
+                . " - " . trim($request->Instansi)
+                . " di Lobby / Ruang Meeting / Lokasi yang sudah ditentukan."
+                ."\n\n"
+                . "_Pesan ini terkirim otomatis menggunakan website KRR._";
+
+            // Kirim ke grup pengumuman
             if ($request->grup_pengumuman == 1) {
                 $response = Http::withHeaders([
                     'Authorization' => env('WA_TOKEN')
                 ])->post('https://api.fonnte.com/send', [
                     'target' => '120363039436451185@g.us',
-                    'message' => "*PENDAFTARAN TAMU PT. KERTA RAJASA RAYA*\n\n"
-                        . "*Nama Tamu:* "
-                        . trim($request->NamaTamu)
-                        . "\n"
-                        . "*Instansi:* "
-                        . trim($request->Instansi)
-                        . "\n"
-                        . "*Bertemu Dengan:* "
-                        . trim($request->BertemuDengan)
-                        . "\n"
-                        . "*Keperluan:* "
-                        . trim($request->Keperluan)
-                        . "\n"
-                        . "*Lokasi:* "
-                        . $lokasiValid->Lokasi
-                        . "\n\n"
-                        . "_Pesan ini terkirim otomatis menggunakan website KRR._",
+                    'message' => $message,
                 ]);
             }
 
+            // Kirim ke grup staff
             if ($request->grup_staff == 1) {
                 $response = Http::withHeaders([
                     'Authorization' => env('WA_TOKEN')
                 ])->post('https://api.fonnte.com/send', [
                     'target' => '120363044087527441@g.us',
-                    'message' => "*PENDAFTARAN TAMU PT. KERTA RAJASA RAYA*\n\n"
-                        . "*Nama Tamu:* "
-                        . trim($request->NamaTamu)
-                        . "\n"
-                        . "*Instansi:* "
-                        . trim($request->Instansi)
-                        . "\n"
-                        . "*Bertemu Dengan:* "
-                        . trim($request->BertemuDengan)
-                        . "\n"
-                        . "*Keperluan:* "
-                        . trim($request->Keperluan)
-                        . "\n"
-                        . "*Lokasi:* "
-                        . $lokasiValid->Lokasi
-                        . "\n\n"
-                        . "_Pesan ini terkirim otomatis menggunakan website KRR._",
+                    'message' => $message,
                 ]);
             }
-
 
             return response()->json([
                 'success' => true,
