@@ -151,7 +151,7 @@ class FormDaftarTamuController extends Controller
                 $response = Http::withHeaders([
                     'Authorization' => env('WA_TOKEN')
                 ])->post('https://api.fonnte.com/send', [
-                    'target' => '120363408716235440@g.us',
+                    'target' => '120363039436451185@g.us',
                     'message' => "*PENDAFTARAN TAMU PT. KERTA RAJASA RAYA*\n\n"
                         . "*Nama Tamu:* "
                         . trim($request->NamaTamu)
@@ -176,7 +176,7 @@ class FormDaftarTamuController extends Controller
                 $response = Http::withHeaders([
                     'Authorization' => env('WA_TOKEN')
                 ])->post('https://api.fonnte.com/send', [
-                    'target' => '120363408716235440@g.us',
+                    'target' => '120363044087527441@g.us',
                     'message' => "*PENDAFTARAN TAMU PT. KERTA RAJASA RAYA*\n\n"
                         . "*Nama Tamu:* "
                         . trim($request->NamaTamu)
@@ -215,7 +215,7 @@ class FormDaftarTamuController extends Controller
 
     public function show(Request $request, $id)
     {
-    
+
     }
 
     public function edit($id)
