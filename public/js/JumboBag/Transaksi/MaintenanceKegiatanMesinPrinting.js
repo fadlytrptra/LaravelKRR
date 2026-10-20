@@ -99,131 +99,131 @@ jQuery(function ($) {
         "4199"
     ];
 
-    table_logMesin = $("#table_logMesin").DataTable({
-        responsive: false,
-        processing: true,
-        serverSide: true,
-        destroy: true,
-        autoWidth: false,
-        paging: false,
-        // scrollX: true,
-        scrollX: "500px",
-        scrollY: "500px", // Mengatur tinggi tabel
-        scrollCollapse: true,
+    // table_logMesin = $("#table_logMesin").DataTable({
+    //     responsive: false,
+    //     processing: true,
+    //     serverSide: true,
+    //     destroy: true,
+    //     autoWidth: false,
+    //     paging: false,
+    //     // scrollX: true,
+    //     scrollX: "500px",
+    //     scrollY: "500px", // Mengatur tinggi tabel
+    //     scrollCollapse: true,
 
-        ajax: {
-            url: "MaintKegiatanMesinPrintingJBB/getData",
-            dataType: "json",
-            type: "GET",
-            data: function (d) {
-                return $.extend({}, d, {
-                    _token: csrfToken,
-                    lokasi: $("#" + slcLokasi.id).val(),
-                });
-            },
-        },
+    //     ajax: {
+    //         url: "MaintKegiatanMesinPrintingJBB/getData",
+    //         dataType: "json",
+    //         type: "GET",
+    //         data: function (d) {
+    //             return $.extend({}, d, {
+    //                 _token: csrfToken,
+    //                 lokasi: $("#" + slcLokasi.id).val(),
+    //             });
+    //         },
+    //     },
 
-        columns: [
-            { data: "idLog" },
-            {
-                data: "tanggalLog_raw",
-                render: function (data, type, row) {
-                    if (type === "display") {
-                        return row.tanggalLog;
-                    }
-                    return data;
-                },
-            },
-            { data: "noMesin" },
-            { data: "shiftPrinting" },
-            { data: "kodeBarang", width: "250px" },
-            { data: "warnaTinta", width: "150px" },
-            {
-                data: "total_beratTintaAwal",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            {
-                data: "total_beratTintaAkhir",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            {
-                data: "total_beratPemakaianTinta",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            {
-                data: "total_jumlahKain",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            {
-                data: "total_hasilPrinting",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            {
-                data: "total_beratKain",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            {
-                data: "total_afalanPrinting",
-                render: function (data) {
-                    return numeral(data || 0).format("0.00");
-                }
-            },
-            { data: "NomorUser" },
-            {
-                data: null,
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    return `
-                    <button class="btn btn-sm btn-warning btn-edit"
-                        style="width:150px"
-                        data-id="${row.idLog}">
-                        <i class="fa fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-danger btn-delete"
-                        style="width:150px"
-                        data-id="${row.idLog}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                `;
-                },
-            },
-        ],
+    //     columns: [
+    //         { data: "idLog" },
+    //         {
+    //             data: "tanggalLog_raw",
+    //             render: function (data, type, row) {
+    //                 if (type === "display") {
+    //                     return row.tanggalLog;
+    //                 }
+    //                 return data;
+    //             },
+    //         },
+    //         { data: "noMesin" },
+    //         { data: "shiftPrinting" },
+    //         { data: "kodeBarang", width: "250px" },
+    //         { data: "warnaTinta", width: "150px" },
+    //         {
+    //             data: "total_beratTintaAwal",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         {
+    //             data: "total_beratTintaAkhir",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         {
+    //             data: "total_beratPemakaianTinta",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         {
+    //             data: "total_jumlahKain",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         {
+    //             data: "total_hasilPrinting",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         {
+    //             data: "total_beratKain",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         {
+    //             data: "total_afalanPrinting",
+    //             render: function (data) {
+    //                 return numeral(data || 0).format("0.00");
+    //             }
+    //         },
+    //         { data: "NomorUser" },
+    //         {
+    //             data: null,
+    //             orderable: false,
+    //             searchable: false,
+    //             render: function (data, type, row) {
+    //                 return `
+    //                 <button class="btn btn-sm btn-warning btn-edit"
+    //                     style="width:150px"
+    //                     data-id="${row.idLog}">
+    //                     <i class="fa fa-edit"></i> Edit
+    //                 </button>
+    //                 <button class="btn btn-sm btn-danger btn-delete"
+    //                     style="width:150px"
+    //                     data-id="${row.idLog}">
+    //                     <i class="fa fa-trash"></i> Delete
+    //                 </button>
+    //             `;
+    //             },
+    //         },
+    //     ],
 
-        columnDefs: [
-            {
-                targets: 4,
-                width: "150px"
-            },
-            {
-                targets: 5,
-                width: "250px"
-            }
-        ],
+    //     columnDefs: [
+    //         {
+    //             targets: 4,
+    //             width: "150px"
+    //         },
+    //         {
+    //             targets: 5,
+    //             width: "250px"
+    //         }
+    //     ],
 
-        createdRow: function (row) {
-            $(row).find("td").css({
-                "font-family": "Arial",
-                "font-size": "14px",
-                "text-align": "center",
-                "vertical-align": "middle"
-            });
-        },
+    //     createdRow: function (row) {
+    //         $(row).find("td").css({
+    //             "font-family": "Arial",
+    //             "font-size": "14px",
+    //             "text-align": "center",
+    //             "vertical-align": "middle"
+    //         });
+    //     },
 
-        order: [[0, "desc"]],
-    });
+    //     order: [[0, "desc"]],
+    // });
 
     $("#table_logMesin").on("click", ".btn-edit", function () {
         const id = $(this).data("id");
@@ -599,7 +599,19 @@ jQuery(function ($) {
     btn_add.addEventListener("click", async function (event) {
         event.preventDefault();
 
-        if (customer_tableHit.val() === null || kodebarang_tableHit.val() === null || jenisPotongan == null) {
+        // if (customer_tableHit.val() === null || kodebarang_tableHit.val() === null || jenisPotongan == null) {
+        //     Swal.fire({
+        //         icon: "info",
+        //         title: "Info!",
+        //         text: "Isi terlebih dahulu datanya!",
+        //         showConfirmButton: true,
+        //         // timer: 2000
+        //     });
+        //     btn_proses.disabled = false;
+        //     return;
+        // }
+
+        if (jenisPotongan == null) {
             Swal.fire({
                 icon: "info",
                 title: "Info!",
