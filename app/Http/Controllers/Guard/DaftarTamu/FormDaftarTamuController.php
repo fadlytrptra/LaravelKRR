@@ -152,7 +152,7 @@ class FormDaftarTamuController extends Controller
             $jam = now('Asia/Jakarta')->format('H:i:s');
 
             // Template pesan WhatsApp
-            $message = "*PENDAFTARAN TAMU DI POS KEAMANAN PT. KERTA RAJASA RAYA (TROPODO)*\n\n"
+            $message = "*PENDAFTARAN TAMU DI POS KEAMANAN PT. KERTA RAJASA RAYA (" . strtoupper(trim($lokasiValid->Lokasi)) . ")*\n\n"
                 . "Tanggal: " . $tanggal . "\n"
                 . "Jam: " . $jam . "\n"
                 . "Nama Tamu: " . trim($request->NamaTamu) . "\n"
