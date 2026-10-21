@@ -1320,17 +1320,20 @@ jQuery(function ($) {
                             searchable: false,
                             render: function (data, type, row) {
                                 return `
-                    <button class="btn btn-sm btn-warning btn-edit"
-                        style="width:150px"
-                        data-id="${row.idLog}">
-                        <i class="fa fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-danger btn-delete"
-                        style="width:150px"
-                        data-id="${row.idLog}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                `;
+                                <div class="d-flex align-items-center gap-1">
+                                    <button class="btn btn-sm btn-warning btn-edit"
+                                        style="width:150px; white-space:nowrap;"
+                                        data-id="${row.idLog}">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                                
+                                    <button class="btn btn-sm btn-danger btn-delete"
+                                        style="width:150px; white-space:nowrap;"
+                                        data-id="${row.idLog}">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            `;
                             },
                         },
                     ],
@@ -1456,17 +1459,20 @@ jQuery(function ($) {
                             searchable: false,
                             render: function (data, type, row) {
                                 return `
-                    <button class="btn btn-sm btn-warning btn-edit"
-                        style="width:150px"
-                        data-id="${row.idLog}">
-                        <i class="fa fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-danger btn-delete"
-                        style="width:150px"
-                        data-id="${row.idLog}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                `;
+                                <div class="d-flex align-items-center gap-1">
+                                    <button class="btn btn-sm btn-warning btn-edit"
+                                        style="width:150px; white-space:nowrap;"
+                                        data-id="${row.idLog}">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+
+                                    <button class="btn btn-sm btn-danger btn-delete"
+                                        style="width:150px; white-space:nowrap;"
+                                        data-id="${row.idLog}">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            `;
                             },
                         },
                     ],
