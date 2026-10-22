@@ -260,6 +260,7 @@ btnLookupKomposisi.addEventListener("click", function () {
 
             listKomposisi.length = 0;
             clearTable_DataTable("table_komposisi", colKomposisi.length);
+            clearTable_DataTable("table_konversi", colKonversi.length);
             listKonversi.length = 0;
             clearSelection_DataTable("table_konversi");
             clearDataDetail();
@@ -669,9 +670,9 @@ btnTambahDetail.addEventListener("click", function () {
                             return (
                                 rowData &&
                                 String(rowData.IdType).trim() ===
-                                    String(
-                                        listKomposisi[pilKomposisi].IdType,
-                                    ).trim()
+                                String(
+                                    listKomposisi[pilKomposisi].IdType,
+                                ).trim()
                             );
                         });
 
@@ -918,13 +919,13 @@ function resolveKomposisiSelection(rowIndex, rowData = null) {
     const rows = getKomposisiRows();
     const row = rowData
         ? rows.find((candidate) => {
-              const candidateData = tableKomposisi.row(candidate).data();
-              return (
-                  candidateData &&
-                  String(candidateData.IdType).trim() ===
-                      String(rowData.IdType).trim()
-              );
-          })
+            const candidateData = tableKomposisi.row(candidate).data();
+            return (
+                candidateData &&
+                String(candidateData.IdType).trim() ===
+                String(rowData.IdType).trim()
+            );
+        })
         : rows[rowIndex];
     const data = rowData || (row ? tableKomposisi.row(row).data() : null);
 
@@ -1008,11 +1009,11 @@ document
         const currentIndex = activeRow
             ? rows.indexOf(activeRow)
             : rows.findIndex(
-                  (row) =>
-                      row.classList.contains("keyboard-selected") ||
-                      // row.classList.contains("selected") ||
-                      row.classList.contains("table-primary"),
-              );
+                (row) =>
+                    row.classList.contains("keyboard-selected") ||
+                    // row.classList.contains("selected") ||
+                    row.classList.contains("table-primary"),
+            );
 
         const startIndex = currentIndex >= 0 ? currentIndex : 0;
         let nextIndex = startIndex;

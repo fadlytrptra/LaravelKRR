@@ -723,13 +723,10 @@ let currentLookupSort = { columnIndex: -1, direction: "asc" };
 async function openLookupModal(config) {
     try {
         currentLookupConfig = config;
-        currentLookupSort = { columnIndex: -1, direction: "asc" };
-        /*
-        currentPage = 1;
-
-        const showPageSelect = document.getElementById("showPerPage");
-        itemsPerPage = parseInt(showPageSelect.value) || 10;
-        */
+        currentLookupSort = {
+            columnIndex: -1,
+            direction: "asc"
+        };
 
         document.getElementById("lookupTitle").innerHTML =
             `<i class="bi bi-view-list text-primary me-2"></i>${config.title}`;
@@ -750,7 +747,7 @@ async function openLookupModal(config) {
 
             sortButton.setAttribute(
                 "aria-label",
-                `Urutkan A-Z berdasarkan ${header}`,
+                `Urutkan A-Z berdasarkan ${header}`
             );
 
             const label = document.createElement("span");
@@ -777,18 +774,21 @@ async function openLookupModal(config) {
                 } else {
                     currentLookupSort = {
                         columnIndex: index,
-                        direction: "asc",
+                        direction: "asc"
                     };
                 }
 
                 trHeader
                     .querySelectorAll("th")
                     .forEach((headerCell, headerIndex) => {
-                        const button = headerCell.querySelector("button");
+                        const button =
+                            headerCell.querySelector("button");
+
                         const icon = button.querySelector("i");
 
                         const isActive =
-                            headerIndex === currentLookupSort.columnIndex;
+                            headerIndex ===
+                            currentLookupSort.columnIndex;
 
                         const nextDirection =
                             isActive &&
@@ -802,7 +802,7 @@ async function openLookupModal(config) {
                                 ? currentLookupSort.direction === "asc"
                                     ? "ascending"
                                     : "descending"
-                                : "none",
+                                : "none"
                         );
 
                         icon.className = isActive
@@ -814,7 +814,7 @@ async function openLookupModal(config) {
 
                         button.setAttribute(
                             "aria-label",
-                            `Urutkan ${nextDirection} berdasarkan ${config.headers[headerIndex]}`,
+                            `Urutkan ${nextDirection} berdasarkan ${config.headers[headerIndex]}`
                         );
                     });
 
@@ -835,11 +835,8 @@ async function openLookupModal(config) {
             </tr>
         `;
 
-        /*
-        document.getElementById("paginationControls").innerHTML = "";
-        */
-
-        const modalEl = document.getElementById("modalLookupGeneric");
+        const modalEl =
+            document.getElementById("modalLookupGeneric");
 
         const modalInstance =
             bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -847,36 +844,19 @@ async function openLookupModal(config) {
         const searchInput =
             document.getElementById("lookupSearch");
 
-        // ==========================================
-        // Hilangkan browser autocomplete/suggestions
-        // ==========================================
-
-        // Gunakan atribut langsung pada DOM
         searchInput.setAttribute("autocomplete", "off");
         searchInput.setAttribute("autocorrect", "off");
         searchInput.setAttribute("autocapitalize", "off");
         searchInput.setAttribute("spellcheck", "false");
-
-        // Hindari name yang umum digunakan browser untuk autocomplete
         searchInput.setAttribute(
             "name",
             "lookup_search_unique_" + Date.now()
         );
-
-        // Tambahan untuk memberitahu browser bahwa ini adalah search field
         searchInput.setAttribute("inputmode", "search");
-
-        // Jangan gunakan password karena bisa memicu heuristik
         searchInput.setAttribute("type", "search");
-
-        // Reset search
-        searchInput.value = "";
-
-        /*
-        // Jika browser masih menampilkan suggestion,
-        // readonly sementara sampai modal benar-benar terbuka.
-        */
         searchInput.setAttribute("readonly", "readonly");
+
+        searchInput.value = "";
 
         let modalShown = false;
         let dataRendered = false;
@@ -894,16 +874,11 @@ async function openLookupModal(config) {
                     return;
                 }
 
-                // Pastikan modal masih terbuka
                 if (!modalEl.classList.contains("show")) {
                     return;
                 }
 
-                // ==========================================
-                // Aktifkan kembali input setelah modal tampil
-                // ==========================================
                 input.removeAttribute("readonly");
-
                 input.focus();
                 input.select();
 
@@ -916,8 +891,6 @@ async function openLookupModal(config) {
             function () {
                 modalShown = true;
 
-                // Tunggu satu frame agar Chrome tidak menganggap
-                // input sebagai autocomplete target saat modal muncul
                 requestAnimationFrame(() => {
                     searchInput.removeAttribute("readonly");
 
@@ -927,7 +900,7 @@ async function openLookupModal(config) {
                     focusLookupSearch();
                 });
             },
-            { once: true },
+            { once: true }
         );
 
         modalInstance.show();
@@ -937,71 +910,48 @@ async function openLookupModal(config) {
         currentLookupData = data;
         filteredLookupData = data;
 
-        renderLookupTable();
-
-        /*
-        renderPagination();
-        */
-
         selectedRowIndex = 0;
+
+        renderLookupTable();
 
         dataRendered = true;
 
         focusLookupSearch();
 
-        /*
         searchInput.onkeydown = function (e) {
-            if (e.key === "ArrowLeft") {
-                e.preventDefault();
-
-                if (currentPage > 1) {
-                    currentPage--;
-
-                    selectedRowIndex = 0;
-
-                    renderLookupTable();
-                    renderPagination();
-
-                    // Kembalikan focus ke search
-                    requestAnimationFrame(() => {
-                        searchInput.focus();
-                    });
-                }
-
+            if (e.key !== "Home" && e.key !== "End") {
                 return;
             }
 
-            if (e.key === "ArrowRight") {
-                e.preventDefault();
+            e.preventDefault();
 
-                const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage
-                );
+            const rows =
+                document.querySelectorAll("#lookupBody tr");
 
-                if (currentPage < totalPages) {
-                    currentPage++;
-
-                    selectedRowIndex = 0;
-
-                    renderLookupTable();
-                    renderPagination();
-
-                    // Kembalikan focus ke search
-                    requestAnimationFrame(() => {
-                        searchInput.focus();
-                    });
-                }
-
+            if (
+                rows.length === 0 ||
+                filteredLookupData.length === 0 ||
+                !rows[0].querySelector("td") ||
+                rows[0].querySelector("td").colSpan > 1
+            ) {
                 return;
+            }
+
+            if (e.key === "Home") {
+                focusLookupRow(0);
+            } else if (e.key === "End") {
+                focusLookupRow(rows.length - 1);
             }
         };
-        */
 
         searchInput.onkeyup = function (e) {
-            // ArrowLeft / ArrowRight
+            // Home dan End sudah ditangani pada keydown.
+            // ArrowLeft dan ArrowRight tetap untuk navigasi teks.
             if (
                 e.key === "ArrowLeft" ||
-                e.key === "ArrowRight"
+                e.key === "ArrowRight" ||
+                e.key === "Home" ||
+                e.key === "End"
             ) {
                 return;
             }
@@ -1012,15 +962,15 @@ async function openLookupModal(config) {
                 const rows =
                     document.querySelectorAll("#lookupBody tr");
 
-                if (rows.length > 0) {
-                    // Pastikan index tidak melebihi jumlah row
+                if (
+                    rows.length > 0 &&
+                    filteredLookupData.length > 0
+                ) {
                     if (selectedRowIndex >= rows.length) {
                         selectedRowIndex = rows.length - 1;
                     }
 
-                    rows[selectedRowIndex].focus();
-
-                    highlightSelectedRow();
+                    focusLookupRow(selectedRowIndex);
                 }
 
                 return;
@@ -1032,7 +982,10 @@ async function openLookupModal(config) {
                 const rows =
                     document.querySelectorAll("#lookupBody tr");
 
-                if (rows.length > 0) {
+                if (
+                    rows.length > 0 &&
+                    filteredLookupData.length > 0
+                ) {
                     if (selectedRowIndex >= rows.length) {
                         selectedRowIndex = rows.length - 1;
                     }
@@ -1043,61 +996,31 @@ async function openLookupModal(config) {
                 return;
             }
 
-            const keyword =
-                this.value.toLowerCase().trim();
+            const keyword = this.value.toLowerCase().trim();
 
-            filteredLookupData =
-                currentLookupData.filter((row) => {
-                    return config.columns.some((col) => {
-                        return String(row[col] || "")
-                            .toLowerCase()
-                            .includes(keyword);
-                    });
+            filteredLookupData = currentLookupData.filter((row) => {
+                return config.columns.some((col) => {
+                    return String(row[col] ?? "")
+                        .toLowerCase()
+                        .includes(keyword);
                 });
+            });
 
-            /*
-            // Reset halaman
-            currentPage = 1;
-            */
-
-            // Reset selected row
+            // Reset pilihan setelah pencarian berubah
             selectedRowIndex = 0;
 
-            // Render ulang
             renderLookupTable();
 
-            /*
-            renderPagination();
-            */
-
-            // Tetap focus di search
+            // Tetap fokus ke input pencarian
             requestAnimationFrame(() => {
                 searchInput.focus();
             });
         };
-
-        /*
-        showPageSelect.onchange = function () {
-            itemsPerPage = parseInt(this.value) || 10;
-
-            currentPage = 1;
-
-            selectedRowIndex = 0;
-
-            renderLookupTable();
-            renderPagination();
-
-            requestAnimationFrame(() => {
-                searchInput.focus();
-            });
-        };
-        */
-
     } catch (error) {
         Swal.fire(
             "Error",
             error.message || "Gagal memuat data lookup.",
-            "error",
+            "error"
         );
     }
 }
@@ -1109,8 +1032,36 @@ function highlightSelectedRow() {
     rows.forEach((row, index) => {
         if (index === selectedRowIndex) {
             row.classList.add("table-primary");
+        } else {
+            row.classList.remove("table-primary");
         }
     });
+}
+
+function focusLookupRow(index) {
+    const rows =
+        document.querySelectorAll("#lookupBody tr");
+
+    if (rows.length === 0) {
+        return;
+    }
+
+    if (
+        filteredLookupData.length === 0 ||
+        !rows[0].querySelector("td") ||
+        rows[0].querySelector("td").colSpan > 1
+    ) {
+        return;
+    }
+
+    selectedRowIndex = Math.max(
+        0,
+        Math.min(index, rows.length - 1)
+    );
+
+    rows[selectedRowIndex].focus();
+
+    highlightSelectedRow();
 }
 
 function renderLookupTable() {
@@ -1142,11 +1093,11 @@ function renderLookupTable() {
 
         const collator = new Intl.Collator(undefined, {
             numeric: true,
-            sensitivity: "base",
+            sensitivity: "base"
         });
 
-        sortedLookupData =
-            [...filteredLookupData].sort((rowA, rowB) => {
+        sortedLookupData = [...filteredLookupData].sort(
+            (rowA, rowB) => {
                 const valueA = rowA[column];
                 const valueB = rowB[column];
 
@@ -1160,22 +1111,15 @@ function renderLookupTable() {
                                 : String(valueA),
                             valueB == null
                                 ? ""
-                                : String(valueB),
+                                : String(valueB)
                         );
 
                 return currentLookupSort.direction === "asc"
                     ? comparison
                     : -comparison;
-            });
+            }
+        );
     }
-
-    /*
-     const startIndex = (currentPage - 1) * itemsPerPage;
-     const endIndex = startIndex + itemsPerPage;
-     const paginatedData = filteredLookupData.slice(startIndex, endIndex);
- 
-     paginatedData.forEach((row) => ) {
-    */
 
     sortedLookupData.forEach((row) => {
         const tr = document.createElement("tr");
@@ -1186,17 +1130,19 @@ function renderLookupTable() {
         config.columns.forEach((col) => {
             const td = document.createElement("td");
 
-            td.textContent =
-                row[col] || "-";
+            td.textContent = row[col] || "-";
 
             tr.appendChild(td);
         });
 
         tr.addEventListener("click", () => {
+            selectedRowIndex =
+                Array.from(tbody.children).indexOf(tr);
+
+            highlightSelectedRow();
+
             const modalEl =
-                document.getElementById(
-                    "modalLookupGeneric"
-                );
+                document.getElementById("modalLookupGeneric");
 
             const modalInstance =
                 bootstrap.Modal.getInstance(modalEl);
@@ -1213,56 +1159,31 @@ function renderLookupTable() {
                 e.preventDefault();
 
                 this.click();
-
             } else if (e.key === "ArrowDown") {
                 e.preventDefault();
 
-                let nextRow =
-                    this.nextElementSibling;
-
-                if (nextRow) {
-                    nextRow.focus();
+                if (this.nextElementSibling) {
+                    focusLookupRow(selectedRowIndex + 1);
                 }
-
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
 
-                let prevRow =
-                    this.previousElementSibling;
-
-                if (prevRow) {
-                    prevRow.focus();
+                if (this.previousElementSibling) {
+                    focusLookupRow(selectedRowIndex - 1);
                 } else {
                     document
                         .getElementById("lookupSearch")
                         .focus();
                 }
-            }
+            } else if (e.key === "Home") {
+                e.preventDefault();
 
-            /*
-            } else if (e.key === "ArrowLeft") {
+                focusLookupRow(0);
+            } else if (e.key === "End") {
                 e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderLookupTable();
-                    renderPagination();
-                    const firstRow = document.querySelector("#lookupBody tr");
-                    if (firstRow) firstRow.focus();
-                }
-            } else if (e.key === "ArrowRight") {
-                e.preventDefault();
-                const totalPages = Math.ceil(
-                    filteredLookupData.length / itemsPerPage
-                );
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderLookupTable();
-                    renderPagination();
-                    const firstRow = document.querySelector("#lookupBody tr");
-                    if (firstRow) firstRow.focus();
-                }
+
+                focusLookupRow(tbody.children.length - 1);
             }
-            */
         });
 
         tbody.appendChild(tr);
