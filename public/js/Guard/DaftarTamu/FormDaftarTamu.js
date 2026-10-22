@@ -619,7 +619,7 @@ $(document).ready(function () {
             second: '2-digit',
             hourCycle: 'h23',
             timeZone: 'Asia/Jakarta'
-        }).format(sekarang);
+        }).format(sekarang).replace(/\./g, ':');
 
         $('#previewWaktuDatang').text(
             `${hariTanggal}, ${jamDatang} WIB`

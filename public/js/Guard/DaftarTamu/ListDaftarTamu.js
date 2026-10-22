@@ -19,6 +19,32 @@ $(document).ready(function () {
         );
     }
 
+
+    // Toggle filter tamu yang belum mengisi jam keluar
+    const btnFilterBelumKeluar = document.getElementById(
+        'btnFilterBelumKeluar'
+    );
+
+    if (btnFilterBelumKeluar) {
+        btnFilterBelumKeluar.addEventListener('click', function () {
+            const aktif = this.dataset.active !== '1';
+
+            this.dataset.active = aktif ? '1' : '0';
+            this.setAttribute('aria-pressed', String(aktif));
+
+            this.classList.toggle('btn-success', aktif);
+            this.classList.toggle('btn-outline-secondary', !aktif);
+
+            this.innerHTML = aktif
+                ? '<i class="fas fa-filter me-1"></i> Belum Isi Jam Keluar'
+                : '<i class="fas fa-filter me-1"></i> Belum Isi Jam Keluar';
+
+            // Terapkan filter tanpa reload halaman
+            table.draw();
+        });
+    }
+
+
     // Filter tanggal datang dan lokasi
     $.fn.dataTable.ext.search.push(function (
         settings,
@@ -33,6 +59,12 @@ $(document).ready(function () {
 
         const tanggal = row.dataset.tanggal || '';
         const lokasi = (row.dataset.lokasi || '').trim();
+
+        const jamKeluar = row.dataset.jamKeluar || '0';
+
+        const filterBelumKeluarAktif =
+            document.getElementById('btnFilterBelumKeluar')
+                ?.dataset.active === '1';
 
         const tanggalAwal = $('#tanggalAwal').val();
         const tanggalAkhir = $('#tanggalAkhir').val();
@@ -53,6 +85,10 @@ $(document).ready(function () {
             lokasiDipilih &&
             lokasi.toLowerCase() !== lokasiDipilih.trim().toLowerCase()
         ) {
+            return false;
+        }
+
+         if (filterBelumKeluarAktif && jamKeluar !== '0') {
             return false;
         }
 

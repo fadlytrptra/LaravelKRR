@@ -58,6 +58,20 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="col-lg-3 col-md-5">
+                        <label class="form-label d-block">
+                            Status Jam Keluar
+                        </label>
+
+                        <button type="button"
+                            id="btnFilterBelumKeluar"
+                            class="btn btn-outline-secondary w-20"
+                            data-active="0"
+                            aria-pressed="false">
+                            <i class="fas fa-filter me-1"></i>
+                            Belum Isi Jam Keluar
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -83,11 +97,14 @@
 
                     <tbody>
                         @foreach ($dataTamu as $tamu)
+
                         <tr
                             data-tanggal="{{ $tamu->TimeStamp
                                 ? \Carbon\Carbon::parse($tamu->TimeStamp)->format('Y-m-d')
                                 : '' }}"
-                            data-lokasi="{{ $tamu->Lokasi }}">
+                            data-lokasi="{{ $tamu->Lokasi }}"
+                            data-jam-keluar="{{ empty($tamu->JamKeluar) ? '0' : '1' }}">
+
 
                             <td>{{ $loop->iteration }}</td>
 
