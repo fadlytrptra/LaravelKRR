@@ -132,8 +132,8 @@ btnLookupKonversi.addEventListener("click", function () {
     openLookupModal({
         title: "Pilih Nomor Konversi",
         url: `/Konversi/getListKonversi/${safeUrlParam(idDivisi)}`,
-        headers: ["ID Konversi", "Identifikasi"],
-        columns: ["IdKonversi", "Identifikasi"],
+        headers: ["Nama Komposisi", "ID Konversi"],
+        columns: ["NamaKomposisi", "IdKonversi"],
         onSelect: (row) => {
             inputIdKonversi.value = row.IdKonversi;
             txtKonversi.value = row.Identifikasi;
