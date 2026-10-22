@@ -13,10 +13,12 @@ $(document).ready(function () {
 
         updateWarnaLokasi();
 
-        filterLokasi.addEventListener(
-            'change',
-            updateWarnaLokasi
-        );
+
+        filterLokasi.addEventListener('change', function () {
+            updateWarnaLokasi();
+            table.draw();
+        });
+
     }
 
 
