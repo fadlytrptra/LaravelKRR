@@ -77,6 +77,7 @@ class CetakDOKencanaController extends Controller
                 'HP.Tgl_PO',
                 'DO.MaxKirimDO',
                 'DO.MinKirimDO',
+                'DO.Uraian',
                 'DP.Satuan as SatuanJual',
                 'DP.IDBarang',
                 'DO.tanggal as TglDO',
