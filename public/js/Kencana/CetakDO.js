@@ -370,6 +370,8 @@ function renderDOTemplate(
         option.NamaBarang
     );
 
+    const uraian = escapeHtml(option.Uraian);
+
     const corak = escapeHtml(
         option.Corak
     );
@@ -597,7 +599,7 @@ function renderDOTemplate(
                                 font-weight: 400;
                                 margin-top: 1px;
                             ">
-                                ${namaBarang}
+                                ${uraian}
                             </div>
 
                         </div>
