@@ -529,6 +529,7 @@ class MaintenanceBKKController extends Controller
 
     public function getGroup(Request $request)
     {
+        set_time_limit(1000);
         $listPengajuan = $request->input('rowDataArray', []);
         $tanggal = $request->input('tanggalgrup', now()->toDateString());
         $user_id = trim(Auth::user()->NomorUser);
