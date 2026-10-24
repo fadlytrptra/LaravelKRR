@@ -63,7 +63,7 @@ class MaintenanceKegiatanMesinPrintingJBBController extends Controller
         $persen1 = $request->input('persen1');
         $persen2 = $request->input('persen2');
         $persen3 = $request->input('persen3');
-        $allRowsDataDetail = $request->input('allRowsDataDetail');
+        $allRowsDataDetail = $request->input('allRowsDataDetail', []);
         $user = trim(Auth::user()->NomorUser);
         // dd($request->all());
         try {
