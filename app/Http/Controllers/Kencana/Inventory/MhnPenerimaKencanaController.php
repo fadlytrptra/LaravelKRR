@@ -464,10 +464,10 @@ class MhnPenerimaKencanaController extends Controller
                         $qtyKeluar -= $qty;
 
                         if ($qtyKeluar <= 0) {
-                            DB::connection('ConnPurchase')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qty]);
+                            DB::connection('ConnKCNPurchase')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qty]);
                             break;
                         } else {
-                            DB::connection('ConnPurchase')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qtyKeluar]);
+                            DB::connection('ConnKCNPurchase')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qtyKeluar]);
                         }
 
                         $totalHarga1 += $totalHarga;
