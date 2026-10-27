@@ -441,9 +441,9 @@ class MasterController extends Controller
 
             DB::connection('ConnExtruder')->statement(
                 'exec SP_5298_EXT_INSERT_MASTER_KOMPOSISI @NamaKomposisi = ?, @idmesin = ?, @iddivisi = ?, @user = ?',
-                [str_replace('~', '/', strtoupper(str_replace('_', ' ', $nama_komposisi))), $id_mesin, $id_divisi, Auth::user()->NomorUser]
+                [$nama_komposisi, $id_mesin, $id_divisi, Auth::user()->NomorUser]
             );
-            return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success']);   
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error($e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);

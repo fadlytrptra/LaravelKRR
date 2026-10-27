@@ -621,13 +621,7 @@ btnTambahDetail.addEventListener("click", function () {
         NamaSubKelompok: txtNamaSubkel.value,
     });
 
-    addTable_DataTable(
-        "table_komposisi",
-        listKomposisi,
-        colKomposisi,
-        rowClickedFetch,
-        "350px",
-    );
+    refreshKomposisiTable();
 
     Swal.fire({
         title: "Input Lagi?",
@@ -720,13 +714,7 @@ btnKoreksiDetail.addEventListener("click", function () {
 
             pilKomposisi = -1;
             clearSelection_DataTable("table_komposisi");
-            addTable_DataTable(
-                "table_komposisi",
-                listKomposisi,
-                colKomposisi,
-                rowClickedFetch,
-                "350px",
-            );
+            refreshKomposisiTable();
 
             clearDataDetail(["id_objek", "nama_objek"]);
             btnLookupObjek.disabled = false;
@@ -771,13 +759,7 @@ btnHapusDetail.addEventListener("click", async function () {
                 btnLookupObjek.disabled = false;
                 btnLookupKelut.disabled = false;
                 btnLookupKelut.focus();
-                addTable_DataTable(
-                    "table_komposisi",
-                    listKomposisi,
-                    colKomposisi,
-                    rowClickedFetch,
-                    "350px",
-                );
+                refreshKomposisiTable();
             } else {
                 pilKomposisi = -1;
                 clearSelection_DataTable("table_komposisi");
@@ -834,6 +816,7 @@ btnHapusDetail.addEventListener("click", async function () {
                     rowClickedFetch,
                     "350px",
                 );
+                bindKomposisiArrowNavigation();
                 pilKomposisi = -1;
                 clearSelection_DataTable("table_komposisi");
             }
@@ -864,7 +847,7 @@ btnKeluar.addEventListener("click", function () {
         pilKomposisi = -1;
         btnBaruMaster.focus();
     } else {
-        window.location.href = '/Extruder/Extruder';
+        window.location.href = "/Extruder/Extruder";
     }
 });
 
@@ -1005,6 +988,169 @@ function clearDataDetail(exceptions = []) {
 function clearDataMaster() {
     clearInputGroup(inputIdKomposisi, txtNamaKomposisi);
     clearInputGroup(inputIdMesin, txtNamaMesin);
+}
+let currentSelectedIndex = -1; // Variabel global untuk melacak index baris aktif
+
+function refreshKomposisiTable() {
+    addTable_DataTable(
+        "table_komposisi",
+        listKomposisi,
+        colKomposisi,
+        rowClickedFetch,
+        "350px",
+        modeProses === "baru" ? "input_order" : "",
+    );
+    bindKomposisiArrowNavigation();
+}
+
+function clearKomposisiArrowNavigation() {
+    $(document).off("keydown.datatableNav");
+    $(document).off("keydown.datatableNavPage"); // Bersihkan event Page Up/Down
+    $(document).off("keydown.datatableNavSelection");
+
+    currentSelectedIndex = -1;
+
+    if (tableKomposisi) {
+        tableKomposisi
+            .table()
+            .container()
+            .querySelectorAll(".odd.selected, .even.selected")
+            .forEach((row) => row.classList.remove("selected"));
+    }
+}
+
+function bindKomposisiArrowNavigation() {
+    $(document).off("keydown.datatableNav");
+    $(document).off("keydown.datatableNavPage");
+    $(document).off("keydown.datatableNavSelection");
+
+    tableKomposisi = $("#table_komposisi").DataTable();
+    const tableElement = $("#table_komposisi");
+
+    if (!document.getElementById("komposisi-tropodo-arrow-style")) {
+        const style = document.createElement("style");
+        style.id = "komposisi-tropodo-arrow-style";
+        style.textContent =
+            "#table_komposisi tbody tr.selected > td { background-color: #dbeafe !important; }";
+        document.head.appendChild(style);
+    }
+
+    tableElement
+        .off("click.komposisiArrow", "tbody tr")
+        .on("click.komposisiArrow", "tbody tr", function () {
+            const visibleRows = tableKomposisi
+                .rows({ search: "applied" })
+                .nodes()
+                .toArray();
+            const visibleIndex = visibleRows.indexOf(this);
+
+            if (visibleIndex < 0) return;
+
+            clearKomposisiArrowNavigation();
+
+            currentSelectedIndex = visibleIndex;
+
+            arrowNavigation_DataTable(
+                tableKomposisi,
+                visibleIndex,
+                (selectedIndex, data) => {
+                    currentSelectedIndex = selectedIndex;
+                    const selectedRow = tableKomposisi
+                        .rows({ search: "applied" })
+                        .nodes()
+                        .toArray()[selectedIndex];
+
+                    if (selectedRow) {
+                        rowClickedFetch(selectedRow, data);
+                        selectedRow.scrollIntoView({
+                            block: "nearest",
+                            behavior: "smooth",
+                        });
+                    }
+                },
+            );
+
+            $(document).on("keydown.datatableNavSelection", function (e) {
+                if (
+                    (e.key !== "ArrowDown" && e.key !== "ArrowUp") ||
+                    currentSelectedIndex < 0
+                ) {
+                    return;
+                }
+
+                const rows = tableKomposisi
+                    .rows({ search: "applied" })
+                    .nodes()
+                    .toArray();
+                if (rows.length === 0) return;
+
+                const nextIndex =
+                    e.key === "ArrowDown"
+                        ? Math.min(rows.length - 1, currentSelectedIndex + 1)
+                        : Math.max(0, currentSelectedIndex - 1);
+
+                e.preventDefault();
+
+                if (nextIndex === currentSelectedIndex) return;
+
+                currentSelectedIndex = nextIndex;
+                const nextRow = rows[nextIndex];
+                const nextData = tableKomposisi.row(nextRow).data();
+
+                if (nextRow && nextData) {
+                    rowClickedFetch(nextRow, nextData);
+                    nextRow.scrollIntoView({
+                        block: "nearest",
+                        behavior: "smooth",
+                    });
+                }
+            });
+
+            $(document).on("keydown.datatableNavPage", function (e) {
+                if (e.key === "PageUp" || e.key === "PageDown") {
+                    e.preventDefault();
+
+                    const allVisibleRows = tableKomposisi
+                        .rows({ search: "applied" })
+                        .nodes()
+                        .toArray();
+                    const maxIndex = allVisibleRows.length - 1;
+
+                    if (maxIndex < 0) return;
+
+                    // Hitung index baru (lompat 5 baris)
+                    if (e.key === "PageUp") {
+                        currentSelectedIndex = Math.max(
+                            0,
+                            currentSelectedIndex - 5,
+                        );
+                    } else if (e.key === "PageDown") {
+                        currentSelectedIndex = Math.min(
+                            maxIndex,
+                            currentSelectedIndex + 5,
+                        );
+                    }
+
+                    const targetRow = allVisibleRows[currentSelectedIndex];
+                    if (targetRow) {
+                        $(targetRow).trigger("click.komposisiArrow");
+
+                        targetRow.scrollIntoView({
+                            block: "center",
+                            behavior: "smooth",
+                        });
+                    }
+                }
+            });
+        });
+
+    $(document)
+        .off("click.komposisiArrowOuter")
+        .on("click.komposisiArrowOuter", (event) => {
+            if (!tableElement[0].contains(event.target)) {
+                clearKomposisiArrowNavigation();
+            }
+        });
 }
 
 function disableDetail(state = true) {
@@ -1159,6 +1305,7 @@ function getDataKomposisiFetch(no_komposisi, post_action = null) {
                 rowClickedFetch,
                 "350px",
             );
+            bindKomposisiArrowNavigation();
         }
         if (post_action) post_action();
     });
@@ -1245,9 +1392,7 @@ function init() {
         info: false,
     });
 
-    tableKomposisi.on("blur", function () {
-        removeNavigation_DataTable([tableKomposisi]);
-    });
+    bindKomposisiArrowNavigation();
 
     clearTable_DataTable(
         "table_komposisi",
