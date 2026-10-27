@@ -2283,24 +2283,32 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    $("#modalAsalKonversi").on("hidden.bs.modal", function () {
+    $("#modalAsalKonversi")
+    .off("hidden.bs.modal.prosesAsal")
+    .on("hidden.bs.modal.prosesAsal", function () {
         if (fetchController) {
             fetchController.abort();
             fetchController = null;
         }
+
         $(this).find("input").val("");
+
         objekSelect.val(null).trigger("change");
         kelompokUtamaSelect.val(null).trigger("change");
         kelompokSelect.val(null).trigger("change");
         subKelompokSelect.val(null).trigger("change");
         idtypeSelect.val(null).trigger("change");
         idtype2Select.val(null).trigger("change");
+
         hargaSatuan.value = 0;
         hargaSatuanDiv.style.display = "none";
-        // namaTypeSelect.val(null).trigger("change");
+
         primerKonversiAsal.value = 0;
         sekunderKonversiAsal.value = 0;
         triterKonversiAsal.value = 0;
+
+        prosesAsalSedangBerjalan = false;
+        btn_prosesAsal.disabled = false;
     });
 
     var KdKonvArr = [];
