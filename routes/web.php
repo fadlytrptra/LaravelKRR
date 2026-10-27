@@ -1212,6 +1212,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Transaksi
     Route::resource('MaintKegiatanMesinPotongJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPotongJBBController::class);
     Route::resource('MaintKegiatanMesinPrintingJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPrintingJBBController::class);
+    Route::resource('MaintKegiatanMesinRBJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinRBJBBController::class);
     //Tabel Hitungan
     Route::resource('CopyKodeBarang', App\Http\Controllers\JumboBag\CopyKodeBarang::class);
     Route::resource('KebutuhanKomponenJBB', App\Http\Controllers\JumboBag\KebutuhanKomponenJBBController::class);
@@ -1925,7 +1926,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/Kencana/CetakPembelian/getData', [App\Http\Controllers\Kencana\CetakPembelianKencanaController::class, 'getData'])->name('Kencana.CetakPembelian.getData');
     Route::resource('Kencana/Cetak', App\Http\Controllers\Kencana\CetakPembelianKencanaController::class);
     Route::resource('Kencana/Supplier', App\Http\Controllers\Kencana\SupplierKencanaController::class);
-
 
     #region Kencana Sales
     Route::resource('Kencana/Billing', App\Http\Controllers\Kencana\BillingKencanaController::class)->names('Kencana.Billing');
