@@ -57,6 +57,7 @@
                                 <th>KB Tabel Hit.</th>
                                 <th>Hasil LBR</th>
                                 <th>Hasil KG</th>
+                                <th>Mesin CL</th>
                                 @if (
                                     $user == '4405' ||
                                         $user == '4221' ||

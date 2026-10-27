@@ -136,6 +136,10 @@ jQuery(function ($) {
                 return numeral(data).format("0,0.00");
             },
         },
+        {
+            data: "Nomor_Mesin_CL",
+            width: "9%",
+        },
     ];
 
     // Only add the action column
