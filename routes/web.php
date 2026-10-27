@@ -2004,12 +2004,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('Kencana/AccPenjualanTanpaBarcodeKencana', App\Http\Controllers\Kencana\AccPenjualanTanpaBarcodeKencanaController::class);
 
     #region Kencana Accounting
-    Route::resource('Kencana/MaintenanceBank', App\Http\Controllers\Kencana\Accounting\MaintenanceBankKencanaController::class);
-    Route::resource('Kencana/MaintenanceMataUang', App\Http\Controllers\Kencana\Accounting\MaintenanceMataUangKencanaController::class);
-    Route::resource('Kencana/MaintenanceStatusSupplier', App\Http\Controllers\Kencana\Accounting\MaintenanceStatusSupplierKencanaController::class);
-    Route::resource('Kencana/MaintenancePenagihanKencana', App\Http\Controllers\Kencana\Accounting\MaintenancePenagihanKencanaController::class);
-    Route::resource('Kencana/BatalPenagihanKencana', App\Http\Controllers\Kencana\Accounting\BatalPenagihanKencanaController::class);
-    // Route::get('detailpenagihan/{idPenagihan}', 'App\Http\Controllers\Accounting\Hutang\BatalPenagihanController@getDataPenagihan');
+    // Route::resource('Kencana/MaintenanceBank', App\Http\Controllers\Kencana\Accounting\MaintenanceBankKencanaController::class);
+    // Route::resource('Kencana/MaintenanceMataUang', App\Http\Controllers\Kencana\Accounting\MaintenanceMataUangKencanaController::class);
+    // Route::resource('Kencana/MaintenanceStatusSupplier', App\Http\Controllers\Kencana\Accounting\MaintenanceStatusSupplierKencanaController::class);
+    // // Hutang
+    // Route::resource('Kencana/MaintenancePenagihanKencana', App\Http\Controllers\Kencana\Accounting\MaintenancePenagihanKencanaController::class);
+    // Route::resource('Kencana/BatalPenagihanKencana', App\Http\Controllers\Kencana\Accounting\BatalPenagihanKencanaController::class);
+    // // Route::get('detailpenagihan/{idPenagihan}', 'App\Http\Controllers\Accounting\Hutang\BatalPenagihanController@getDataPenagihan');
     // Route::resource('Kencana/ACCSerahTerimaPenagihanKencana', App\Http\Controllers\Kencana\Accounting\ACCSerahTerimaPenagihanKencanaController::class);
     // Route::resource('Kencana/PenagihandiRETURKencana', App\Http\Controllers\Kencana\Accounting\PenagihandiRETURKencanaController::class);
     // Route::resource('Kencana/PelunasanHutangKencana', App\Http\Controllers\Kencana\Accounting\PelunasanHutangKencanaController::class);
@@ -2018,18 +2019,69 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::resource('Kencana/PenyesuaianSaldoSupplierKencana', App\Http\Controllers\Kencana\Accounting\PenyesuaianSaldoSupplierKencanaController::class);
     // Route::resource('Kencana/MaintenancePengajuanBKKKencana', App\Http\Controllers\Kencana\Accounting\PengajuanBKKKencanaController::class);
     // Route::resource('Kencana/MaintenanceACCBKKKencana', App\Http\Controllers\Kencana\Accounting\ACCBKKKencanaController::class);
+    // Route::post('/Kencana/MaintenanceBKKKRR2Kencana/getGroupKencana', [App\Http\Controllers\Kencana\Accounting\MaintenanceBKKKencanaController::class, 'getGroupKencana']);
+    // Route::resource('Kencana/MaintenanceBKKKRR2Kencana', App\Http\Controllers\Kencana\Accounting\MaintenanceBKKKencanaController::class);
+    // Route::get('/Kencana/getBankKencanaSelectKencana', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKKKencanaController@getBankSelectKencana');
+    // Route::get('/Kencana/MaintenanceBKKKRR2PrintKencana', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKKKencanaController@printKencana');
+    // Route::resource('/Kencana/MaintenanceTTKRR1Kencana', App\Http\Controllers\Kencana\Accounting\MaintenanceTTKRR1KencanaController::class);
+    // Route::resource('/Kencana/MaintenanceACCBayarTTKRR1Kencana', App\Http\Controllers\Kencana\Accounting\MaintenanceACCBayarTTKRR1KencanaController::class);
+    // Route::get('/Kencana/getSupplierTTKRR1Kencana', 'App\Http\Controllers\Kencana\Accounting\MaintenanceTTKRR1KencanaController@getSupplierTTKRR1Kencana');
+    // Route::get('/Kencana/getTabelListDetailBrgKencana/{idSupplier}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceTTKRR1KencanaController@getTabelListDetailBrgKencana');
+    // Route::resource('/Kencana/MaintenanceBKKKRR1Kencana', App\Http\Controllers\Kencana\Accounting\MaintenanceBKKKRR1KencanaController::class);
+    // Route::resource('/Kencana/MaintenanceBKMKRR1Kencana', App\Http\Controllers\Kencana\Accounting\MaintenanceBKMKRR1KencanaController::class);
+    // Route::resource('/Kencana/KodePerkiraanBKKKencana', App\Http\Controllers\Kencana\Accounting\KodePerkiraanBKKKencanaController::class);
+    // Route::get('/Kencana/getIdBKKKdPrkKencana/{BlnThn}', 'App\Http\Controllers\Kencana\Accounting\KodePerkiraanBKKKencanaController@getIdBKKKdPrkKencana');
+    // Route::get('/Kencana/getIdBKKKdPrk2Kencana/{BlnThn}', 'App\Http\Controllers\Kencana\Accounting\KodePerkiraanBKKKencanaController@getIdBKKKdPrk2Kencana');
+    // Route::get('/Kencana/getTabelRincianBKKKencana/{idBKK}', 'App\Http\Controllers\Kencana\Accounting\KodePerkiraanBKKKencanaController@getTabelRincianBKKKencana');
+    // Route::resource('/Kencana/MaintenanceKursBKKKencana', App\Http\Controllers\Kencana\Accounting\MaintenanceKursBKKKencanaController::class);
+    // Route::resource('/Kencana/BatalBKKKencana', App\Http\Controllers\Kencana\Accounting\BatalBKKKencanaController::class);
+    // Route::get('/Kencana/getIdBKKBesarKencana/{bulanTahun}', 'App\Http\Controllers\Kencana\Accounting\BatalBKKKencanaController@getIdBKKBesarKencana');
+    // Route::get('/Kencana/getIdBKKKecilKencana/{bulanTahun}', 'App\Http\Controllers\Kencana\Accounting\BatalBKKKencanaController@getIdBKKKecilKencana');
+    // Route::get('/Kencana/getListBKKBtlBKKKencana/{idBKKSelect}', 'App\Http\Controllers\Kencana\Accounting\BatalBKKKencanaController@getListBKKBtlBKKKencana');
+    // Route::get('/Kencana/getCheckBtlBKKKencana/{idBKKSelect}', 'App\Http\Controllers\Kencana\Accounting\BatalBKKKencanaController@getCheckBtlBKKKencana');
+    // Route::resource('/Kencana/MaintenanceUraianBKKKencana', App\Http\Controllers\Kencana\Accounting\UraianBKKKencanaController::class);
+    // Route::get('/Kencana/getCheckBKKIdBKKKencana/{idBKK}', 'App\Http\Controllers\Kencana\Accounting\UraianBKKKencanaController@getCheckBKKIdBKKKencana');
+    // Route::get('/Kencana/getListBKKKencana/{idBKK}', 'App\Http\Controllers\Kencana\Accounting\UraianBKKKencanaController@getListBKKKencana');
+    // Route::get('/Kencana/getListBKKTotalIdBKKKencana/{idBKK}', 'App\Http\Controllers\Kencana\Accounting\UraianBKKKencanaController@getListBKKTotalIdBKKKencana');
+    // Route::resource('/Kencana/MaintenanceKursKencana', App\Http\Controllers\Kencana\Accounting\MaintenanceKursKencanaController::class);
+    // // Piutang
+    // Route::resource('/Kencana/MaintenanceBKMPenagihanKencana', App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController::class);
+    // Route::get('/Kencana/detailtabelpenagihanKencana/{bulan}/{tahun}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getTabelPelunasanKencana');
+    // Route::get('/Kencana/detailbankKencana', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getDataBankKencana');
+    // Route::get('/Kencana/tabeldetailpelunasanKencana/{idPelunasan}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getTabelDetailPelunasanKencana');
+    // Route::get('/Kencana/detailkodeperkiraanKencana/{kode}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getKodePerkiraanKencana');
+    // Route::get('/Kencana/tabelkuranglebihKencana/{idPelunasan}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getTabelKurangLebihKencana');
+    // Route::get('/Kencana/getTabelTampilBKMPenagihanKencana/{tanggalInputTampil}/{tanggalInputTampil2}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getTabelTampilBKMPenagihanKencana');
+    // Route::get('/Kencana/tabelbiayaKencana/{idPelunasan}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getTabelBiayaKencana');
+    // Route::get('/Kencana/cekNoPelunasanBKMPenagihanKencana/{idPelunasan}/{idCustomer}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@cekNoPelunasanBKMPenagihanKencana');
+    // Route::get('/Kencana/cekJumlahRincianBKMPenagihanKencana/{idPelunasan}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@cekJumlahRincianBKMPenagihanKencana');
+    // Route::post('/Kencana/insertUpdateBKMPenagihanKencana/groupbkm', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@insertUpdateBKMPenagihanKencana');
+    // Route::get('/Kencana/getCetakBKMNoPenagihanKencana/{idBKMInput}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getCetakBKMNoPenagihanKencana');
+    // Route::get('/Kencana/getCetakBKMJumlahPelunasanKencana/{idBKMInput}', 'App\Http\Controllers\Kencana\Accounting\MaintenanceBKMPenagihanKencanaController@getCetakBKMJumlahPelunasanKencana');
+    // // Route::get('prosesSisaPiutang/{idPelunasan}', 'App\Http\Controllers\Accounting\Piutang\MaintenanceBKMPenagihanController@prosesSisaPiutang');
+
+    // Route::resource('MaintenanceBKMNoPenagihan', App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController::class);
+    // Route::get('detailcustomer/{kode?}', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getNamaCustomer');
+    // Route::get('detailmatauang/', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getMataUang');
+    // Route::get('detailbank', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getDataBank');
+    // Route::get('jenispembayaran', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getJenisPembayaran');
+    // Route::get('detailkodeperkiraan/{kode}', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getKodePerkiraan');
+    // Route::get('detailjenisbank/{idBank}', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getJenisBank');
+    // Route::get('getidbkm/{idBank}/{tanggalInput}', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getUraianEnter');
+    // Route::get('tabeltampilbkm/{tanggalInputTampil}/{tanggalInputTampil2}', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@getTabelTampilBKM');
+    //Route::get('BKMNoPenagihan', 'App\Http\Controllers\Accounting\Piutang\BKMNoPenagihanController@BKMNoPenagihan');
 
     #region Kencana Inventory
     Route::resource('Kencana/TerimaBarangKencana', TerimaPurchasingKencanaController::class);
     Route::get('Kencana/TerimaBarangKencana/downloadPdf/{no_po}', [TerimaPurchasingKencanaController::class, 'downloadPdf'])->name('Kencana/TerimaBarangKencana.downloadPdf');
     Route::resource('Kencana/KonversiBarangKencana', KonversiBarangKencanaController::class);
-    Route::get('getObjekSelectKCN/{divisi}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getObjekSelect');
-    Route::get('getKelompokUtamaSelectKCN/{objek}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getKelompokUtamaSelect');
-    Route::get('getKelompokSelectKCN/{kelompokUtama}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getKelompokSelect');
-    Route::get('getSubKelompokSelectKCN/{kelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getSubKelompokSelect');
-    Route::get('getIdTypeSelectKCN/{subKelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getIdTypeSelect');
-    Route::get('getTypeABMSelectKCN/{subKelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getTypeABMSelect');
-    Route::get('getTypeCIRSelectKCN', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getTypeCIRSelect');
+    Route::get('getObjekSelectKCN/{divisi}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getObjekSelectKCN');
+    Route::get('getKelompokUtamaSelectKCN/{objek}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getKelompokUtamaSelectKCN');
+    Route::get('getKelompokSelectKCN/{kelompokUtama}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getKelompokSelectKCN');
+    Route::get('getSubKelompokSelectKCN/{kelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getSubKelompokSelectKCN');
+    Route::get('getIdTypeSelectKCN/{subKelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getIdTypeSelectKCN');
+    Route::get('getTypeABMSelectKCN/{subKelompok}', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getTypeABMSelectKCN');
+    Route::get('getTypeCIRSelectKCN', 'App\Http\Controllers\Kencana\Inventory\KonversiBarangKencanaController@getTypeCIRSelectKCN');
     Route::resource('Kencana/AccKonversiBarangKencana', AccKonversiBarangKencanaController::class);
     Route::resource('Kencana/PenyesuaianBarangKencana', PenyesuaianBarangKencanaController::class);
     Route::resource('Kencana/PenghangusanBarangKencana', PenghangusanBarangKencanaController::class);
