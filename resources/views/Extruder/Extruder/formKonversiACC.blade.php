@@ -7,7 +7,7 @@
 @section('content')
     <style>
         .extruder_root {
-            zoom: 0.8;
+            zoom: 0.6;
             /* transform: scale(0.8);
                 transform-origin: top center; */
         }
