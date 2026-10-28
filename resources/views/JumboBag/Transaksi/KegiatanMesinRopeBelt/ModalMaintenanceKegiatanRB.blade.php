@@ -24,6 +24,7 @@
                                 <select id="namaMesinPotong" class="form-select form-select-sm" style="width: 100%">
                                     <option>Rope</option>
                                     <option>Belt</option>
+                                    <option>Pita</option>
                                     {{-- @foreach ($listLokasi as $d)
                                     <option value="{{ $d->idLokasi }}">
                                         {{ $d->idLokasi . ' | ' . $d->nama_lokasi }}
