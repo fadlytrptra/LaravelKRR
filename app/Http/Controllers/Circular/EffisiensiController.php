@@ -66,7 +66,8 @@ class EffisiensiController extends Controller
                             DB::raw('SUM(a.AfalanWE) as AfalanWE')
                         )
                         ->whereDate('a.Tgl_Log', '=', $tanggal)
-                        ->where('a.Id_Lokasi', '<>', 4)
+                        ->whereNotIn('a.Id_Lokasi', [4, 5])
+                        // ->where('a.Id_Lokasi', '<>', 4)
                         ->groupBy('a.Nama_mesin', 'a.Id_order', 'a.Id_Group', 'b.Keterangan', 'a.A_Rpm')
                         ->orderBy('a.Nama_mesin')
                         ->get();
@@ -97,7 +98,7 @@ class EffisiensiController extends Controller
                                 ->where('Shift', $shift)
                                 ->where('Nama_mesin', $NmMesin)
                                 ->where('Id_order', $IdOrder)
-                                ->where('Id_Lokasi', '<>', 4)
+                                ->whereNotIn('Id_Lokasi', [4, 5])
                                 ->selectRaw('
                                     SUM(Hasil_Meter) as Hasil_Meter,
                                     AVG(Effisiensi) as Effisiensi,
@@ -114,7 +115,7 @@ class EffisiensiController extends Controller
                                 ->where('Shift', $shift)
                                 ->where('Tgl_Log', $tanggal)
                                 ->where('Effisiensi', '<>', 0)
-                                ->where('Id_Lokasi', '<>', 4)
+                                ->whereNotIn('Id_Lokasi', [4, 5])
                                 ->select(DB::raw('SUM(Effisiensi) as sumEff, COUNT(Effisiensi) as cnt'))
                                 ->first();
 
@@ -172,7 +173,7 @@ class EffisiensiController extends Controller
                             ->where('Tgl_Log', $tanggal)
                             ->where('Effisiensi', '<>', 0)
                             ->whereNotIn('Id_Group', ['02', '03'])
-                            ->where('Id_Lokasi', '<>', 4)
+                            ->whereNotIn('Id_Lokasi', [4, 5])
                             ->select(DB::raw('SUM(Effisiensi) as sumEff, COUNT(Effisiensi) as cnt'))
                             ->first();
 
