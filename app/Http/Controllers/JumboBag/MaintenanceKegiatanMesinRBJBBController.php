@@ -47,8 +47,10 @@ class MaintenanceKegiatanMesinRBJBBController extends Controller
         $kodeBarang = $request->input('kodeBarang');
         $komponen = $request->input('komponen');
         $jenisPotongan = $request->input('jenisPotongan');
+        $jenisRopePita = $request->input('jenisRopePita');
         $ukuranpanjang_tableHit = $request->input('ukuranPanjang');
         $ukuranlebar_tableHit = $request->input('ukuranLebar');
+        $pemakaian_roll = $request->input('pemakaian_roll');
         $hasil_potongJumlah = $request->input('hasil_potongJumlah');
         $hasil_potongBerat = $request->input('hasil_potongBerat');
         $afalan_waLBR = $request->input('afalan_waLBR');
@@ -97,8 +99,10 @@ class MaintenanceKegiatanMesinRBJBBController extends Controller
 				        @kodeBarang = ?,
 				        @komponen = ?,
 				        @jenisPotongan = ?,
+                        @jenisRopePita = ?,
 				        @ukuranpanjang_tableHit = ?,
 				        @ukuranlebar_tableHit = ?,
+                        @pemakaian_roll = ?,
 				        @hasil_potongJumlah = ?,
 				        @hasil_potongBerat = ?,
 				        @afalan_waLBR = ?,
@@ -138,8 +142,10 @@ class MaintenanceKegiatanMesinRBJBBController extends Controller
                                 $kodeBarang,
                                 $komponen,
                                 $jenisPotongan,
+                                $jenisRopePita,
                                 $ukuranpanjang_tableHit,
                                 $ukuranlebar_tableHit,
+                                $pemakaian_roll,
                                 $hasil_potongJumlah,
                                 $hasil_potongBerat,
                                 $afalan_waLBR,
@@ -189,8 +195,10 @@ class MaintenanceKegiatanMesinRBJBBController extends Controller
 				        @kodeBarang = ?,
 				        @komponen = ?,
 				        @jenisPotongan = ?,
+                        @jenisRopePita = ?,
 				        @ukuranpanjang_tableHit = ?,
 				        @ukuranlebar_tableHit = ?,
+                        @pemakaian_roll = ?,
 				        @hasil_potongJumlah = ?,
 				        @hasil_potongBerat = ?,
 				        @afalan_waLBR = ?,
@@ -229,8 +237,10 @@ class MaintenanceKegiatanMesinRBJBBController extends Controller
                                 $kodeBarang,
                                 $komponen,
                                 $jenisPotongan,
+                                $jenisRopePita,
                                 $ukuranpanjang_tableHit,
                                 $ukuranlebar_tableHit,
+                                $pemakaian_roll,
                                 $hasil_potongJumlah,
                                 $hasil_potongBerat,
                                 $afalan_waLBR,

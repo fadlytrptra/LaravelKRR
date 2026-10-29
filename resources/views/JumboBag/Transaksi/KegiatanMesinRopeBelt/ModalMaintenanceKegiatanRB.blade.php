@@ -133,6 +133,13 @@
                                 <select name="komponen_tableHit" id="komponen_tableHit"></select>
                             </div>
                         </div>
+                         <div class="form-group"style="flex: 0.14">
+                            <label for="jenisRopePita">Jenis Rope/Pita</label>
+                            <div class="input-group">
+                                <input type="text" name="jenisRopePita" id="jenisRopePita"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
                         <div class="form-group"style="flex: 0.15; display: none;" id="div_jenisPotongan">
                             <label for="jenisPotongan">Jenis Potongan</label>
                             <div class="input-group">
@@ -160,6 +167,13 @@
                         </div>
                     </div>
                     <div class="d-flex" style="gap: 0.5%;width: 100%">
+                        <div class="form-group"style="flex: 0.2">
+                            <label for="pemakaian_roll">Pemakaian Roll</label>
+                            <div class="input-group">
+                                <input type="number" name="pemakaian_roll" id="pemakaian_roll"
+                                    class="form-control" min="0" enterkeyhint="enter">
+                            </div>
+                        </div>
                         <div class="form-group"style="flex: 0.2">
                             <label for="hasil_potongJumlah">Jml. Hasil Potong</label>
                             <div class="input-group">

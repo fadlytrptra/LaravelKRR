@@ -16,8 +16,10 @@ jQuery(function ($) {
     let beratRoll = document.getElementById("beratRoll");
     let panjangRoll = document.getElementById("panjangRoll");
     let nomor_mesinCL = document.getElementById("nomor_mesinCL");
+    let jenisRopePita = document.getElementById("jenisRopePita");
     let ukuranpanjang_tableHit = document.getElementById("ukuranpanjang_tableHit");
     let ukuranlebar_tableHit = document.getElementById("ukuranlebar_tableHit");
+    let pemakaian_roll = document.getElementById("pemakaian_roll");
     let hasil_potongJumlah = document.getElementById("hasil_potongJumlah");
     let hasil_potongBerat = document.getElementById("hasil_potongBerat");
     let afalan_waLBR = document.getElementById("afalan_waLBR");
@@ -47,7 +49,7 @@ jQuery(function ($) {
     const getValue = (el) => parseFloat(el?.value || 0);
     // let tgl_awal = document.getElementById("tgl_awal");
     // let tgl_akhir = document.getElementById("tgl_akhir");
-    
+
     $.ajaxSetup({
         beforeSend: function () {
             // Show the loading screen before the AJAX request
@@ -108,8 +110,10 @@ jQuery(function ($) {
         komponen_tableHit.empty();
         komponen_tableHit.val(null).trigger("change");
         jenisPotongan = null;
+        jenisRopePita.value = "";
         ukuranpanjang_tableHit.value = "";
         ukuranlebar_tableHit.value = "";
+        pemakaian_roll.value = "";
         hasil_potongJumlah.value = "";
         hasil_potongBerat.value = "";
         afalan_waLBR.value = "";
@@ -316,6 +320,17 @@ jQuery(function ($) {
         }
     });
 
+    jenisRopePita.addEventListener("input", function () {
+        this.value = this.value.toUpperCase();
+    });
+
+    jenisRopePita.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            pemakaian_roll.focus();
+        }
+    });
+
     ukuranpanjang_tableHit.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
@@ -342,6 +357,13 @@ jQuery(function ($) {
             if (this.value == "") {
                 this.value = 0;
             }
+            pemakaian_roll.focus();
+        }
+    });
+
+    pemakaian_roll.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
             hasil_potongJumlah.focus();
         }
     });
@@ -782,8 +804,10 @@ jQuery(function ($) {
                 beratRoll.value = numeral(data[0].beratRoll).format('0.00');
                 panjangRoll.value = numeral(data[0].panjangRoll).format('0.00');
                 nomor_mesinCL.value = data[0].nomor_mesinCL;
+                jenisRopePita.value = data[0].jenisRopePita;
                 ukuranpanjang_tableHit.value = numeral(data[0].ukuranpanjang_tableHit).format('0.00');
                 ukuranlebar_tableHit.value = numeral(data[0].ukuranlebar_tableHit).format('0.00');
+                pemakaian_roll.value = numeral(data[0].pemakaian_roll).format('0.00');
                 hasil_potongJumlah.value = numeral(data[0].hasil_potongJumlah).format('0.00');
                 hasil_potongBerat.value = numeral(data[0].hasil_potongBerat).format('0.00');
                 afalan_waLBR.value = numeral(data[0].afalan_waLBR).format('0.00');
@@ -1284,7 +1308,7 @@ jQuery(function ($) {
         ukuranlebar_tableHit.value = komponenWidth;
         const event = new KeyboardEvent("keypress", { key: "Enter" });
         ukuranpanjang_tableHit.dispatchEvent(event);
-        hasil_potongJumlah.focus();
+        jenisRopePita.focus();
     });
 
     komponen_tableHit.on("select2:open", function () {
@@ -1399,8 +1423,10 @@ jQuery(function ($) {
                 kodeBarang: kodebarang_tableHit.val(),
                 komponen: komponen_tableHit.val(),
                 jenisPotongan: jenisPotongan,
+                jenisRopePita: jenisRopePita.value,
                 ukuranPanjang: ukuranpanjang_tableHit.value,
                 ukuranLebar: ukuranlebar_tableHit.value,
+                pemakaian_roll: pemakaian_roll.value,
                 hasil_potongJumlah: hasil_potongJumlah.value,
                 hasil_potongBerat: hasil_potongBerat.value,
                 afalan_waLBR: afalan_waLBR.value,
