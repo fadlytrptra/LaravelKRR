@@ -194,13 +194,9 @@ class CetakPembelianKencanaController extends Controller
             // RESPONSE
             // =====================================================
             return response()->json([
-
                 'success' => true,
-
                 'data' => $data,
-
                 'total' => $data->count(),
-
             ]);
 
 
@@ -354,11 +350,39 @@ class CetakPembelianKencanaController extends Controller
                     'NM_SUP',
                     'ALAMAT1',
                     'KOTA1',
-                    'NEGARA1'
+                    'NEGARA1',
+                    'ID_MATAUANG'
                 ])
                 ->where('NO_SUP', $transaksi->Supplier)
                 ->first();
         }
+
+    // =========================================================
+    // MATA UANG BERDASARKAN SUPPLIER
+    // =========================================================
+    $idMataUangBC = null;
+
+    if (!empty($transaksi?->Supplier)) {
+
+        $idMataUangBC = DB::connection('ConnKCNPurchase')
+            ->table('YSUPPLIER as S')
+            ->leftJoin(
+                'ACCOUNTING.dbo.T_MATAUANG as M',
+                'S.ID_MATAUANG',
+                '=',
+                'M.Id_MataUang'
+            )
+            ->where('S.NO_SUP', $transaksi->Supplier)
+            ->value('M.Id_MataUang_BC');
+
+        $idMataUangBC = trim($idMataUangBC ?? '');
+
+        Log::info('CETAK SPPB - MATA UANG', [
+            'NoSPPB' => $noSPPB,
+            'Supplier' => $transaksi->Supplier,
+            'Id_MataUang_BC' => $idMataUangBC,
+        ]);
+    }
 
 
         // =========================================================
@@ -416,6 +440,7 @@ class CetakPembelianKencanaController extends Controller
             'NEGARA1'  => $supplier->NEGARA1 ?? null,
 
             'Pay_Term' => $paymentTerm->Pembayaran ?? null,
+            'Id_MataUang_BC' => $idMataUangBC,
         ];
 
 
