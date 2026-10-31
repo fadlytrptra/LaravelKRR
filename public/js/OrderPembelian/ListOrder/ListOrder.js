@@ -145,14 +145,39 @@ $(function () {
                 document.getElementById("Currency_ListOrder").innerHTML =
                     "Currency: " + (data[0].Mt_Uang || "-");
                 document.getElementById("UnitPrice_ListOrder").innerHTML =
-                    "Unit Price: " + (data[0].Harga_unit || "-");
+                    "Unit Price: " +
+                    (data[0].Harga_unit != null
+                        ? Number(data[0].Harga_unit).toLocaleString("en-US", {
+                            minimumFractionDigits: 4,
+                            maximumFractionDigits: 4,
+                        })
+                        : "-");
+
                 document.getElementById("Discount_ListOrder").innerHTML =
-                    "Discount: " + (data[0].harga_disc || "-");
+                    "Discount: " +
+                    (data[0].harga_disc != null
+                        ? Number(data[0].harga_disc).toLocaleString("en-US", {
+                            minimumFractionDigits: 4,
+                            maximumFractionDigits: 4,
+                        })
+                        : "-");
+
                 document.getElementById("PPN_ListOrder").innerHTML =
-                    "PPN: " + (data[0].PPN || "-");
+                    "PPN: " +
+                    (data[0].PPN != null
+                        ? Number(data[0].PPN).toLocaleString("en-US", {
+                            minimumFractionDigits: 4,
+                            maximumFractionDigits: 4,
+                        })
+                        : "-");
                 document.getElementById("TotalPrice_ListOrder").innerHTML =
                     "Total Price: " +
-                    (data[0].PriceExt || "-") +
+                    (data[0].PriceExt != null
+                        ? Number(data[0].PriceExt).toLocaleString("en-US", {
+                            minimumFractionDigits: 4,
+                            maximumFractionDigits: 4,
+                        })
+                        : "-") +
                     "<text class='material-symbols-outlined' style='font-size:20px;cursor:pointer' id='iconHarga'>expand_more</text>";
                 document.getElementById("ReceiveBTTB_ListOrder").innerHTML =
                     "Receive BTTB: " +
