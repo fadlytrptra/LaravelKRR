@@ -14,7 +14,7 @@ class AccPenjualanKencanaController extends Controller
     public function index()
     {
         $user = Auth::user()->NomorUser;
-        $data = DB::connection('ConnInventory')
+        $data = DB::connection('ConnKCNInventory')
             ->table('Tmp_Transaksi as TT')
             ->join('Type as T', 'TT.IdType', '=', 'T.IdType')
             ->join('Subkelompok as SK', 'T.IdSubkelompok_Type', '=', 'SK.IdSubkelompok')
@@ -82,7 +82,7 @@ class AccPenjualanKencanaController extends Controller
     // {
     //     $user = Auth::user()->NomorUser;
 
-    //     $data = DB::connection('ConnInventory')
+    //     $data = DB::connection('ConnKCNInventory')
     //         ->table('Tmp_Transaksi')
     //         ->where('IdTransaksi', $idtransaksi)
     //         ->get();
@@ -98,7 +98,7 @@ class AccPenjualanKencanaController extends Controller
     public function accPenjualanTampilData($idtransaksi)
     {
         $user = Auth::user()->NomorUser;
-        $data = DB::connection('ConnInventory')
+        $data = DB::connection('ConnKCNInventory')
             ->table('Tmp_Transaksi as TT')
             ->join('Type as T', 'TT.IdType', '=', 'T.IdType')
             ->join('Subkelompok as SK','T.IdSubkelompok_Type','=','SK.IdSubkelompok')
@@ -161,7 +161,7 @@ class AccPenjualanKencanaController extends Controller
                 'KodeBarang' => $kodebarang,
             ]);
 
-            $data = DB::connection('ConnInventory')
+            $data = DB::connection('ConnKCNInventory')
                 ->table('Tmp_Gudang as TG')
                 ->join(
                     'Type as T',
@@ -289,7 +289,7 @@ class AccPenjualanKencanaController extends Controller
 
     public function store(Request $request)
     {
-        $conn = DB::connection('ConnInventory');
+        $conn = DB::connection('ConnKCNInventory');
 
         try {
             $idType = trim((string) $request->id_type);

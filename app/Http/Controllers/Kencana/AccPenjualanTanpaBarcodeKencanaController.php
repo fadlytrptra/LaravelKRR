@@ -117,7 +117,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
         $jumlahKonversi = $request->input('JumlahKonversi', 0);
         $user = trim(Auth::user()->NomorUser);
 
-        // $conn = DB::connection('ConnInventory');
+        // $conn = DB::connection('ConnKCNInventory');
 
         // $cekUser = $conn->select("
         //     SELECT
@@ -129,7 +129,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
         // dd($cekUser);
 
         try {
-            DB::connection('ConnInventory')
+            DB::connection('ConnKCNInventory')
                 ->transaction(function () use (
                     $idTransaksi,
                     $jumlahPrimer,
@@ -139,7 +139,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
                     $user
                 ) {
 
-                    $conn = DB::connection('ConnInventory');
+                    $conn = DB::connection('ConnKCNInventory');
 
                     /*
                     |--------------------------------------------------------------------------
@@ -629,7 +629,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
     */
     private function getListBarang($user)
     {
-        return DB::connection('ConnInventory')
+        return DB::connection('ConnKCNInventory')
             ->table('Tmp_Transaksi as TT')
 
             ->join(
@@ -829,7 +829,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
     */
     private function getDetailBarang($idTransaksi, $user)
     {
-        return DB::connection('ConnInventory')
+        return DB::connection('ConnKCNInventory')
             ->table('Tmp_Transaksi as TT')
             ->join(
                 'Type as T',
@@ -1013,7 +1013,7 @@ class AccPenjualanTanpaBarcodeKencanaController extends Controller
     private function cekSesuaiPemberi(
         $idTransaksi
     ) {
-        $conn = DB::connection('ConnInventory');
+        $conn = DB::connection('ConnKCNInventory');
 
         /*
          * Ambil IdType dari Tmp_Transaksi

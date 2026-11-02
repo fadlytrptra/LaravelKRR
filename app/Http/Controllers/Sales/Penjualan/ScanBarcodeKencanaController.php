@@ -16,7 +16,7 @@ class ScanBarcodeKencanaController extends Controller
         // dd(date('Y-m-d'));
         $date = date('Y-m-d');
         // Jumlah barcode
-        $jumlah = DB::connection('ConnInventory')
+        $jumlah = DB::connection('ConnKCNInventory')
             ->table('Tmp_Gudang')
             ->where('Tgl_mutasi', $date)
             ->where('typetransaksi', '09')
@@ -24,7 +24,7 @@ class ScanBarcodeKencanaController extends Controller
             ->count();
 
         // Rekap barcode
-        $data_kodeBarang = DB::connection('ConnInventory')
+        $data_kodeBarang = DB::connection('ConnKCNInventory')
             ->table('Tmp_Gudang')
             ->join(
                 'Type',
@@ -71,14 +71,14 @@ class ScanBarcodeKencanaController extends Controller
 
     public function scanBarcodeLihatData($date)
     {
-        $jumlah = DB::connection('ConnInventory')
+        $jumlah = DB::connection('ConnKCNInventory')
             ->table('Tmp_Gudang')
             ->where('Tgl_mutasi', $date)
             ->where('typetransaksi', '09')
             ->where('Aktif', 'Y')
             ->count();
 
-        $data_kodeBarang = DB::connection('ConnInventory')
+        $data_kodeBarang = DB::connection('ConnKCNInventory')
             ->table('Tmp_Gudang')
             ->join(
                 'Type',
@@ -129,7 +129,7 @@ class ScanBarcodeKencanaController extends Controller
 
     public function scanBarcodeDetailData($idType, $kodeBarang, $tglMutasi)
     {
-        $data = DB::connection('ConnInventory')
+        $data = DB::connection('ConnKCNInventory')
             ->table('Tmp_Gudang')
             ->join(
                 'Type',
@@ -196,7 +196,7 @@ class ScanBarcodeKencanaController extends Controller
 
             $indeks = trim($kodeBarcode[0]);
             $kdbrg = trim($kodeBarcode[1]);
-            $data = DB::connection('ConnInventory')
+            $data = DB::connection('ConnKCNInventory')
                 ->table('Tmp_Gudang')
                 ->where('NoIndeks', (int) $indeks)
                 ->where('Kode_barang', $kdbrg)
@@ -204,7 +204,7 @@ class ScanBarcodeKencanaController extends Controller
                 ->first();
 
 
-            $status = DB::connection('ConnInventory')
+            $status = DB::connection('ConnKCNInventory')
                 ->table('Dispresiasi')
                 ->join(
                     'Type',
@@ -278,7 +278,7 @@ class ScanBarcodeKencanaController extends Controller
                     continue;
                 }
 
-                $result = DB::connection('ConnInventory')
+                $result = DB::connection('ConnKCNInventory')
                     ->table('Dispresiasi')
                     ->select('Id_type_tujuan')
                     ->where('NoIndeks', (int) $indeks)
@@ -290,7 +290,7 @@ class ScanBarcodeKencanaController extends Controller
                     continue;
                 }
 
-                DB::connection('ConnInventory')
+                DB::connection('ConnKCNInventory')
                     ->table('Tmp_Gudang')
                     ->insert([
                         'NoIndeks'      => (int) $indeks,
