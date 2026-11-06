@@ -39,8 +39,10 @@ const btnHapus = document.getElementById("btn_hapus");
 const btnProses = document.getElementById("btn_proses");
 const btnKeluar = document.getElementById("btn_keluar");
 const labelPLC = document.getElementById("label_plc");
+const btn_bagi = document.getElementById("btn_bagi");
 
 tgl_awal.valueAsDate = new Date();
+btn_bagi.disabled = true;
 // tgl_awal.valueAsDate = new Date(2025, 11, 25);
 tgl_akhir.valueAsDate = new Date();
 slcShiftTable.disabled = false;
@@ -280,7 +282,32 @@ $("#" + slcShift.id).on("select2:select", function () {
     getCounterFetch(hidIdMesin.value, slcShift.value);
     getPegawaiFetch(slcShift.value, hidIdMesin.value, txtIdOrder.value);
 
-    txtRpm.disabled = false;
+    if (this.value == "P") {
+        if (
+            hidIdMesin.value == 217 ||
+            hidIdMesin.value == 271 ||
+            hidIdMesin.value == 301 ||
+            hidIdMesin.value == 310 ||
+            hidIdMesin.value == 330 ||
+            hidIdMesin.value == 336 ||
+            hidIdMesin.value == 347 ||
+            hidIdMesin.value == 349 ||
+            hidIdMesin.value == 350
+        ) {
+            getDetailMesinFetch(hidIdMesin.value);
+            txtRpm.disabled = false;
+            btn_bagi.disabled = true;
+        } else {
+            txtRpm.disabled = false;
+            txtRpm.value = "";
+            btn_bagi.disabled = false;
+        }
+    } else {
+        getDetailMesinFetch(hidIdMesin.value);
+        txtRpm.disabled = false;
+        btn_bagi.disabled = true;
+    }
+
     txtShuttle.disabled = false;
     txtCounterAkhir.disabled = false;
     btnProses.disabled = false;
@@ -349,6 +376,34 @@ $("#" + slcIdLog.id).on("select2:select", function () {
     getDetailLog(slcIdLog.value);
 });
 
+let isBagiProcessing = false;
+
+btn_bagi.addEventListener("click", async function (event) {
+    event.preventDefault();
+
+    if (isBagiProcessing) return;
+    isBagiProcessing = true;
+
+    btn_bagi.disabled = true;
+
+    try {
+        const hasil = numeral(txtRpm.value).divide(6).value();
+        const desimal = hasil - Math.floor(hasil);
+
+        txtRpm.value = desimal >= 0.7
+            ? Math.ceil(hasil)
+            : Math.floor(hasil);
+
+        txtCounterAkhir.select();
+    } finally {
+        // Mencegah klik ganda dalam waktu singkat
+        setTimeout(() => {
+            isBagiProcessing = false;
+            btn_bagi.disabled = false;
+        }, 500);
+    }
+});
+
 btnIsi.addEventListener("click", function () {
     modeProses = 1;
     toggleButtons(2);
@@ -411,6 +466,29 @@ btnProses.addEventListener("click", function () {
         let processGo;
         switch (modeProses) {
             case 1:
+                if (
+                    txtRpm <= 0 && slcShift.value.trim() == "P" &&
+                    hidIdMesin.value == 217 ||
+                    hidIdMesin.value == 271 ||
+                    hidIdMesin.value == 301 ||
+                    hidIdMesin.value == 310 ||
+                    hidIdMesin.value == 330 ||
+                    hidIdMesin.value == 336 ||
+                    hidIdMesin.value == 347 ||
+                    hidIdMesin.value == 349 ||
+                    hidIdMesin.value == 350
+                ) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info!",
+                        text: "Wajib isi RPM dahulu!",
+                        showConfirmButton: true,
+                        // timer: 2000
+                    });
+                    button_modalProses.disabled = false;
+                    return;
+                }
+
                 processGo = () => {
                     prosesIsi(xMeter);
                 };
@@ -613,7 +691,29 @@ function getDetailMesinFetch(s_id_mesin) {
     fetchSelect(
         "/sp-order/Sp_List_Mesin~4/" + s_id_mesin,
         (data) => {
-            txtRpm.value = data[0]["Rpm"];
+            if (slcShift.value.trim() == "P") {
+                if (
+                    s_id_mesin == 217 ||
+                    s_id_mesin == 271 ||
+                    s_id_mesin == 301 ||
+                    s_id_mesin == 310 ||
+                    s_id_mesin == 330 ||
+                    s_id_mesin == 336 ||
+                    s_id_mesin == 347 ||
+                    s_id_mesin == 349 ||
+                    s_id_mesin == 350
+                ) {
+                    txtRpm.value = data[0]["Rpm"];
+                    btn_bagi.disabled = true;
+                } else {
+                    txtRpm.value = "";
+                    btn_bagi.disabled = false;
+                }
+            } else {
+                txtRpm.value = data[0]["Rpm"];
+            }
+
+            // txtRpm.value = data[0]["Rpm"];
             txtShuttle.value = data[0]["Number_of_shutle"];
             txtIdOrder.value = data[0]["Id_Order"];
             txtNamaOrder.value = data[0]["nama_order"];
@@ -666,7 +766,26 @@ function getDetailMesinFetch(s_id_mesin) {
                             txtShuttle.disabled = false;
                             txtCounterAkhir.disabled = false;
                             btnProses.disabled = false;
-                            txtCounterAkhir.focus();
+
+                            if (slcShift.value.trim() == "P") {
+                                if (
+                                    s_id_mesin == 217 ||
+                                    s_id_mesin == 271 ||
+                                    s_id_mesin == 301 ||
+                                    s_id_mesin == 310 ||
+                                    s_id_mesin == 330 ||
+                                    s_id_mesin == 336 ||
+                                    s_id_mesin == 347 ||
+                                    s_id_mesin == 349 ||
+                                    s_id_mesin == 350
+                                ) {
+                                    txtCounterAkhir.focus();
+                                } else {
+                                    txtRpm.focus();
+                                }
+                            } else {
+                                txtCounterAkhir.focus();
+                            }
                         }
                     }
                 }
@@ -727,6 +846,38 @@ function getDetailLog(s_id_log) {
 
 function prosesIsi(x_meter) {
     // Mengambil rencana jumlah order & jumlah order yang sudah dikerjakan
+    if (slcShift.value.trim() == "P") {
+        if (
+            hidIdMesin.value == 217 ||
+            hidIdMesin.value == 271 ||
+            hidIdMesin.value == 301 ||
+            hidIdMesin.value == 310 ||
+            hidIdMesin.value == 330 ||
+            hidIdMesin.value == 336 ||
+            hidIdMesin.value == 347 ||
+            hidIdMesin.value == 349 ||
+            hidIdMesin.value == 350
+        ) {
+            // txtCounterAkhir.focus();
+        } else {
+            $.ajax({
+                url: "/order/show/DataRPMPagi",
+                type: "GET",
+                data: {
+                    _token: csrfToken,
+                    hidIdMesin: hidIdMesin.value,
+                    txtRpm: txtRpm.value,
+                },
+                success: function (data) {
+                    console.log("data rpm berhasil update");
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                },
+            });
+        }
+    }
     fetchSelect("/sp-order/Sp_List_Order~2/" + txtIdOrder.value, (data) => {
         let sJmlOrder = data[0]["A_jumlah_Order"] ?? 0;
         let sROrder = data[0]["R_jumlah_Order"] ?? 0;
@@ -833,6 +984,38 @@ function prosesIsi(x_meter) {
 }
 
 function prosesKoreksi() {
+    if (slcShift.value.trim() == "P") {
+        if (
+            hidIdMesin.value == 217 ||
+            hidIdMesin.value == 271 ||
+            hidIdMesin.value == 301 ||
+            hidIdMesin.value == 310 ||
+            hidIdMesin.value == 330 ||
+            hidIdMesin.value == 336 ||
+            hidIdMesin.value == 347 ||
+            hidIdMesin.value == 349 ||
+            hidIdMesin.value == 350
+        ) {
+            // txtCounterAkhir.focus();
+        } else {
+            $.ajax({
+                url: "/order/show/DataRPMPagi",
+                type: "GET",
+                data: {
+                    _token: csrfToken,
+                    hidIdMesin: hidIdMesin.value,
+                    txtRpm: txtRpm.value,
+                },
+                success: function (data) {
+                    console.log("data rpm berhasil update");
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                },
+            });
+        }
+    }
     fetchStatement(
         "/sp-order/sp_Update_Log_Mesin/" +
         slcIdLog.value.trim() +
