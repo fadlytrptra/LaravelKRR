@@ -127,6 +127,65 @@ use App\Http\Controllers\Kencana\Inventory\ListDetailTransaksiKencanaController;
 use App\Http\Controllers\Kencana\Inventory\LacakTransaksiKencanaController;
 use App\Http\Controllers\Kencana\Inventory\TransaksiBulananKencanaController;
 use App\Http\Controllers\Kencana\Inventory\TransaksiHarianKencanaController;
+
+use App\Http\Controllers\GPS\JadwalKonstruksi\konstruksiEstimasiController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiBagianGambarController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiJadwalController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiJamKerjaController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiEstimasiTanggalController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiEstimasiWaktuController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiFinishController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiEditWorkstationController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiEditOrderController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiDeleteWorkstationController;
+use App\Http\Controllers\GPS\JadwalKonstruksi\KonstruksiDeleteOrderController;
+
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanMaterialTypeController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanBagianBarangController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanJadwalController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanJamKerjaController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanEditMesinController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanEditOrderController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanEstimasiTanggalController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanEstimasiWaktuController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanJumlahBarangController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanFinishController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanDeleteMesinController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanDeleteOrderController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanMakloonController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanHargaMaterialController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanSparePartController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanOrderProyekController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanFinishRencanaController;
+use App\Http\Controllers\GPS\JadwalPengerjaan\PengerjaanFinishSelesaiController;
+
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiWorkstationController;
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiOrderController;
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiOrderGambarController;
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiEstimasiController;
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiGrafikWorkstationController;
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiBulananController;
+use App\Http\Controllers\GPS\InformasiKonstruksi\InfoKonstruksiHistoriController;
+
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanMesinController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanOrderController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanOrderProyekController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanEdmCncController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanDrillMillScrapController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanGrindingController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanLasController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanPunchInjectCastingController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanTurningController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanFinishingController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanMakloonController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanGrafikOrderController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanBulananController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanHistoriController;
+use App\Http\Controllers\GPS\InformasiPengerjaan\InfoPengerjaanSparePartController;
+
+use App\Http\Controllers\GPS\Laporan\LaporanOrderGambarController;
+use App\Http\Controllers\GPS\Laporan\LaporanOrderPengerjaanController;
+use App\Http\Controllers\GPS\Laporan\LaporanHasilPengerjaanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -777,117 +836,464 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/Catat/delPerawatan/{kode}', [PencatatanController::class, 'delPerawatan']);
     #endregion
 
+    /* GPS */
     #region GPS
     Route::get('GPS', 'App\Http\Controllers\HomeController@GPS');
+    #endregion
 
-    Route::resource('estimasiJadwal', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EstimasiJadwalController::class);
-    Route::get('CekEstimasiKonstruksi/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EstimasiJadwalController@CekEstimasiKonstruksi');
-    Route::get('LoadDataEstimasiJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EstimasiJadwalController@LoadData');
-    Route::get('GetTanggalEstimasiJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EstimasiJadwalController@GetTanggal');
-    Route::get('CekjadwalEstimasiJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EstimasiJadwalController@Cekjadwal');
-    Route::get('cektanggalEstimasiJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EstimasiJadwalController@cektanggal');
+    #region GPS - Jadwal Konstruksi
+    // Estimasi Jadwal
+    Route::prefix('/GPS/JadwalKonstruksi/EstimasiJadwal')->name('GPS.konstruksiEstimasi.')->group(function () {
+        Route::get('/get-order', [konstruksiEstimasiController::class, 'getOrder'])->name('get-order');
+        Route::resource('', konstruksiEstimasiController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
 
-    Route::resource('MaintenanceGambar', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\MaintenanceBagianGambarController::class);
-    Route::get('LoadDataMaintenanceGambar/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\MaintenanceBagianGambarController@LoadData');
-    Route::get('cekdataestimasiMaintenanceGambar/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\MaintenanceBagianGambarController@cekdataestimasi');
-    Route::get('cekdataMaintenanceGambar/{noOd}/{bagian}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\MaintenanceBagianGambarController@cekdata');
-    Route::get('GetdatabagianMaintenanceGambar/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\MaintenanceBagianGambarController@Getdatabagian');
-    Route::get('cekdatabagianMaintenanceGambar/{noOd}/{Idbag}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\MaintenanceBagianGambarController@cekdatabagian');
+    // Maintenance Bagian Gambar
+    Route::prefix('/GPS/JadwalKonstruksi/MaintenanceBagianGambar')->name('GPS.konstruksiBagianGambar.')->group(function () {
+        Route::get('/get-order', [KonstruksiBagianGambarController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [KonstruksiBagianGambarController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::resource('', KonstruksiBagianGambarController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
 
-    Route::resource('InputJadwalKonstruksi', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController::class);
-    Route::get('LoadDataInputJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@LoadData');
-    Route::get('cekdataestimasiInputJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@cekdataestimasi');
-    Route::get('GetdatabagianInputJadwal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@Getdatabagian');
-    Route::get('GetJamKerjaInputJadwal/{worksts}/{estDate}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@GetJamKerja');
-    Route::get('CekdatasudahadaInputJadwal/{idBagian}/{estDate}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@Cekdatasudahada');
-    Route::get('Cekestimasidatekonstruksi/{EstDate}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@Cekestimasidatekonstruksi');
-    Route::get('HitungSisaJamInputJadwalKons/{EstDate}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\InputJadwalController@HitungSisaJam');
+    // Input Jadwal
+    Route::prefix('GPS/JadwalKonstruksi/InputJadwal')->name('GPS.konstruksiJadwal.')->group(function () {
+        Route::get('/', [KonstruksiJadwalController::class, 'index'])->name('index');
+        Route::get('/get-order', [KonstruksiJadwalController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [KonstruksiJadwalController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-workstation-list', [KonstruksiJadwalController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::post('/cek-estimasi', [KonstruksiJadwalController::class, 'cekEstimasi'])->name('cek-estimasi');
+        Route::post('/cek-tanggal', [KonstruksiJadwalController::class, 'cekTanggal'])->name('cek-tanggal');
+        Route::post('/get-jam-kerja', [KonstruksiJadwalController::class, 'getJamKerja'])->name('get-jam-kerja');
+        Route::post('/hitung-sisa-jam', [KonstruksiJadwalController::class, 'hitungSisaJam'])->name('hitung-sisa-jam');
+        Route::post('/cek-proses', [KonstruksiJadwalController::class, 'cekProses'])->name('cek-proses');
+        Route::post('/cek-estdate', [KonstruksiJadwalController::class, 'cekEstDate'])->name('cek-estdate');
+        Route::post('/insert-newque', [KonstruksiJadwalController::class, 'insertNewQue'])->name('insert-newque');
+        Route::post('/get-list-kons', [KonstruksiJadwalController::class, 'getListKons'])->name('get-list-kons');
+        Route::post('/insert-appque', [KonstruksiJadwalController::class, 'insertAppQue'])->name('insert-appque');
+    });
 
-    Route::resource('EditJam', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJamKerjaOptimalController::class);
-    Route::get('HitungSisaJamEditJam/{EstDate}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJamKerjaOptimalController@HitungSisaJam');
-    Route::get('GetJamKerjaEditJam/{worksts}/{estDate}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJamKerjaOptimalController@GetJamKerja');
+    // Edit Jam Kerja Optimal
+    Route::prefix('GPS/JadwalKonstruksi/EditJamKerjaOptimal')->name('GPS.konstruksiJamKerja.')->group(function () {
+        Route::get('/get-workstation-list', [KonstruksiJamKerjaController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::post('/get-jam-kerja', [KonstruksiJamKerjaController::class, 'getJamKerja'])->name('get-jam-kerja');
+        Route::post('/hitung-sisa', [KonstruksiJamKerjaController::class, 'hitungSisa'])->name('hitung-sisa');
+        Route::resource('', KonstruksiJamKerjaController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
 
-    Route::resource('EditPerWorkStation', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerWorkStationController::class);
-    Route::get('NoAntriEditPerWorkstation/{worksts}/{date1}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerWorkStationController@NoAntri');
-    Route::get('getdatatableEditPerWorkstation/{noAntri}/{date}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerWorkStationController@getdatatable');
+    // Edit Estimasi Tanggal
+    Route::prefix('GPS/JadwalKonstruksi/EditEstimasiTanggal')->name('GPS.konstruksiEstimasiTanggal.')->group(function () {
+        Route::get('/get-workstation-list', [KonstruksiEstimasiTanggalController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::get('/get-jadwal', [KonstruksiEstimasiTanggalController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', KonstruksiEstimasiTanggalController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
 
-    Route::resource('EditPerOrderkonstruksi', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerOrderController::class);
-    Route::get('LoadDataEditPerOrderKonstruksi/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerOrderController@LoadData');
-    Route::get('cekEstimasiKonstruksiEditPerOrderKonstruksi/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerOrderController@cekEstimasiKonstruksi');
-    Route::get('getDataTableEditPerOrderKonstruksi/{noOd}/{idBag}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditJadwalPerOrderController@getDataTable');
+    // Edit Estimasi Waktu
+    Route::prefix('GPS/JadwalKonstruksi/EditEstimasiWaktu')->name('GPS.konstruksiEstimasiWaktu.')->group(function () {
+        Route::get('/get-workstation-list', [KonstruksiEstimasiWaktuController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::get('/get-jadwal', [KonstruksiEstimasiWaktuController::class, 'getJadwal'])->name('get-jadwal');
+        Route::post('/hitung-jam', [KonstruksiEstimasiWaktuController::class, 'hitungJam'])->name('hitung-jam');
+        Route::resource('', KonstruksiEstimasiWaktuController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
 
-    Route::resource('EditEstimasiTanggal', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiTanggalController::class);
-    Route::get('NOFINISHEditEstimasiJadwal/{worksts}/{date1}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiTanggalController@NOFINISH');
-    // Route::get('getdatatableEditEstimasiJadwal/{noAntri}/{date}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiTanggalController@getdatatable');
-    Route::get('cekestimasiEditEstimasiTanggal/{noOd}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiTanggalController@cekestimasi');
-    Route::get('cekestimasikonstruksiEditEstimasiTanggal/{noOd}/{newTgl}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiTanggalController@cekestimasikonstruksi');
+    // Finish Jadwal
+    Route::prefix('GPS/JadwalKonstruksi/FinishJadwal')->name('GPS.konstruksiFinish.')->group(function () {
+        Route::get('/get-order', [KonstruksiFinishController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [KonstruksiFinishController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [KonstruksiFinishController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', KonstruksiFinishController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
 
-    Route::resource('EditEstimasiWaktu', App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiWaktuController::class);
-    Route::get('LoaddataEditEstimasiWaktu/{worksts}/{date1}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiWaktuController@Loaddata');
-    Route::get('hitungjamEditEstimasiWaktu/{EstDate}/{worksts}/{noQue}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiWaktuController@hitungjam');
-    Route::post('EditJamKerjaKonstruksiEditEstimasiWaktu', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiWaktuController@EditJamKerjaKonstruksi');
-    Route::get('HitungJamSisaEditEstimasiWaktu/{EstDate}/{worksts}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiWaktuController@HitungJamSisa');
-    Route::get('GetJamKerjaEditEstimasiWaktu/{worksts}/{EstDate}', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksi\EditEstimasiWaktuController@GetJamKerja');
+    // Edit Jadwal Pre-WorkStation
+    Route::prefix('GPS/JadwalKonstruksi/EditJadwal/PerWorkStation')->name('GPS.konstruksiEditWorkstation.')->group(function () {
+        Route::get('/get-workstation-list', [KonstruksiEditWorkstationController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::get('/get-jadwal', [KonstruksiEditWorkstationController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', KonstruksiEditWorkstationController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Edit Jadwal Pre-Order
+    Route::prefix('GPS/JadwalKonstruksi/EditJadwal/PerOrder')->name('GPS.konstruksiEditOrder.')->group(function () {
+        Route::get('/get-order', [KonstruksiEditOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [KonstruksiEditOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [KonstruksiEditOrderController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', KonstruksiEditOrderController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Delete Jadwal Pre-WorkStation
+    Route::prefix('GPS/JadwalKonstruksi/DeleteJadwal/PerWorkStation')->name('GPS.konstruksiDeleteWorkstation.')->group(function () {
+        Route::get('/get-workstation-list', [KonstruksiDeleteWorkstationController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::get('/get-jadwal', [KonstruksiDeleteWorkstationController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', KonstruksiDeleteWorkstationController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Delete Jadwal Pre-Order
+    Route::prefix('GPS/JadwalKonstruksi/DeleteJadwal/PerOrder')->name('GPS.konstruksiDeleteOrder.')->group(function () {
+        Route::get('/get-order', [KonstruksiDeleteOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [KonstruksiDeleteOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [KonstruksiDeleteOrderController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', KonstruksiDeleteOrderController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+    #endregion
+
+    #region GPS - Jadwal Pengerjaan
+    // Maintenance Material Type
+    Route::prefix('GPS/JadwalPengerjaan/MaintenanceMaterialType')->name('GPS.pengerjaanMaterialType.')->group(function () {
+        Route::get('/get-material-list', [PengerjaanMaterialTypeController::class, 'getMaterialList'])->name('get-material-list');
+        Route::resource('', PengerjaanMaterialTypeController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Maintenance Bagian Barang
+    Route::prefix('GPS/JadwalPengerjaan/MaintenanceBagianBarang')->name('GPS.pengerjaanBagianBarang.')->group(function () {
+        Route::get('/', [PengerjaanBagianBarangController::class, 'index'])->name('index');
+        Route::get('/get-order', [PengerjaanBagianBarangController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanBagianBarangController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-material-list', [PengerjaanBagianBarangController::class, 'getMaterialList'])->name('get-material-list');
+        Route::get('/get-spek-list', [PengerjaanBagianBarangController::class, 'getSpekList'])->name('get-spek-list');
+        Route::get('/get-satuan-list', [PengerjaanBagianBarangController::class, 'getSatuanList'])->name('get-satuan-list');
+        Route::post('/process-bagian', [PengerjaanBagianBarangController::class, 'processBagian'])->name('process-bagian');
+        Route::post('/process-material', [PengerjaanBagianBarangController::class, 'processMaterial'])->name('process-material');
+    });
+
+    // Input Jadwal
+    Route::prefix('GPS/JadwalPengerjaan/InputJadwal')->name('GPS.pengerjaanJadwal.')->group(function () {
+        Route::get('/', [PengerjaanJadwalController::class, 'index'])->name('index');
+        Route::post('/get-order', [PengerjaanJadwalController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanJadwalController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-mesin-list', [PengerjaanJadwalController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [PengerjaanJadwalController::class, 'getTypeList'])->name('get-type-list');
+        Route::post('/get-jam-kerja', [PengerjaanJadwalController::class, 'getJamKerja'])->name('get-jam-kerja');
+        Route::post('/cek-proses', [PengerjaanJadwalController::class, 'cekProses'])->name('cek-proses');
+        Route::post('/cek-estdate', [PengerjaanJadwalController::class, 'cekEstDate'])->name('cek-estdate');
+        Route::post('/hitung-sisa-jam', [PengerjaanJadwalController::class, 'hitungSisaJam'])->name('hitung-sisa-jam');
+        Route::post('/insert-newque', [PengerjaanJadwalController::class, 'insertNewQue'])->name('insert-newque');
+        Route::post('/get-list-antri', [PengerjaanJadwalController::class, 'getListAntri'])->name('get-list-antri');
+        Route::post('/insert-appque', [PengerjaanJadwalController::class, 'insertAppQue'])->name('insert-appque');
+        Route::post('/save-stsready', [PengerjaanJadwalController::class, 'saveStsReady'])->name('save-stsready');
+    });
+
+    // Edit Jam Kerja Optimal
+    Route::prefix('GPS/JadwalPengerjaan/EditJamKerjaOptimal')->name('GPS.pengerjaanJamKerja.')->group(function () {
+        Route::get('/get-mesin-list', [PengerjaanJamKerjaController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [PengerjaanJamKerjaController::class, 'getTypeList'])->name('get-type-list');
+        Route::post('/get-jam-kerja', [PengerjaanJamKerjaController::class, 'getJamKerja'])->name('get-jam-kerja');
+        Route::post('/hitung-sisa', [PengerjaanJamKerjaController::class, 'hitungSisa'])->name('hitung-sisa');
+        Route::resource('', PengerjaanJamKerjaController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Edit Jadwal Per Mesin
+    Route::prefix('GPS/JadwalPengerjaan/EditJadwal/PerMesin')->name('GPS.pengerjaanEditMesin.')->group(function () {
+        Route::get('/get-mesin-list', [PengerjaanEditMesinController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [PengerjaanEditMesinController::class, 'getTypeList'])->name('get-type-list');
+        Route::get('/get-jadwal', [PengerjaanEditMesinController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanEditMesinController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Edit Jadwal Per Order
+    Route::prefix('GPS/JadwalPengerjaan/EditJadwal/PerOrder')->name('GPS.pengerjaanEditOrder.')->group(function () {
+        Route::get('/get-order', [PengerjaanEditOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanEditOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanEditOrderController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanEditOrderController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Edit Estimasi Tanggal
+    Route::prefix('GPS/JadwalPengerjaan/EditEstimasiTanggal')->name('GPS.pengerjaanEstimasiTanggal.')->group(function () {
+        Route::get('/get-mesin-list', [PengerjaanEstimasiTanggalController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [PengerjaanEstimasiTanggalController::class, 'getTypeList'])->name('get-type-list');
+        Route::get('/get-jadwal', [PengerjaanEstimasiTanggalController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanEstimasiTanggalController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Edit Estimasi Waktu
+    Route::prefix('GPS/JadwalPengerjaan/EditEstimasiWaktu')->name('GPS.pengerjaanEstimasiWaktu.')->group(function () {
+        Route::get('/get-mesin-list', [PengerjaanEstimasiWaktuController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [PengerjaanEstimasiWaktuController::class, 'getTypeList'])->name('get-type-list');
+        Route::get('/get-jadwal', [PengerjaanEstimasiWaktuController::class, 'getJadwal'])->name('get-jadwal');
+        Route::post('/hitung-jam', [PengerjaanEstimasiWaktuController::class, 'hitungJam'])->name('hitung-jam');
+        Route::resource('', PengerjaanEstimasiWaktuController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Edit Jumlah Barang yang dikerjakan
+    Route::prefix('GPS/JadwalPengerjaan/EditJumlahBarangygdikerjakan')->name('GPS.pengerjaanJumlahBarang.')->group(function () {
+        Route::get('/get-order', [PengerjaanJumlahBarangController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanJumlahBarangController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanJumlahBarangController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanJumlahBarangController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Finish Jadwal
+    Route::prefix('GPS/JadwalPengerjaan/FinishJadwal')->name('GPS.pengerjaanFinish.')->group(function () {
+        Route::get('/get-order', [PengerjaanFinishController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanFinishController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanFinishController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanFinishController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Delete Jadwal Per Mesin
+    Route::prefix('GPS/JadwalPengerjaan/DeleteJadwal/PerMesin')->name('GPS.pengerjaanDeleteMesin.')->group(function () {
+        Route::get('/get-mesin-list', [PengerjaanDeleteMesinController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [PengerjaanDeleteMesinController::class, 'getTypeList'])->name('get-type-list');
+        Route::get('/get-jadwal', [PengerjaanDeleteMesinController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanDeleteMesinController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Delete Jadwal Per Mesin
+    Route::prefix('GPS/JadwalPengerjaan/DeleteJadwal/PerOrder')->name('GPS.pengerjaanDeleteOrder.')->group(function () {
+        Route::get('/get-order', [PengerjaanDeleteOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanDeleteOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanDeleteOrderController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanDeleteOrderController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Biaya Proses Makloon
+    Route::prefix('GPS/JadwalPengerjaan/BiayaProsesMakloon')->name('GPS.pengerjaanMakloon.')->group(function () {
+        Route::get('/get-order', [PengerjaanMakloonController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanMakloonController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanMakloonController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanMakloonController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Harga Material
+    Route::prefix('GPS/JadwalPengerjaan/HargaMaterial')->name('GPS.pengerjaanHargaMaterial.')->group(function () {
+        Route::get('/get-material-order', [PengerjaanHargaMaterialController::class, 'getMaterialOrder'])->name('get-material-order');
+        Route::get('/get-satuan-list', [PengerjaanHargaMaterialController::class, 'getSatuanList'])->name('get-satuan-list');
+        Route::resource('', PengerjaanHargaMaterialController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Maintenance Data S/Part
+    Route::prefix('GPS/JadwalPengerjaan/MaintenanceDataS/Part')->name('GPS.pengerjaanSparePart.')->group(function () {
+        Route::get('/get-order', [PengerjaanSparePartController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanSparePartController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-spart-existing', [PengerjaanSparePartController::class, 'getSpartExisting'])->name('get-spart-existing');
+        Route::get('/get-spart-detail', [PengerjaanSparePartController::class, 'getSpartDetail'])->name('get-spart-detail');
+        Route::get('/get-mohon-beli', [PengerjaanSparePartController::class, 'getMohonBeli'])->name('get-mohon-beli');
+        Route::get('/load-barang', [PengerjaanSparePartController::class, 'loadBarang'])->name('load-barang');
+        Route::get('/get-satuan-list', [PengerjaanSparePartController::class, 'getSatuanList'])->name('get-satuan-list');
+        Route::resource('', PengerjaanSparePartController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Nomer Order Kerja/Proyek
+    Route::prefix('GPS/JadwalPengerjaan/NomerOrderKerja/Proyek')->name('GPS.pengerjaanOrderProyek.')->group(function () {
+        Route::get('/get-order', [PengerjaanOrderProyekController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanOrderProyekController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::resource('', PengerjaanOrderProyekController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Penyesuaian Data Finish Rencana
+    Route::prefix('GPS/JadwalPengerjaan/DataRencana')->name('GPS.PengerjaanFinishRencana.')->group(function () {
+        Route::get('/get-order', [PengerjaanFinishRencanaController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanFinishRencanaController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanFinishRencanaController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanFinishRencanaController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+
+    // Penyesuaian Data Finish Selesai
+    Route::prefix('GPS/JadwalPengerjaan/DataSelesai')->name('GPS.PengerjaanFinishSelesai.')->group(function () {
+        Route::get('/get-order', [PengerjaanFinishSelesaiController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [PengerjaanFinishSelesaiController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [PengerjaanFinishSelesaiController::class, 'getJadwal'])->name('get-jadwal');
+        Route::resource('', PengerjaanFinishSelesaiController::class)->only(['index', 'store'])->names(['index' => 'index', 'store' => 'store']);
+    });
+    #endregion
+
+    #region GPS - Informasi Konstruksi
+    // Jadwal Per WorkStation
+    Route::prefix('GPS/InformasiKonstruksi/JadwalPerWorkStation')->name('GPS.InfoKonstruksiWorkstation.')->group(function () {
+        Route::get('/', [InfoKonstruksiWorkstationController::class, 'index'])->name('index');
+        Route::get('/get-workstation-list', [InfoKonstruksiWorkstationController::class, 'getWorkstationList'])->name('get-workstation-list');
+        Route::get('/get-jadwal', [InfoKonstruksiWorkstationController::class, 'getJadwal'])->name('get-jadwal');
+    });
+
+    // Jadwal Per Order
+    Route::prefix('GPS/InformasiKonstruksi/JadwalPerOrder')->name('GPS.InfoKonstruksiOrder.')->group(function () {
+        Route::get('/', [InfoKonstruksiOrderController::class, 'index'])->name('index');
+        Route::get('/get-order', [InfoKonstruksiOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [InfoKonstruksiOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [InfoKonstruksiOrderController::class, 'getJadwal'])->name('get-jadwal');
+    });
+
+    // Daftar Order Gambar
+    Route::prefix('GPS/InformasiKonstruksi/DaftarOrderGambar')->name('GPS.InfoKonstruksiOrderGambar.')->group(function () {
+        Route::get('/', [InfoKonstruksiOrderGambarController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoKonstruksiOrderGambarController::class, 'getData'])->name('get-data');
+    });
+
+    // Daftar Estimasi Jadwal
+    Route::prefix('GPS/InformasiKonstruksi/DaftarEstimasiJadwal')->name('GPS.InfoKonstruksiEstimasi.')->group(function () {
+        Route::get('/', [InfoKonstruksiEstimasiController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoKonstruksiEstimasiController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Work Stations
+    Route::prefix('GPS/InformasiKonstruksi/GrafikWorkStations')->name('GPS.InfoKonstruksiGrafikWorkstation.')->group(function () {
+        Route::get('/', [InfoKonstruksiGrafikWorkstationController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoKonstruksiGrafikWorkstationController::class, 'getData'])->name('get-data');
+    });
+
+    // Jadwal Konstruksi per Bulan
+    Route::prefix('GPS/InformasiKonstruksi/JadwalKonstruksiperbulan')->name('GPS.InfoKonstruksiBulanan.')->group(function () {
+        Route::get('/', [InfoKonstruksiBulananController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoKonstruksiBulananController::class, 'getData'])->name('get-data');
+    });
+
+    // Histori Proses Konstruksi
+    Route::prefix('GPS/InformasiKonstruksi/HistoriProsesKonstruksi')->name('GPS.InfoKonstruksiHistori.')->group(function () {
+        Route::get('/', [InfoKonstruksiHistoriController::class, 'index'])->name('index');
+        Route::get('/get-bagian-list', [InfoKonstruksiHistoriController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-histori', [InfoKonstruksiHistoriController::class, 'getHistori'])->name('get-histori');
+        Route::get('/get-histori-detail', [InfoKonstruksiHistoriController::class, 'getHistoriDetail'])->name('get-histori-detail');
+    });
+    #endregion
+
+    #region GPS - Informasi Pengerjaan
+    // Jadwal Per Mesin
+    Route::prefix('GPS/InformasiPengerjaan/JadwalPerMesin')->name('GPS.InfoPengerjaanMesin.')->group(function () {
+        Route::get('/', [InfoPengerjaanMesinController::class, 'index'])->name('index');
+        Route::get('/get-mesin-list', [InfoPengerjaanMesinController::class, 'getMesinList'])->name('get-mesin-list');
+        Route::get('/get-type-list', [InfoPengerjaanMesinController::class, 'getTypeList'])->name('get-type-list');
+        Route::get('/get-jadwal', [InfoPengerjaanMesinController::class, 'getJadwal'])->name('get-jadwal');
+    });
+
+    // Jadwal Per Order
+    Route::prefix('GPS/InformasiPengerjaan/JadwalPerOrder')->name('GPS.InfoPengerjaanOrder.')->group(function () {
+        Route::get('/', [InfoPengerjaanOrderController::class, 'index'])->name('index');
+        Route::get('/get-order', [InfoPengerjaanOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [InfoPengerjaanOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [InfoPengerjaanOrderController::class, 'getJadwal'])->name('get-jadwal');
+    });
+
+    // Daftar Order Kerja dan Proyek
+    Route::prefix('GPS/InformasiPengerjaan/DaftarOrderKerjadanProyek')->name('GPS.InfoPengerjaanOrderProyek.')->group(function () {
+        Route::get('/', [InfoPengerjaanOrderProyekController::class, 'index'])->name('index');
+        Route::get('/get-list-order', [InfoPengerjaanOrderProyekController::class, 'getListOrder'])->name('get-list-order');
+        Route::get('/get-list-material', [InfoPengerjaanOrderProyekController::class, 'getListMaterial'])->name('get-list-material');
+        Route::get('/get-user-type', [InfoPengerjaanOrderProyekController::class, 'getUserType'])->name('get-user-type');
+        Route::post('/set-ready', [InfoPengerjaanOrderProyekController::class, 'setReady'])->name('set-ready');
+        Route::post('/set-bon', [InfoPengerjaanOrderProyekController::class, 'setBon'])->name('set-bon');
+        Route::post('/mhn-list-mohon', [InfoPengerjaanOrderProyekController::class, 'mhnGetListMohon'])->name('mhn-list-mohon');
+        Route::get('/mhn-divisi-list', [InfoPengerjaanOrderProyekController::class, 'mhnGetDivisiList'])->name('mhn-divisi-list');
+        Route::get('/mhn-objek-list', [InfoPengerjaanOrderProyekController::class, 'mhnGetObjekList'])->name('mhn-objek-list');
+        Route::get('/mhn-kel-utama-list', [InfoPengerjaanOrderProyekController::class, 'mhnGetKelUtamaList'])->name('mhn-kel-utama-list');
+        Route::get('/mhn-kelompok-list', [InfoPengerjaanOrderProyekController::class, 'mhnGetKelompokList'])->name('mhn-kelompok-list');
+        Route::get('/mhn-sub-kel-list', [InfoPengerjaanOrderProyekController::class, 'mhnGetSubKelList'])->name('mhn-sub-kel-list');
+        Route::get('/mhn-type-list', [InfoPengerjaanOrderProyekController::class, 'mhnGetTypeList'])->name('mhn-type-list');
+        Route::post('/mhn-kode-barang', [InfoPengerjaanOrderProyekController::class, 'mhnGetKodeBarang'])->name('mhn-kode-barang');
+        Route::post('/mhn-cek-kode-barang', [InfoPengerjaanOrderProyekController::class, 'mhnCekKodeBarang'])->name('mhn-cek-kode-barang');
+        Route::post('/mhn-kode-barang-terima', [InfoPengerjaanOrderProyekController::class, 'mhnGetKodeBarangTerima'])->name('mhn-kode-barang-terima');
+        Route::post('/mhn-insert-tmp', [InfoPengerjaanOrderProyekController::class, 'mhnInsertTmp'])->name('mhn-insert-tmp');
+        Route::post('/mhn-update-tmp', [InfoPengerjaanOrderProyekController::class, 'mhnUpdateTmp'])->name('mhn-update-tmp');
+        Route::post('/mhn-delete-tmp', [InfoPengerjaanOrderProyekController::class, 'mhnDeleteTmp'])->name('mhn-delete-tmp');
+        Route::post('/mhn-tujuan-detail', [InfoPengerjaanOrderProyekController::class, 'mhnGetTujuanDetail'])->name('mhn-tujuan-detail');
+        Route::post('/mhn-asal-detail', [InfoPengerjaanOrderProyekController::class, 'mhnGetAsalDetail'])->name('mhn-asal-detail');
+    });
+
+    // Grafik Mesin EDM/CNC
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinEDMCNC')->name('GPS.InfoPengerjaanEdmCnc.')->group(function () {
+        Route::get('/', [InfoPengerjaanEdmCncController::class, 'index'])->name('index');
+        Route::get('/get-data', [InfoPengerjaanEdmCncController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Drill/Mill/Scrap
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinDrillMillScrap')->name('GPS.InfoPengerjaanDrillMillScrap.')->group(function () {
+        Route::get('/', [InfoPengerjaanDrillMillScrapController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanDrillMillScrapController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Grinding
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinGrinding')->name('GPS.InfoPengerjaanGrinding.')->group(function () {
+        Route::get('/', [InfoPengerjaanGrindingController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanGrindingController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Las
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinLas')->name('GPS.InfoPengerjaanLas.')->group(function () {
+        Route::get('/', [InfoPengerjaanLasController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanLasController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Punch/Inject/Casting
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinPunchInjectCasting')->name('GPS.InfoPengerjaanPunchInjectCasting.')->group(function () {
+        Route::get('/', [InfoPengerjaanPunchInjectCastingController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanPunchInjectCastingController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Turning
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinTurning')->name('GPS.InfoPengerjaanTurning.')->group(function () {
+        Route::get('/', [InfoPengerjaanTurningController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanTurningController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Finishing
+    Route::prefix('GPS/InformasiPengerjaan/GrafikMesinFinishing')->name('GPS.InfoPengerjaanFinishing.')->group(function () {
+        Route::get('/', [InfoPengerjaanFinishingController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanFinishingController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Mesin Makloon
+    Route::prefix('GPS/InformasiPengerjaan/GrafikProsesMakloon')->name('GPS.InfoPengerjaanMakloon.')->group(function () {
+        Route::get('/', [InfoPengerjaanMakloonController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanMakloonController::class, 'getData'])->name('get-data');
+    });
+
+    // Grafik Pengerjaan Per Order
+    Route::prefix('GPS/InformasiPengerjaan/GrafikPengerjaanPerOrder')->name('GPS.InfoPengerjaanGrafikOrder.')->group(function () {
+        Route::get('/', [InfoPengerjaanGrafikOrderController::class, 'index'])->name('index');
+        Route::get('/get-order', [InfoPengerjaanGrafikOrderController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [InfoPengerjaanGrafikOrderController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-jadwal', [InfoPengerjaanGrafikOrderController::class, 'getJadwal'])->name('get-jadwal');
+    });
+
+    // Jadawal Pengerjaan Per Bulan
+    Route::prefix('GPS/InformasiPengerjaan/JadwalPengerjaanperbulan')->name('GPS.InfoPengerjaanBulanan.')->group(function () {
+        Route::get('/', [InfoPengerjaanBulananController::class, 'index'])->name('index');
+        Route::post('/get-data', [InfoPengerjaanBulananController::class, 'getData'])->name('get-data');
+    });
+
+    // Histori Proses Pengerjaan
+    Route::prefix('GPS/InformasiPengerjaan/HistoriProsesPengerjaan')->name('GPS.InfoPengerjaanHistori.')->group(function () {
+        Route::get('/', [InfoPengerjaanHistoriController::class, 'index'])->name('index');
+        Route::get('/get-user-type', [InfoPengerjaanHistoriController::class, 'getUserType'])->name('get-user-type');
+        Route::get('/get-data', [InfoPengerjaanHistoriController::class, 'getData'])->name('get-data');
+        Route::get('/get-detail', [InfoPengerjaanHistoriController::class, 'getDetail'])->name('get-detail');
+        Route::get('/get-material-detail', [InfoPengerjaanHistoriController::class, 'getHistoriMaterial'])->name('get-material-detail');
+        Route::get('/get-spart-detail', [InfoPengerjaanHistoriController::class, 'getHistoriSpart'])->name('get-spart-detail');
+        Route::get('/get-makloon-detail', [InfoPengerjaanHistoriController::class, 'getHistoriMakloon'])->name('get-makloon-detail');
+        Route::get('/get-bagian-list', [InfoPengerjaanHistoriController::class, 'getBagianList'])->name('get-bagian-list');
+    });
+
+    // Daftar Spare Part Per Order
+    Route::prefix('GPS/InformasiPengerjaan/DaftarSparePartPerOrder')->name('GPS.InfoPengerjaanSparePart.')->group(function () {
+        Route::get('/', [InfoPengerjaanSparePartController::class, 'index'])->name('index');
+        Route::get('/get-order', [InfoPengerjaanSparePartController::class, 'getOrder'])->name('get-order');
+        Route::get('/get-bagian-list', [InfoPengerjaanSparePartController::class, 'getBagianList'])->name('get-bagian-list');
+        Route::get('/get-spart-list', [InfoPengerjaanSparePartController::class, 'getSpartList'])->name('get-spart-list');
+    });
+    #endregion
+
+    #region GPS - Laporan
+    // Order Gambar Masuk
+    Route::prefix('GPS/Laporan/OrderGambarMasuk')->group(function () {
+        Route::get('/', function () {
+            return "
+        <script>
+            alert('Fitur ini belum tersedia, silakan kembali nanti!');
+            window.history.back(); // Kembali ke halaman sebelumnya setelah klik OK
+        </script>
+        ";
+        });
+    });
 
 
-    Route::get('FinishJadwalKonstruksi', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksiController@FinishJadwalKonstruksi');
-    Route::get('DeleteJadwalPerWorkStation', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksiController@DeleteJadwalPerWorkStation');
-    Route::get('DeleteJadwalPerOrder', 'App\Http\Controllers\WORKSHOP\Gps\JadwalKonstruksiController@DeleteJadwalPerOrder');
+    // Order Pengerjaan Masuk
+    Route::prefix('GPS/Laporan/OrderPengerjaanMasuk')->name('GPS.LaporanOrderPengerjaan.')->group(function () {
+        Route::get('/', [LaporanOrderPengerjaanController::class, 'index'])->name('index');
+        Route::get('/get-data', [LaporanOrderPengerjaanController::class, 'getData'])->name('get-data');
+    });
 
-    //gps2
-    Route::get('MaintenanceMaterialType', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@MaintenanceMaterialType');
-    Route::get('MaintenanceMaterialType', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@MaintenanceMaterialType');
-    Route::get('MaintenanceBagianBarang', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@MaintenanceBagianBarang');
-    Route::get('InputJadwal', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@InputJadwal');
-    Route::get('EditJamKerja', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@EditJamKerja');
-    Route::get('EditPerMesin', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@EditPerMesin');
-    Route::get('EditPerOrder', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@EditPerOrder');
-    Route::get('EditEstimasiTanggalPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@EditEstimasiTanggal');
-    Route::get('EditEstimasiWaktuPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@EditEstimasiWaktu');
-    Route::get('EditJumlahBarang', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@EditJumlahBarang');
-    Route::get('FinishJadwalPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@FinishJadwal');
-    Route::get('DeletePerMesin', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@DeletePerMesin');
-    Route::get('DeletePerOrder', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@DeletePerOrder');
-    Route::get('BiayaProsesMakloon', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@BiayaProsesMakloon');
-    Route::get('HargaMaterial', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@HargaMaterial');
-    Route::get('MaintenanceDataSPart', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@MaintenanceDataSpart');
-    Route::get('NomorOrderKerjaProyek', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@NomorOrderKerjaProyek');
-    Route::get('DataPerencanaan', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@DataPerencanaan');
-    Route::get('DataSelesai', 'App\Http\Controllers\WORKSHOP\Gps\JadwalPengerjaanController@DataSelesai');
-
-    //gps3
-    Route::resource('JadwalPerWorkStation', App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksi\JadwalPerWorkStationController::class);
-    Route::get('LoaddataJadwalPerWorkStation/{worksts}/{date1}/{date2}', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksi\JadwalPerWorkStationController@Loaddata');
-
-
-    // Route::get('', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@JadwalPerWorkStation');
-    Route::get('JadwalPerOder', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@JadwalPerOrder');
-    Route::get('DaftarOrderGambar', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@DaftarOrderGambar');
-    Route::get('DaftarEstimasiJadwal', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@DaftarEstimasiJadwal');
-    Route::get('GrafikWorkStation', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@GrafikWorkStation');
-    Route::get('JadwalKonstruksiPerBulan', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@JadwalKonstruksiPerBulan');
-    Route::get('HistoriProsesKonstruksi', 'App\Http\Controllers\WORKSHOP\Gps\InformasiKonstruksiController@HistoriProsesKonstruksi');
-
-    //gps4
-    Route::get('JadwalPerMesinPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@JadwalPerMesinPengerjaan');
-    Route::get('JadwalPerOrderPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@JadwalPerOrderPengerjaan');
-    Route::get('DaftarOrderKerjaProyek', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@DaftarOrderKerjaProyek');
-    Route::get('EDMCNC', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@EDMCNC');
-    Route::get('DrillMillScrap', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@DrillMillScrap');
-    Route::get('MesinGrinding', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@MesinGrinding');
-    Route::get('MesinLas', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@MesinLas');
-    Route::get('PunchInjectCasting', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@PunchInjectCasting');
-    Route::get('Turning', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@Turning');
-    Route::get('Finishing', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@Finishing');
-    Route::get('ProsesMakloon', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@Makloon');
-    Route::get('PengerjaanPerOrder', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@PengerjaanPerOrder');
-    Route::get('PengerjaanPerBulan', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@PengerjaanPerBulan');
-    Route::get('HistoriProsesPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@HistoriProsesPengerjaan');
-    Route::get('DaftarSPerPart', 'App\Http\Controllers\WORKSHOP\Gps\InformasiPengerjaanController@DaftarSPerPart');
-
-    //gps - Laporan
-    Route::get('OrderPengerjaanMasuk', 'App\Http\Controllers\WORKSHOP\Gps\LaporanController@OrderPengerjaanMasuk');
-    Route::get('HasilPengerjaan', 'App\Http\Controllers\WORKSHOP\Gps\LaporanController@HasilPengerjaan');
+    // Hasil Pengerjaan
+    Route::prefix('GPS/Laporan/HasilPengerjaan')->name('GPS.LaporanHasilPengerjaan.')->group(function () {
+        Route::get('/', [LaporanHasilPengerjaanController::class, 'index'])->name('index');
+        Route::get('/get-data', [LaporanHasilPengerjaanController::class, 'getData'])->name('get-data');
+    });
     #endregion
 
     #region Workshop
@@ -1213,6 +1619,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('MaintKegiatanMesinPotongJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPotongJBBController::class);
     Route::resource('MaintKegiatanMesinPrintingJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinPrintingJBBController::class);
     Route::resource('MaintKegiatanMesinRBJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanMesinRBJBBController::class);
+    // Route::resource('MaintKegiatanJahitJBB', App\Http\Controllers\JumboBag\MaintenanceKegiatanJahitJBB::class);
     //Tabel Hitungan
     Route::resource('CopyKodeBarang', App\Http\Controllers\JumboBag\CopyKodeBarang::class);
     Route::resource('KebutuhanKomponenJBB', App\Http\Controllers\JumboBag\KebutuhanKomponenJBBController::class);

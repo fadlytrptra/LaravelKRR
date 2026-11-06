@@ -179,8 +179,8 @@ class HomeController extends Controller
     }
     public function GPS()
     {
-        $result = (new HakAksesController)->HakAksesProgram('Workshop');
-        $access = (new HakAksesController)->HakAksesFiturMaster('Workshop');
+        $result = (new HakAksesController)->HakAksesProgram('GPS');
+        $access = (new HakAksesController)->HakAksesFiturMaster('GPS');
         if ($result > 0) {
             return view('layouts.appGPS', compact('access'));
         } else {

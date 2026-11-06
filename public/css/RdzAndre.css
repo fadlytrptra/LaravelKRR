@@ -552,7 +552,9 @@ table tr:last-child td:last-child {
 
 .acs-add-btn::before,
 .acs-add-btn::after {
-    transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
+    transition:
+        width 0.2s ease-in-out,
+        border-radius 0.2s ease-in-out;
     content: "";
     position: absolute;
     height: 4px;
@@ -748,4 +750,82 @@ table tr:last-child td:last-child {
         max-width: 70%;
         max-height: 70%;
     }
+}
+
+.gps_root table {
+    font-size: 16px !important;
+}
+
+.gps_root table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+.gps_root table .table-bordered th,
+.gps_root table .table-bordered td {
+    border: 1px solid #555555;
+    white-space: nowrap;
+}
+
+.gps_root table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.gps_root table th {
+    background-color: #dddddd;
+}
+
+.gps_root .dataTables_filter {
+    margin-bottom: 15px !important;
+}
+
+.gps_root .sorting {
+    font-size: 16px !important;
+}
+
+.gps_root .card-body {
+    overflow-x: auto;
+}
+
+#tableLookupGeneric tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+#tableLookupGeneric tbody tr:focus {
+    outline: none;
+}
+
+#tableLookupGeneric tbody tr:focus td {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.gps_root .input-group > .form-control,
+.gps_root .input-group > .btn,
+.gps_root .input-group > .input-group-text {
+    height: 38px !important;
+    display: flex;
+    align-items: center;
+}
+
+.gps_root input[type="number"].form-control {
+    display: block;
+}
+
+.gps_root .hidden {
+    display: none !important;
+}
+
+.gps_root .unclickable {
+    pointer-events: none;
+    background-color: #e9ecef;
+}
+
+.gps_root #table_komposisi tbody tr.keyboard-selected {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.gps_root #table_komposisi tbody tr.keyboard-selected td {
+    color: white !important;
 }
