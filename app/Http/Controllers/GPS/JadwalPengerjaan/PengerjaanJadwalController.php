@@ -139,7 +139,7 @@ class PengerjaanJadwalController extends Controller
         $db = DB::connection('Connworkshop');
         try {
             $minAntri = collect($db->select(
-                'EXEC [dbo].[SP_5298_PJW_GET-MIN-ANTRIAN] ?, ?, ?',
+                'EXEC [dbo].[SP_5298_PJW_GET-MIN-ANTRIAN] @EstDate=?, @mesin=?, @noType=?',
                 [$v['estDate'], $v['mesin'], $v['noType']]
             ))->first();
 
@@ -149,7 +149,7 @@ class PengerjaanJadwalController extends Controller
             }
 
             $jk = collect($db->select(
-                'EXEC [dbo].[SP_5298_PJW_GET-JAM-KERJA] ?, ?, ?, ?',
+                'EXEC [dbo].[SP_5298_PJW_GET-JAM-KERJA] @nomer=?, @mesin=?, @noType=?, @EstDate=?',
                 [$nomer, $v['mesin'], $v['noType'], $v['estDate']]
             ))->first();
 

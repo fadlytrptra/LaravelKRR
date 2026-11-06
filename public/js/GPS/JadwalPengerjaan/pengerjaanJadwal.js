@@ -207,10 +207,10 @@ jQuery(function ($) {
 
     TEstTime.addEventListener("keypress", (e) => {
         if (e.key !== "Enter") return;
+        TEstTime1.focus();
         const mesin = parseInt(TNoMesin.value);
         const noType = parseInt(TNoType.value);
         if (!mesin || !noType || !EstDate.value) {
-            TEstTime1.focus();
             return;
         }
 
@@ -228,7 +228,6 @@ jQuery(function ($) {
                     jamKerjaLabel.style.display = "none";
                     btnProses.dataset.jamKerja = 0;
                 }
-                TEstTime1.focus();
             },
         );
     });
@@ -466,6 +465,8 @@ jQuery(function ($) {
                 showCancelButton: true,
                 confirmButtonText: "Emergency",
                 cancelButtonText: "Tidak",
+                reverseButtons: true,
+                focusCancel: true,
             }).then((r) => {
                 meta.status = r.isConfirmed ? 1 : 0;
                 continueNewQueue(meta);
@@ -1049,6 +1050,8 @@ jQuery(function ($) {
                 showCancelButton: true,
                 confirmButtonText: "Emergency",
                 cancelButtonText: "Tidak",
+                reverseButtons: true,
+                focusCancel: true,
             }).then((r) =>
                 confirmEmergency(r.isConfirmed ? 1 : 0, menitDiinput),
             );
