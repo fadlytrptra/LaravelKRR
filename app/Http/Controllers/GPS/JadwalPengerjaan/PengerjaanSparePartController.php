@@ -184,7 +184,7 @@ class PengerjaanSparePartController extends Controller
 
         $db = DB::connection('ConnPurchase');
         try {
-            $row = collect($db->select('EXEC [dbo].[SP_5298_PJW_LOAD-BARANG] ?', [
+            $row = collect($db->select('EXEC [dbo].[SP_5298_PJW_LOAD-BARANG] @KdBarang=?', [
                 $validated['kdBarang']
             ]))->first();
 

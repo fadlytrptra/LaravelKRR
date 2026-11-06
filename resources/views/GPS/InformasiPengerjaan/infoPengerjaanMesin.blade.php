@@ -238,6 +238,10 @@
                 </table>
             </div>
 
+            <div class="text-muted small mt-2">
+                Double-click baris untuk melihat daftar material.
+            </div>
+
             <div class="row mt-4 pt-3 border-top">
                 <div class="col-md-6">
                     <button type="button" id="btnRefresh" class="btn btn-secondary fw-bold px-3">Refresh</button>
@@ -250,11 +254,14 @@
         </div>
     </div>
 
+    @include('GPS.InformasiPengerjaan.frmListMaterial')
+
     <script>
         window.infPkjMsnConfig = {
             routeGetMesinList: "{{ route('GPS.InfoPengerjaanMesin.get-mesin-list') }}",
             routeGetTypeList: "{{ route('GPS.InfoPengerjaanMesin.get-type-list') }}",
-            routeGetJadwal: "{{ route('GPS.InfoPengerjaanMesin.get-jadwal') }}"
+            routeGetJadwal: "{{ route('GPS.InfoPengerjaanMesin.get-jadwal') }}",
+            routeGetListMaterial: "{{ route('GPS.InfoPengerjaanMesin.get-list-material') }}"
         };
     </script>
 

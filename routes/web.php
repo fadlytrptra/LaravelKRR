@@ -1151,6 +1151,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get-mesin-list', [InfoPengerjaanMesinController::class, 'getMesinList'])->name('get-mesin-list');
         Route::get('/get-type-list', [InfoPengerjaanMesinController::class, 'getTypeList'])->name('get-type-list');
         Route::get('/get-jadwal', [InfoPengerjaanMesinController::class, 'getJadwal'])->name('get-jadwal');
+        Route::get('/get-list-material', [InfoPengerjaanMesinController::class, 'getListMaterial'])->name('get-list-material');
     });
 
     // Jadwal Per Order

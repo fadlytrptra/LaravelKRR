@@ -239,4 +239,48 @@ class InfoPengerjaanMesinController extends Controller
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
     }
+
+    // SP_5298_PJW_LIST-MATERIAL-LENGKAP
+    public function getListMaterial(Request $request)
+    {
+        $validated = $request->validate([
+            'noOrder' => ['required', 'string', 'max:100'],
+            'namaBagian' => ['required', 'string', 'max:100'],
+            'jenisOrder' => ['required', 'in:H,P'],
+        ]);
+
+        try {
+            $rows = DB::connection('Connworkshop')->select(
+                'EXEC [dbo].[SP_5298_PJW_LIST-MATERIAL-LENGKAP] @noOrder=?, @namaBagian=?, @jenisOrder=?',
+                [
+                    trim($validated['noOrder']),
+                    trim($validated['namaBagian']),
+                    $validated['jenisOrder'],
+                ]
+            );
+
+            $data = [];
+            foreach ($rows as $row) {
+                $status = (int)($row->Status ?? 0);
+                $data[] = [
+                    'MtrType' => trim($row->MtrType ?? ''),
+                    'Spek' => trim($row->Spek ?? ''),
+                    'KdBrg' => trim($row->KdBrg ?? ''),
+                    'Jml' => number_format((float)($row->Jml ?? 0), 2, '.', ','),
+                    'NamaSatuan' => trim($row->Nama_Satuan ?? ''),
+                    'Status' => $status,
+                    'HargaBaru' => $status === 0
+                        ? ((float)($row->Harga ?? 0) > 0 ? 'Ada' : 'Belum ada')
+                        : '',
+                    'HargaBekas' => $status === 1
+                        ? ((float)($row->HargaBekas ?? 0) > 0 ? 'Ada' : 'Belum ada')
+                        : '',
+                ];
+            }
+
+            return response()->json(['success' => true, 'data' => $data]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+        }
+    }
 }
