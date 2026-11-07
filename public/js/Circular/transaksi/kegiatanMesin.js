@@ -282,7 +282,7 @@ $("#" + slcShift.id).on("select2:select", function () {
     getCounterFetch(hidIdMesin.value, slcShift.value);
     getPegawaiFetch(slcShift.value, hidIdMesin.value, txtIdOrder.value);
 
-    if (this.value == "P" && slcStatusLog.value.trim() == "01") {
+    if (this.value == "P") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
@@ -466,28 +466,28 @@ btnProses.addEventListener("click", function () {
         let processGo;
         switch (modeProses) {
             case 1:
-                // if (
-                //     txtRpm <= 0 && slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01" &&
-                //     hidIdMesin.value == 217 ||
-                //     hidIdMesin.value == 271 ||
-                //     hidIdMesin.value == 301 ||
-                //     hidIdMesin.value == 310 ||
-                //     hidIdMesin.value == 330 ||
-                //     hidIdMesin.value == 336 ||
-                //     hidIdMesin.value == 347 ||
-                //     hidIdMesin.value == 349 ||
-                //     hidIdMesin.value == 350
-                // ) {
-                //     Swal.fire({
-                //         icon: "info",
-                //         title: "Info!",
-                //         text: "Wajib isi RPM dahulu!",
-                //         showConfirmButton: true,
-                //         // timer: 2000
-                //     });
-                //     button_modalProses.disabled = false;
-                //     return;
-                // }
+                if (
+                    txtRpm <= 0 && slcShift.value.trim() == "P" &&
+                    hidIdMesin.value == 217 ||
+                    hidIdMesin.value == 271 ||
+                    hidIdMesin.value == 301 ||
+                    hidIdMesin.value == 310 ||
+                    hidIdMesin.value == 330 ||
+                    hidIdMesin.value == 336 ||
+                    hidIdMesin.value == 347 ||
+                    hidIdMesin.value == 349 ||
+                    hidIdMesin.value == 350
+                ) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info!",
+                        text: "Wajib isi RPM dahulu!",
+                        showConfirmButton: true,
+                        // timer: 2000
+                    });
+                    button_modalProses.disabled = false;
+                    return;
+                }
 
                 processGo = () => {
                     prosesIsi(xMeter);
@@ -691,7 +691,7 @@ function getDetailMesinFetch(s_id_mesin) {
     fetchSelect(
         "/sp-order/Sp_List_Mesin~4/" + s_id_mesin,
         (data) => {
-            if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+            if (slcShift.value.trim() == "P") {
                 if (
                     s_id_mesin == 217 ||
                     s_id_mesin == 271 ||
@@ -767,7 +767,7 @@ function getDetailMesinFetch(s_id_mesin) {
                             txtCounterAkhir.disabled = false;
                             btnProses.disabled = false;
 
-                            if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+                            if (slcShift.value.trim() == "P") {
                                 if (
                                     s_id_mesin == 217 ||
                                     s_id_mesin == 271 ||
@@ -846,7 +846,7 @@ function getDetailLog(s_id_log) {
 
 function prosesIsi(x_meter) {
     // Mengambil rencana jumlah order & jumlah order yang sudah dikerjakan
-    if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+    if (slcShift.value.trim() == "P") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
@@ -984,7 +984,7 @@ function prosesIsi(x_meter) {
 }
 
 function prosesKoreksi() {
-    if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+    if (slcShift.value.trim() == "P") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
