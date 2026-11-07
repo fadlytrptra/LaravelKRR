@@ -1417,22 +1417,36 @@ class PurchaseOrderController extends Controller
         $total = $sumAmount + $ppn;
 
         /* ===============================
-         * EMAIL SUPPLIER
-         * =============================== */
-        $emailString = $request->email;
-        if (!$emailString) {
-            $supplier = DB::connection('ConnPurchase')
-                ->table('YSUPPLIER as s')
-                ->join('YTRANSBL as t', 's.NO_SUP', '=', 't.Supplier')
-                ->where('t.NO_PO', $request->no_po)
-                ->select('s.TELEX1', 's.TELEX2')
-                ->first();
+        * EMAIL SUPPLIER
+        * =============================== */
+        $supplier = DB::connection('ConnPurchase')
+            ->table('YSUPPLIER as s')
+            ->join('YTRANSBL as t', 's.NO_SUP', '=', 't.Supplier')
+            ->where('t.NO_PO', $request->no_po)
+            ->select(
+                's.NM_SUP',
+                's.TELEX1',
+                's.TELEX2'
+            )
+            ->first();
 
+        if (!$supplier) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data supplier tidak ditemukan.'
+            ]);
+        }
+
+        $namaSupplier = trim($supplier->NM_SUP ?? '');
+
+        $emailString = $request->email;
+
+        if (!$emailString) {
             $emailString = collect([
                 trim($supplier->TELEX1 ?? ''),
                 trim($supplier->TELEX2 ?? '')
             ])
-                ->filter(fn($e) => !empty($e))
+                ->filter(fn($e) => !empty($e) && $e !== '00')
                 ->implode(', ');
         }
 
@@ -1473,25 +1487,70 @@ class PurchaseOrderController extends Controller
         /* ===============================
          * SET RECIPIENTS
          * =============================== */
-        $emails[] = 'purchasing@kertarajasa.co.id';
+        $emails[] = 'christoromeo2@gmail.com';
 
         if ($sales) {
-            $emails[] = 'sales@kertarajasa.co.id';
+            $emails[] = 'christoromeo2@gmail.com';
         }
 
         /* ===============================
          * KIRIM EMAIL
          * =============================== */
-        Mail::send([], [], function ($message) use ($emails, $request, $pdf) {
-            $message->to($emails)
-                ->subject("Purchase Order Kerta Rajasa Raya {$request->no_po}")
-                ->html("Berikut adalah Purchase Order dengan nomor {$request->no_po}. Silakan cek detail terlampir.")
-                ->attachData(
-                    $pdf->output(),
-                    "{$request->no_po}.pdf",
-                    ['mime' => 'application/pdf']
-                );
-        });
+        $htmlBody = '
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+            </head>
+            <body style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+
+                <p>
+                    Dear Supplier <strong>' . e($namaSupplier) . '</strong>,
+                </p>
+
+                <p>
+                    Berikut kami lampirkan Purchase Order PT. Kerta Rajasa Raya
+                    dengan nomor <strong>' . e($request->no_po) . '</strong>,
+                    untuk detail Purchase Order dapat dilihat melalui attachment
+                    pada email ini.
+                </p>
+
+                <p>
+                    Terimakasih
+                </p>
+
+                <br>
+
+                <p>
+                    <em>Email ini terkirim otomatis menggunakan sistem perusahaan kami</em>
+                </p>
+
+                <br>
+
+                <div style="line-height: 1.6;">
+                    PT. KERTA RAJASA RAYA<br>
+                    Jl. Raya Tropodo No.1, Kepuh, Tropodo, Kec. Waru,
+                    Kabupaten Sidoarjo, Jawa Timur 61256<br>
+                    Phone Office: (031) 8669595<br>
+                    Email Office: purchasing@kertarajasa.co.id
+                </div>
+
+            </body>
+            </html>
+            ';
+
+            Mail::send([], [], function ($message) use ($emails, $request, $pdf, $htmlBody) {
+
+                $message->to($emails)
+                    ->subject("Purchase Order Kerta Rajasa Raya {$request->no_po}")
+                    ->html($htmlBody)
+                    ->attachData(
+                        $pdf->output(),
+                        "{$request->no_po}.pdf",
+                        ['mime' => 'application/pdf']
+                    );
+
+            });
 
         DB::connection('ConnPurchase')
             ->table('YTRANSBL')
