@@ -5,26 +5,26 @@
 @endsection
 
 <style>
-    @media (hover: none) and (pointer: coarse) {
+@media (hover: none) and (pointer: coarse) {
 
-        body {
-            zoom: 0.75;
-        }
-
-        /* BACKDROP */
-        .modal-backdrop {
-            transform: scale(2);
-            transform-origin: top left;
-            width: 143%;
-            height: 143%;
-        }
-
-        /* MODAL */
-        .modal {
-            transform: scale(1);
-            transform-origin: top center;
-        }
+    body {
+        zoom: 0.75;
     }
+
+    /* BACKDROP */
+    .modal-backdrop {
+        transform: scale(2);
+        transform-origin: top left;
+        width: 143%;
+        height: 143%;
+    }
+
+    /* MODAL */
+    .modal {
+        transform: scale(1);
+        transform-origin: top center;
+    }
+}
 </style>
 
 @section('content')
@@ -179,19 +179,13 @@
                         disabled>
                 </div>
 
-                <div class="col-auto ps-0">
-                    <button type="button" class="btn btn-primary btn-sm" id="btn_bagi">
-                        Bagi 6
-                    </button>
-                </div>
-
                 <div class="col-md-1"></div>
 
                 <div class="col-md-2 d-flex justify-content-end">
                     <label for="shuttle">Jumlah Shuttle</label>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2 d-flex justify-content-end">
                     <input type="text" id="shuttle" class="form-control form-control-sm" placeholder="0"
                         min="0" disabled>
                 </div>

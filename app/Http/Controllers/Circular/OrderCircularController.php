@@ -2210,16 +2210,6 @@ class OrderCircularController extends Controller
             // dd($response);
             return datatables($response)->make(true);
 
-        } else if ($id == 'DataRPMPagi') {
-            $hidIdMesin = $request->input('hidIdMesin');
-            $txtRpm = $request->input('txtRpm');
-            // dd($request->all());
-
-            DB::connection('ConnCircular')->table('T_Mesin')
-                ->where('Id_mesin', $hidIdMesin)
-                ->update([
-                    'Rpm' => $txtRpm
-                ]);
         }
     }
 
