@@ -439,6 +439,7 @@ btnKoreksi.addEventListener("click", function () {
     loadIdLogMesin();
     dtTanggal1.disabled = false;
     slcShift.disabled = false;
+    // btn_bagi.disabled = false;
 });
 
 btnHapus.addEventListener("click", function () {
@@ -1210,6 +1211,7 @@ function toggleButtons(s_nilai) {
             btnHapus.disabled = true;
             btnProses.disabled = false;
             btnKeluar.textContent = "Batal";
+            btn_bagi.disabled = false;
             break;
 
         default:
@@ -1221,6 +1223,7 @@ function toggleButtons(s_nilai) {
             btnIsi.classList.remove("btn-clicked-isi");
             btnKoreksi.classList.remove("btn-clicked-koreksi");
             btnHapus.classList.remove("btn-clicked-hapus");
+            btn_bagi.disabled = true;
             break;
     }
 }
