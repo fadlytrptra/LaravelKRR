@@ -1487,10 +1487,10 @@ class PurchaseOrderController extends Controller
         /* ===============================
          * SET RECIPIENTS
          * =============================== */
-        $emails[] = 'christoromeo2@gmail.com';
+        $emails[] = 'purchasing@kertarajasa.co.id';
 
         if ($sales) {
-            $emails[] = 'christoromeo2@gmail.com';
+            $emails[] = 'sales@kertarajasa.co.id';
         }
 
         /* ===============================
