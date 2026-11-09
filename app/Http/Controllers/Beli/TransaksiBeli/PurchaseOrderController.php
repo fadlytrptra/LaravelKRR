@@ -1487,21 +1487,45 @@ class PurchaseOrderController extends Controller
         /* ===============================
          * SET RECIPIENTS
          * =============================== */
-        $emails[] = 'purchasing@kertarajasa.co.id';
+        $emails[] = 'christoromeo2@gmail.com';
 
         if ($sales) {
-            $emails[] = 'sales@kertarajasa.co.id';
+            $emails[] = 'christoromeo2@gmail.com';
         }
 
         /* ===============================
-         * KIRIM EMAIL
-         * =============================== */
-        $htmlBody = '
+        * KIRIM EMAIL
+        * =============================== */
+
+        // Lokasi logo perusahaan
+        $logoPath = public_path('images/logo2.png');
+
+        // Pastikan file logo tersedia
+        if (!file_exists($logoPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File logo2.png tidak ditemukan.'
+            ]);
+        }
+
+        Mail::send([], [], function ($message) use (
+            $emails,
+            $request,
+            $pdf,
+            $namaSupplier,
+            $logoPath
+        ) {
+
+            // Embed logo ke dalam email
+            $logoEm = $message->embed($logoPath);
+
+            $htmlBody = '
             <!DOCTYPE html>
             <html>
             <head>
                 <meta charset="UTF-8">
             </head>
+
             <body style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
 
                 <p>
@@ -1528,29 +1552,35 @@ class PurchaseOrderController extends Controller
                 <br>
 
                 <div style="line-height: 1.6;">
-                    PT. KERTA RAJASA RAYA<br>
+                    <strong>PT. KERTA RAJASA RAYA</strong><br>
                     Jl. Raya Tropodo No.1, Kepuh, Tropodo, Kec. Waru,
                     Kabupaten Sidoarjo, Jawa Timur 61256<br>
                     Phone Office: (031) 8669595<br>
                     Email Office: purchasing@kertarajasa.co.id
                 </div>
 
+                <br>
+
+                <img
+                    src="' . $logoEm . '"
+                    alt="Logo PT. Kerta Rajasa Raya"
+                    style="display: block; max-width: 220px; height: auto;"
+                >
+
             </body>
             </html>
             ';
 
-            Mail::send([], [], function ($message) use ($emails, $request, $pdf, $htmlBody) {
+            $message->to($emails)
+                ->subject("Purchase Order Kerta Rajasa Raya {$request->no_po}")
+                ->html($htmlBody)
+                ->attachData(
+                    $pdf->output(),
+                    "{$request->no_po}.pdf",
+                    ['mime' => 'application/pdf']
+                );
 
-                $message->to($emails)
-                    ->subject("Purchase Order Kerta Rajasa Raya {$request->no_po}")
-                    ->html($htmlBody)
-                    ->attachData(
-                        $pdf->output(),
-                        "{$request->no_po}.pdf",
-                        ['mime' => 'application/pdf']
-                    );
-
-            });
+        });
 
         DB::connection('ConnPurchase')
             ->table('YTRANSBL')
