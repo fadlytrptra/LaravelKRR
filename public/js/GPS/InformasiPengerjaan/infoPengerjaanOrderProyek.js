@@ -39,6 +39,7 @@ jQuery(function ($) {
     const mhn_Tanggal = document.getElementById("mhn_Tanggal");
 
     const mhn_FrameAsal = document.getElementById("mhn_FrameAsal");
+    const mhn_BarangFields = document.getElementById("mhn_BarangFields");
     const mhn_Divisi = document.getElementById("mhn_Divisi");
     const mhn_TIdDivisi = document.getElementById("mhn_TIdDivisi");
     const mhn_btnDivisi = document.getElementById("mhn_btnDivisi");
@@ -75,16 +76,18 @@ jQuery(function ($) {
     const mhn_Alasan = document.getElementById("mhn_Alasan");
 
     const mhn_tbody = document.getElementById("mhn_tbody");
+    const mhn_TableSection = document.getElementById("mhn_TableSection");
     const mhn_IdTransaksi = document.getElementById("mhn_IdTransaksi");
 
     const mhn_btnIsi = document.getElementById("mhn_btnIsi");
     const mhn_btnKoreksi = document.getElementById("mhn_btnKoreksi");
     const mhn_btnHapus = document.getElementById("mhn_btnHapus");
     const mhn_btnKeluar = document.getElementById("mhn_btnKeluar");
+    const mhn_btnHeaderClose = document.getElementById("mhn_btnHeaderClose");
 
     const mhnState = {
         pilih: 0,       // 0 = AllData, 1 = AllDataPemohon
-        proses: 0,      // 0 = none, 2 = koreksi
+        proses: 0,      // 0 = pilih aksi, 1 = isi, 2 = koreksi, 3 = hapus
         konvBeri: "",
         konvTerima: "",
         jmlBon: 0,
@@ -117,6 +120,13 @@ jQuery(function ($) {
             const row = rows[idx];
             if (row.rowColor === "limegreen") {
                 checked.push({ idBag: row.IdTrans, estDate: row.TglStart });
+            }
+        });
+
+        mhn_Modal.addEventListener("hide.bs.modal", function (event) {
+            if (mhnState.proses !== 0) {
+                event.preventDefault();
+                mhn_btnKeluar.click();
             }
         });
         if (checked.length === 0) {
@@ -217,8 +227,20 @@ jQuery(function ($) {
         }
     });
 
+    mhn_Modal.addEventListener("shown.bs.modal", function () {
+        if (!mhn_TIdDivisi2.value) mhn_btnDivisi2.focus();
+    });
+
     mhn_btnKeluar.addEventListener("click", function () {
+        if (mhnState.proses !== 0) {
+            mhnResetProcess();
+            return;
+        }
         mhn_ModalBs.hide();
+    });
+
+    mhn_btnHeaderClose.addEventListener("click", function () {
+        mhn_btnKeluar.click();
     });
 
     mhn_btnDivisi2.addEventListener("click", function () {
@@ -230,8 +252,7 @@ jQuery(function ($) {
             function (row) {
                 mhn_TIdDivisi2.value = row.Id;
                 mhn_Divisi2.value = row.Nama;
-                mhn_btnObjek2.disabled = false;
-                mhn_btnObjek2.focus();
+                mhnResetForm(true);
                 Swal.fire({
                     title: "Tampilkan Data?",
                     text: "Tampilkan semua data atau hanya data pemohon?",
@@ -240,7 +261,9 @@ jQuery(function ($) {
                     cancelButtonText: "Pemohon Saja",
                 }).then(function (r) {
                     mhnState.pilih = r.isConfirmed ? 0 : 1;
-                    mhnLoadListMohon();
+                    mhnLoadListMohon(function () {
+                        mhn_btnIsi.focus();
+                    });
                 });
             }
         );
@@ -311,6 +334,10 @@ jQuery(function ($) {
                 mhn_FrameAsal.disabled = false;
                 mhn_btnDivisi.disabled = false;
                 mhn_btnDivisi.focus();
+                if (mhn_TIdType.value || mhn_KdBrg.value) {
+                    mhn_FrameQty.disabled = true;
+                    mhnValidateKodeBarang();
+                }
             }
         );
     });
@@ -392,7 +419,8 @@ jQuery(function ($) {
             function (row) {
                 mhn_TIdSubKel.value = row.Id;
                 mhn_SubKel.value = row.Nama;
-                mhn_KdBrg.focus();
+                mhnClearBarangFields();
+                mhn_btnNama.focus();
             }
         );
     });
@@ -402,6 +430,7 @@ jQuery(function ($) {
             Swal.fire("Info", "Pilih Sub Kelompok Pemberi terlebih dahulu.", "info");
             return;
         }
+        mhnClearBarangFields();
         mhnLookup(
             "Pilih Nama Barang",
             window.infoPkjOrderProyekConfig.routeMhnTypeList +
@@ -409,8 +438,12 @@ jQuery(function ($) {
             ["ID Type", "Nama Type"],
             ["Id", "Nama"],
             function (row) {
-                mhn_TIdType.value = row.Id;
-                mhn_NmBrg.value = row.Nama;
+                if (!row.Id) {
+                    Swal.fire("Error", "Kode Type barang tidak ditemukan.", "error");
+                    return;
+                }
+                mhn_TIdType.value = row.Id || "";
+                mhn_NmBrg.value = row.Nama || "";
                 mhnValidateKodeBarang();
             }
         );
@@ -418,11 +451,17 @@ jQuery(function ($) {
 
     mhn_KdBrg.addEventListener("keypress", function (e) {
         if (e.key !== "Enter") return;
+        e.preventDefault();
         if (!mhn_TIdSubKel.value) {
             Swal.fire("Info", "Pilih Sub Kelompok Pemberi terlebih dahulu.", "info");
             return;
         }
-        mhn_KdBrg.value = mhn_KdBrg.value.padStart(9, "0").slice(-9);
+        const kode = mhn_KdBrg.value.trim();
+        if (!kode) {
+            mhn_btnNama.focus();
+            return;
+        }
+        mhn_KdBrg.value = kode.padStart(9, "0").slice(-9);
         mhnValidateKodeBarang();
     });
 
@@ -457,25 +496,71 @@ jQuery(function ($) {
     });
 
     mhn_Alasan.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") mhn_btnIsi.focus();
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        if (
+            (parseFloat(mhn_Primer.value) || 0) === 0 &&
+            (parseFloat(mhn_Sekunder.value) || 0) === 0 &&
+            (parseFloat(mhn_Tritier.value) || 0) === 0
+        ) {
+            Swal.fire("Error", "Jumlah yang di-BON tidak boleh 0.", "error");
+            mhn_Primer.focus();
+            return;
+        }
+
+        if (mhnState.proses === 1) mhn_btnIsi.disabled = false;
+        if (mhnState.proses === 2) mhn_btnKoreksi.focus();
+        else if (mhnState.proses === 3) mhn_btnHapus.focus();
+        else mhn_btnIsi.focus();
     });
 
     mhn_btnIsi.addEventListener("click", function () {
+        // VB: ISI membuka mode input terlebih dahulu, lalu PROSES menyimpan.
+        if (mhnState.proses === 0) {
+            if (!mhn_TIdDivisi2.value) {
+                Swal.fire("Info", "Pilih dulu Divisi Penerima.", "info");
+                mhn_btnDivisi2.focus();
+                return;
+            }
+
+            mhn_tbody.querySelectorAll("tr.selected").forEach(function (row) {
+                row.classList.remove("selected");
+            });
+            mhn_IdTransaksi.value = "";
+            mhn_TIdObjek2.value = "";
+            mhn_Objek2.value = "";
+            mhn_TIdKelUtama2.value = "";
+            mhn_KelUtama2.value = "";
+            mhn_TIdKelompok2.value = "";
+            mhn_Kelompok2.value = "";
+            mhn_TIdSubKel2.value = "";
+            mhn_SubKel2.value = "";
+            mhn_btnKelUtama2.disabled = true;
+            mhn_btnKelompok2.disabled = true;
+            mhn_btnSubKel2.disabled = true;
+            mhn_Pemohon.value = mhn_Pemohon.dataset.user || "";
+            mhn_Tanggal.value = new Date().toISOString().slice(0, 10);
+            mhnResetFormAsalOnly();
+            mhnState.proses = 1;
+            mhnSetListVisible(false);
+            mhnSetEntryFieldsVisible(true);
+            mhn_btnIsi.textContent = "PROSES";
+            mhn_btnIsi.disabled = true;
+            mhn_btnKoreksi.disabled = true;
+            mhn_btnHapus.disabled = true;
+            mhn_btnKeluar.textContent = "BATAL";
+            mhn_btnObjek2.disabled = false;
+            mhn_btnObjek2.focus();
+            return;
+        }
+
         // Mode KOREKSI → update
         if (mhnState.proses === 2) {
             mhnConfirmAction();
             return;
         }
 
-        // Cegah duplikasi: baris terpilih tapi dalam mode ISI
-        if (mhn_IdTransaksi.value) {
-            Swal.fire(
-                "Info",
-                "Ada data terpilih. Klik KOREKSI untuk mengubah, atau klik area kosong pada list untuk membatalkan pilihan.",
-                "info"
-            );
-            return;
-        }
+        if (mhnState.proses !== 1) return;
 
         // Mode insert
         const p = parseFloat(mhn_Primer.value) || 0;
@@ -518,6 +603,7 @@ jQuery(function ($) {
                 Swal.fire("Sukses", res.message || "Data tersimpan.", "success");
                 mhnLoadListMohon();
                 mhnResetFormAsalOnly();
+                mhn_btnIsi.disabled = true;
                 mhn_btnObjek2.focus();
             },
             function (xhr) {
@@ -531,15 +617,33 @@ jQuery(function ($) {
             Swal.fire("Info", "Pilih 1 baris pada list terlebih dahulu.", "info");
             return;
         }
+        if (mhnState.proses === 2) {
+            mhnConfirmAction();
+            return;
+        }
         mhnState.proses = 2;
         mhn_FrameQty.disabled = false;
-        mhn_btnIsi.textContent = "PROSES";
-        Swal.fire("Info", "Ubah data lalu klik tombol PROSES.", "info");
+        mhn_btnKoreksi.textContent = "PROSES";
+        mhn_btnIsi.disabled = true;
+        mhn_btnHapus.disabled = true;
+        mhn_btnKeluar.textContent = "BATAL";
+        Swal.fire("Info", "Ubah data lalu klik tombol PROSES.", "info").then(function () {
+            mhn_Primer.focus();
+        });
     });
 
     mhn_btnHapus.addEventListener("click", function () {
         if (!mhn_IdTransaksi.value) {
             Swal.fire("Info", "Pilih 1 baris pada list terlebih dahulu.", "info");
+            return;
+        }
+        if (mhnState.proses !== 3) {
+            mhnState.proses = 3;
+            mhn_btnIsi.disabled = true;
+            mhn_btnKoreksi.disabled = true;
+            mhn_btnHapus.textContent = "PROSES";
+            mhn_btnKeluar.textContent = "BATAL";
+            mhn_btnHapus.focus();
             return;
         }
         Swal.fire({
@@ -556,8 +660,8 @@ jQuery(function ($) {
                 null, null,
                 function (res) {
                     Swal.fire("Sukses", res.message, "success");
+                    mhnResetForm(true);
                     mhnLoadListMohon();
-                    mhnResetForm();
                 },
                 function (xhr) {
                     Swal.fire("Error", (xhr.responseJSON && xhr.responseJSON.error) || "Gagal hapus.", "error");
@@ -570,14 +674,8 @@ jQuery(function ($) {
         const tr = e.target.closest("tr");
 
         // Klik area kosong / row tanpa kolom lengkap → batalkan pilihan
-        if (!tr || tr.querySelectorAll("td").length < 16) {
-            mhn_tbody.querySelectorAll("tr.selected").forEach(function (x) {
-                x.classList.remove("selected");
-            });
-            mhn_IdTransaksi.value = "";
-            mhn_btnIsi.textContent = "ISI";
-            mhnState.proses = 0;
-            mhn_FrameQty.disabled = true;
+        if (!tr || tr.querySelectorAll("td").length < 19) {
+            mhnResetForm(true);
             return;
         }
 
@@ -590,13 +688,13 @@ jQuery(function ($) {
         const cells = tr.querySelectorAll("td");
         mhn_IdTransaksi.value = cells[0].textContent.trim();
         mhn_Alasan.value = cells[2].textContent.trim();
-        mhn_Pemohon.value = cells[3].textContent.trim();
+        mhn_Pemohon.value = cells[18].textContent.trim();
         mhn_NmBrg.value = cells[1].textContent.trim();
-        mhn_KdBrg.value = cells[13].textContent.trim();
-        mhn_TIdType.value = cells[14].textContent.trim();
-        mhn_Primer.value = cells[10].textContent.trim();
-        mhn_Sekunder.value = cells[11].textContent.trim();
-        mhn_Tritier.value = cells[12].textContent.trim();
+        mhn_KdBrg.value = cells[10].textContent.trim();
+        mhn_TIdType.value = cells[11].textContent.trim();
+        mhn_Primer.value = cells[12].textContent.trim();
+        mhn_Sekunder.value = cells[13].textContent.trim();
+        mhn_Tritier.value = cells[14].textContent.trim();
         mhn_Divisi2.value = cells[5].textContent.trim();
         mhn_Objek2.value = cells[6].textContent.trim();
         mhn_KelUtama2.value = cells[7].textContent.trim();
@@ -606,7 +704,16 @@ jQuery(function ($) {
         // Reset state KOREKSI jika sebelumnya aktif
         mhnState.proses = 0;
         mhn_btnIsi.textContent = "ISI";
+        mhn_btnIsi.disabled = false;
+        mhn_btnKoreksi.disabled = false;
+        mhn_btnHapus.disabled = false;
+        mhn_btnKoreksi.textContent = "KOREKSI";
+        mhn_btnHapus.textContent = "HAPUS";
+        mhn_btnKeluar.textContent = "KELUAR";
+        mhn_btnObjek2.disabled = true;
+        mhn_FrameAsal.disabled = true;
         mhn_FrameQty.disabled = true;
+        mhnSetEntryFieldsVisible(true);
 
         // Load detail Tujuan
         ajaxPost(
@@ -619,6 +726,7 @@ jQuery(function ($) {
                 mhn_TIdKelUtama2.value = r.IdKelUtama || "";
                 mhn_TIdKelompok2.value = r.IdKelompok || "";
                 mhn_TIdSubKel2.value = r.IdSubKel || "";
+                mhnLoadCorrectionStock();
             }
         );
 
@@ -638,6 +746,7 @@ jQuery(function ($) {
                 mhn_KelUtama.value = r.NamaKelUtama || "";
                 mhn_Kelompok.value = r.NamaKelompok || "";
                 mhn_SubKel.value = r.NamaSubKel || "";
+                mhnLoadCorrectionStock();
             }
         );
     });
@@ -651,10 +760,44 @@ jQuery(function ($) {
         mhnState.onCloseCb = (opts && opts.onClose) || null;
         mhnResetForm();
         mhn_tbody.innerHTML =
-            '<tr><td colspan="16" class="text-center text-muted">Pilih divisi penerima untuk memuat data.</td></tr>';
+            '<tr><td colspan="13" class="text-center text-muted">Pilih divisi penerima untuk memuat data.</td></tr>';
         mhn_ModalBs.show();
-        mhn_btnDivisi2.focus();
     };
+
+    function mhnResetProcess() {
+        const idDivisi = mhn_TIdDivisi2.value;
+        mhnResetForm(true);
+        if (idDivisi) {
+            mhnLoadListMohon(function () {
+                mhn_btnIsi.focus();
+            });
+        }
+    }
+
+    function mhnLoadCorrectionStock() {
+        if (!mhn_KdBrg.value || !mhn_TIdSubKel.value) return;
+        ajaxPost(
+            window.infoPkjOrderProyekConfig.routeMhnKodeBarang,
+            {
+                kodeBarang: mhn_KdBrg.value,
+                idSubKel: mhn_TIdSubKel.value,
+                idType: mhn_TIdType.value,
+            },
+            null,
+            null,
+            function (r) {
+                mhnFillKodeBarang(r);
+            },
+            function (xhr) {
+                Swal.fire(
+                    "Error",
+                    (xhr.responseJSON && xhr.responseJSON.error) ||
+                        "Gagal memuat saldo barang.",
+                    "error",
+                );
+            },
+        );
+    }
 
     function mhnLookup(title, url, headers, columns, onSelect) {
         openLookupModal({ title, url, headers, columns, onSelect });
@@ -771,41 +914,71 @@ jQuery(function ($) {
     function mhnValidateKodeBarang() {
         const kode = mhn_KdBrg.value.trim();
         const idSubKel = mhn_TIdSubKel.value;
-        if (!kode || !idSubKel) return;
+        const idType = mhn_TIdType.value;
+        if ((!kode && !idType) || !idSubKel) return;
+
+        const loadKodeBarang = function () {
+            ajaxPost(
+                window.infoPkjOrderProyekConfig.routeMhnKodeBarang,
+                { kodeBarang: kode, idType: idType, idSubKel: idSubKel },
+                null,
+                null,
+                function (r) {
+                    mhnFillKodeBarang(r);
+                },
+                function (xhr) {
+                    Swal.fire(
+                        "Error",
+                        (xhr.responseJSON && xhr.responseJSON.error) ||
+                            "Gagal memuat kode barang.",
+                        "error",
+                    );
+                },
+            );
+        };
+
+        if (!kode) {
+            loadKodeBarang();
+            return;
+        }
 
         ajaxPost(
             window.infoPkjOrderProyekConfig.routeMhnCekKodeBarang,
             { kodeBarang: kode, idSubKel: idSubKel },
-            null, null,
+            null,
+            null,
             function (res) {
                 if (res.jumlah === 0) {
                     Swal.fire(
                         "Error",
                         "Tidak ada kode barang " + kode + " pada sub kel ini.",
-                        "error"
+                        "error",
                     );
                     return;
                 }
-                ajaxPost(
-                    window.infoPkjOrderProyekConfig.routeMhnKodeBarang,
-                    {
-                        kodeBarang: kode,
-                        idType: mhn_TIdType.value || "",
-                        idSubKel: idSubKel,
-                    },
-                    null, null,
-                    function (r) {
-                        mhnFillKodeBarang(r);
-                    }
+                loadKodeBarang();
+            },
+            function (xhr) {
+                Swal.fire(
+                    "Error",
+                    (xhr.responseJSON && xhr.responseJSON.error) ||
+                        "Gagal memeriksa kode barang.",
+                    "error",
                 );
-            }
+            },
         );
     }
 
     function mhnFillKodeBarang(r) {
-        mhn_KdBrg.value = r.KodeBarang || mhn_KdBrg.value;
-        mhn_NmBrg.value = r.NamaType || "";
-        mhn_TIdType.value = r.IdType || "";
+        if (!r) return;
+        const kodeBarang = String(r.KodeBarang || mhn_KdBrg.value || "").trim();
+        if (!kodeBarang) {
+            Swal.fire("Error", "Kode Barang untuk Nama Barang ini tidak ditemukan.", "error");
+            return;
+        }
+        mhn_KdBrg.value = kodeBarang;
+        mhn_NmBrg.value = r.NamaType || mhn_NmBrg.value || "";
+        mhn_TIdType.value = r.IdType || mhn_TIdType.value || "";
         mhn_Primer1.value = r.Primer1 || 0;
         mhn_Sekunder1.value = r.Sekunder1 || 0;
         mhn_Tritier1.value = r.Tritier1 || 0;
@@ -829,20 +1002,25 @@ jQuery(function ($) {
                 mhn_SatSekunder.textContent = t.SatSekunder || "-";
                 mhn_SatTritier.textContent = t.SatTritier || "-";
 
-                let valid = true;
+                let valid = false;
                 if (mhnState.konvBeri !== "Y" && mhnState.konvTerima !== "Y") {
                     valid =
                         t.SatPrimer === mhn_SatPrimer1.textContent &&
                         t.SatSekunder === mhn_SatSekunder1.textContent &&
                         t.SatTritier === mhn_SatTritier1.textContent;
                 } else if (mhnState.konvBeri === "Y" && mhnState.konvTerima !== "Y") {
-                    valid = true;
+                    valid =
+                        t.SatPrimer === mhn_SatPrimer1.textContent ||
+                        t.SatSekunder === mhn_SatSekunder1.textContent ||
+                        t.SatTritier === mhn_SatTritier1.textContent;
                 }
 
                 if (valid) {
-                    mhn_FrameQty.disabled = false;
-                    mhn_Primer.focus();
+                    const canEditQty = mhnState.proses === 1 || mhnState.proses === 2;
+                    mhn_FrameQty.disabled = !canEditQty;
+                    if (canEditQty) mhn_Primer.focus();
                 } else {
+                    mhn_FrameQty.disabled = true;
                     Swal.fire(
                         "Error",
                         "Satuan pemberi dan penerima tidak sama.",
@@ -867,8 +1045,8 @@ jQuery(function ($) {
             null, null,
             function (res) {
                 Swal.fire("Sukses", res.message, "success");
+                mhnResetForm(true);
                 mhnLoadListMohon();
-                mhnResetForm();
             },
             function (xhr) {
                 Swal.fire(
@@ -880,10 +1058,16 @@ jQuery(function ($) {
         );
     }
 
-    function mhnLoadListMohon() {
-        if (!mhn_TIdDivisi2.value) return;
+    function mhnLoadListMohon(onLoaded) {
+        const finish = function () {
+            if (typeof onLoaded === "function") onLoaded();
+        };
+        if (!mhn_TIdDivisi2.value) {
+            finish();
+            return;
+        }
         mhn_tbody.innerHTML =
-            '<tr><td colspan="16" class="text-center text-muted">Memuat data...</td></tr>';
+            '<tr><td colspan="13" class="text-center text-muted">Memuat data...</td></tr>';
 
         ajaxPost(
             window.infoPkjOrderProyekConfig.routeMhnListMohon,
@@ -895,7 +1079,8 @@ jQuery(function ($) {
             function (data) {
                 if (!data || data.length === 0) {
                     mhn_tbody.innerHTML =
-                        '<tr><td colspan="16" class="text-center text-muted">Tidak ada data mohon.</td></tr>';
+                        '<tr><td colspan="13" class="text-center text-muted">Tidak ada data mohon.</td></tr>';
+                    finish();
                     return;
                 }
                 let html = "";
@@ -911,26 +1096,33 @@ jQuery(function ($) {
                     html += `<td class="mhn-tbl-cell">${esc(row.NamaKelUtama)}</td>`;
                     html += `<td class="mhn-tbl-cell">${esc(row.NamaKelompok)}</td>`;
                     html += `<td class="mhn-tbl-cell">${esc(row.NamaSubKel)}</td>`;
+                    html += `<td class="mhn-tbl-cell d-none">${esc(row.KodeBarang)}</td>`;
+                    html += `<td class="mhn-tbl-cell d-none">${esc(row.IdType)}</td>`;
                     html += `<td class="mhn-tbl-cell text-end">${row.Primer}</td>`;
                     html += `<td class="mhn-tbl-cell text-end">${row.Sekunder}</td>`;
                     html += `<td class="mhn-tbl-cell text-end">${row.Tritier}</td>`;
-                    html += `<td class="mhn-tbl-cell">${esc(row.KodeBarang)}</td>`;
-                    html += `<td class="mhn-tbl-cell">${esc(row.IdType)}</td>`;
-                    html += `<td class="mhn-tbl-cell">${esc(row.IdPenerima1)}</td>`;
+                    html += `<td class="mhn-tbl-cell d-none">${esc(row.SatPrimer)}</td>`;
+                    html += `<td class="mhn-tbl-cell d-none">${esc(row.SatSekunder)}</td>`;
+                    html += `<td class="mhn-tbl-cell d-none">${esc(row.SatTritier)}</td>`;
+                    html += `<td class="mhn-tbl-cell d-none">${esc(row.IdPenerima1)}</td>`;
                     html += "</tr>";
                 });
                 mhn_tbody.innerHTML = html;
+                finish();
             },
             function () {
                 mhn_tbody.innerHTML =
-                    '<tr><td colspan="16" class="text-center text-danger">Gagal memuat.</td></tr>';
+                    '<tr><td colspan="13" class="text-center text-danger">Gagal memuat.</td></tr>';
+                finish();
             }
         );
     }
 
-    function mhnResetForm() {
-        mhn_TIdDivisi2.value = "";
-        mhn_Divisi2.value = "";
+    function mhnResetForm(preserveReceiver) {
+        const receiverId = preserveReceiver ? mhn_TIdDivisi2.value : "";
+        const receiverName = preserveReceiver ? mhn_Divisi2.value : "";
+        mhn_TIdDivisi2.value = receiverId;
+        mhn_Divisi2.value = receiverName;
         mhn_TIdObjek2.value = "";
         mhn_Objek2.value = "";
         mhn_TIdKelUtama2.value = "";
@@ -939,6 +1131,8 @@ jQuery(function ($) {
         mhn_Kelompok2.value = "";
         mhn_TIdSubKel2.value = "";
         mhn_SubKel2.value = "";
+        mhn_Pemohon.value = mhn_Pemohon.dataset.user || "";
+        mhn_Tanggal.value = new Date().toISOString().slice(0, 10);
         mhn_btnObjek2.disabled = true;
         mhn_btnKelUtama2.disabled = true;
         mhn_btnKelompok2.disabled = true;
@@ -946,8 +1140,18 @@ jQuery(function ($) {
         mhnResetFormAsalOnly();
         mhn_IdTransaksi.value = "";
         mhn_btnIsi.textContent = "ISI";
+        mhn_btnIsi.disabled = false;
+        mhn_btnKoreksi.disabled = false;
+        mhn_btnHapus.disabled = false;
+        mhn_btnKoreksi.textContent = "KOREKSI";
+        mhn_btnHapus.textContent = "HAPUS";
+        mhn_btnKeluar.textContent = "KELUAR";
+        mhn_btnObjek2.disabled = true;
         mhn_FrameAsal.disabled = true;
         mhn_FrameQty.disabled = true;
+        mhnSetListVisible(true);
+        mhnSetEntryFieldsVisible(false);
+        mhnState.proses = 0;
         mhn_tbody.querySelectorAll("tr.selected").forEach(function (x) {
             x.classList.remove("selected");
         });
@@ -973,6 +1177,7 @@ jQuery(function ($) {
         mhn_btnKelompok.disabled = true;
         mhn_btnSubKel.disabled = true;
         mhn_FrameQty.disabled = true;
+        mhn_FrameAsal.disabled = true;
         mhn_Primer.value = "0";
         mhn_Sekunder.value = "0";
         mhn_Tritier.value = "0";
@@ -986,8 +1191,38 @@ jQuery(function ($) {
         mhn_SatSekunder1.textContent = "";
         mhn_SatTritier1.textContent = "";
         mhn_Alasan.value = "";
-        mhnState.proses = 0;
-        mhn_btnIsi.textContent = "ISI";
+        mhnState.konvBeri = "";
+        mhnState.konvTerima = "";
+    }
+
+    function mhnClearBarangFields() {
+        mhn_KdBrg.value = "";
+        mhn_NmBrg.value = "";
+        mhn_TIdType.value = "";
+        mhn_Primer1.value = "0";
+        mhn_Sekunder1.value = "0";
+        mhn_Tritier1.value = "0";
+        mhn_SatPrimer1.textContent = "";
+        mhn_SatSekunder1.textContent = "";
+        mhn_SatTritier1.textContent = "";
+        mhn_Primer.value = "0";
+        mhn_Sekunder.value = "0";
+        mhn_Tritier.value = "0";
+        mhn_SatPrimer.textContent = "-";
+        mhn_SatSekunder.textContent = "-";
+        mhn_SatTritier.textContent = "-";
+        mhn_Alasan.value = "";
+        mhn_FrameQty.disabled = true;
+        mhnState.konvBeri = "";
+        mhnState.konvTerima = "";
+    }
+
+    function mhnSetListVisible(visible) {
+        mhn_TableSection.classList.toggle("d-none", !visible);
+    }
+
+    function mhnSetEntryFieldsVisible(visible) {
+        mhn_BarangFields.classList.toggle("d-none", !visible);
     }
 
     function esc(s) {

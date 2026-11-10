@@ -283,13 +283,13 @@
                     </div>
                     <div>
                         <h5 class="modal-title fw-bold mb-0">
-                            Permohonan Mutasi Antar Divisi
+                            PERMOHONAN MUTASI ANTAR DIVISI ( AWAL PENERIMA )
                         </h5>
                         <small class="text-muted">Formulir permohonan perpindahan barang antar divisi</small>
                     </div>
                 </div>
 
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="mhn_btnHeaderClose" class="btn-close" aria-label="Close"></button>
             </div>
 
             <div class="modal-body mhn-body">
@@ -297,11 +297,10 @@
                 <fieldset class="mhn-section mb-3">
                     <legend>
                         <i class="bi bi-box-arrow-in-down me-2"></i>
-                        Penerima Barang
+                        PENERIMA BARANG
                     </legend>
 
                     <div class="row g-3">
-
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
                                 <label class="col-sm-4 mhn-label">Divisi</label>
@@ -322,7 +321,9 @@
                             <div class="row align-items-center g-2">
                                 <label class="col-5 mhn-label">Pemohon</label>
                                 <div class="col-7">
-                                    <input type="text" id="mhn_Pemohon" class="form-control" readonly>
+                                    <input type="text" id="mhn_Pemohon" class="form-control" readonly
+                                        data-user="{{ auth()->user()->NomorUser ?? '' }}"
+                                        value="{{ auth()->user()->NomorUser ?? '' }}">
                                 </div>
                             </div>
                         </div>
@@ -331,11 +332,11 @@
                             <div class="row align-items-center g-2">
                                 <label class="col-4 mhn-label">Tanggal</label>
                                 <div class="col-8">
-                                    <input type="date" id="mhn_Tanggal" class="form-control">
+                                    <input type="date" id="mhn_Tanggal" class="form-control"
+                                        value="{{ now()->format('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
                                 <label class="col-sm-4 mhn-label">Objek</label>
@@ -354,22 +355,6 @@
 
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
-                                <label class="col-sm-4 mhn-label">Kel. Utama</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <input type="text" id="mhn_KelUtama2" class="form-control" readonly>
-                                        <button class="btn btn-outline-secondary mhn-search-btn" id="mhn_btnKelUtama2"
-                                            type="button" disabled>
-                                            <i class="bi bi-search"></i>
-                                        </button>
-                                    </div>
-                                    <input type="hidden" id="mhn_TIdKelUtama2">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="row align-items-center g-2">
                                 <label class="col-sm-4 mhn-label">Kelompok</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
@@ -380,6 +365,22 @@
                                         </button>
                                     </div>
                                     <input type="hidden" id="mhn_TIdKelompok2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center g-2">
+                                <label class="col-sm-4 mhn-label">Kelompok Utama</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="text" id="mhn_KelUtama2" class="form-control" readonly>
+                                        <button class="btn btn-outline-secondary mhn-search-btn" id="mhn_btnKelUtama2"
+                                            type="button" disabled>
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="mhn_TIdKelUtama2">
                                 </div>
                             </div>
                         </div>
@@ -406,7 +407,7 @@
                 <fieldset id="mhn_FrameAsal" class="mhn-section mb-3" disabled>
                     <legend>
                         <i class="bi bi-box-arrow-up me-2"></i>
-                        Pemberi Barang
+                        PEMBERI BARANG
                     </legend>
 
                     <div class="row g-3">
@@ -426,6 +427,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6 d-none d-md-block"></div>
 
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
@@ -439,22 +441,6 @@
                                         </button>
                                     </div>
                                     <input type="hidden" id="mhn_TIdObjek">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="row align-items-center g-2">
-                                <label class="col-sm-4 mhn-label">Kel. Utama</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <input type="text" id="mhn_KelUtama" class="form-control" readonly>
-                                        <button class="btn btn-outline-secondary mhn-search-btn" id="mhn_btnKelUtama"
-                                            type="button" disabled>
-                                            <i class="bi bi-search"></i>
-                                        </button>
-                                    </div>
-                                    <input type="hidden" id="mhn_TIdKelUtama">
                                 </div>
                             </div>
                         </div>
@@ -477,6 +463,22 @@
 
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
+                                <label class="col-sm-4 mhn-label">Kelompok Utama</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="text" id="mhn_KelUtama" class="form-control" readonly>
+                                        <button class="btn btn-outline-secondary mhn-search-btn" id="mhn_btnKelUtama"
+                                            type="button" disabled>
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="mhn_TIdKelUtama">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center g-2">
                                 <label class="col-sm-4 mhn-label">Sub Kelompok</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
@@ -491,6 +493,8 @@
                             </div>
                         </div>
 
+                        <div id="mhn_BarangFields" class="col-12 d-none">
+                            <div class="row g-3">
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
                                 <label class="col-sm-4 mhn-label">Kode Barang</label>
@@ -502,8 +506,17 @@
 
                         <div class="col-md-6">
                             <div class="row align-items-center g-2">
-                                <label class="col-sm-4 mhn-label">Nama Barang</label>
+                                <label class="col-sm-4 mhn-label">Kode Type</label>
                                 <div class="col-sm-8">
+                                    <input type="text" id="mhn_TIdType" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="row align-items-center g-2">
+                                <label class="col-sm-2 mhn-label">Nama Barang</label>
+                                <div class="col-sm-10">
                                     <div class="input-group">
                                         <input type="text" id="mhn_NmBrg" class="form-control" readonly>
                                         <button class="btn btn-outline-secondary mhn-search-btn" id="mhn_btnNama"
@@ -511,48 +524,38 @@
                                             <i class="bi bi-search"></i>
                                         </button>
                                     </div>
-                                    <input type="hidden" id="mhn_TIdType">
                                 </div>
                             </div>
                         </div>
 
-                    </div>
-                </fieldset>
-
-                <fieldset id="mhn_FrameQty" class="mhn-section mb-3" disabled>
-                    <legend>
-                        <i class="bi bi-box-seam me-2"></i>
-                        Stok &amp; Jumlah Mutasi
-                    </legend>
-
-                    <div class="row g-3">
-
                         <div class="col-12">
                             <div class="row align-items-center g-2">
-                                <label class="col-md-2 mhn-label">Stok Akhir</label>
+                                <label class="col-md-2 mhn-label">Stok Akhir Barang</label>
 
-                                <div class="col-md-2">
-                                    <input type="text" id="mhn_Primer1" class="form-control text-end"
-                                        value="0" readonly>
+                                <div class="col-md-3">
+                                    <small class="d-block text-muted">Sat.Primer</small>
+                                    <div class="input-group">
+                                        <input type="text" id="mhn_Primer1" class="form-control text-end"
+                                            value="0" readonly>
+                                        <span class="input-group-text" id="mhn_SatPrimer1"></span>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-2">
-                                    <input type="text" id="mhn_Sekunder1" class="form-control text-end"
-                                        value="0" readonly>
+                                <div class="col-md-3">
+                                    <small class="d-block text-muted">Sat.Sekunder</small>
+                                    <div class="input-group">
+                                        <input type="text" id="mhn_Sekunder1" class="form-control text-end"
+                                            value="0" readonly>
+                                        <span class="input-group-text" id="mhn_SatSekunder1"></span>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-2">
-                                    <input type="text" id="mhn_Tritier1" class="form-control text-end"
-                                        value="0" readonly>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mhn-unit-info">
-                                        <span id="mhn_SatPrimer1"></span>
-                                        <span>/</span>
-                                        <span id="mhn_SatSekunder1"></span>
-                                        <span>/</span>
-                                        <span id="mhn_SatTritier1"></span>
+                                <div class="col-md-3">
+                                    <small class="d-block text-muted">Sat.Tritier</small>
+                                    <div class="input-group">
+                                        <input type="text" id="mhn_Tritier1" class="form-control text-end"
+                                            value="0" readonly>
+                                        <span class="input-group-text" id="mhn_SatTritier1"></span>
                                     </div>
                                 </div>
                             </div>
@@ -560,9 +563,84 @@
 
                         <div class="col-12">
                             <div class="row align-items-center g-2">
-                                <label class="col-md-2 mhn-label">Jumlah Mutasi</label>
+                                <label class="col-md-2 mhn-label">Jumlah Belum ACC</label>
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
+                                    <small class="d-block text-muted">Primer</small>
+                                    <input type="text" id="mhn_Primer2" class="form-control text-end"
+                                        value="0" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <small class="d-block text-muted">Sekunder</small>
+                                    <input type="text" id="mhn_Sekunder2" class="form-control text-end"
+                                        value="0" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <small class="d-block text-muted">Tritier</small>
+                                    <input type="text" id="mhn_Tritier2" class="form-control text-end"
+                                        value="0" readonly>
+                                </div>
+                            </div>
+                        </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div id="mhn_TableSection" class="mhn-table-wrapper">
+                    <div class="mhn-table-heading">
+                        <div>
+                            <i class="bi bi-list-ul me-2"></i>
+                            <span>Daftar Permohonan Mutasi</span>
+                        </div>
+                        <span class="mhn-table-caption">Data transaksi</span>
+                    </div>
+
+                    <div class="table-responsive mhn-table-scroll">
+                        <table class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="mhn-tbl-hdr">Kd.Trans</th>
+                                    <th class="mhn-tbl-hdr">Nama Barang</th>
+                                    <th class="mhn-tbl-hdr">Alasan Mutasi</th>
+                                    <th class="mhn-tbl-hdr">Pemohon</th>
+                                    <th class="mhn-tbl-hdr">Tgl Mohon</th>
+                                    <th class="mhn-tbl-hdr">Div.Penerima</th>
+                                    <th class="mhn-tbl-hdr">Objek</th>
+                                    <th class="mhn-tbl-hdr">Kel.Utama</th>
+                                    <th class="mhn-tbl-hdr">Kelompok</th>
+                                    <th class="mhn-tbl-hdr">Sub.Kel</th>
+                                    <th class="mhn-tbl-hdr text-end">Primer</th>
+                                    <th class="mhn-tbl-hdr text-end">Sekunder</th>
+                                    <th class="mhn-tbl-hdr text-end">Tritier</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="mhn_tbody">
+                                <tr>
+                                    <td colspan="13" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        Belum ada data. Pilih divisi penerima terlebih dahulu.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <fieldset id="mhn_FrameQty" class="mhn-section mb-3" disabled>
+                    <legend>
+                        <i class="bi bi-box-seam me-2"></i>
+                        Jumlah Barang
+                    </legend>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="row align-items-center g-2">
+                                <div class="col-md-4">
+                                    <small class="d-block text-muted">Primer</small>
                                     <div class="input-group">
                                         <input type="number" id="mhn_Primer" class="form-control text-end"
                                             value="0" min="0" step="0.01">
@@ -570,7 +648,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-4">
+                                    <small class="d-block text-muted">Sekunder</small>
                                     <div class="input-group">
                                         <input type="number" id="mhn_Sekunder" class="form-control text-end"
                                             value="0" min="0" step="0.01">
@@ -578,7 +657,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-4">
+                                    <small class="d-block text-muted">Tritier</small>
                                     <div class="input-group">
                                         <input type="number" id="mhn_Tritier" class="form-control text-end"
                                             value="0" min="0" step="0.01">
@@ -600,50 +680,6 @@
 
                     </div>
                 </fieldset>
-
-                <div class="mhn-table-wrapper">
-                    <div class="mhn-table-heading">
-                        <div>
-                            <i class="bi bi-list-ul me-2"></i>
-                            <span>Daftar Permohonan Mutasi</span>
-                        </div>
-                        <span class="mhn-table-caption">Data transaksi</span>
-                    </div>
-
-                    <div class="table-responsive mhn-table-scroll">
-                        <table class="table table-hover align-middle mb-0" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th class="mhn-tbl-hdr">Kd.Trans</th>
-                                    <th class="mhn-tbl-hdr">Nama Barang</th>
-                                    <th class="mhn-tbl-hdr">Alasan</th>
-                                    <th class="mhn-tbl-hdr">Pemohon</th>
-                                    <th class="mhn-tbl-hdr">Tgl Mohon</th>
-                                    <th class="mhn-tbl-hdr">Divisi</th>
-                                    <th class="mhn-tbl-hdr">Objek</th>
-                                    <th class="mhn-tbl-hdr">Kel.Utama</th>
-                                    <th class="mhn-tbl-hdr">Kelompok</th>
-                                    <th class="mhn-tbl-hdr">Sub.Kel</th>
-                                    <th class="mhn-tbl-hdr text-end">Primer</th>
-                                    <th class="mhn-tbl-hdr text-end">Sekunder</th>
-                                    <th class="mhn-tbl-hdr text-end">Tritier</th>
-                                    <th class="mhn-tbl-hdr">Kd.Brg</th>
-                                    <th class="mhn-tbl-hdr">Kd.Type</th>
-                                    <th class="mhn-tbl-hdr">IdPemohon</th>
-                                </tr>
-                            </thead>
-
-                            <tbody id="mhn_tbody">
-                                <tr>
-                                    <td colspan="16" class="text-center text-muted py-4">
-                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                                        Belum ada data. Pilih divisi penerima terlebih dahulu.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
                 <input type="hidden" id="mhn_IdTransaksi">
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\HakAksesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Dba\Connection;
 use Illuminate\Support\Facades\Auth;
 
 class InfoPengerjaanOrderProyekController extends Controller
@@ -15,7 +16,7 @@ class InfoPengerjaanOrderProyekController extends Controller
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('GPS');
 
-        // Default date: awal bulan s/d akhir bulan
+        // Default date: awal bulan s/d akhir bulanp
         $now = Carbon::now();
         $startDate = $now->copy()->startOfMonth()->format('Y-m-d');
         $endDate   = $now->copy()->endOfMonth()->format('Y-m-d');
@@ -105,7 +106,6 @@ class InfoPengerjaanOrderProyekController extends Controller
 
                 // Biaya proses
                 $biProses = 0;
-                // awal select ganti statment masih error ganti statments baru bisa tapi ini juga salah
                 $pr = $db->select('EXEC [dbo].[SP_5298_PJW_BIAYA-PROSES-BAGIAN] @noBagian=?, @date1=?, @date2=?', [
                     $idBagian,
                     $validated['date1'],
@@ -374,6 +374,24 @@ class InfoPengerjaanOrderProyekController extends Controller
             ? 'ConnInventory' : 'Connworkshop');
     }
 
+    private function mhnRowValue($row, array $aliases, $default = null)
+    {
+        $columns = [];
+        foreach ((array) $row as $key => $value) {
+            $normalizedKey = strtolower(preg_replace('/[^a-z0-9]/i', '', (string) $key));
+            $columns[$normalizedKey] = $value;
+        }
+
+        foreach ($aliases as $alias) {
+            $normalizedAlias = strtolower(preg_replace('/[^a-z0-9]/i', '', (string) $alias));
+            if (array_key_exists($normalizedAlias, $columns)) {
+                return $columns[$normalizedAlias];
+            }
+        }
+
+        return $default;
+    }
+
     // SP_5298_PJW_LIST-MOHON-TMPTRANSAKSI (kode=1 pemohon / kode=2 all)
     public function mhnGetListMohon(Request $request)
     {
@@ -430,6 +448,12 @@ class InfoPengerjaanOrderProyekController extends Controller
     {
         $v = $request->validate(['mode' => ['required', 'in:tujuan,asal']]);
         $user = Auth::check() ? Auth::user()->NomorUser : '';
+        // $db = DB::connection('ConnInventory');
+        // Hanya untuk test hapus atau commet
+        // if ($user == '4384') {
+        //     $user = '0000001';
+        // }
+
         try {
             $db = $this->invDb();
             $sp = $v['mode'] === 'asal' ? 'SP_5298_PJW_USERDIVISI-DIMINTA' : 'SP_5298_PJW_USERDIVISI';
@@ -437,7 +461,7 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($list as $item) {
                 $arr = array_values((array) $item);
-                $result[] = ['Id' => $arr[0] ?? '', 'Nama' => $arr[1] ?? ''];
+                $result[] = ['Id' => $arr[1] ?? '', 'Nama' => $arr[0] ?? ''];
             }
             return response()->json($result);
         } catch (\Exception $e) {
@@ -453,6 +477,10 @@ class InfoPengerjaanOrderProyekController extends Controller
             'idDivisi' => ['required', 'string'],
         ]);
         $user = Auth::check() ? Auth::user()->NomorUser : '';
+        // hanya utuk test hapus atau commet
+        // if ($user == '4384') {
+        //     $user = '0000001';
+        // }
         try {
             $db = $this->invDb();
             $sp = $v['mode'] === 'asal' ? 'SP_5298_PJW_USEROBJEK-DIMINTA' : 'SP_5298_PJW_USER-OBJEK';
@@ -460,7 +488,7 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($list as $item) {
                 $arr = array_values((array) $item);
-                $result[] = ['Id' => $arr[0] ?? '', 'Nama' => $arr[1] ?? ''];
+                $result[] = ['Id' => $arr[1] ?? '', 'Nama' => $arr[0] ?? ''];
             }
             return response()->json($result);
         } catch (\Exception $e) {
@@ -477,7 +505,7 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($list as $item) {
                 $arr = array_values((array) $item);
-                $result[] = ['Id' => $arr[0] ?? '', 'Nama' => $arr[1] ?? ''];
+                $result[] = ['Id' => $arr[1] ?? '', 'Nama' => $arr[0] ?? ''];
             }
             return response()->json($result);
         } catch (\Exception $e) {
@@ -494,7 +522,7 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($list as $item) {
                 $arr = array_values((array) $item);
-                $result[] = ['Id' => $arr[0] ?? '', 'Nama' => $arr[1] ?? ''];
+                $result[] = ['Id' => $arr[1] ?? '', 'Nama' => $arr[0] ?? ''];
             }
             return response()->json($result);
         } catch (\Exception $e) {
@@ -511,7 +539,7 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($list as $item) {
                 $arr = array_values((array) $item);
-                $result[] = ['Id' => $arr[0] ?? '', 'Nama' => $arr[1] ?? ''];
+                $result[] = ['Id' => $arr[1] ?? '', 'Nama' => $arr[0] ?? ''];
             }
             return response()->json($result);
         } catch (\Exception $e) {
@@ -528,7 +556,10 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($list as $item) {
                 $arr = array_values((array) $item);
-                $result[] = ['Id' => $arr[0] ?? '', 'Nama' => $arr[1] ?? ''];
+                $result[] = [
+                    'Id' => $this->mhnRowValue($item, ['IdType', 'Id'], $arr[1] ?? ''),
+                    'Nama' => $this->mhnRowValue($item, ['NamaType', 'Nama'], $arr[0] ?? ''),
+                ];
             }
             return response()->json($result);
         } catch (\Exception $e) {
@@ -558,7 +589,7 @@ class InfoPengerjaanOrderProyekController extends Controller
                     'EXEC [dbo].[SP_5298_PJW_NAMATYPE-TYPE] ?, ?',
                     [$v['idType'], $v['idSubKel']]
                 ))->first();
-                $kodeBarang = trim($kb->kodebarang ?? '');
+                $kodeBarang = trim((string) $this->mhnRowValue($kb, ['KodeBarang', 'KdBrg'], ''));
             }
 
             if (!$kodeBarang) {
@@ -570,17 +601,23 @@ class InfoPengerjaanOrderProyekController extends Controller
                 [$kodeBarang, $v['idSubKel']]
             ))->first();
 
+            if (!$r) {
+                return response()->json([
+                    'error' => 'Barang tidak ditemukan pada Sub Kelompok pemberi.',
+                ], 404);
+            }
+
             return response()->json([
                 'KodeBarang'   => $kodeBarang,
-                'IdType'       => trim($r->idtype ?? ''),
-                'NamaType'     => trim($r->namatype ?? ''),
-                'Primer1'      => (float)($r->saldoprimer ?? 0),
-                'Sekunder1'    => (float)($r->saldosekunder ?? 0),
-                'Tritier1'     => (float)($r->saldotritier ?? 0),
-                'SatPrimer1'   => trim($r->satuan_primer ?? ''),
-                'SatSekunder1' => trim($r->satuan_sekunder ?? ''),
-                'SatTritier1'  => trim($r->satuan_tritier ?? ''),
-                'KonvBeri'     => trim($r->PakaiAturanKonversi ?? ''),
+                'IdType'       => trim((string) $this->mhnRowValue($r, ['IdType'], '')),
+                'NamaType'     => trim((string) $this->mhnRowValue($r, ['NamaType'], '')),
+                'Primer1'      => (float) $this->mhnRowValue($r, ['SaldoPrimer'], 0),
+                'Sekunder1'    => (float) $this->mhnRowValue($r, ['SaldoSekunder'], 0),
+                'Tritier1'     => (float) $this->mhnRowValue($r, ['SaldoTritier'], 0),
+                'SatPrimer1'   => trim((string) $this->mhnRowValue($r, ['SatuanPrimer'], '')),
+                'SatSekunder1' => trim((string) $this->mhnRowValue($r, ['SatuanSekunder'], '')),
+                'SatTritier1'  => trim((string) $this->mhnRowValue($r, ['SatuanTritier'], '')),
+                'KonvBeri'     => trim((string) $this->mhnRowValue($r, ['PakaiAturanKonversi'], '')),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -620,11 +657,16 @@ class InfoPengerjaanOrderProyekController extends Controller
                 'EXEC [dbo].[SP_5298_PJW_KODEBARANG-TYPE] ?, ?',
                 [$v['kodeBarang'], $v['idSubKel']]
             ))->first();
+            if (!$r) {
+                return response()->json([
+                    'error' => 'Type barang tidak ditemukan pada Sub Kelompok penerima.',
+                ], 404);
+            }
             return response()->json([
-                'SatPrimer'   => trim($r->satuan_primer ?? ''),
-                'SatSekunder' => trim($r->satuan_sekunder ?? ''),
-                'SatTritier'  => trim($r->satuan_tritier ?? ''),
-                'KonvTerima'  => trim($r->PakaiAturanKonversi ?? ''),
+                'SatPrimer'   => trim((string) $this->mhnRowValue($r, ['SatuanPrimer'], '')),
+                'SatSekunder' => trim((string) $this->mhnRowValue($r, ['SatuanSekunder'], '')),
+                'SatTritier'  => trim((string) $this->mhnRowValue($r, ['SatuanTritier'], '')),
+                'KonvTerima'  => trim((string) $this->mhnRowValue($r, ['PakaiAturanKonversi'], '')),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -645,9 +687,23 @@ class InfoPengerjaanOrderProyekController extends Controller
             'alasan'         => ['nullable', 'string'],
             'tanggal'        => ['required', 'date'],
         ]);
+        if (
+            (float) $v['primer'] === 0.0 &&
+            (float) $v['sekunder'] === 0.0 &&
+            (float) $v['tritier'] === 0.0
+        ) {
+            return response()->json(['error' => 'Jumlah BON tidak boleh 0.'], 422);
+        }
+        if ($v['idSubKelAsal'] === $v['idSubKelTujuan']) {
+            return response()->json(
+                ['error' => 'Sub Kelompok Asal dan Tujuan tidak boleh sama.'],
+                422,
+            );
+        }
         try {
             $db = $this->invDb();
-            $db->select('EXEC [dbo].[SP_5298_PJW_INSERT-02-TMPTRANSAKSI] ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
+            $v['idPenerima'] = Auth::check() ? Auth::user()->NomorUser : $v['idPenerima'];
+            $db->select('EXEC [dbo].[SP_5298_PJW_INSERT-02-TMPTRANSAKSI] @XIdTypeTransaksi=?, @XUraianDetailTransaksi=?, @XSaatawalTransaksi=?, @XIdType=?, @XIdPenerima=?, @XJumlahKeluarPrimer=?, @XJumlahKeluarSekunder=?, @XJumlahKeluarTritier=?, @XAsalIdSubKelompok=?, @XTujuanIdSubkelompok=?', [
                 '02',
                 $v['alasan'] ?? '',
                 $v['tanggal'],
@@ -676,9 +732,16 @@ class InfoPengerjaanOrderProyekController extends Controller
             'tritier'        => ['required', 'numeric'],
             'idSubKelTujuan' => ['required', 'string'],
         ]);
+        if (
+            (float) $v['primer'] === 0.0 &&
+            (float) $v['sekunder'] === 0.0 &&
+            (float) $v['tritier'] === 0.0
+        ) {
+            return response()->json(['error' => 'Jumlah BON tidak boleh 0.'], 422);
+        }
         try {
             $db = $this->invDb();
-            $db->select('EXEC [dbo].[SP_5298_PJW_UPDATE-TMPTRANSAKSI] ?, ?, ?, ?, ?, ?', [
+            $db->select('EXEC [dbo].[SP_5298_PJW_UPDATE-TMPTRANSAKSI] @XIdTransaksi=?, @XUraianDetailTransaksi=?, @XJumlahKeluarPrimer=?, @XJumlahKeluarSekunder=?, @XJumlahKeluarTritier=?, @XTujuanSubkelompok=?', [
                 $v['idTransaksi'],
                 $v['alasan'] ?? '',
                 $v['primer'],
@@ -698,7 +761,7 @@ class InfoPengerjaanOrderProyekController extends Controller
         $v = $request->validate(['idTransaksi' => ['required', 'string']]);
         try {
             $db = $this->invDb();
-            $db->select('EXEC [dbo].[SP_5298_PJW_DELETE-TMPTRANSAKSI] ?', [$v['idTransaksi']]);
+            $db->select('EXEC [dbo].[SP_5298_PJW_DELETE-TMPTRANSAKSI] @XIdTransaksi=?', [$v['idTransaksi']]);
             return response()->json(['success' => true, 'message' => 'Data berhasil dihapus.']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -753,5 +816,4 @@ class InfoPengerjaanOrderProyekController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 }

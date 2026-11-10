@@ -93,7 +93,7 @@ jQuery(function ($) {
     function getJenisOd() {
         return OptHarian.checked ? "H" : "P";
     }
-    
+
     function loadOrder(noOd) {
         ajaxGet(
             window.infPkjOrderConfig.routeGetOrder,
