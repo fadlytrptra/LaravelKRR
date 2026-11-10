@@ -300,6 +300,7 @@ $("#" + slcShift.id).on("select2:select", function () {
         } else {
             txtRpm.disabled = false;
             txtRpm.value = "";
+            txtRpm.focus();
             btn_bagi.disabled = false;
         }
     } else {
@@ -377,32 +378,81 @@ $("#" + slcIdLog.id).on("select2:select", function () {
 });
 
 let isBagiProcessing = false;
+let isRpmEntered = false;
 
-btn_bagi.addEventListener("click", async function (event) {
-    event.preventDefault();
+txtRpm.addEventListener("keypress", function (e) {
+    if (e.key == "Enter") {
+        e.preventDefault();
 
-    if (isBagiProcessing) return;
-    isBagiProcessing = true;
+        if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+            if (
+                hidIdMesin.value == 217 ||
+                hidIdMesin.value == 271 ||
+                hidIdMesin.value == 301 ||
+                hidIdMesin.value == 310 ||
+                hidIdMesin.value == 330 ||
+                hidIdMesin.value == 336 ||
+                hidIdMesin.value == 347 ||
+                hidIdMesin.value == 349 ||
+                hidIdMesin.value == 350
+            ) {
+                // Tidak perlu pembagian 6
+            } else {
+                if (isBagiProcessing) return;
 
-    btn_bagi.disabled = true;
+                isBagiProcessing = true;
 
-    try {
-        const hasil = numeral(txtRpm.value).divide(6).value();
-        const desimal = hasil - Math.floor(hasil);
+                try {
+                    const hasil = numeral(txtRpm.value).divide(6).value();
+                    const desimal = hasil - Math.floor(hasil);
 
-        txtRpm.value = desimal >= 0.7
-            ? Math.ceil(hasil)
-            : Math.floor(hasil);
+                    txtRpm.value = desimal >= 0.7
+                        ? Math.ceil(hasil)
+                        : Math.floor(hasil);
 
-        txtCounterAkhir.select();
-    } finally {
-        // Mencegah klik ganda dalam waktu singkat
-        setTimeout(() => {
-            isBagiProcessing = false;
-            btn_bagi.disabled = false;
-        }, 500);
+                    txtCounterAkhir.select();
+                } finally {
+                    setTimeout(() => {
+                        isBagiProcessing = false;
+                    }, 500);
+                }
+            }
+        }
+
+        // Menandakan RPM sudah dikonfirmasi dengan Enter
+        isRpmEntered = true;
     }
 });
+
+txtRpm.addEventListener("input", function () {
+    isRpmEntered = false;
+});
+
+// btn_bagi.addEventListener("click", async function (event) {
+//     event.preventDefault();
+
+//     if (isBagiProcessing) return;
+//     isBagiProcessing = true;
+
+//     btn_bagi.disabled = true;
+
+//     try {
+//         const hasil = numeral(txtRpm.value).divide(6).value();
+//         const desimal = hasil - Math.floor(hasil);
+
+//         txtRpm.value = desimal >= 0.7
+//             ? Math.ceil(hasil)
+//             : Math.floor(hasil);
+
+//         txtCounterAkhir.select();
+//     } finally {
+//         // Mencegah klik ganda dalam waktu singkat
+//         setTimeout(() => {
+//             isBagiProcessing = false;
+//             btn_bagi.disabled = false;
+//         }, 500);
+//     }
+// });
 
 btnIsi.addEventListener("click", function () {
     modeProses = 1;
@@ -439,7 +489,6 @@ btnKoreksi.addEventListener("click", function () {
     loadIdLogMesin();
     dtTanggal1.disabled = false;
     slcShift.disabled = false;
-    // btn_bagi.disabled = false;
 });
 
 btnHapus.addEventListener("click", function () {
@@ -454,6 +503,13 @@ btnHapus.addEventListener("click", function () {
 
 btnProses.addEventListener("click", function () {
     btnProses.disabled = true;
+    if (modeProses == 1 && !isRpmEntered) {
+        showToast("Silakan tekan Enter pada RPM terlebih dahulu!");
+
+        btnProses.disabled = false;
+        txtRpm.focus();
+        return;
+    }
     // Dipanggil setelah lolos semua pengecekan
     const prosesKegiatanMesin = () => {
         let jam_kerja = hitungJamKerja();
@@ -467,29 +523,6 @@ btnProses.addEventListener("click", function () {
         let processGo;
         switch (modeProses) {
             case 1:
-                // if (
-                //     txtRpm <= 0 && slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01" &&
-                //     hidIdMesin.value == 217 ||
-                //     hidIdMesin.value == 271 ||
-                //     hidIdMesin.value == 301 ||
-                //     hidIdMesin.value == 310 ||
-                //     hidIdMesin.value == 330 ||
-                //     hidIdMesin.value == 336 ||
-                //     hidIdMesin.value == 347 ||
-                //     hidIdMesin.value == 349 ||
-                //     hidIdMesin.value == 350
-                // ) {
-                //     Swal.fire({
-                //         icon: "info",
-                //         title: "Info!",
-                //         text: "Wajib isi RPM dahulu!",
-                //         showConfirmButton: true,
-                //         // timer: 2000
-                //     });
-                //     button_modalProses.disabled = false;
-                //     return;
-                // }
-
                 processGo = () => {
                     prosesIsi(xMeter);
                 };

@@ -176,11 +176,11 @@
 
                 <div class="col-md-2">
                     <input type="text" id="rpm" class="form-control form-control-sm" placeholder="0" min="0"
-                        disabled>
+                         enterkeyhint="enter" disabled>
                 </div>
 
                 <div class="col-auto ps-0">
-                    <button type="button" class="btn btn-primary btn-sm" id="btn_bagi">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn_bagi" style="display: none">
                         Bagi 6
                     </button>
                 </div>
