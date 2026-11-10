@@ -36,38 +36,69 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Nomor DO</th>
-                                    <th>Tanggal </th>
+                                    <th>Tanggal</th>
                                     <th>ID Pesanan</th>
+                                    <th>NO PO</th>
                                     <th>No SP</th>
                                     <th>Customer</th>
                                     <th>ID Barang</th>
                                     <th>Nama Barang</th>
-                                    <th>Primer</th>
+                                    <th>Min Kirim DO</th>
+                                    <th>Max Kirim DO</th>
                                     <th>Sekunder</th>
                                     <th>Tritier</th>
                                     <th>ID Trans TMP</th>
-                                    {{-- <th>Action</th> --}}
-
                                 </tr>
                             </thead>
+
                             <tbody>
                                 @foreach ($data as $item)
                                     <tr>
                                         <td class="RDZPaddingTable RDZCenterTable">
-                                            <div style="display: flex; align-items: center;gap:5px">
-                                                <input type="checkbox" name="selected[]" id="id_do"
-                                                    value="{{ $item->IDDO }}">{{ $item->IDDO }}
+                                            <div style="display: flex; align-items: center; gap: 5px">
+                                                <input
+                                                    type="checkbox"
+                                                    name="selected[]"
+                                                    value="{{ $item->IDDO }}"
+                                                >
+                                                {{ $item->IDDO }}
                                             </div>
                                         </td>
+
                                         <td class="RDZPaddingTable RDZCenterTable" style="white-space: nowrap">
-                                            {{ date('m-d-Y', strtotime($item->tanggal)) }}</td>
-                                        <td class="RDZPaddingTable RDZCenterTable">{{ $item->IDPesanan }}</td>
-                                        <td class="RDZPaddingTable RDZCenterTable">{{ $item->IDSuratPesanan }}</td>
-                                        <td class="RDZPaddingTable RDZCenterTable">{{ $item->NamaCust }}</td>
-                                        <td class="RDZPaddingTable RDZCenterTable">{{ $item->IDBarang }}</td>
-                                        <td class="RDZPaddingTable RDZCenterTable">{{ $item->NamaBarang }}</td>
+                                            {{ date('m-d-Y', strtotime($item->tanggal)) }}
+                                        </td>
+
                                         <td class="RDZPaddingTable RDZCenterTable">
-                                            {{ $item->QtyPrimer }}
+                                            {{ $item->IDPesanan }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->NO_PO }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->IDSuratPesanan }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->NamaCust }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->IDBarang }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->NamaBarang }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->MinKirimDO }}
+                                        </td>
+
+                                        <td class="RDZPaddingTable RDZCenterTable">
+                                            {{ $item->MaxKirimDO }}
                                         </td>
 
                                         <td class="RDZPaddingTable RDZCenterTable">
@@ -77,14 +108,14 @@
                                         <td class="RDZPaddingTable RDZCenterTable">
                                             {{ $item->QtyTritier }}
                                         </td>
-                                        <td class="RDZPaddingTable RDZCenterTable">{{ $item->IdtransTmp }}</td>
-                                        {{-- <td class="acs-td-button">
-                                                <button type="button" class="btn btn-sm btn-danger" id="buttonBatal"
-                                                    onclick="openModal('{{ $item->IdtransTmp }}','{{ $item->IDDO }}')"><span>&#x1F5D1;</span>
-                                                    Batalkan</button>
-                                            </td> --}}
+
+                                        <td class="RDZPaddingTable RDZCenterTable"
+                                            data-column="id-trans-tmp">
+                                            {{ $item->IdtransTmp }}
+                                        </td>
                                     </tr>
                                 @endforeach
+                            </tbody>
                         </table>
                     </div>
                    <div style="margin-top: 15px;">

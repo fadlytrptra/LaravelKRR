@@ -1,48 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const buttonBatal = document.getElementById("buttonBatal");
     const modal = document.getElementById("modalBatalDO");
     const modalForm = document.getElementById("modal-form");
-
     const btnCloseModal = document.getElementById("btnCloseModal");
     const btnCancelModal = document.getElementById("btnCancelModal");
-
-    const selectedDoCount =
-        document.getElementById("selectedDoCount");
-
-    const btnConfirmBatal =
-        document.getElementById("btnConfirmBatal");
-
+    const selectedDoCount = document.getElementById("selectedDoCount");
+    const btnConfirmBatal = document.getElementById("btnConfirmBatal");
 
     /* =========================================================
        BUKA MODAL
        ========================================================= */
 
     buttonBatal.addEventListener("click", function () {
-
-        const table =
-            document.getElementById("table_DO");
-
-        const selectedCheckboxes =
-            table.querySelectorAll(
-                'input[name="selected[]"]:checked'
-            );
-
+        const table = document.getElementById("table_DO");
+        const selectedCheckboxes = table.querySelectorAll('input[name="selected[]"]:checked');
 
         /* Tidak ada DO dipilih */
-
         if (selectedCheckboxes.length === 0) {
-
             Swal.fire({
                 icon: "warning",
                 title: "Tidak ada DO yang dipilih",
                 text: "Silakan pilih minimal satu Delivery Order.",
                 confirmButtonText: "OK"
             });
-
             return;
         }
-
 
         /* =====================================================
            HAPUS HIDDEN INPUT LAMA
@@ -62,25 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
            ===================================================== */
 
         selectedCheckboxes.forEach(function (checkbox) {
-
             const row = checkbox.closest("tr");
-
             const cells = row.cells;
-
             const nomorDO = checkbox.value;
-
-            /*
-             * Kolom ID Trans TMP
-             * index = 10
-             */
-            const nomorTransTmp =
-                cells[10].textContent.trim();
-
+            const nomorTransTmp = row.querySelector('[data-column="id-trans-tmp"]').textContent.trim();
 
             /* nomorDOs[] */
 
-            const inputDO =
-                document.createElement("input");
+            const inputDO = document.createElement("input");
 
             inputDO.type = "hidden";
             inputDO.name = "nomorDOs[]";
@@ -94,9 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             /* nomorTransTmps[] */
 
-            const inputTransTmp =
-                document.createElement("input");
-
+            const inputTransTmp = document.createElement("input");
             inputTransTmp.type = "hidden";
             inputTransTmp.name = "nomorTransTmps[]";
             inputTransTmp.value = nomorTransTmp;
@@ -116,27 +85,20 @@ document.addEventListener("DOMContentLoaded", function () {
         /* =====================================================
            JUMLAH DO
            ===================================================== */
-
-        selectedDoCount.textContent =
-            selectedCheckboxes.length;
+        selectedDoCount.textContent = selectedCheckboxes.length;
 
 
         /* =====================================================
            RESET BUTTON
            ===================================================== */
-
         btnConfirmBatal.disabled = false;
-
-        btnConfirmBatal.innerHTML =
-            '<span>&#x1F5D1;</span> Ya, Batalkan';
-
+        btnConfirmBatal.innerHTML = '<span>&#x1F5D1;</span> Ya, Batalkan';
 
         /* =====================================================
            TAMPILKAN MODAL
            ===================================================== */
 
         modal.classList.add("show");
-
         document.body.classList.add("modal-open");
 
     });
@@ -147,77 +109,41 @@ document.addEventListener("DOMContentLoaded", function () {
        ========================================================= */
 
     function hideModal() {
-
         modal.classList.remove("show");
-
         document.body.classList.remove("modal-open");
-
     }
-
-
-    /* =========================================================
-       TOMBOL X
-       ========================================================= */
 
     btnCloseModal.addEventListener(
         "click",
         hideModal
     );
 
-
-    /* =========================================================
-       TOMBOL BATAL
-       ========================================================= */
-
     btnCancelModal.addEventListener(
         "click",
         hideModal
     );
 
-
-    /* =========================================================
-       KLIK BACKDROP
-       ========================================================= */
-
     modal.addEventListener(
         "click",
         function (event) {
-
             if (event.target === modal) {
                 hideModal();
             }
-
         }
     );
-
-
-    /* =========================================================
-       ESC
-       ========================================================= */
 
     document.addEventListener(
         "keydown",
         function (event) {
-
-            if (
-                event.key === "Escape" &&
-                modal.classList.contains("show")
-            ) {
+            if (event.key === "Escape" && modal.classList.contains("show")) {
                 hideModal();
             }
-
         }
     );
-
-
-    /* =========================================================
-       SUBMIT
-       ========================================================= */
 
     modalForm.addEventListener(
         "submit",
         function (event) {
-
             const selectedDO =
                 modalForm.querySelectorAll(
                     'input[name="nomorDOs[]"][data-batal-do="true"]'
@@ -225,27 +151,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (selectedDO.length === 0) {
-
                 event.preventDefault();
-
                 Swal.fire({
                     icon: "warning",
                     title: "Tidak ada DO yang dipilih",
                     text: "Silakan pilih minimal satu Delivery Order.",
                     confirmButtonText: "OK"
                 });
-
                 return;
             }
 
-
-            /* Cegah double submit */
-
             btnConfirmBatal.disabled = true;
-
-            btnConfirmBatal.innerHTML =
-                '<span class="spinner-border spinner-border-sm"></span> Memproses...';
-
+            btnConfirmBatal.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
         }
     );
 
