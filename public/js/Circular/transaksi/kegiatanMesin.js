@@ -503,12 +503,27 @@ btnHapus.addEventListener("click", function () {
 
 btnProses.addEventListener("click", function () {
     btnProses.disabled = true;
-    if (modeProses == 1 && !isRpmEntered) {
-        showToast("Silakan tekan Enter pada RPM terlebih dahulu!");
+    if (modeProses == 1 && !isRpmEntered && slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+        if (
+            hidIdMesin.value == 217 ||
+            hidIdMesin.value == 271 ||
+            hidIdMesin.value == 301 ||
+            hidIdMesin.value == 310 ||
+            hidIdMesin.value == 330 ||
+            hidIdMesin.value == 336 ||
+            hidIdMesin.value == 347 ||
+            hidIdMesin.value == 349 ||
+            hidIdMesin.value == 350
+        ) {
+            // Tidak perlu pembagian 6
+        } else {
+            showToast("Silakan tekan Enter pada RPM terlebih dahulu!");
 
-        btnProses.disabled = false;
-        txtRpm.focus();
-        return;
+            btnProses.disabled = false;
+            txtRpm.focus();
+            return;
+        }
+
     }
     // Dipanggil setelah lolos semua pengecekan
     const prosesKegiatanMesin = () => {
