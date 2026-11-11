@@ -19,7 +19,7 @@ class InfoPengerjaanOrderProyekController extends Controller
         // Default date: awal bulan s/d akhir bulanp
         $now = Carbon::now();
         $startDate = $now->copy()->startOfMonth()->format('Y-m-d');
-        $endDate   = $now->copy()->endOfMonth()->format('Y-m-d');
+        $endDate = $now->copy()->endOfMonth()->format('Y-m-d');
 
         return view('GPS.InformasiPengerjaan.infoPengerjaanOrderProyek', compact('access', 'startDate', 'endDate'));
     }
@@ -73,12 +73,12 @@ class InfoPengerjaanOrderProyekController extends Controller
             $totalBiayaAll = 0;
 
             foreach ($unique as $order) {
-                $jenisOd   = $order->JenisOrder;
-                $idBagian  = $order->IdBagian;
-                $noAntri   = trim($order->NoAntrian);
-                $estDate   = $order->EstDate;
-                $noType    = $order->NoType;
-                $stsReady  = $order->StsReady1 ?? null;
+                $jenisOd = $order->JenisOrder;
+                $idBagian = $order->IdBagian;
+                $noAntri = trim($order->NoAntrian);
+                $estDate = $order->EstDate;
+                $noType = $order->NoType;
+                $stsReady = $order->StsReady1 ?? null;
 
                 // Biaya material (kode 3)
                 $biMaterial = 0;
@@ -106,14 +106,23 @@ class InfoPengerjaanOrderProyekController extends Controller
 
                 // Biaya proses
                 $biProses = 0;
-                $pr = $db->select('SET NOCOUNT ON; EXEC [dbo].[SP_5298_PJW_BIAYA-PROSES-BAGIAN] @noBagian=?, @date1=?, @date2=?', [
-                    $idBagian,
-                    $validated['date1'],
-                    $validated['date2']
-                ]);
-                if (!empty($pr) && isset($pr[0]->TotalBiaya)) {
-                    $biProses = $pr[0]->TotalBiaya;
-                }
+
+                // Total Biaya Proses
+                $totalProses = $db->table('VW_PRG_5298_PJW_BIAYA-PROSES-BAGIAN')
+                    ->where('IdBagian', $idBagian)
+                    ->whereDate('SetujuKR', '>=', $validated['date1'])
+                    ->whereDate('SetujuKR', '<=', $validated['date2'])
+                    ->sum('Biaya');
+
+                // Total Biaya Makloon
+                $totalMakloon = $db->table('Harga_Makloon')
+                    ->where('IdBagian', $idBagian)
+                    ->whereDate('TimeInput', '>=', $validated['date1'])
+                    ->whereDate('TimeInput', '<=', $validated['date2'])
+                    ->sum('HargaTotal');
+
+                // Total Biaya Proses + Makloon
+                $biProses = $totalProses + $totalMakloon;
 
                 // Cek kelengkapan material (kode 2)
                 $dt_mtr = false;
@@ -125,13 +134,18 @@ class InfoPengerjaanOrderProyekController extends Controller
                     $i = $spek = $kd = $jml = $hrg = 0;
                     foreach ($materials as $m) {
                         $i++;
-                        if (!empty(trim($m->Spek ?? ''))) $spek++;
-                        if (!empty(trim($m->KdBrg ?? ''))) $kd++;
-                        if (($m->Jml ?? 0) > 0) $jml++;
+                        if (!empty(trim($m->Spek ?? '')))
+                            $spek++;
+                        if (!empty(trim($m->KdBrg ?? '')))
+                            $kd++;
+                        if (($m->Jml ?? 0) > 0)
+                            $jml++;
                         if (($m->Status ?? 0) == 0) {
-                            if (($m->Harga ?? 0) > 0) $hrg++;
+                            if (($m->Harga ?? 0) > 0)
+                                $hrg++;
                         } else {
-                            if (($m->HargaBekas ?? 0) > 0) $hrg++;
+                            if (($m->HargaBekas ?? 0) > 0)
+                                $hrg++;
                         }
                     }
                     if ($i > 0 && $spek == $i && $kd == $i && $jml == $i && $hrg == $i) {
@@ -149,7 +163,8 @@ class InfoPengerjaanOrderProyekController extends Controller
                     $estDate,
                     $noType
                 ]);
-                if (empty($info)) continue;
+                if (empty($info))
+                    continue;
                 $info = $info[0];
 
                 $orderSp = ($jenisOd === 'H')
@@ -164,32 +179,32 @@ class InfoPengerjaanOrderProyekController extends Controller
                     ?? ($orderDetail[0]->Satuan ?? '');
 
                 $row = [
-                    'NoOrder'     => trim($info->NoOrder ?? ''),
-                    'DM'          => $dt_mtr ? 'BL' : 'L',
-                    'NamaBarang'  => ($jenisOd === 'H') ? trim($info->Nama_Brg ?? '') : trim($info->Nama_Proyek ?? ''),
-                    'NamaBagian'  => trim($info->NamaBagian ?? ''),
-                    'TglStart'    => trim($info->EstDate ?? ''),
-                    'KdBarang'    => ($jenisOd === 'H') ? trim($info->Kd_Brg ?? '') : '',
-                    'Divisi'      => trim($info->NamaDivisi ?? ''),
+                    'NoOrder' => trim($info->NoOrder ?? ''),
+                    'DM' => $dt_mtr ? 'BL' : 'L',
+                    'NamaBarang' => ($jenisOd === 'H') ? trim($info->Nama_Brg ?? '') : trim($info->Nama_Proyek ?? ''),
+                    'NamaBagian' => trim($info->NamaBagian ?? ''),
+                    'TglStart' => trim($info->EstDate ?? ''),
+                    'KdBarang' => ($jenisOd === 'H') ? trim($info->Kd_Brg ?? '') : '',
+                    'Divisi' => trim($info->NamaDivisi ?? ''),
                     'StatusOrder' => trim($info->Keterangan ?? ''),
-                    'JmlOrder'   => trim(implode(' ', array_filter([
-                        trim((string)($info->Jml_Brg ?? '')),
-                        trim((string)$satuan),
+                    'JmlOrder' => trim(implode(' ', array_filter([
+                        trim((string) ($info->Jml_Brg ?? '')),
+                        trim((string) $satuan),
                     ]))),
-                    'TglFinish'   => '',
-                    'StatusMtr'   => '',
-                    'IdTrans'     => '',
-                    'Keterangan'  => '',
-                    'TotalBiaya'  => '',
-                    'TglBon'      => '',
-                    'rowColor'    => '',
+                    'TglFinish' => '',
+                    'StatusMtr' => '',
+                    'IdTrans' => '',
+                    'Keterangan' => '',
+                    'TotalBiaya' => '',
+                    'TglBon' => '',
+                    'rowColor' => '',
                 ];
 
                 $biTotal = 0;
                 $tglFinish = $info->TglFinish ?? null;
-                $cancel    = $info->Cancel ?? 0;
+                $cancel = $info->Cancel ?? 0;
                 $ketCancel = $info->KetCancel ?? '';
-                $tglBon    = $info->TglBon ?? null;
+                $tglBon = $info->TglBon ?? null;
 
                 if (!is_null($tglFinish)) {
                     if ($cancel == 1) {
@@ -251,8 +266,8 @@ class InfoPengerjaanOrderProyekController extends Controller
             }
 
             return response()->json([
-                'success'    => true,
-                'data'       => $result,
+                'success' => true,
+                'data' => $result,
                 'totalBiaya' => number_format($totalBiayaAll, 2, '.', ','),
             ]);
         } catch (\Exception $e) {
@@ -281,19 +296,19 @@ class InfoPengerjaanOrderProyekController extends Controller
 
             $data = [];
             foreach ($rows as $row) {
-                $status = (int)($row->Status ?? 0);
+                $status = (int) ($row->Status ?? 0);
                 $data[] = [
                     'MtrType' => trim($row->MtrType ?? ''),
                     'Spek' => trim($row->Spek ?? ''),
                     'KdBrg' => trim($row->KdBrg ?? ''),
-                    'Jml' => number_format((float)($row->Jml ?? 0), 2, '.', ','),
+                    'Jml' => number_format((float) ($row->Jml ?? 0), 2, '.', ','),
                     'NamaSatuan' => trim($row->Nama_Satuan ?? ''),
                     'Status' => $status,
                     'HargaBaru' => $status === 0
-                        ? ((float)($row->Harga ?? 0) > 0 ? 'Ada' : 'Belum ada')
+                        ? ((float) ($row->Harga ?? 0) > 0 ? 'Ada' : 'Belum ada')
                         : '',
                     'HargaBekas' => $status === 1
-                        ? ((float)($row->HargaBekas ?? 0) > 0 ? 'Ada' : 'Belum ada')
+                        ? ((float) ($row->HargaBekas ?? 0) > 0 ? 'Ada' : 'Belum ada')
                         : '',
                 ];
             }
@@ -396,7 +411,7 @@ class InfoPengerjaanOrderProyekController extends Controller
     public function mhnGetListMohon(Request $request)
     {
         $v = $request->validate([
-            'kode'     => ['required', 'in:1,2'],
+            'kode' => ['required', 'in:1,2'],
             'idDivisi' => ['required', 'string'],
         ]);
         $user = Auth::check() ? Auth::user()->NomorUser : '';
@@ -416,25 +431,25 @@ class InfoPengerjaanOrderProyekController extends Controller
             $result = [];
             foreach ($rows as $r) {
                 $result[] = [
-                    'IdTransaksi'  => trim($r->IdTransaksi ?? ''),
-                    'NamaType'     => trim($r->NamaType ?? ''),
+                    'IdTransaksi' => trim($r->IdTransaksi ?? ''),
+                    'NamaType' => trim($r->NamaType ?? ''),
                     'UraianDetail' => trim($r->UraianDetailTransaksi ?? ''),
-                    'IdPenerima'   => trim($r->IdPenerima ?? ''),
-                    'SaatAwal'     => trim($r->SaatAwalTransaksi ?? ''),
-                    'NamaDivisi'   => trim($r->NamaDivisi ?? ''),
-                    'NamaObjek'    => trim($r->NamaObjek ?? ''),
+                    'IdPenerima' => trim($r->IdPenerima ?? ''),
+                    'SaatAwal' => trim($r->SaatAwalTransaksi ?? ''),
+                    'NamaDivisi' => trim($r->NamaDivisi ?? ''),
+                    'NamaObjek' => trim($r->NamaObjek ?? ''),
                     'NamaKelUtama' => trim($r->NamaKelompokUtama ?? ''),
                     'NamaKelompok' => trim($r->NamaKelompok ?? ''),
-                    'NamaSubKel'   => trim($r->NamaSubKelompok ?? ''),
-                    'KodeBarang'   => trim($r->KodeBarang ?? ''),
-                    'IdType'       => trim($r->Idtype ?? ''),
-                    'Primer'       => (float)($r->JumlahPengeluaranPrimer ?? 0),
-                    'Sekunder'     => (float)($r->JumlahPengeluaranSekunder ?? 0),
-                    'Tritier'      => (float)($r->JumlahPengeluaranTritier ?? 0),
-                    'SatPrimer'    => trim($r->SatPrimer ?? ''),
-                    'SatSekunder'  => trim($r->SatSekunder ?? ''),
-                    'SatTritier'   => trim($r->SatTritier ?? ''),
-                    'IdPenerima1'  => trim($r->IdPenerima1 ?? ''),
+                    'NamaSubKel' => trim($r->NamaSubKelompok ?? ''),
+                    'KodeBarang' => trim($r->KodeBarang ?? ''),
+                    'IdType' => trim($r->Idtype ?? ''),
+                    'Primer' => (float) ($r->JumlahPengeluaranPrimer ?? 0),
+                    'Sekunder' => (float) ($r->JumlahPengeluaranSekunder ?? 0),
+                    'Tritier' => (float) ($r->JumlahPengeluaranTritier ?? 0),
+                    'SatPrimer' => trim($r->SatPrimer ?? ''),
+                    'SatSekunder' => trim($r->SatSekunder ?? ''),
+                    'SatTritier' => trim($r->SatTritier ?? ''),
+                    'IdPenerima1' => trim($r->IdPenerima1 ?? ''),
                 ];
             }
             return response()->json($result);
@@ -473,7 +488,7 @@ class InfoPengerjaanOrderProyekController extends Controller
     public function mhnGetObjekList(Request $request)
     {
         $v = $request->validate([
-            'mode'     => ['required', 'in:tujuan,asal'],
+            'mode' => ['required', 'in:tujuan,asal'],
             'idDivisi' => ['required', 'string'],
         ]);
         $user = Auth::check() ? Auth::user()->NomorUser : '';
@@ -572,9 +587,9 @@ class InfoPengerjaanOrderProyekController extends Controller
     public function mhnGetKodeBarang(Request $request)
     {
         $v = $request->validate([
-            'idType'     => ['nullable', 'string'],
+            'idType' => ['nullable', 'string'],
             'kodeBarang' => ['nullable', 'string'],
-            'idSubKel'   => ['required', 'string'],
+            'idSubKel' => ['required', 'string'],
         ]);
 
         try {
@@ -608,16 +623,16 @@ class InfoPengerjaanOrderProyekController extends Controller
             }
 
             return response()->json([
-                'KodeBarang'   => $kodeBarang,
-                'IdType'       => trim((string) $this->mhnRowValue($r, ['IdType'], '')),
-                'NamaType'     => trim((string) $this->mhnRowValue($r, ['NamaType'], '')),
-                'Primer1'      => (float) $this->mhnRowValue($r, ['SaldoPrimer'], 0),
-                'Sekunder1'    => (float) $this->mhnRowValue($r, ['SaldoSekunder'], 0),
-                'Tritier1'     => (float) $this->mhnRowValue($r, ['SaldoTritier'], 0),
-                'SatPrimer1'   => trim((string) $this->mhnRowValue($r, ['SatuanPrimer'], '')),
+                'KodeBarang' => $kodeBarang,
+                'IdType' => trim((string) $this->mhnRowValue($r, ['IdType'], '')),
+                'NamaType' => trim((string) $this->mhnRowValue($r, ['NamaType'], '')),
+                'Primer1' => (float) $this->mhnRowValue($r, ['SaldoPrimer'], 0),
+                'Sekunder1' => (float) $this->mhnRowValue($r, ['SaldoSekunder'], 0),
+                'Tritier1' => (float) $this->mhnRowValue($r, ['SaldoTritier'], 0),
+                'SatPrimer1' => trim((string) $this->mhnRowValue($r, ['SatuanPrimer'], '')),
                 'SatSekunder1' => trim((string) $this->mhnRowValue($r, ['SatuanSekunder'], '')),
-                'SatTritier1'  => trim((string) $this->mhnRowValue($r, ['SatuanTritier'], '')),
-                'KonvBeri'     => trim((string) $this->mhnRowValue($r, ['PakaiAturanKonversi'], '')),
+                'SatTritier1' => trim((string) $this->mhnRowValue($r, ['SatuanTritier'], '')),
+                'KonvBeri' => trim((string) $this->mhnRowValue($r, ['PakaiAturanKonversi'], '')),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -629,7 +644,7 @@ class InfoPengerjaanOrderProyekController extends Controller
     {
         $v = $request->validate([
             'kodeBarang' => ['required', 'string'],
-            'idSubKel'   => ['required', 'string'],
+            'idSubKel' => ['required', 'string'],
         ]);
         try {
             $db = $this->invDb();
@@ -638,7 +653,7 @@ class InfoPengerjaanOrderProyekController extends Controller
                 'EXEC [dbo].[SP_5298_PJW_CEKKODEBARANG-TYPE] ?, ?',
                 [$kode, $v['idSubKel']]
             ))->first();
-            return response()->json(['jumlah' => (int)($r->jumlah ?? 0)]);
+            return response()->json(['jumlah' => (int) ($r->jumlah ?? 0)]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -649,7 +664,7 @@ class InfoPengerjaanOrderProyekController extends Controller
     {
         $v = $request->validate([
             'kodeBarang' => ['required', 'string'],
-            'idSubKel'   => ['required', 'string'],
+            'idSubKel' => ['required', 'string'],
         ]);
         try {
             $db = $this->invDb();
@@ -663,10 +678,10 @@ class InfoPengerjaanOrderProyekController extends Controller
                 ], 404);
             }
             return response()->json([
-                'SatPrimer'   => trim((string) $this->mhnRowValue($r, ['SatuanPrimer'], '')),
+                'SatPrimer' => trim((string) $this->mhnRowValue($r, ['SatuanPrimer'], '')),
                 'SatSekunder' => trim((string) $this->mhnRowValue($r, ['SatuanSekunder'], '')),
-                'SatTritier'  => trim((string) $this->mhnRowValue($r, ['SatuanTritier'], '')),
-                'KonvTerima'  => trim((string) $this->mhnRowValue($r, ['PakaiAturanKonversi'], '')),
+                'SatTritier' => trim((string) $this->mhnRowValue($r, ['SatuanTritier'], '')),
+                'KonvTerima' => trim((string) $this->mhnRowValue($r, ['PakaiAturanKonversi'], '')),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -677,15 +692,15 @@ class InfoPengerjaanOrderProyekController extends Controller
     public function mhnInsertTmp(Request $request)
     {
         $v = $request->validate([
-            'idType'         => ['required', 'string'],
-            'idPenerima'     => ['required', 'string'],
-            'primer'         => ['required', 'numeric'],
-            'sekunder'       => ['required', 'numeric'],
-            'tritier'        => ['required', 'numeric'],
-            'idSubKelAsal'   => ['required', 'string'],
+            'idType' => ['required', 'string'],
+            'idPenerima' => ['required', 'string'],
+            'primer' => ['required', 'numeric'],
+            'sekunder' => ['required', 'numeric'],
+            'tritier' => ['required', 'numeric'],
+            'idSubKelAsal' => ['required', 'string'],
             'idSubKelTujuan' => ['required', 'string'],
-            'alasan'         => ['nullable', 'string'],
-            'tanggal'        => ['required', 'date'],
+            'alasan' => ['nullable', 'string'],
+            'tanggal' => ['required', 'date'],
         ]);
         if (
             (float) $v['primer'] === 0.0 &&
@@ -725,11 +740,11 @@ class InfoPengerjaanOrderProyekController extends Controller
     public function mhnUpdateTmp(Request $request)
     {
         $v = $request->validate([
-            'idTransaksi'    => ['required', 'string'],
-            'alasan'         => ['nullable', 'string'],
-            'primer'         => ['required', 'numeric'],
-            'sekunder'       => ['required', 'numeric'],
-            'tritier'        => ['required', 'numeric'],
+            'idTransaksi' => ['required', 'string'],
+            'alasan' => ['nullable', 'string'],
+            'primer' => ['required', 'numeric'],
+            'sekunder' => ['required', 'numeric'],
+            'tritier' => ['required', 'numeric'],
             'idSubKelTujuan' => ['required', 'string'],
         ]);
         if (
@@ -779,11 +794,11 @@ class InfoPengerjaanOrderProyekController extends Controller
                 [$v['idTransaksi']]
             ))->first();
             return response()->json([
-                'IdDivisi'   => trim($r->IdDivisi ?? ''),
-                'IdObjek'    => trim($r->IdObjek ?? ''),
+                'IdDivisi' => trim($r->IdDivisi ?? ''),
+                'IdObjek' => trim($r->IdObjek ?? ''),
                 'IdKelUtama' => trim($r->IdKelompokUtama ?? ''),
                 'IdKelompok' => trim($r->IDKelompok ?? ''),
-                'IdSubKel'   => trim($r->Idsubkelompok ?? ''),
+                'IdSubKel' => trim($r->Idsubkelompok ?? ''),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -801,16 +816,16 @@ class InfoPengerjaanOrderProyekController extends Controller
                 [$v['idTransaksi']]
             ))->first();
             return response()->json([
-                'IdDivisi'     => trim($r->iddivisi ?? ''),
-                'IdObjek'      => trim($r->IdObjek ?? ''),
-                'IdKelUtama'   => trim($r->IdKelompokUtama ?? ''),
-                'IdKelompok'   => trim($r->IdKelompok ?? ''),
-                'IdSubKel'     => trim($r->IdSubkelompok ?? ''),
-                'NamaDivisi'   => trim($r->NamaDivisi ?? ''),
-                'NamaObjek'    => trim($r->namaobjek ?? ''),
+                'IdDivisi' => trim($r->iddivisi ?? ''),
+                'IdObjek' => trim($r->IdObjek ?? ''),
+                'IdKelUtama' => trim($r->IdKelompokUtama ?? ''),
+                'IdKelompok' => trim($r->IdKelompok ?? ''),
+                'IdSubKel' => trim($r->IdSubkelompok ?? ''),
+                'NamaDivisi' => trim($r->NamaDivisi ?? ''),
+                'NamaObjek' => trim($r->namaobjek ?? ''),
                 'NamaKelUtama' => trim($r->namakelompokutama ?? ''),
                 'NamaKelompok' => trim($r->NamaKelompok ?? ''),
-                'NamaSubKel'   => trim($r->namasubkelompok ?? ''),
+                'NamaSubKel' => trim($r->namasubkelompok ?? ''),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
