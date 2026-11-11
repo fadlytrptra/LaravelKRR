@@ -106,7 +106,7 @@ class InfoPengerjaanOrderProyekController extends Controller
 
                 // Biaya proses
                 $biProses = 0;
-                $pr = $db->select('EXEC [dbo].[SP_5298_PJW_BIAYA-PROSES-BAGIAN] @noBagian=?, @date1=?, @date2=?', [
+                $pr = $db->select('SET NOCOUNT ON; EXEC [dbo].[SP_5298_PJW_BIAYA-PROSES-BAGIAN] @noBagian=?, @date1=?, @date2=?', [
                     $idBagian,
                     $validated['date1'],
                     $validated['date2']
