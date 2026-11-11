@@ -119,9 +119,9 @@
                                         $printSecond = 1;
                                     @endphp
                                     <li>
-                                        <a class="" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                        <a class="dropdown-item" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false"
-                                            style="margin: 10px;cursor: default;">
+                                            style="cursor: default; color: black; font-size: 15px">
                                             {{ $secondMenuItem->NamaMenu }} &raquo;
                                         </a>
                                 @endif
