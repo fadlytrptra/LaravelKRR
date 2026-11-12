@@ -1696,6 +1696,23 @@ jQuery(function ($) {
             return;
         }
 
+        if (
+            pemakaianReduser.value.trim() === "" ||
+            pembersihan.value.trim() === "" ||
+            Number(pemakaianReduser.value) <= 0 ||
+            Number(pembersihan.value) <= 0
+        ) {
+            Swal.fire({
+                icon: "info",
+                title: "Info!",
+                text: "Isi Pemakaian Reduser dan Reduser untuk Pembersihan terlebih dahulu dengan nilai lebih dari 0!",
+                showConfirmButton: true,
+            });
+
+            button_modalProsesPrinting.disabled = false;
+            return;
+        }
+
         $.ajax({
             url: "MaintKegiatanMesinPrintingJBB",
             dataType: "json",
