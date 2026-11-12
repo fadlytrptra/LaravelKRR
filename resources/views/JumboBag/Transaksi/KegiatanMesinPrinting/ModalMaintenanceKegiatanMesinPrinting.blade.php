@@ -35,11 +35,14 @@
                                     enterkeyhint="enter">
                             </div>
                         </div>
-                        <div class="form-group"style="flex: 0.15" id="div_parentSelectNamaMesin">
-                            <label for="namaMesinPotong">No Mesin</label>
+                        <div class="form-group" style="flex: 0.15" id="div_parentSelectNamaMesin">
+                            <label for="noMesin">No Mesin</label>
                             <div class="input-group">
-                                <input type="text" name="noMesin" id="noMesin" class="form-control" value="PRINT"
-                                    enterkeyhint="enter" readonly>
+                                <select name="noMesin" id="noMesin" class="form-select form-select-sm" style="width: 100%">
+                                    <option value="PRINT" selected>PRINT</option>
+                                    <option value="PRINTING MOJOSARI 1">PRINTING MOJOSARI 1</option>
+                                    <option value="PRINTING MOJOSARI 2">PRINTING MOJOSARI 2</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group"style="flex: 0.12">

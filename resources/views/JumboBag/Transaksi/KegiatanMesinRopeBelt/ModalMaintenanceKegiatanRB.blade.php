@@ -22,9 +22,12 @@
                             <label for="namaMesinPotong">Nama Mesin</label>
                             <div class="input-group">
                                 <select id="namaMesinPotong" class="form-select form-select-sm" style="width: 100%">
-                                    <option>Rope</option>
-                                    <option>Belt</option>
-                                    <option>Pita</option>
+                                    <option value="Rope">Rope</option>
+                                    <option value="Pita">Pita</option>
+                                    <option value="Belt">Belt</option>
+                                    <option value="Belt 1">Belt 1</option>
+                                    <option value="Belt 2">Belt 2</option>
+                                    <option value="Belt 3">Belt 3</option>
                                     {{-- @foreach ($listLokasi as $d)
                                     <option value="{{ $d->idLokasi }}">
                                         {{ $d->idLokasi . ' | ' . $d->nama_lokasi }}

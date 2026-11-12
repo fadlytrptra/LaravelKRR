@@ -104,6 +104,11 @@ jQuery(function ($) {
         nomor_mesinCL.value = "";
         // $("#" + slcNamaMesinPotong.id).empty();
         // $("#" + slcNamaMesinPotong.id).trigger("change");
+        if ($("#" + slcLokasi.id).val() == 'Tropodo') {
+            $("#" + slcNamaMesinPotong.id).val("Rope").trigger("change");
+        } else if ($("#" + slcLokasi.id).val() == 'Mojosari') {
+            $("#" + slcNamaMesinPotong.id).val("Belt 1").trigger("change");
+        }
         customer_tableHit.val(null).trigger("change");
         kodebarang_tableHit.empty();
         kodebarang_tableHit.val(null).trigger("change");
@@ -942,9 +947,13 @@ jQuery(function ($) {
 
     $("#" + slcLokasi.id).on("change", function () {
         const val = $(this).val();
-        let allowedType = [];
+        $("#" + slcNamaMesinPotong.id + " option").prop("disabled", true);
         switch (val) {
             case "Tropodo":
+                $("#" + slcNamaMesinPotong.id + ' option[value="Rope"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id + ' option[value="Pita"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id + ' option[value="Belt"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id).val("Rope").trigger("change");
                 table_logMesin = $("#table_logMesin").DataTable({
                     responsive: false,
                     processing: true,
@@ -1048,6 +1057,12 @@ jQuery(function ($) {
                 break;
 
             case "Mojosari":
+                $("#" + slcNamaMesinPotong.id + ' option[value="Rope"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id + ' option[value="Pita"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id + ' option[value="Belt 1"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id + ' option[value="Belt 2"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id + ' option[value="Belt 3"]').prop("disabled", false);
+                $("#" + slcNamaMesinPotong.id).val("Belt 1").trigger("change");
                 table_logMesin = $("#table_logMesin").DataTable({
                     responsive: false,
                     processing: true,
@@ -1152,8 +1167,12 @@ jQuery(function ($) {
         }
     });
 
-    // default lokasi = 1
-    $("#" + slcLokasi.id).val("Tropodo").trigger("change");
+    // default lokasi
+    if (nomorUser == '7323' || nomorUser == '7324' || nomorUser == '7353' || nomorUser == '8982') {
+        $("#" + slcLokasi.id).val("Mojosari").trigger("change");
+    } else {
+        $("#" + slcLokasi.id).val("Tropodo").trigger("change");
+    }
 
     customer_tableHit.on("select2:select", function () {
         const selectedCustomer = $(this).val(); // Get selected Customer

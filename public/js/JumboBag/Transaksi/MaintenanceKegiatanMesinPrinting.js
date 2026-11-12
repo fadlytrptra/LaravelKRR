@@ -5,7 +5,7 @@ jQuery(function ($) {
     let nomorUser = document.getElementById("nomorUser").value;
     let tambahKegiatanMesinPrintingLabel = document.getElementById("tambahKegiatanMesinPrintingLabel");
     let tanggalLog = document.getElementById("tanggalLog");
-    let noMesin = document.getElementById("noMesin");
+    // let noMesin = document.getElementById("noMesin");
     let shiftPrinting = document.getElementById("shiftPrinting");
     let ukuranpanjang_tableHit = document.getElementById("ukuranpanjang_tableHit");
     let ukuranlebar_tableHit = document.getElementById("ukuranlebar_tableHit");
@@ -75,6 +75,7 @@ jQuery(function ($) {
     const kodebarang_tableHit = $("#kodebarang_tableHit");
     const komponen_tableHit = $("#komponen_tableHit");
     const slcLokasi = document.getElementById("lokasi");
+    const slcMesin = document.getElementById("noMesin");
 
     let idLog = null
     let kodebarang_tableHitEdit = null
@@ -98,132 +99,6 @@ jQuery(function ($) {
         "4451",
         "4199"
     ];
-
-    // table_logMesin = $("#table_logMesin").DataTable({
-    //     responsive: false,
-    //     processing: true,
-    //     serverSide: true,
-    //     destroy: true,
-    //     autoWidth: false,
-    //     paging: false,
-    //     // scrollX: true,
-    //     scrollX: "500px",
-    //     scrollY: "500px", // Mengatur tinggi tabel
-    //     scrollCollapse: true,
-
-    //     ajax: {
-    //         url: "MaintKegiatanMesinPrintingJBB/getData",
-    //         dataType: "json",
-    //         type: "GET",
-    //         data: function (d) {
-    //             return $.extend({}, d, {
-    //                 _token: csrfToken,
-    //                 lokasi: $("#" + slcLokasi.id).val(),
-    //             });
-    //         },
-    //     },
-
-    //     columns: [
-    //         { data: "idLog" },
-    //         {
-    //             data: "tanggalLog_raw",
-    //             render: function (data, type, row) {
-    //                 if (type === "display") {
-    //                     return row.tanggalLog;
-    //                 }
-    //                 return data;
-    //             },
-    //         },
-    //         { data: "noMesin" },
-    //         { data: "shiftPrinting" },
-    //         { data: "kodeBarang", width: "250px" },
-    //         { data: "warnaTinta", width: "150px" },
-    //         {
-    //             data: "total_beratTintaAwal",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         {
-    //             data: "total_beratTintaAkhir",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         {
-    //             data: "total_beratPemakaianTinta",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         {
-    //             data: "total_jumlahKain",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         {
-    //             data: "total_hasilPrinting",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         {
-    //             data: "total_beratKain",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         {
-    //             data: "total_afalanPrinting",
-    //             render: function (data) {
-    //                 return numeral(data || 0).format("0.00");
-    //             }
-    //         },
-    //         { data: "NomorUser" },
-    //         {
-    //             data: null,
-    //             orderable: false,
-    //             searchable: false,
-    //             render: function (data, type, row) {
-    //                 return `
-    //                 <button class="btn btn-sm btn-warning btn-edit"
-    //                     style="width:150px"
-    //                     data-id="${row.idLog}">
-    //                     <i class="fa fa-edit"></i> Edit
-    //                 </button>
-    //                 <button class="btn btn-sm btn-danger btn-delete"
-    //                     style="width:150px"
-    //                     data-id="${row.idLog}">
-    //                     <i class="fa fa-trash"></i> Delete
-    //                 </button>
-    //             `;
-    //             },
-    //         },
-    //     ],
-
-    //     columnDefs: [
-    //         {
-    //             targets: 4,
-    //             width: "150px"
-    //         },
-    //         {
-    //             targets: 5,
-    //             width: "250px"
-    //         }
-    //     ],
-
-    //     createdRow: function (row) {
-    //         $(row).find("td").css({
-    //             "font-family": "Arial",
-    //             "font-size": "14px",
-    //             "text-align": "center",
-    //             "vertical-align": "middle"
-    //         });
-    //     },
-
-    //     order: [[0, "desc"]],
-    // });
 
     $("#table_logMesin").on("click", ".btn-edit", function () {
         const id = $(this).data("id");
@@ -268,6 +143,8 @@ jQuery(function ($) {
                     console.error("Data header tidak ditemukan.");
                     return;
                 }
+
+                $("#" + slcMesin.id).val(data[0].noMesin).trigger("change");
 
                 shiftPrinting.value = data[0].shiftPrinting;
                 pemakaianReduser.value = numeral(data[0].pemakaianReduser).format('0.00');
@@ -926,6 +803,11 @@ jQuery(function ($) {
     function clearAll() {
         tanggalLog.valueAsDate = new Date();
         shiftPrinting.value = "";
+        if ($("#" + slcLokasi.id).val() == 'Tropodo') {
+            $("#" + slcMesin.id).val("PRINT").trigger("change");
+        } else if ($("#" + slcLokasi.id).val() == 'Mojosari') {
+            $("#" + slcMesin.id).val("PRINTING MOJOSARI 1").trigger("change");
+        }
         customer_tableHit.val(null).trigger("change");
         kodebarang_tableHit.empty();
         kodebarang_tableHit.val(null).trigger("change");
@@ -1221,9 +1103,11 @@ jQuery(function ($) {
 
     $("#" + slcLokasi.id).on("change", function () {
         const val = $(this).val();
-        let allowedType = [];
+        $("#" + slcMesin.id + " option").prop("disabled", true);
         switch (val) {
             case "Tropodo":
+                $("#" + slcMesin.id + ' option[value="PRINT"]').prop("disabled", false);
+                $("#" + slcMesin.id).val("PRINT").trigger("change");
                 // Lokasi 1 boleh semua
                 // $("#divTropGedB").show();
                 // $("#divGedD").hide();
@@ -1340,6 +1224,10 @@ jQuery(function ($) {
 
                     columnDefs: [
                         {
+                            targets: 2,
+                            width: "250px"
+                        },
+                        {
                             targets: 4,
                             width: "150px"
                         },
@@ -1363,6 +1251,9 @@ jQuery(function ($) {
                 break;
 
             case "Mojosari":
+                $("#" + slcMesin.id + ' option[value="PRINTING MOJOSARI 1"]').prop("disabled", false);
+                $("#" + slcMesin.id + ' option[value="PRINTING MOJOSARI 2"]').prop("disabled", false);
+                $("#" + slcMesin.id).val("PRINTING MOJOSARI 1").trigger("change");
                 // Lokasi 2 hanya type tertentu
                 // $("#divTropGedB").show();
                 // $("#divGedD").hide();
@@ -1479,6 +1370,10 @@ jQuery(function ($) {
 
                     columnDefs: [
                         {
+                            targets: 2,
+                            width: "250px"
+                        },
+                        {
                             targets: 4,
                             width: "150px"
                         },
@@ -1503,8 +1398,29 @@ jQuery(function ($) {
         }
     });
 
-    // default lokasi = 1
-    $("#" + slcLokasi.id).val("Tropodo").trigger("change");
+    // default lokasi
+    if (nomorUser == '7323' || nomorUser == '7324' || nomorUser == '7353' || nomorUser == '8982') {
+        $("#" + slcLokasi.id).val("Mojosari").trigger("change");
+    } else {
+        $("#" + slcLokasi.id).val("Tropodo").trigger("change");
+    }
+
+    $("#" + slcMesin.id).select2({
+        placeholder: "-- Pilih Mesin --",
+        dropdownParent: $("#div_parentSelectNamaMesin")
+    });
+
+    $("#" + slcMesin.id).on("change", function () {
+        const val = $(this).val();
+        let allowedType = [];
+        switch (val) {
+            case "Tropodo":
+                break;
+
+            case "Mojosari":
+                break;
+        }
+    });
 
     customer_tableHit.on("select2:select", function () {
         const selectedCustomer = $(this).val(); // Get selected Customer
@@ -1791,7 +1707,7 @@ jQuery(function ($) {
                 idLog: idLog,
                 tanggalLog: tanggalLog.value,
                 lokasi: $("#" + slcLokasi.id).val(),
-                noMesin: noMesin.value,
+                noMesin: $("#" + slcMesin.id).val(),
                 shiftPrinting: shiftPrinting.value,
                 customer: customer_tableHit.val(),
                 kodeBarang: kodebarang_tableHit.val(),

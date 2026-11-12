@@ -54,6 +54,15 @@
         white-space: normal;
         overflow-wrap: anywhere;
     }
+
+    #table_logMesin th:nth-child(3),
+    #table_logMesin td:nth-child(3) {
+        min-width: 250px !important;
+        width: 250px !important;
+        max-width: 250px !important;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 </style>
 <link href="{{ asset('css/ABM/MaintenanceKegiatanMesin.css') }}" rel="stylesheet">
 <link href="{{ asset('css/style.css') }}" rel="stylesheet">
