@@ -418,19 +418,35 @@ document.addEventListener("DOMContentLoaded", function () {
                             bagType.textContent = result[0].Bag_Type;
                             poNo.textContent = result[0].PO_No;
 
-                            var prodDateObj = new Date(result[0].Tanggal_Prod);
-                            var testingDateObj = new Date(result[0].Tanggal_Testing);
+                            // Production Date
+                            if (result[0].Tanggal_Prod) {
+                                var prodDateObj = new Date(result[0].Tanggal_Prod);
 
-                            prodDate.textContent = prodDateObj.toLocaleDateString('en-US', {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric'
-                            });
-                            testingDate.textContent = testingDateObj.toLocaleDateString('en-US', {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric'
-                            });
+                                prodDate.textContent = !isNaN(prodDateObj.getTime())
+                                    ? prodDateObj.toLocaleDateString('en-US', {
+                                        month: 'long',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                    })
+                                    : '';
+                            } else {
+                                prodDate.textContent = '';
+                            }
+
+                            // Testing Date
+                            if (result[0].Tanggal_Testing) {
+                                var testingDateObj = new Date(result[0].Tanggal_Testing);
+
+                                testingDate.textContent = !isNaN(testingDateObj.getTime())
+                                    ? testingDateObj.toLocaleDateString('en-US', {
+                                        month: 'long',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                    })
+                                    : '';
+                            } else {
+                                testingDate.textContent = '';
+                            }
 
 
                             // box kanan info
