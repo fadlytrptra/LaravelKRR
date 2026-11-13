@@ -282,7 +282,7 @@ $("#" + slcShift.id).on("select2:select", function () {
     getCounterFetch(hidIdMesin.value, slcShift.value);
     getPegawaiFetch(slcShift.value, hidIdMesin.value, txtIdOrder.value);
 
-    if (this.value == "P" && slcStatusLog.value.trim() == "01") {
+    if (this.value == "M" && slcStatusLog.value.trim() == "01") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
@@ -384,7 +384,7 @@ txtRpm.addEventListener("keypress", function (e) {
     if (e.key == "Enter") {
         e.preventDefault();
 
-        if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+        if (slcShift.value.trim() == "M" && slcStatusLog.value.trim() == "01") {
             if (
                 hidIdMesin.value == 217 ||
                 hidIdMesin.value == 271 ||
@@ -503,7 +503,7 @@ btnHapus.addEventListener("click", function () {
 
 btnProses.addEventListener("click", function () {
     btnProses.disabled = true;
-    if (modeProses == 1 && !isRpmEntered && slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+    if (modeProses == 1 && !isRpmEntered && slcShift.value.trim() == "M" && slcStatusLog.value.trim() == "01") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
@@ -740,7 +740,7 @@ function getDetailMesinFetch(s_id_mesin) {
     fetchSelect(
         "/sp-order/Sp_List_Mesin~4/" + s_id_mesin,
         (data) => {
-            if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+            if (slcShift.value.trim() == "M" && slcStatusLog.value.trim() == "01") {
                 if (
                     s_id_mesin == 217 ||
                     s_id_mesin == 271 ||
@@ -816,7 +816,7 @@ function getDetailMesinFetch(s_id_mesin) {
                             txtCounterAkhir.disabled = false;
                             btnProses.disabled = false;
 
-                            if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+                            if (slcShift.value.trim() == "M" && slcStatusLog.value.trim() == "01") {
                                 if (
                                     s_id_mesin == 217 ||
                                     s_id_mesin == 271 ||
@@ -895,7 +895,7 @@ function getDetailLog(s_id_log) {
 
 function prosesIsi(x_meter) {
     // Mengambil rencana jumlah order & jumlah order yang sudah dikerjakan
-    if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+    if (slcShift.value.trim() == "M" && slcStatusLog.value.trim() == "01") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
@@ -1033,7 +1033,7 @@ function prosesIsi(x_meter) {
 }
 
 function prosesKoreksi() {
-    if (slcShift.value.trim() == "P" && slcStatusLog.value.trim() == "01") {
+    if (slcShift.value.trim() == "M" && slcStatusLog.value.trim() == "01") {
         if (
             hidIdMesin.value == 217 ||
             hidIdMesin.value == 271 ||
