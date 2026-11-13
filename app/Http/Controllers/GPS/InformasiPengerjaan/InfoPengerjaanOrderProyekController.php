@@ -650,10 +650,10 @@ class InfoPengerjaanOrderProyekController extends Controller
             $db = $this->invDb();
             $kode = str_pad(trim($v['kodeBarang']), 9, '0', STR_PAD_LEFT);
             $r = collect($db->select(
-                'EXEC [dbo].[SP_5298_PJW_CEKKODEBARANG-TYPE] ?, ?',
+                'EXEC [dbo].[SP_5298_PJW_CEKKODEBARANG-TYPE] @XKodeBarang = ?, @XIdSubKelompok = ?',
                 [$kode, $v['idSubKel']]
             ))->first();
-            return response()->json(['jumlah' => (int) ($r->jumlah ?? 0)]);
+            return response()->json(['jumlah' => (int) ($r->Jumlah ?? 0)]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -718,7 +718,7 @@ class InfoPengerjaanOrderProyekController extends Controller
         try {
             $db = $this->invDb();
             $v['idPenerima'] = Auth::check() ? Auth::user()->NomorUser : $v['idPenerima'];
-            $db->select('EXEC [dbo].[SP_5298_PJW_INSERT-02-TMPTRANSAKSI] @XIdTypeTransaksi=?, @XUraianDetailTransaksi=?, @XSaatawalTransaksi=?, @XIdType=?, @XIdPenerima=?, @XJumlahKeluarPrimer=?, @XJumlahKeluarSekunder=?, @XJumlahKeluarTritier=?, @XAsalIdSubKelompok=?, @XTujuanIdSubkelompok=?', [
+            $db->statement('EXEC [dbo].[SP_5298_PJW_INSERT-02-TMPTRANSAKSI] @XIdTypeTransaksi=?, @XUraianDetailTransaksi=?, @XSaatawalTransaksi=?, @XIdType=?, @XIdPenerima=?, @XJumlahKeluarPrimer=?, @XJumlahKeluarSekunder=?, @XJumlahKeluarTritier=?, @XAsalIdSubKelompok=?, @XTujuanIdSubkelompok=?', [
                 '02',
                 $v['alasan'] ?? '',
                 $v['tanggal'],

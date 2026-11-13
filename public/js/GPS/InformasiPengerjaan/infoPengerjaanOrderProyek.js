@@ -472,7 +472,7 @@ jQuery(function ($) {
             mhn_Primer.value = "0";
             return;
         }
-        mhn_Sekunder.focus();
+        mhn_Sekunder.select();
     });
 
     mhn_Sekunder.addEventListener("keypress", function (e) {
@@ -482,7 +482,7 @@ jQuery(function ($) {
             mhn_Sekunder.value = "0";
             return;
         }
-        mhn_Tritier.focus();
+        mhn_Tritier.select();
     });
 
     mhn_Tritier.addEventListener("keypress", function (e) {
@@ -1018,7 +1018,7 @@ jQuery(function ($) {
                 if (valid) {
                     const canEditQty = mhnState.proses === 1 || mhnState.proses === 2;
                     mhn_FrameQty.disabled = !canEditQty;
-                    if (canEditQty) mhn_Primer.focus();
+                    if (canEditQty) mhn_Primer.select();
                 } else {
                     mhn_FrameQty.disabled = true;
                     Swal.fire(
