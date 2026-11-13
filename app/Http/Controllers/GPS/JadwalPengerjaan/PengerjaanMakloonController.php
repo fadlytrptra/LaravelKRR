@@ -144,7 +144,7 @@ class PengerjaanMakloonController extends Controller
             'noType'     => ['required', 'integer'],
             'jmlBrg'     => ['required', 'numeric', 'min:0'],
             'harga'      => ['required', 'numeric', 'min:0'],
-            'keterangan' => ['required', 'string', 'max:255'],
+            'keterangan' => ['nullable', 'string', 'max:255'],
             'hargaU'     => ['nullable', 'numeric'],
         ]);
 
@@ -164,7 +164,7 @@ class PengerjaanMakloonController extends Controller
                 $validated['noType'],         // @noType
                 (int)$validated['jmlBrg'],    // @jmlBrg
                 (float)$validated['harga'],   // @harga
-                $validated['keterangan'],     // @keterangan
+                $validated['keterangan'] ?? '',     // @keterangan
                 $hargaT,                      // @hargaT (Jml × Harga)
                 $hargaU,                      // @hargaU (harga total lama)
             ]);
