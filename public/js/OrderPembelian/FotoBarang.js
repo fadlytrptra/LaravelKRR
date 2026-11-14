@@ -52,6 +52,95 @@ function setActionButtons({
     btnHapus.disabled = !isAdminFotoBarang || !hapus;
 }
 
+
+async function compressImage(file) {
+    return new Promise((resolve, reject) => {
+
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+
+        img.onload = function () {
+
+            const MAX_WIDTH = 1600;
+            const MAX_HEIGHT = 1600;
+
+            let width = img.width;
+            let height = img.height;
+
+            // Sesuaikan resolusi
+            if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                const ratio = Math.min(
+                    MAX_WIDTH / width,
+                    MAX_HEIGHT / height
+                );
+
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.drawImage(img, 0, 0, width, height);
+
+            URL.revokeObjectURL(objectUrl);
+
+            // Kompresi JPEG
+            let quality = 0.85;
+
+            function convert() {
+                canvas.toBlob(blob => {
+
+                    if (!blob) {
+                        reject(new Error("Gagal melakukan kompresi gambar."));
+                        return;
+                    }
+
+                    // Target maksimal 1 MB
+                    if (blob.size > 1024 * 1024 && quality > 0.45) {
+                        quality -= 0.1;
+                        convert();
+                        return;
+                    }
+
+                    const compressedFile = new File(
+                        [blob],
+                        "foto-barang.jpg",
+                        {
+                            type: "image/jpeg",
+                            lastModified: Date.now()
+                        }
+                    );
+
+                    console.log("Foto sebelum:",
+                        (file.size / 1024 / 1024).toFixed(2), "MB");
+
+                    console.log("Foto sesudah:",
+                        (compressedFile.size / 1024 / 1024).toFixed(2), "MB");
+
+                    resolve(compressedFile);
+
+                }, "image/jpeg", quality);
+            }
+
+            convert();
+        };
+
+        img.onerror = function () {
+            URL.revokeObjectURL(objectUrl);
+            reject(new Error(
+                "Gambar tidak dapat dibaca. Pastikan format JPG, PNG, atau WEBP."
+            ));
+        };
+
+        img.src = objectUrl;
+    });
+}
+
+
 // endregion
 
 // #region Event Listener
@@ -95,27 +184,41 @@ btnBrowse.addEventListener("click", function () {
 });
 
 
-// preview gambar input
-fotoInput.addEventListener("change", function (e) {
-    let file = e.target.files[0];
 
-    if (file) {
-        selectedFile = file;
+fotoInput.addEventListener("change", async function (e) {
 
-        let reader = new FileReader();
-        reader.onload = function (ev) {
-            previewImage.src = ev.target.result;
-            gambarDariDB = false;
-            setActionButtons({
-                browse: false,
-                foto: false,
-                simpan: true,
-                hapus: true
-            });
-        };
-        reader.readAsDataURL(file);
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    try {
+        selectedFile = await compressImage(file);
+
+        previewImage.src = URL.createObjectURL(selectedFile);
+
+        gambarDariDB = false;
+
+        setActionButtons({
+            browse: false,
+            foto: false,
+            simpan: true,
+            hapus: true
+        });
+
+    } catch (error) {
+        console.error("Kompresi gagal:", error);
+
+        Swal.fire({
+            icon: "error",
+            title: "Gagal Memproses Gambar",
+            text: error.message
+        });
+
+        fotoInput.value = "";
+        selectedFile = null;
     }
 });
+
 
 // Cari Barang
 btnCari.addEventListener("click", function () {
@@ -290,26 +393,41 @@ btnFoto.addEventListener("click", async function () {
 });
 
 // preview hasil kamera
-cameraInput.addEventListener("change", function (e) {
-    let file = e.target.files[0];
 
-    if (file) {
-        selectedFile = file;
+cameraInput.addEventListener("change", async function (e) {
 
-        let reader = new FileReader();
-        reader.onload = function (ev) {
-            previewImage.src = ev.target.result;
-            gambarDariDB = false;
-            setActionButtons({
-                browse: false,
-                foto: false,
-                simpan: true,
-                hapus: true
-            });
-        };
-        reader.readAsDataURL(file);
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    try {
+        selectedFile = await compressImage(file);
+
+        previewImage.src = URL.createObjectURL(selectedFile);
+
+        gambarDariDB = false;
+
+        setActionButtons({
+            browse: false,
+            foto: false,
+            simpan: true,
+            hapus: true
+        });
+
+    } catch (error) {
+        console.error("Kompresi kamera gagal:", error);
+
+        Swal.fire({
+            icon: "error",
+            title: "Gagal Memproses Foto",
+            text: error.message
+        });
+
+        cameraInput.value = "";
+        selectedFile = null;
     }
 });
+
 
 btnTakePhoto.addEventListener("click", function () {
     const ctx = cameraCanvas.getContext("2d");
@@ -419,14 +537,50 @@ btnSimpan.addEventListener("click", function () {
     formData.append("Kd_Barang", kdBarang.value);
     formData.append("Foto", selectedFile);
 
+
     fetch("/FotoBarang", {
         method: "POST",
         headers: {
-            "X-CSRF-TOKEN": csrfToken
+            "X-CSRF-TOKEN": csrfToken,
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
         },
         body: formData
     })
-    .then(response => response.json())
+    .then(async response => {
+        const raw = await response.text();
+
+        let res;
+
+        try {
+            res = JSON.parse(raw);
+        } catch (error) {
+            console.error("Response bukan JSON:", raw);
+
+            throw new Error(
+                `HTTP ${response.status}: ${raw.substring(0, 500)}`
+            );
+        }
+
+        console.log("HTTP Status:", response.status);
+        console.log("Response Laravel:", res);
+
+        if (!response.ok) {
+            let detail = res.message || "Terjadi kesalahan.";
+
+            if (res.errors) {
+                detail += " " + Object.values(res.errors)
+                    .flat()
+                    .join(", ");
+            }
+
+            throw new Error(
+                `HTTP ${response.status}: ${detail}`
+            );
+        }
+
+        return res;
+    })
     .then(res => {
 
         Swal.fire({
@@ -435,26 +589,20 @@ btnSimpan.addEventListener("click", function () {
             text: res.message
         });
 
-        // jika berhasil simpan
         if (res.success) {
 
-            // clear input
             kdBarang.value = "";
             namaBarang.value = "";
             ketBarang.value = "";
 
-            // reset file input
             fotoInput.value = "";
             cameraInput.value = "";
 
-            // reset state
             selectedFile = null;
             gambarDariDB = false;
 
-            // kosongkan preview
             previewImage.src = "";
 
-            // kembali ke state awal
             btnBrowse.disabled = true;
             btnFoto.disabled = true;
 
@@ -463,25 +611,22 @@ btnSimpan.addEventListener("click", function () {
     })
     .catch(error => {
 
-        console.error(error);
+        console.error("Upload Foto Error:", error);
 
         Swal.fire({
             icon: "error",
-            title: "Error",
-            text: "Gagal menyimpan data."
+            title: "Gagal Menyimpan",
+            text: error.message
         });
+
     })
     .finally(() => {
 
-        // selalu aktif lagi
         btnCari.disabled = false;
         btnSimpan.disabled = false;
         btnHapus.disabled = false;
 
-        // kondisi browse & foto
         if (gambarDariDB) {
-
-            // gambar dari database
             btnBrowse.disabled = true;
             btnFoto.disabled = true;
 
@@ -489,16 +634,15 @@ btnSimpan.addEventListener("click", function () {
             previewImage.src &&
             !previewImage.src.includes("tanyaken_apa.jpg")
         ) {
-            // ada preview gambar baru
             btnBrowse.disabled = true;
             btnFoto.disabled = true;
 
         } else {
-            // belum ada gambar
             btnBrowse.disabled = false;
             btnFoto.disabled = false;
         }
     });
+
 });
 
 
