@@ -15,6 +15,34 @@ class SuratPesananManagerKencanaController extends Controller
     public function index()
     {
         $data = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_HEADER_PESANAN_BLMACC @Kode = ?', [2]);
+        // Ambil semua ID Surat Pesanan
+        $idSuratPesanan = collect($data)
+            ->pluck('IDSuratPesanan')
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        // Ambil Qty, HargaSatuan, dan Satuan dari T_DetailPesanan
+        $detailPesanan = DB::connection('ConnKCNSales')
+            ->table('T_DetailPesanan')
+            ->select(
+                'IDSuratPesanan',
+                'Qty',
+                'HargaSatuan',
+                'Satuan'
+            )
+            ->whereIn('IDSuratPesanan', $idSuratPesanan)
+            ->get()
+            ->keyBy('IDSuratPesanan');
+
+        // Gabungkan ke data header
+        foreach ($data as $item) {
+            $detail = $detailPesanan->get($item->IDSuratPesanan);
+            $item->Qty = $detail->Qty ?? 0;
+            $item->HargaSatuan = $detail->HargaSatuan ?? 0;
+            $item->Satuan = trim($detail->Satuan ?? '-');
+        }
         $jenis_sp = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_SP @Kode = ?', [1]);
         $list_customer = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_ALL_CUSTOMER @Kode = ?', [1]);
         $list_sales = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_SALES');

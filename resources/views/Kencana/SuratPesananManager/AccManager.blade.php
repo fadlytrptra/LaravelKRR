@@ -27,6 +27,9 @@
                                 <th>Nama Customer </th>
                                 <th>Nama Sales</th>
                                 <th>Tanggal Pesan</th>
+                                <th>Quantity</th>
+                                <th>Satuan</th>
+                                <th>Harga Satuan</th>
                                 {{-- <th>Action</th> --}}
                             </tr>
                         </thead>
@@ -45,6 +48,15 @@
                                     <td class="RDZPaddingTable RDZCenterTable">{{ $item->NamaSales }}</td>
                                     <td class="RDZPaddingTable RDZCenterTable">
                                         {{ date('m-d-Y', strtotime($item->Tgl_Pesan)) }}</td>
+                                         <td class="RDZPaddingTable RDZCenterTable">
+                                        {{ number_format((float) $item->Qty, 2, '.', ',') }}
+                                    </td>
+                                    <td class="RDZPaddingTable RDZCenterTable">
+                                        {{ $item->Satuan }}
+                                    </td>
+                                    <td class="RDZPaddingTable RDZCenterTable">
+                                        {{ number_format((float) $item->HargaSatuan, 2, '.', ',') }}
+                                    </td>
                                     {{-- <td class="acs-td-button">
                                             <form onsubmit="return confirm('Apakah Anda Yakin ?');"
                                                 action="{{ url('SuratPesananManager/' . $item->IDSuratPesanan . '/up') }}"
@@ -77,7 +89,7 @@
                             {{-- {{ url('/SuratPesananManager/upall') }} --}}
                             {{ csrf_field() }}
                             @php
-                                $canApprove = in_array(trim($user), ['YUDI', 'rudy', '4496', 'RUDY', 'TJAHYO']);
+                                $canApprove = in_array(trim($user), ['YUDI', '4496', 'RUDY', 'TJAHYO']);
                             @endphp
 
                             <button class="btn btn-sm btn-success" id="button_submitSelected"

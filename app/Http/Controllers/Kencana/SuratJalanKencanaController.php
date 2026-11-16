@@ -55,14 +55,7 @@ class SuratJalanKencanaController extends Controller
         $access = (new HakAksesController)
             ->HakAksesFiturMaster('Kencana');
 
-        return view(
-            'Kencana.SuratJalan.Create',
-            compact(
-                'jenisPengiriman',
-                'customer',
-                'expeditor',
-                'access'
-            )
+        return view('Kencana.SuratJalan.Create', compact('jenisPengiriman', 'customer', 'expeditor', 'access')
         );
     }
 
@@ -92,7 +85,7 @@ class SuratJalanKencanaController extends Controller
                 'DP.IDPesanan'
             )
             ->join(
-                DB::raw('INVENTORY.dbo.VW_PRG_1486_SLS_TYPE as T'),
+                DB::raw('KCN_INVENTORY.dbo.VW_PRG_1486_SLS_TYPE as T'),
                 function ($join) {
                     $join->on(function ($query) {
                         $query->whereRaw('LEN(DP.IDBarang) = 20')
@@ -111,6 +104,8 @@ class SuratJalanKencanaController extends Controller
             ->select(
                 'DO.IDDO',
                 DB::raw('DO.IdTransTmp AS NoTrans'),
+                    'DO.QtyTritier as Qty',
+                    'DP.Satuan as Satuan',
                 DB::raw("
                     LTRIM(RTRIM(
                         COALESCE(
@@ -129,7 +124,7 @@ class SuratJalanKencanaController extends Controller
 
         return response()->json($data);
     }
-    
+
     public function getNomorSuratJalan(Request $request)
     {
         try {
@@ -218,6 +213,8 @@ class SuratJalanKencanaController extends Controller
                     'DPG.IDHeaderKirim as IDHeaderKirim',
                     'DPG.IDDO as IDDO',
                     'DPG.IDSuratPesanan as IDSuratPesanan',
+                    'DO.QtyTritier as Qty',
+                    'DP.Satuan as Satuan',
 
                     DB::raw("
                         CASE

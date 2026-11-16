@@ -60,7 +60,7 @@ class DeliveryOrderKencanaController extends Controller
     }
     public function getKelompokUtama($kodeBarang)
     {
-        $data = DB::connection('ConnInventory')->select(
+        $data = DB::connection('ConnKCNInventory')->select(
             'SELECT DISTINCT
                 T.IdType,
                 T.NamaType,
@@ -81,7 +81,7 @@ class DeliveryOrderKencanaController extends Controller
     }
     public function getKelompok($kelompokUtama, $kodeBarang)
     {
-        $data = DB::connection('ConnInventory')->select(
+        $data = DB::connection('ConnKCNInventory')->select(
             'SELECT DISTINCT
                 K.IdKelompok,
                 K.NamaKelompok
@@ -99,7 +99,7 @@ class DeliveryOrderKencanaController extends Controller
     }
     public function getSubKelompok($kelompok, $kodeBarang)
     {
-        $data = DB::connection('ConnInventory')->select(
+        $data = DB::connection('ConnKCNInventory')->select(
             'SELECT DISTINCT
                 S.IdSubkelompok,
                 S.NamaSubKelompok
@@ -117,7 +117,7 @@ class DeliveryOrderKencanaController extends Controller
     }
     public function getSaldo($subKelompok, $kodeBarang)
     {
-        $data = DB::connection('ConnInventory')->select(
+        $data = DB::connection('ConnKCNInventory')->select(
             'SELECT
                 IdType,
                 NamaType,

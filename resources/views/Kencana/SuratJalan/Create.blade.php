@@ -337,7 +337,6 @@
                                     {{-- ===================================================== --}}
 
                                     <div class="permohonan-sj-container07">
-
                                         <table
                                             class="permohonan-sj-table"
                                             id="list_view"
@@ -345,25 +344,18 @@
                                         >
 
                                             <thead class="thead-light">
-
                                                 <tr>
-
                                                     <th>No. DO</th>
-
                                                     <th>Uraian</th>
-
                                                     <th>No. Trans</th>
-
                                                     <th>Surat Pesanan</th>
-
+                                                    <th>Qty</th>
+                                                    <th>Satuan</th>
                                                 </tr>
-
                                             </thead>
 
                                             <tbody id="list_view_body">
-
                                                 {{-- Data detail akan diisi oleh JavaScript --}}
-
                                             </tbody>
 
                                         </table>
@@ -538,6 +530,18 @@
                                             value="{{ old('barang3.' . $index) }}"
                                         >
 
+                                         <input
+                                            type="hidden"
+                                            name="barang4[]"
+                                            value="{{ old('barang4.' . $index) }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="barang5[]"
+                                            value="{{ old('barang5.' . $index) }}"
+                                        >
+
                                     @endforeach
 
                                 @endif
@@ -605,6 +609,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.oldBarang1 = @json(old('barang1', []));
     window.oldBarang2 = @json(old('barang2', []));
     window.oldBarang3 = @json(old('barang3', []));
+    window.oldBarang4 = @json(old('barang4', []));
+    window.oldBarang5 = @json(old('barang5', []));
 </script>
 
 @endif
