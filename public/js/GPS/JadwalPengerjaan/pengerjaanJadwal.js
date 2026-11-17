@@ -92,9 +92,9 @@ jQuery(function ($) {
         jamKerja: 0,
         sisaMenit: 0,
     };
-//#endregion
+    //#endregion
 
-//#region Input & Core Events
+    //#region Input & Core Events
     EstDate.valueAsDate = new Date();
     clearAll();
 
@@ -244,9 +244,9 @@ jQuery(function ($) {
     btnBatal.addEventListener("click", resetAll);
 
     btnProses.addEventListener("click", doProses);
-//#endregion
+    //#endregion
 
-//#region Utility & Helper Functions
+    //#region Utility & Helper Functions
     function loadOrder(noOd) {
         ajaxPost(
             window.prosesJadwalConfig.routeGetOrder,
@@ -271,7 +271,7 @@ jQuery(function ($) {
                 Swal.fire(
                     "Error",
                     (xhr.responseJSON && xhr.responseJSON.error) ||
-                        "Order tidak ditemukan.",
+                    "Order tidak ditemukan.",
                     "error",
                 );
             },
@@ -421,7 +421,7 @@ jQuery(function ($) {
                         Swal.fire(
                             "Error",
                             (xhr.responseJSON && xhr.responseJSON.error) ||
-                                "Gagal memuat jam kerja optimal.",
+                            "Gagal memuat jam kerja optimal.",
                             "error",
                         ),
                 );
@@ -430,7 +430,7 @@ jQuery(function ($) {
                 Swal.fire(
                     "Error",
                     (xhr.responseJSON && xhr.responseJSON.error) ||
-                        "Gagal memeriksa jadwal pada tanggal tersebut.",
+                    "Gagal memeriksa jadwal pada tanggal tersebut.",
                     "error",
                 ),
         );
@@ -633,7 +633,7 @@ jQuery(function ($) {
             try {
                 sessionStorage.removeItem(jamKerjaPendingKey);
                 sessionStorage.removeItem(jamKerjaResultKey);
-            } catch (storageError) {}
+            } catch (storageError) { }
             Swal.fire(
                 "Error",
                 "Konteks form tidak dapat disimpan pada browser ini. Edit Jam Kerja tidak dibuka agar data pengerjaan tidak hilang.",
@@ -701,7 +701,7 @@ jQuery(function ($) {
             try {
                 sessionStorage.removeItem(jamKerjaPendingKey);
                 sessionStorage.removeItem(jamKerjaResultKey);
-            } catch (storageError) {}
+            } catch (storageError) { }
             Swal.fire("Error", "Konteks Edit Jam Kerja tidak dapat dipulihkan.", "error");
             return;
         }
@@ -748,7 +748,7 @@ jQuery(function ($) {
                 Swal.fire(
                     "Error",
                     (xhr.responseJSON && xhr.responseJSON.error) ||
-                        "Gagal menghitung ulang sisa jam kerja.",
+                    "Gagal menghitung ulang sisa jam kerja.",
                     "error",
                 ),
         );
@@ -807,8 +807,15 @@ jQuery(function ($) {
                         confirmButtonText: "Ya (Lanjut)",
                         cancelButtonText: "Selesai",
                     }).then((r) => {
-                        if (r.isConfirmed) clearFrame2();
-                        else clearAll();
+                        // if (r.isConfirmed) clearFrame2();
+                        // else clearAll();
+                        if (r.isConfirmed) {
+                            clearFrame2();
+                        } else if (r.dismiss === Swal.DismissReason.cancel) {
+                            clearFrame2();
+                        } else {
+                            clearFrame2();
+                        }
                     });
                 }
             },
@@ -816,7 +823,7 @@ jQuery(function ($) {
                 Swal.fire(
                     "Error",
                     (xhr.responseJSON && xhr.responseJSON.error) ||
-                        "Gagal simpan.",
+                    "Gagal simpan.",
                     "error",
                 ),
         );
@@ -863,7 +870,7 @@ jQuery(function ($) {
                 modalState.sisaMenit = Math.max(
                     0,
                     (parseInt(res.sisaJam) || 0) * 60 +
-                        (parseInt(res.sisaMenit) || 0),
+                    (parseInt(res.sisaMenit) || 0),
                 );
                 lSisaJam.textContent =
                     res.sisaJam + " jam " + res.sisaMenit + " menit";
@@ -1023,15 +1030,22 @@ jQuery(function ($) {
                         confirmButtonText: "Ya",
                         cancelButtonText: "Selesai",
                     }).then((r) => {
-                        if (r.isConfirmed) clearFrame2();
-                        else clearAll();
+                        // if (r.isConfirmed) clearFrame2();
+                        // else clearAll();
+                        if (r.isConfirmed) {
+                            clearFrame2();
+                        } else if (r.dismiss === Swal.DismissReason.cancel) {
+                            clearFrame2();
+                        } else {
+                            clearFrame2();
+                        }
                     });
                 },
                 (xhr) =>
                     Swal.fire(
                         "Error",
                         (xhr.responseJSON && xhr.responseJSON.error) ||
-                            "Gagal simpan.",
+                        "Gagal simpan.",
                         "error",
                     ),
             );
