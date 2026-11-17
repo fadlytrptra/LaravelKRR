@@ -1058,7 +1058,7 @@ document
             case "Enter":
                 event.preventDefault();
                 event.stopPropagation();
-
+                pilKonversi = -1;
                 // Panggil loading data saat menekan Enter
                 loadSelectedKomposisi(
                     startIndex,
@@ -1101,7 +1101,7 @@ function clearDataMaster() {
     numUkuran.value = "";
     numDenier.value = "";
     txtWarna.value = "";
-    dateTanggal.value = getCurrentDate();
+    // dateTanggal.value = getCurrentDate();
     txtShift.value = "";
     timeAwal.value = "00:00";
     timeAkhir.value = "00:00";
