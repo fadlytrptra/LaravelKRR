@@ -916,6 +916,7 @@ function prosesIsi(x_meter) {
                     _token: csrfToken,
                     hidIdMesin: hidIdMesin.value,
                     txtRpm: txtRpm.value,
+                    dtTanggal1: dtTanggal1.value,
                 },
                 success: function (data) {
                     console.log("data rpm berhasil update");
@@ -1054,6 +1055,7 @@ function prosesKoreksi() {
                     _token: csrfToken,
                     hidIdMesin: hidIdMesin.value,
                     txtRpm: txtRpm.value,
+                    dtTanggal1: dtTanggal1.value,
                 },
                 success: function (data) {
                     console.log("data rpm berhasil update");

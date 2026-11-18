@@ -2213,12 +2213,20 @@ class OrderCircularController extends Controller
         } else if ($id == 'DataRPMPagi') {
             $hidIdMesin = $request->input('hidIdMesin');
             $txtRpm = $request->input('txtRpm');
+            $dtTanggal1 = $request->input('dtTanggal1');
             // dd($request->all());
 
             DB::connection('ConnCircular')->table('T_Mesin')
                 ->where('Id_mesin', $hidIdMesin)
                 ->update([
                     'Rpm' => $txtRpm
+                ]);
+
+             DB::connection('ConnCircular')->table('T_Log_Mesin')
+                ->where('Tgl_Log', $dtTanggal1)
+                ->where('Id_mesin', $hidIdMesin)
+                ->update([
+                    'A_rpm' => $txtRpm
                 ]);
         }
     }
