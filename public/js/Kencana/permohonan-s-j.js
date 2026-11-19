@@ -98,6 +98,12 @@ surat_pesanan.addEventListener("change", function () {
                 // Simpan No Trans di option
                 optionTag.dataset.notrans = option.NoTrans ?? "";
 
+                // Qty dari T_DeliveryOrder
+                optionTag.dataset.qty = option.Qty ?? "";
+
+                // Satuan dari T_DetailPesanan
+                optionTag.dataset.satuan = option.Satuan ?? "";
+
                 nomor_do.appendChild(optionTag);
             });
         });
@@ -237,7 +243,9 @@ id_kirimSelect.addEventListener("keypress", function (event) {
                     item.IDDO || item.IdDO || "",
                     item.Uraian || "",
                     item.IDDetailKirim || "",
-                    item.IDSuratPesanan || ""
+                    item.IDSuratPesanan || "",
+                    item.Qty || "",
+                    item.Satuan || ""
                 ];
 
                 console.log("Detail Row:", arrayDetail);
@@ -324,16 +332,20 @@ id_kirimText.addEventListener("keypress", function (event) {
                 }
 
                 truk_nopol.value = data[0][0].TrukNopol;
-                let arrayDetail = [];
+                data[1].forEach((item) => {
 
-                for (let i = 0; i < data[1].length; i++) {
-                    arrayDetail.push(data[1][i].IDDO);
-                    arrayDetail.push(data[1][i].Uraian);
-                    arrayDetail.push(data[1][i].IDDetailKirim);
-                    arrayDetail.push(data[1][i].IDSuratPesanan);
-                }
-                console.log(arrayDetail);
-                funcInsertRow(arrayDetail);
+                    const arrayDetail = [
+                        item.IDDO || "",
+                        item.Uraian || "",
+                        item.IDDetailKirim || "",
+                        item.IDSuratPesanan || "",
+                        item.Qty || "",
+                        item.Satuan || ""
+                    ];
+
+                    funcInsertRow(arrayDetail);
+
+                });
             });
         list_sjButton.disabled = true;
     }
@@ -462,7 +474,9 @@ add_item.addEventListener("click", function () {
         selectedDO.value,
         uraian.value,
         selectedDO.dataset.notrans || "",
-        selectedSP.value
+        selectedSP.value,
+        selectedDO.dataset.qty || "",
+        selectedDO.dataset.satuan || ""
     ];
 
     funcInsertRow(arraydata);
@@ -479,15 +493,20 @@ add_item.addEventListener("click", function () {
 });
 
 function funcInsertRow(array) {
+
     const table = document.getElementById("list_view");
-    const dataToCheck = array[1];
+
+    // Pastikan jumlah kolom selalu 6
+    while (array.length < 6) {
+        array.push("");
+    }
+
+    // Cek duplikat berdasarkan ID DO
+    const dataToCheck = array[0];
     let isDataInTable = false;
 
-    // ==========================================
-    // CEK DATA DUPLIKAT
-    // ==========================================
     const existingInputs = table.querySelectorAll(
-        'input[name="barang1[]"]'
+        'input[name="barang0[]"]'
     );
 
     existingInputs.forEach((input) => {
@@ -497,55 +516,45 @@ function funcInsertRow(array) {
     });
 
     if (isDataInTable) {
-        alert("Data sudah ada di table");
+        alert("Data DO sudah ada di table");
         return;
     }
 
-    // ==========================================
-    // BUAT ROW BARU
-    // ==========================================
+    // Buat row baru
     const newRow = table.insertRow(-1);
     newRow.className = "acs-tr-hover";
 
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < 6; i++) {
+
         const cell = newRow.insertCell(i);
 
         cell.className = "acs-tr-hover";
-
-        // Jangan pakai height tetap
         cell.style.height = "auto";
         cell.style.verticalAlign = "top";
         cell.style.overflow = "visible";
 
-        // ==========================================
-        // INPUT HIDDEN UNTUK FORM
-        // ==========================================
+        // Input hidden
         const hiddenInput = document.createElement("input");
 
         hiddenInput.type = "hidden";
-        hiddenInput.value = array[i];
+        hiddenInput.value = array[i] ?? "";
         hiddenInput.name = "barang" + i + "[]";
 
         cell.appendChild(hiddenInput);
 
-        // ==========================================
-        // TAMPILAN DATA
-        // ==========================================
+        // Tampilan
         const display = document.createElement("div");
 
-        display.textContent = array[i];
+        display.textContent = array[i] ?? "";
 
         display.style.width = "100%";
         display.style.height = "auto";
         display.style.minHeight = "35px";
-
         display.style.padding = "8px";
         display.style.boxSizing = "border-box";
-
         display.style.whiteSpace = "normal";
         display.style.wordBreak = "break-word";
         display.style.overflowWrap = "anywhere";
-
         display.style.lineHeight = "1.5";
 
         // Khusus Uraian
@@ -556,11 +565,12 @@ function funcInsertRow(array) {
         cell.appendChild(display);
     }
 
-    // ==========================================
-    // SELECT ROW
-    // ==========================================
+    // Select row
     newRow.addEventListener("click", () => {
-        const highlightedRow = table.querySelector("tr.highlighted");
+
+        const highlightedRow = table.querySelector(
+            "tr.highlighted"
+        );
 
         if (highlightedRow) {
             highlightedRow.classList.remove("highlighted");
@@ -582,6 +592,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const oldBarang1 = window.oldBarang1 || [];
     const oldBarang2 = window.oldBarang2 || [];
     const oldBarang3 = window.oldBarang3 || [];
+    const oldBarang4 = window.oldBarang4 || [];
+    const oldBarang5 = window.oldBarang5 || [];
 
     if (oldBarang0.length === 0) {
         return;
@@ -605,7 +617,9 @@ document.addEventListener("DOMContentLoaded", function () {
             oldBarang0[i] || "",
             oldBarang1[i] || "",
             oldBarang2[i] || "",
-            oldBarang3[i] || ""
+            oldBarang3[i] || "",
+            oldBarang4[i] || "",
+            oldBarang5[i] || ""
         ];
 
         funcInsertRow(arrayData);
@@ -725,7 +739,7 @@ function validasiFormSuratJalan() {
 
         const inputs = rows[i].querySelectorAll("input");
 
-        if (inputs.length < 4) {
+        if (inputs.length < 6) {
             Swal.fire({
                 icon: "warning",
                 title: "Data Belum Lengkap",
