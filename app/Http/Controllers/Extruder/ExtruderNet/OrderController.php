@@ -77,7 +77,8 @@ class OrderController extends Controller
                 'kode' => 'nullable|string'
             ]);
 
-            $cleanIdentifikasi = strtoupper($validated['identifikasi']);
+            // $cleanIdentifikasi = strtoupper($validated['identifikasi']);
+            $cleanIdentifikasi = $validated['identifikasi'];
             $userId = Auth::user()->NomorUser;
 
             if ($validated['gedung'] === 'B') {
