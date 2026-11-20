@@ -367,7 +367,7 @@ class CetakPembelianKencanaController extends Controller
         $idMataUangBC = DB::connection('ConnKCNPurchase')
             ->table('YSUPPLIER as S')
             ->leftJoin(
-                'ACCOUNTING.dbo.T_MATAUANG as M',
+                'KCN_ACCOUNTING.dbo.T_MATAUANG as M',
                 'S.ID_MATAUANG',
                 '=',
                 'M.Id_MataUang'

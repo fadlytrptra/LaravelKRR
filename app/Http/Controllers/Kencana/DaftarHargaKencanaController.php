@@ -29,7 +29,7 @@ class DaftarHargaKencanaController extends Controller
         $totalData = DB::connection('ConnKCNPurchase')->table('YTERIMA')
             ->leftJoin('YSUPPLIER', 'YTERIMA.No_sup', '=', 'YSUPPLIER.NO_SUP')
             ->leftJoin('YSATUAN', 'YTERIMA.Satuan_Terima', '=', 'YSATUAN.No_satuan')
-            ->leftJoin('ACCOUNTING.dbo.T_MATAUANG', 'YTERIMA.IdMataUang', '=', 'ACCOUNTING.dbo.T_MATAUANG.Id_MataUang')
+            ->leftJoin('KCN_ACCOUNTING.dbo.T_MATAUANG', 'YTERIMA.IdMataUang', '=', 'KCN_ACCOUNTING.dbo.T_MATAUANG.Id_MataUang')
             ->leftJoin('YTRANSBL', 'YTERIMA.No_trans', '=', 'YTRANSBL.No_trans')
             ->join('Y_BARANG', 'YTRANSBL.Kd_brg', '=', 'Y_BARANG.KD_BRG')
             ->leftJoin('YUSER', 'YTRANSBL.Operator', '=', 'YUSER.kd_user')
@@ -45,7 +45,7 @@ class DaftarHargaKencanaController extends Controller
                 'YSUPPLIER.KOTA1',
                 'YSUPPLIER.NEGARA1',
                 'YTERIMA.Hrg_trm',
-                'ACCOUNTING.dbo.T_MATAUANG.Id_MataUang_BC',
+                'KCN_ACCOUNTING.dbo.T_MATAUANG.Id_MataUang_BC',
                 'YUSER.Nama',
                 'YTERIMA.Datang'
             )->count();
@@ -59,7 +59,7 @@ class DaftarHargaKencanaController extends Controller
         $query = DB::connection('ConnKCNPurchase')->table('YTERIMA')
             ->leftJoin('YSUPPLIER', 'YTERIMA.No_sup', '=', 'YSUPPLIER.NO_SUP')
             ->leftJoin('YSATUAN', 'YTERIMA.Satuan_Terima', '=', 'YSATUAN.No_satuan')
-            ->leftJoin('ACCOUNTING.dbo.T_MATAUANG', 'YTERIMA.IdMataUang', '=', 'ACCOUNTING.dbo.T_MATAUANG.Id_MataUang')
+            ->leftJoin('KCN_ACCOUNTING.dbo.T_MATAUANG', 'YTERIMA.IdMataUang', '=', 'KCN_ACCOUNTING.dbo.T_MATAUANG.Id_MataUang')
             ->leftJoin('YTRANSBL', 'YTERIMA.No_trans', '=', 'YTRANSBL.No_trans')
             ->join('Y_BARANG', 'YTRANSBL.Kd_brg', '=', 'Y_BARANG.KD_BRG')
             ->leftJoin('YUSER', 'YTRANSBL.Operator', '=', 'YUSER.kd_user')
@@ -75,7 +75,7 @@ class DaftarHargaKencanaController extends Controller
                 'YSUPPLIER.KOTA1',
                 'YSUPPLIER.NEGARA1',
                 'YTERIMA.Hrg_trm',
-                'ACCOUNTING.dbo.T_MATAUANG.Id_MataUang_BC',
+                'KCN_ACCOUNTING.dbo.T_MATAUANG.Id_MataUang_BC',
                 'YUSER.Nama',
                 'YTERIMA.Datang'
             );
@@ -129,7 +129,7 @@ class DaftarHargaKencanaController extends Controller
 
         $totalFilteredBeforeCap = (clone $query)->count(); // real filtered count
 
-        // $maxRecords = $request->input('maximumRecords'); 
+        // $maxRecords = $request->input('maximumRecords');
         // $limitMaxRecords = intval($maxRecords) - intval($start);
         // // Cap the filtered count
         // $totalFiltered = ($maxRecords && $totalFilteredBeforeCap > $maxRecords)
@@ -197,7 +197,7 @@ class DaftarHargaKencanaController extends Controller
             $query = DB::connection('ConnKCNPurchase')->table('YTERIMA')
                 ->leftJoin('YSUPPLIER', 'YTERIMA.No_sup', '=', 'YSUPPLIER.NO_SUP')
                 ->leftJoin('YSATUAN', 'YTERIMA.Satuan_Terima', '=', 'YSATUAN.No_satuan')
-                ->leftJoin('ACCOUNTING.dbo.T_MATAUANG', 'YTERIMA.IdMataUang', '=', 'ACCOUNTING.dbo.T_MATAUANG.Id_MataUang')
+                ->leftJoin('KCN_ACCOUNTING.dbo.T_MATAUANG', 'YTERIMA.IdMataUang', '=', 'KCN_ACCOUNTING.dbo.T_MATAUANG.Id_MataUang')
                 ->leftJoin('YTRANSBL', 'YTERIMA.No_trans', '=', 'YTRANSBL.No_trans')
                 ->join('Y_BARANG', 'YTRANSBL.Kd_brg', '=', 'Y_BARANG.KD_BRG')
                 ->leftJoin('YUSER', 'YTRANSBL.Operator', '=', 'YUSER.kd_user')
@@ -213,7 +213,7 @@ class DaftarHargaKencanaController extends Controller
                     'YSUPPLIER.KOTA1',
                     'YSUPPLIER.NEGARA1',
                     'YTERIMA.Hrg_trm',
-                    'ACCOUNTING.dbo.T_MATAUANG.Id_MataUang_BC',
+                    'KCN_ACCOUNTING.dbo.T_MATAUANG.Id_MataUang_BC',
                     'YUSER.Nama',
                     'YTERIMA.Datang'
                 );

@@ -260,7 +260,7 @@ class BttbPembelianController extends Controller
                     ]);
 
                 case 'matauang':
-                    $mataUang = DB::connection('ConnAccounting')->select('EXEC SP_7775_PBL_LIST_MATA_UANG');
+                    $mataUang = DB::connection('ConnKCNAccounting')->select('EXEC SP_7775_PBL_LIST_MATA_UANG');
 
                     return response()->json([
                         'success' => true,
@@ -268,7 +268,7 @@ class BttbPembelianController extends Controller
                     ]);
 
                 case 'namamatauang':
-                    $data = DB::connection('ConnAccounting')->select('EXEC SP_7775_PBL_SLC_NAMA_MATAUANG @IdMataUang = ?', [$request->IdMataUang]);
+                    $data = DB::connection('ConnKCNAccounting')->select('EXEC SP_7775_PBL_SLC_NAMA_MATAUANG @IdMataUang = ?', [$request->IdMataUang]);
 
                     return response()->json([
                         'success' => true,
@@ -325,21 +325,21 @@ class BttbPembelianController extends Controller
             $KodeBarang = $request->KodeBarang;
             try {
                 DB::connection('ConnKCNPurchase')->statement('exec SP_1273_PRG_UPDATE_HARGA_YTERIMA @Kode = ?, @NoSPPB = ?, @Kurs = ?', [1, $NoSPPB, $Kurs]);
-                $ada = DB::connection('ConnSales')->select('exec SP_1273_PRG_LIST_HARGASATUAN @Kode = ?, @KodeBarang = ?', [1, $KodeBarang]);
+                $ada = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_HARGASATUAN @Kode = ?, @KodeBarang = ?', [1, $KodeBarang]);
                 if ($ada[0]->Ada > 0) {
                     $qtyJual = DB::connection('ConnKCNPurchase')->select('exec SP_1273_PRG_CEK_QTY_JUAL @Kode = ?, @KodeBarang = ?', [1, $KodeBarang])[0]->QtyJual;
-                    $saldoInv = DB::connection('ConnInventory')->select('exec SP_1273_PRG_CEK_SALDO @Kode = ?, @KodeBarang = ?', [1, $KodeBarang])[0]->Saldo;
+                    $saldoInv = DB::connection('ConnKCNInventory')->select('exec SP_1273_PRG_CEK_SALDO @Kode = ?, @KodeBarang = ?', [1, $KodeBarang])[0]->Saldo;
                     // dd($qtyJual, $saldoInv);
                     if ($qtyJual <> $saldoInv) {
                         return response()->json(['error' => 'Hubungi EDP untuk cek harga satuan qtyJual <> saldoInv']);
                     } else {
-                        $qtyTritier = DB::connection('ConnSales')->select('exec SP_1273_PRG_LIST_HARGASATUAN @Kode = ?, @KodeBarang = ?', [2, $KodeBarang])[0]->QtyTritier;
-                        $qtyJual2 = DB::connection('ConnSales')->select('exec SP_1273_PRG_CEK_QTY_JUAL @Kode = ?, @KodeBarang = ?', [2, $KodeBarang])[0]->QtyJual2;
+                        $qtyTritier = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_HARGASATUAN @Kode = ?, @KodeBarang = ?', [2, $KodeBarang])[0]->QtyTritier;
+                        $qtyJual2 = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_CEK_QTY_JUAL @Kode = ?, @KodeBarang = ?', [2, $KodeBarang])[0]->QtyJual2;
                         if ($qtyTritier <> $qtyJual2) {
                             return response()->json(['error' => 'Hubungi EDP untuk cek harga satuan qtyJual2 <> qtyTritier']);
                         } else {
-                            $listSales = DB::connection('ConnSales')->select('exec SP_1273_PRG_LIST_HARGASATUAN @Kode = ?, @KodeBarang = ?', [3, $KodeBarang]);
-                            $listJual = DB::connection('ConnSales')->select('exec SP_1273_PRG_LIST_SPPB_KURS_TERIMA @Kode = ?, @KodeBarang = ?', [3, $KodeBarang]);
+                            $listSales = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_HARGASATUAN @Kode = ?, @KodeBarang = ?', [3, $KodeBarang]);
+                            $listJual = DB::connection('ConnKCNSales')->select('exec SP_1273_PRG_LIST_SPPB_KURS_TERIMA @Kode = ?, @KodeBarang = ?', [3, $KodeBarang]);
                             for ($i = 0; $i < count($listSales); $i++) {
                                 $qtyJual1 = $listSales[$i]->QtyTritier;
                                 $totalHargaBeli1 = 0.0;
@@ -378,7 +378,7 @@ class BttbPembelianController extends Controller
                                     }
                                 }
                                 $HargaBeli2 = $totalHargaBeli1 / $listSales[$i]->QtyTritier;
-                                DB::connection('ConnSales')->statement(
+                                DB::connection('ConnKCNSales')->statement(
                                     'exec SP_1273_PRG_UDT_PENJUALAN
                                         @IdTrans = ?,
                                         @Harga = ?,
