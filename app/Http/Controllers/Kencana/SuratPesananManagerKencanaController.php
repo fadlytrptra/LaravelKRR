@@ -218,7 +218,7 @@ class SuratPesananManagerKencanaController extends Controller
             $list_customer = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_ALL_CUSTOMER @Kode = ?', [1]);
             $list_sales = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_SALES');
             $jenis_brg = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_JNSBRG');
-            $kelompok_utama = DB::connection('ConnInventory')->select('exec SP_1486_SLS_LIST_TYPEBARANG');
+            $kelompok_utama = DB::connection('ConnKCNInventory')->select('exec SP_1486_SLS_LIST_TYPEBARANG');
             $list_satuan = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_SATUAN');
             $jenis_harga = DB::connection('ConnKCNSales')->table('T_JenisHargaBarangEksport')->select('*')->get();
             $header_pesanan = DB::connection('ConnKCNSales')->select('exec SP_1486_SLS_LIST_SP_SDH_ACC @IDSURATPESANAN = ?, @Kode = ?', [$no_spValue, 1]);

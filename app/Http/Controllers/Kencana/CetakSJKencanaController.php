@@ -141,7 +141,7 @@ class CetakSJKencanaController extends Controller
             // DP.IDBarang -> INVENTORY.dbo.Type.KodeBarang
             // =====================================================
             ->leftJoin(
-                DB::raw('INVENTORY.dbo.Type as TY'),
+                DB::raw('KCN_INVENTORY.dbo.Type as TY'),
                 'DP.IDBarang',
                 '=',
                 'TY.KodeBarang'

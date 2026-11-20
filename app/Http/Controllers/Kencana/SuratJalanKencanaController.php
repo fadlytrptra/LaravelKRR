@@ -203,7 +203,7 @@ class SuratJalanKencanaController extends Controller
                     'DPG.IDDO'
                 )
                 ->join(
-                    DB::raw('INVENTORY.dbo.VW_PRG_1486_SLS_TYPE as T'),
+                    DB::raw('KCN_INVENTORY.dbo.VW_PRG_1486_SLS_TYPE as T'),
                     'DP.IDBarang',
                     '=',
                     'T.IdType'
@@ -407,13 +407,15 @@ class SuratJalanKencanaController extends Controller
                         @IdHeaderKirim = ?,
                         @IdDO = ?,
                         @IDSuratPesanan = ?,
-                        @AccMgr = ?',
+                        @AccMgr = ?,
+                        @JnsIdPengiriman = ?',
                     [
                         1,
                         $IDHeaderKirim,
                         $idDO,
                         $idSP,
-                        $AccMgr
+                        $AccMgr,
+                        $JnsIdPengiriman
                     ]
                 );
             }
@@ -428,6 +430,21 @@ class SuratJalanKencanaController extends Controller
                 ]
             );
 
+            // ==========================================
+            // CEK DETAIL SETELAH SP ACC
+            // ==========================================
+
+            $cekDetailAkhir = $conn
+                ->table('T_DetailPengiriman')
+                ->whereIn('IDDO', $IdDO)
+                ->get([
+                    'IDDetailKirim',
+                    'IDHeaderKirim',
+                    'IDDO',
+                    'IDSuratPesanan',
+                    'StatusKirim',
+                    'Penerima'
+                ]);
             $conn->commit();
 
             return redirect()
@@ -481,6 +498,7 @@ class SuratJalanKencanaController extends Controller
                 ->with('validation_error', $message);
         }
     }
+
 
     //Display the specified resource.
     public function show($id)

@@ -252,7 +252,7 @@ class SuratPesananKencanaController extends Controller
 
     public function getSaldoInventory($kode_barang)
     {
-        $data = db::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE @KodeBarang = ?, @Kode = ?', [$kode_barang, 10]);
+        $data = db::connection('ConnKCNInventory')->select('exec SP_1003_INV_LIST_TYPE @KodeBarang = ?, @Kode = ?', [$kode_barang, 10]);
 
         return response()->json($data);
     }
