@@ -183,8 +183,8 @@ class PengerjaanJamKerjaController extends Controller
 
             $db->statement('EXEC [dbo].[SP_5298_PJW_EDIT-JAM-KERJA] ?, ?, ?, ?, ?', [
                 $validated['nomer'],
-                $validated['noType'],
                 $validated['noMesin'],
+                $validated['noType'],
                 $validated['jmlJam'],
                 $validated['tanggal'],
             ]);

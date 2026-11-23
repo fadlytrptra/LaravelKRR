@@ -142,17 +142,17 @@ jQuery(function ($) {
             onSelect: (row) => {
                 TIdBagian.value = row.IdBagian;
                 TBagian.value = row.NamaBagian;
-                TJml1.focus();
+                TJml1.select();
             },
         });
     });
 
     TJml1.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
-            if (parseFloat(TJml1.value) > 0) THari.focus();
+            if (parseFloat(TJml1.value) > 0) THari.select();
             else {
                 Swal.fire("Info", "Jml yg dikerjakan harus > 0.", "info");
-                TJml1.focus();
+                TJml1.select();
             }
         }
     });
@@ -202,12 +202,12 @@ jQuery(function ($) {
     });
 
     EstDate.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") TEstTime.focus();
+        if (e.key === "Enter") TEstTime.select();
     });
 
     TEstTime.addEventListener("keypress", (e) => {
         if (e.key !== "Enter") return;
-        TEstTime1.focus();
+        TEstTime1.select();
         const mesin = parseInt(TNoMesin.value);
         const noType = parseInt(TNoType.value);
         if (!mesin || !noType || !EstDate.value) {
@@ -294,7 +294,7 @@ jQuery(function ($) {
         }
         if (!Number.isInteger(jmlBrg) || jmlBrg < 1) {
             Swal.fire("Info", "Jumlah barang yang dikerjakan harus lebih dari nol.", "info");
-            TJml1.focus();
+            TJml1.select();
             return;
         }
         if (!Number.isInteger(mesin) || mesin < 1 || !Number.isInteger(noType) || noType < 1) {
@@ -316,7 +316,7 @@ jQuery(function ($) {
             (estHour === 0 && estMinute === 0)
         ) {
             Swal.fire("Error", "Estimate waktu harus lebih besar dari nol.", "error");
-            TEstTime.focus();
+            TEstTime.select();
             return;
         }
 
