@@ -216,7 +216,7 @@ btnOkBKM.addEventListener("click", function () {
 
     $.ajax({
         type: "GET",
-        url: "MaintenanceBKMTransistorisBank/getListBKM",
+        url: "/Kencana/BKMTransistorisBankKencana/getListBKM",
         data: {
             _token: csrfToken,
             tgl1: tglAwalBKM.value,
@@ -244,6 +244,9 @@ $("#tableListBKM tbody").on("click", "tr", function () {
 });
 
 btnCetakBKM.addEventListener("click", function () {
+    console.log("Button Cetak BKM diklik");
+    console.log("ID BKM:", idCetakBKM.value);
+
     if (idCetakBKM.value === "") {
         Swal.fire({
             icon: "error",
@@ -251,129 +254,48 @@ btnCetakBKM.addEventListener("click", function () {
             returnFocus: false,
         });
         return;
-    } else {
-        $.ajax({
-            type: "GET",
-            url: "MaintenanceBKMTransistorisBank/getCetakBKM",
-            data: {
-                _token: csrfToken,
-                id_bkm: idCetakBKM.value,
-            },
-            success: function (result) {
-                if (result.length !== 0) {
-                    // console.log(result);
-                    let totalBKM = 0;
-                    var bkmDetailsContainer = document.getElementById(
-                        "bkmDetailsContainer"
-                    );
-
-                    bkmDetailsContainer.innerHTML = "";
-
-                    namaCetakBKM.textContent =
-                        ": " + decodeHtmlEntities(result[0].Id_bank);
-                    voucherCetakBKM.textContent =
-                        ": " + decodeHtmlEntities(result[0].Id_BKM);
-                    descriptionCetakBKM.textContent =
-                        ": " + decodeHtmlEntities(result[0].Nama_Bank);
-                    var today = new Date();
-
-                    var options = {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                    };
-                    var formattedToday = today
-                        .toLocaleDateString("en-GB", options)
-                        .replace(/ /g, "-");
-                    postedCetakBKM.textContent = ": " + formattedToday;
-
-                    var date = new Date(result[0].Tgl_Input);
-                    var options = {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                    };
-                    var formattedDate = date
-                        .toLocaleDateString("en-GB", options)
-                        .replace(/ /g, "-");
-                    dateCetakBKM.textContent = ": " + formattedDate;
-
-                    receivedCetakBKM.textContent =
-                        ": " + decodeHtmlEntities(result[0].Keterangan);
-
-                    result.forEach(function (item, index) {
-                        var row = document.createElement("div");
-                        row.classList.add("row");
-
-                        // COA column
-                        var coaCol = document.createElement("div");
-                        coaCol.classList.add("col-sm-2", "text-left");
-                        coaCol.textContent = decodeHtmlEntities(
-                            item.KodePerkiraan
-                        );
-                        row.appendChild(coaCol);
-
-                        // Account Name column
-                        var accountCol = document.createElement("div");
-                        accountCol.classList.add("col-sm-4", "text-left");
-                        accountCol.textContent = decodeHtmlEntities(
-                            item.DetailKdPerkiraan
-                        );
-                        row.appendChild(accountCol);
-
-                        // Description column
-                        var descriptionCol = document.createElement("div");
-                        descriptionCol.classList.add("col-sm-4", "text-left");
-                        descriptionCol.textContent = decodeHtmlEntities(
-                            item.Uraian
-                        );
-                        row.appendChild(descriptionCol);
-
-                        // Amount column
-                        var amountCol = document.createElement("div");
-                        amountCol.classList.add("col-sm-2", "text-right");
-                        amountCol.textContent = numeral(
-                            parseFloat(item.Nilai_Rincian)
-                        ).format("0,0.00");
-                        row.appendChild(amountCol);
-
-                        // Append the row to the container
-                        bkmDetailsContainer.appendChild(row);
-
-                        // Update the total
-                        totalBKM += parseFloat(item.Nilai_Rincian);
-
-                        // Add underline class only to the last row
-                        if (index === result.length - 1) {
-                            coaCol.classList.add("underline");
-                            accountCol.classList.add("underline");
-                            descriptionCol.classList.add("underline");
-                            amountCol.classList.add("underline");
-                        }
-                    });
-
-                    // coaListBKM.textContent = decodeHtmlEntities(result[0].KodePerkiraan);
-                    // accountListBKM.textContent = decodeHtmlEntities(result[0].DetailKdPerkiraan);
-                    // descriptionListBKM.textContent = decodeHtmlEntities(result[0].Uraian);
-                    // amountListBKM.textContent = numeral(parseFloat(result[0].Nilai_Rincian)).format("0,0.00");
-                    // totalBKM += result[0].Nilai_Rincian;
-
-                    amountBKM.textContent =
-                        "Amount " +
-                        decodeHtmlEntities(result[0].Id_MataUang_BC);
-                    totalAmountBKM.textContent = numeral(
-                        parseFloat(totalBKM)
-                    ).format("0,0.00");
-
-                    printPreview("preview");
-                    updateDateBKM();
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-            },
-        });
     }
+
+    $.ajax({
+        type: "GET",
+        url: "/Kencana/BKMTransistorisBankKencana/getCetakBKM",
+        data: {
+            _token: csrfToken,
+            id_bkm: idCetakBKM.value,
+        },
+
+        beforeSend: function () {
+            console.log("Request getCetakBKM dikirim...");
+        },
+
+        success: function (result) {
+            console.log("Response getCetakBKM:", result);
+            console.log("Jumlah data:", result.length);
+
+            if (result.length !== 0) {
+                // Proses cetak BKM yang sudah ada
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Data Tidak Ditemukan",
+                    text: "Data detail BKM tidak ditemukan.",
+                });
+            }
+        },
+
+        error: function (xhr, status, error) {
+            console.error("Error getCetakBKM:", xhr);
+            console.error("Status:", status);
+            console.error("Error:", error);
+            console.error("Response:", xhr.responseText);
+
+            Swal.fire({
+                icon: "error",
+                title: "Gagal Mengambil Data BKM",
+                text: xhr.responseText,
+            });
+        },
+    });
 });
 
 $("#tglAwalBKM").on("keydown", function (e) {
@@ -410,7 +332,7 @@ btnOkBKK.addEventListener("click", function () {
 
     $.ajax({
         type: "GET",
-        url: "MaintenanceBKMTransistorisBank/getListBKK",
+        url: "/Kencana/BKMTransistorisBankKencana/getListBKK",
         data: {
             _token: csrfToken,
             tgl1: tglAwalBKK.value,
@@ -448,7 +370,7 @@ btnCetakBKK.addEventListener("click", function () {
     } else {
         $.ajax({
             type: "GET",
-            url: "MaintenanceBKMTransistorisBank/getCetakBKK",
+            url: "/Kencana/BKMTransistorisBankKencana/getCetakBKK",
             data: {
                 _token: csrfToken,
                 id_bkk: idCetakBKK.value,
@@ -758,7 +680,7 @@ btnMataUang1.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getMataUang",
+                            url: "/Kencana/BKMTransistorisBankKencana/getMataUang",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -805,7 +727,7 @@ btnMataUang1.addEventListener("click", function (e) {
 
                 $.ajax({
                     type: "GET",
-                    url: "MaintenanceBKMTransistorisBank/getSymbol",
+                    url: "/Kencana/BKMTransistorisBankKencana/getSymbol",
                     data: {
                         _token: csrfToken,
                         nama: mataUang1.value.trim(),
@@ -871,7 +793,7 @@ btnMataUang.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getMataUang",
+                            url: "/Kencana/BKMTransistorisBankKencana/getMataUang",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -918,7 +840,7 @@ btnMataUang.addEventListener("click", function (e) {
 
                 $.ajax({
                     type: "GET",
-                    url: "MaintenanceBKMTransistorisBank/getSymbol",
+                    url: "/Kencana/BKMTransistorisBankKencana/getSymbol",
                     data: {
                         _token: csrfToken,
                         nama: mataUang.value.trim(),
@@ -1076,7 +998,7 @@ btnBank1.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getBank",
+                            url: "/Kencana/BKMTransistorisBankKencana/getBank",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1118,7 +1040,7 @@ btnBank1.addEventListener("click", function (e) {
                 if (idBank1.value !== "") {
                     $.ajax({
                         type: "GET",
-                        url: "MaintenanceBKMTransistorisBank/getAccBank",
+                        url: "/Kencana/BKMTransistorisBankKencana/getAccBank",
                         data: {
                             _token: csrfToken,
                             idBank: idBank1.value,
@@ -1185,7 +1107,7 @@ btnBank.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getBank",
+                            url: "/Kencana/BKMTransistorisBankKencana/getBank",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1227,7 +1149,7 @@ btnBank.addEventListener("click", function (e) {
                 if (idBank.value !== "") {
                     $.ajax({
                         type: "GET",
-                        url: "MaintenanceBKMTransistorisBank/getAccBank",
+                        url: "/Kencana/BKMTransistorisBankKencana/getAccBank",
                         data: {
                             _token: csrfToken,
                             idBank: idBank.value,
@@ -1337,7 +1259,7 @@ btnJenisBayar1.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getJenisBayar",
+                            url: "/Kencana/BKMTransistorisBankKencana/getJenisBayar",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1443,7 +1365,7 @@ btnJenisBayar.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getJenisBayar",
+                            url: "/Kencana/BKMTransistorisBankKencana/getJenisBayar",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1538,7 +1460,7 @@ btnPerkiraan1.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getPerkiraan",
+                            url: "/Kencana/BKMTransistorisBankKencana/getPerkiraan",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1633,7 +1555,7 @@ btnPerkiraan.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "MaintenanceBKMTransistorisBank/getPerkiraan",
+                            url: "/Kencana/BKMTransistorisBankKencana/getPerkiraan",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1788,7 +1710,7 @@ $("#uraian1").on("keydown", function (e) {
 
         $.ajax({
             type: "GET",
-            url: "MaintenanceBKMTransistorisBank/getIdBKK",
+            url: "/Kencana/BKMTransistorisBankKencana/getIdBKK",
             data: {
                 _token: csrfToken,
                 bank: IdBank1.trim(),
@@ -1939,7 +1861,7 @@ $("#uraian").on("keydown", function (e) {
 
         $.ajax({
             type: "GET",
-            url: "MaintenanceBKMTransistorisBank/getIdBKM",
+            url: "/Kencana/BKMTransistorisBankKencana/getIdBKM",
             data: {
                 _token: csrfToken,
                 bank: IdBank.trim(),
@@ -2136,7 +2058,7 @@ select_kodePerkiraan1.on("select2:select", function () {
     console.log($(this).select2("data")[0].text.split(" | ")[0].trim());
     $.ajax({
         type: "GET",
-        url: "MaintenanceBKMTransistorisBank/getPerkiraanChange",
+        url: "/Kencana/BKMTransistorisBankKencana/getPerkiraanChange",
         data: {
             _token: csrfToken,
         },
@@ -2196,7 +2118,7 @@ select_kodePerkiraan1.on("select2:select", function () {
 //                         scrollCollapse: true,
 //                         order: [0, "asc"],
 //                         ajax: {
-//                             url: "MaintenanceBKMTransistorisBank/getPerkiraan",
+//                             url: "/Kencana/BKMTransistorisBankKencana/getPerkiraan",
 //                             dataType: "json",
 //                             type: "GET",
 //                             data: {
@@ -2231,7 +2153,7 @@ select_kodePerkiraan1.on("select2:select", function () {
 
 //                 $.ajax({
 //                     type: 'GET',
-//                     url: 'MaintenanceBKMTransistorisBank/getPerkiraanChange',
+//                     url: '/Kencana/BKMTransistorisBankKencana/getPerkiraanChange',
 //                     data: {
 //                         _token: csrfToken,
 //                     },
@@ -2515,7 +2437,7 @@ select_kodePerkiraan.on("select2:select", function () {
     console.log($(this).select2("data")[0].text.split(" | ")[0].trim());
     $.ajax({
         type: "GET",
-        url: "MaintenanceBKMTransistorisBank/getPerkiraanChange",
+        url: "/Kencana/BKMTransistorisBankKencana/getPerkiraanChange",
         data: {
             _token: csrfToken,
         },
@@ -2575,7 +2497,7 @@ select_kodePerkiraan.on("select2:select", function () {
 //                         scrollCollapse: true,
 //                         order: [0, "asc"],
 //                         ajax: {
-//                             url: "MaintenanceBKMTransistorisBank/getPerkiraan",
+//                             url: "/Kencana/BKMTransistorisBankKencana/getPerkiraan",
 //                             dataType: "json",
 //                             type: "GET",
 //                             data: {
@@ -2610,7 +2532,7 @@ select_kodePerkiraan.on("select2:select", function () {
 
 //                 $.ajax({
 //                     type: 'GET',
-//                     url: 'MaintenanceBKMTransistorisBank/getPerkiraanChange',
+//                     url: '/Kencana/BKMTransistorisBankKencana/getPerkiraanChange',
 //                     data: {
 //                         _token: csrfToken,
 //                     },
@@ -3040,7 +2962,7 @@ btnProses.addEventListener("click", async function (e) {
             (async () => {
                 const response = await $.ajax({
                     type: "PUT",
-                    url: "MaintenanceBKMTransistorisBank/insertBKK",
+                    url: "/Kencana/BKMTransistorisBankKencana/insertBKK",
                     data: {
                         _token: csrfToken,
                         idBKK: idBKK.value.trim(),
@@ -3054,7 +2976,7 @@ btnProses.addEventListener("click", async function (e) {
                 if (response.success) {
                     return $.ajax({
                         type: "PUT",
-                        url: "MaintenanceBKMTransistorisBank/insertTransBKK",
+                        url: "/Kencana/BKMTransistorisBankKencana/insertTransBKK",
                         data: {
                             _token: csrfToken,
                             idBKK: idBKK.value,
@@ -3080,7 +3002,7 @@ btnProses.addEventListener("click", async function (e) {
         // Ambil IdPembayaran setelah proses insert
         let result = await $.ajax({
             type: "GET",
-            url: "MaintenanceBKMTransistorisBank/getIdPembayaran",
+            url: "/Kencana/BKMTransistorisBankKencana/getIdPembayaran",
             data: { _token: csrfToken },
         });
 
@@ -3091,7 +3013,7 @@ btnProses.addEventListener("click", async function (e) {
             let detailRequests = [
                 $.ajax({
                     type: "PUT",
-                    url: "MaintenanceBKMTransistorisBank/insertTrans2BKK",
+                    url: "/Kencana/BKMTransistorisBankKencana/insertTrans2BKK",
                     data: {
                         _token: csrfToken,
                         idpembayaran: IdPembayaran,
@@ -3106,7 +3028,7 @@ btnProses.addEventListener("click", async function (e) {
                 detailRequests.push(
                     $.ajax({
                         type: "PUT",
-                        url: "MaintenanceBKMTransistorisBank/insertDetailBKK",
+                        url: "/Kencana/BKMTransistorisBankKencana/insertDetailBKK",
                         data: {
                             _token: csrfToken,
                             idpembayaran: IdPembayaran,
@@ -3120,7 +3042,7 @@ btnProses.addEventListener("click", async function (e) {
                 detailRequests.push(
                     $.ajax({
                         type: "PUT",
-                        url: "MaintenanceBKMTransistorisBank/insertBg",
+                        url: "/Kencana/BKMTransistorisBankKencana/insertBg",
                         data: {
                             _token: csrfToken,
                             id: IdPembayaran,
@@ -3132,7 +3054,7 @@ btnProses.addEventListener("click", async function (e) {
                         .then(() =>
                             $.ajax({
                                 type: "GET",
-                                url: "MaintenanceBKMTransistorisBank/cekBg",
+                                url: "/Kencana/BKMTransistorisBankKencana/cekBg",
                                 data: {
                                     _token: csrfToken,
                                     idpembayaran: IdPembayaran,
@@ -3146,7 +3068,7 @@ btnProses.addEventListener("click", async function (e) {
                                 );
                                 return $.ajax({
                                     type: "PUT",
-                                    url: "MaintenanceBKMTransistorisBank/updateBg",
+                                    url: "/Kencana/BKMTransistorisBankKencana/updateBg",
                                     data: {
                                         _token: csrfToken,
                                         id: IdPembayaran,
@@ -3167,7 +3089,7 @@ btnProses.addEventListener("click", async function (e) {
                 try {
                     const response = await $.ajax({
                         type: "PUT",
-                        url: "MaintenanceBKMTransistorisBank/insertBKM",
+                        url: "/Kencana/BKMTransistorisBankKencana/insertBKM",
                         data: {
                             _token: csrfToken,
                             idBKM: idBKM.value.trim(),
@@ -3181,7 +3103,7 @@ btnProses.addEventListener("click", async function (e) {
                     if (response.success) {
                         return await $.ajax({
                             type: "PUT",
-                            url: "MaintenanceBKMTransistorisBank/insertTransBKM",
+                            url: "/Kencana/BKMTransistorisBankKencana/insertTransBKM",
                             data: {
                                 _token: csrfToken,
                                 idBKM: idBKM.value,
@@ -3215,7 +3137,7 @@ btnProses.addEventListener("click", async function (e) {
         if (ada3) {
             let result = await $.ajax({
                 type: "GET",
-                url: "MaintenanceBKMTransistorisBank/getIdPelunasan",
+                url: "/Kencana/BKMTransistorisBankKencana/getIdPelunasan",
                 data: { _token: csrfToken },
             });
 
@@ -3223,7 +3145,7 @@ btnProses.addEventListener("click", async function (e) {
                 let IdPelunasan = decodeHtmlEntities(result);
                 await $.ajax({
                     type: "PUT",
-                    url: "MaintenanceBKMTransistorisBank/insertDetailBKM",
+                    url: "/Kencana/BKMTransistorisBankKencana/insertDetailBKM",
                     data: {
                         _token: csrfToken,
                         idpelunasan: IdPelunasan,

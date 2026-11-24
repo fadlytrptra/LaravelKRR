@@ -389,39 +389,55 @@ nomor_doSelect.addEventListener("change", function () {
                 .then((options) => {
                     id_pesananSelect.innerHTML =
                         "<option disabled selected value>-- Pilih ID Pesanan --</option>";
+                    // Cari ID Pesanan yang sesuai dengan data DO
+                    const selectedPesanan = options.find(
+                        (option) => option.IDPesanan == data[0].IDPesanan
+                    );
+
+                    if (!selectedPesanan) {
+                        console.error(
+                            "ID Pesanan tidak ditemukan:",
+                            data[0].IDPesanan
+                        );
+                        alert("ID Pesanan tidak ditemukan pada daftar Surat Pesanan.");
+                        return;
+                    }
+
+                    // Kosongkan dropdown
+                    id_pesananSelect.innerHTML =
+                        '<option disabled value="">-- Pilih ID Pesanan --</option>';
+
+                    // Masukkan seluruh pilihan ID Pesanan
                     options.forEach((option) => {
                         let optionTag = document.createElement("option");
+
                         optionTag.value = option.IDPesanan;
                         optionTag.text =
                             option.IDPesanan + " | " + option.Uraian;
-                        id_pesananSelect.appendChild(optionTag);
-                        for (
-                            let i = 0;
-                            i < id_pesananSelect.options.length;
-                            i++
-                        ) {
-                            if (
-                                id_pesananSelect.options[i].value ==
-                                data[0].IDPesanan
-                            ) {
-                                id_pesananSelect.options[i].selected = true;
-                                // console.log(nomor_spSelect.options[i].value);
-                                break;
-                            }
-                        }
-                        kode_barang.value = option.Uraian.slice(-9);
 
-                        // Ambil Uraian yang tersimpan di T_DeliveryOrder
-                        if (data[0].Uraian !== null && data[0].Uraian !== undefined) {
-                            uraian.value = data[0].Uraian;
-                        } else {
-                            // Fallback jika data lama belum memiliki Uraian
-                            uraian.value = option.Uraian
-                                .split("-")
-                                .slice(0, -1)
-                                .join("-");
-                        }
+                        id_pesananSelect.appendChild(optionTag);
                     });
+
+                    // Pilih ID Pesanan sesuai data DO
+                    id_pesananSelect.value = data[0].IDPesanan;
+
+                    // Isi kode barang dari ID Pesanan yang sesuai
+                    kode_barang.value = selectedPesanan.Uraian.slice(-9);
+
+                    // Ambil Uraian yang tersimpan di T_DeliveryOrder
+                    if (
+                        data[0].Uraian !== null &&
+                        data[0].Uraian !== undefined &&
+                        data[0].Uraian !== ""
+                    ) {
+                        uraian.value = data[0].Uraian;
+                    } else {
+                        // Fallback jika data lama belum memiliki Uraian
+                        uraian.value = selectedPesanan.Uraian
+                            .split("-")
+                            .slice(0, -1)
+                            .join("-");
+                    }
                     fetch(
                         "/Kencana/options/kelompokutama/" +
                         encodeURIComponent(kode_barang.value)
@@ -865,17 +881,36 @@ edit_button.addEventListener("click", function (event) {
         listBarang_button.disabled = false;
         nomor_doText.focus();
         fetch("/Kencana/options/nomorDO/")
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("HTTP Error: " + response.status);
+                }
+                return response.json();
+            })
             .then((options) => {
-                // console.log(options);
+                console.log("DATA LIST NOMOR DO:", options);
+
                 nomor_doSelect.innerHTML =
-                    "<option disabled selected value>-- Pilih Nomor Delivery Order --</option>";
+                    '<option disabled selected value="">-- Pilih Nomor Delivery Order --</option>';
+
+                if (!options || options.length === 0) {
+                    alert("Tidak ada data Delivery Order yang dapat dikoreksi.");
+                    return;
+                }
+
                 options.forEach((option) => {
                     let optionTag = document.createElement("option");
+
                     optionTag.value = option.IDDO;
-                    optionTag.text = option.IDDO + " - " + option.Uraian;
+                    optionTag.text =
+                        option.IDDO + " - " + option.Uraian;
+
                     nomor_doSelect.appendChild(optionTag);
                 });
+            })
+            .catch((error) => {
+                console.error("Gagal mengambil daftar DO:", error);
+                alert("Gagal mengambil data Delivery Order.");
             });
     } else {
         // button BATAL

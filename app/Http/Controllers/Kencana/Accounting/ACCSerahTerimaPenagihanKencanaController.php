@@ -15,7 +15,7 @@ class ACCSerahTerimaPenagihanKencanaController extends Controller
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('Kencana');
-        return view('Accounting.Hutang.ACCSerahTerimaPenagihan', compact('access'));
+        return view('Kencana.Accounting.Hutang.ACCSerahTerimaPenagihan', compact('access'));
     }
 
     //Show the form for creating a new resource.
@@ -46,11 +46,11 @@ class ACCSerahTerimaPenagihanKencanaController extends Controller
                                 'message' => "Tolong diproses cetak dulu !!.. Untuk TT No=" . trim($item['Id_Penagihan']) . ". Krn Nilai Penagihan masih kosong!"
                             ]);
                         } else {
-                            $result = DB::connection('ConnKCNAccouting')
+                            $result = DB::connection('ConnKCNAccounting')
                                 ->select('exec SP_1273_PRG_CHECK_TT_TERIMAGDG ?', [$item['Id_Penagihan']]);
                             // dd($result);
                             if ($result[0]->Ada > 0) {
-                                $result = DB::connection('ConnKCNAccouting')
+                                $result = DB::connection('ConnKCNAccounting')
                                     ->select('exec SP_1273_PRG_LIST_TT_MASUKGDG ?', [$item['Id_Penagihan']]);
                                 // dd($result);
                                 $tmpTrans = $result[0]->NoTransaksiTmp ?? '0';
@@ -64,10 +64,10 @@ class ACCSerahTerimaPenagihanKencanaController extends Controller
                                     ]);
                                 }
                             } else {
-                                DB::connection('ConnKCNAccouting')
+                                DB::connection('ConnKCNAccounting')
                                     ->statement('exec SP_1273_PRG_UDT_TT_SERAHTRM ?', [$item['Id_Penagihan']]);
 
-                                DB::connection('ConnKCNAccouting')
+                                DB::connection('ConnKCNAccounting')
                                     ->statement('exec SP_1273_PRG_INS_TT_IDBAYAR ?, ?, ?, ?', [
                                         trim($item['Id_Penagihan']),
                                         trim($item['Id_MataUang']),
@@ -81,7 +81,7 @@ class ACCSerahTerimaPenagihanKencanaController extends Controller
             } else {
                 foreach ($data as $item) {
                     if (!empty($item['Id_Penagihan'])) {
-                        DB::connection('ConnKCNAccouting')
+                        DB::connection('ConnKCNAccounting')
                             ->statement('exec SP_1273_PRG_TT_BATAL_SERAHTRM ?, ?', [
                                 $item['Id_Pembayaran'],
                                 $item['Id_Penagihan']
@@ -99,7 +99,7 @@ class ACCSerahTerimaPenagihanKencanaController extends Controller
     public function show(Request $request, $id)
     {
         if ($id == 'getSerahTerima') {
-            $data = DB::connection('ConnKCNAccouting')
+            $data = DB::connection('ConnKCNAccounting')
                 ->select('exec SP_1273_PRG_LIST_TT_SERAHTRM');
             // dd($data);
             $response = [];
@@ -120,7 +120,7 @@ class ACCSerahTerimaPenagihanKencanaController extends Controller
         } else if ($id == 'getBatalSerahTerima') {
             // $listPengajuan = $request->input('checkedRows', []);
             // dd($listPengajuan);
-            $data = DB::connection('ConnKCNAccouting')
+            $data = DB::connection('ConnKCNAccounting')
                 ->select('exec SP_1273_PRG_TT_BATAL_SERAHTERIMA');
             // dd($data);
             $response = [];

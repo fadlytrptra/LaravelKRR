@@ -188,11 +188,164 @@
                                                             @endphp
                                                             @foreach ($arraySubFitur as $fiturSubMenu)
                                                                 <li>
-                                                                    <a style="color: black;font-size: 15px;display: block"
+                                                                    <a style="color: black;font-size: 14px;display: block;margin: 0;padding-left: 5%;padding-bottom: 1px;padding-top: 1px;"
                                                                         class="dropdown-item" tabindex="-1"
-                                                                        href="{{ url($fiturSubMenu['Route']) }}">{{ $fiturSubMenu['Nama'] }}
+                                                                        href="{{ url($fiturSubMenu['Route']) }}">
+                                                                        {{ $fiturSubMenu['Nama'] }}
                                                                     </a>
                                                                 </li>
+
+                                                                <!-- Penambahan Sub Menu untuk Accounting Kencana -->
+                                                                @if ($fiturSubMenu['Nama'] === 'Maintenance BKM No Penagihan')
+                                                                    <li>
+                                                                        <a style="color: black;font-size: 14px;display: block;margin: 0;padding-left: 5%;padding-bottom: 1px;padding-top: 1px;"
+                                                                            class="dropdown-item" tabindex="-1" href="#">
+                                                                            Maintenance BKM Cash Advance &raquo;
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/CreateBKMKencana') }}">
+                                                                                    Create BKM
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/UpdateDetailBKMKencana') }}">
+                                                                                    Update Detail BKM
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                @endif
+
+                                                                @if ($fiturSubMenu['Nama'] === 'Maintenance Kode Perkiraan BKM')
+                                                                    <li>
+                                                                        <a style="color: black;font-size: 14px;display: block;margin: 0;padding-left: 5%;padding-bottom: 1px;padding-top: 1px;"
+                                                                            class="dropdown-item" tabindex="-1" href="#">
+                                                                            Informasi Bank &raquo;
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/MaintenanceInformasiBankKencana') }}">
+                                                                                    Maintenance Informasi Bank
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/AnalisaInformasiBankKencana') }}">
+                                                                                    Analisi Informasi Bank
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                @endif
+
+                                                                @if ($fiturSubMenu['Nama'] === 'Maintenance Kode Perkiraan BKM')
+                                                                    <li>
+                                                                        <a style="color: black;font-size: 14px;display: block;margin: 0;padding-left: 5%;padding-bottom: 1px;padding-top: 1px;"
+                                                                            class="dropdown-item" tabindex="-1" href="#">
+                                                                            Maintenance Penjualan Lokal &raquo;
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/FakturUangMukaKencana') }}">
+                                                                                    Faktur Uang Muka
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/PenagihanPenjualanLokalKencana') }}">
+                                                                                    Penagihan Penjualan Lokal
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                @endif
+
+                                                                @if ($fiturSubMenu['Nama'] === 'Analisa Status Pelunasan')
+                                                                    <li>
+                                                                        <a style="color: black;font-size: 14px;display: block;margin: 0;padding-left: 5%;padding-bottom: 1px;padding-top: 1px;"
+                                                                            class="dropdown-item" tabindex="-1" href="#">
+                                                                            Maintenance Nota Kredit &raquo;
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/NotaKreditReturKCN') }}">
+                                                                                    Nota Kredit Retur
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/PotHargaKCN') }}">
+                                                                                    Pot Harga
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/FreeKCN') }}">
+                                                                                    Free
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/KelebihanBayarUntukJualTunaiKCN') }}">
+                                                                                    Kelebihan Bayar Untuk Jual Tunai
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/SelisihTimbangKCN') }}">
+                                                                                    Selisih Timbang
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                @endif
+
+                                                                @if ($fiturSubMenu['Nama'] === 'Maintenance Faktur Pajak Penjualan')
+                                                                    <li>
+                                                                        <a style="color: black;font-size: 14px;display: block;margin: 0;padding-left: 5%;padding-bottom: 1px;padding-top: 1px;"
+                                                                            class="dropdown-item" tabindex="-1" href="#">
+                                                                            Maintenance BKK Nota Kredit &raquo;
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                                            <li>
+                                                                                <a style="color: black;font-size: 14px;display: block"
+                                                                                    class="dropdown-item" tabindex="-1"
+                                                                                    href="{{ url('Kencana/PengajuanKCN') }}">
+                                                                                    Pengajuan
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                @endif
                                                             @endforeach
                                                         </ul>
                                                     @endif

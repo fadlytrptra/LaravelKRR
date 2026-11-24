@@ -396,6 +396,26 @@ function terimaKodeBarang(kodeBarang, PIB) {
                     konvTerima = "";
                 }
 
+                console.log("=== VALIDASI MUTASI BARANG ===");
+                console.log("Kode Barang:", kodeBarang);
+                console.log("PIB:", PIB);
+                console.log("Subkelompok Penerima:", subkelId2.value);
+
+                console.log("Satuan Pemberi:", {
+                    primer: no_primer.value,
+                    sekunder: no_sekunder.value,
+                    tritier: no_tritier.value
+                });
+
+                console.log("Satuan Penerima:", {
+                    primer: no_primer3.value,
+                    sekunder: no_sekunder3.value,
+                    tritier: no_tritier3.value
+                });
+
+                console.log("Konversi Pemberi:", konvBeri);
+                console.log("Konversi Penerima:", konvTerima);
+
                 // console.log('KONVTERIMA: ', konvTerima);
 
                 if (konvBeri !== "Y" && konvTerima !== "Y") {
@@ -415,6 +435,7 @@ function terimaKodeBarang(kodeBarang, PIB) {
                             [no_primer3, no_sekunder3, no_tritier3][i].value,
                     );
                 }
+                console.log("Respons data penerima:", response);
                 // console.log('apakah terima?', terima);
 
                 resolve(true);
