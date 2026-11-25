@@ -31,7 +31,7 @@
             {{-- <div style="left: 11cm; top: 4cm; position: absolute; text-align:right; font-size:16px;">
                 No Seri Faktur Pajak: {{ $dataCetak[0]->NoSeri_FakturPajak }}
             </div> --}}
-            <div style="position:absolute; left:6cm; top:8cm; width:14cm;">
+            <div style="position:absolute; left:6cm; top:7cm; width:14cm;">
                 <div style="font-size:14px; font-weight:bold;">
                     {{ $dataCetak[0]->NamaNPWP }}
                 </div>
