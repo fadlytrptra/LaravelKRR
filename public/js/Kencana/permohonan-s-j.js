@@ -242,7 +242,7 @@ id_kirimSelect.addEventListener("keypress", function (event) {
                 const arrayDetail = [
                     item.IDDO || item.IdDO || "",
                     item.Uraian || "",
-                    item.IDDetailKirim || "",
+                    item.NoTrans || "",
                     item.IDSuratPesanan || "",
                     item.Qty || "",
                     item.Satuan || ""

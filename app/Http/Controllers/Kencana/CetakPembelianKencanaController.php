@@ -513,12 +513,7 @@ class CetakPembelianKencanaController extends Controller
         );
     }
 
-
-    /**
-     * ============================================================
-     * KIRIM EMAIL KE SUPPLIER
-     * ============================================================
-     */
+    // CetakPembelianKencanaController.php
     public function sendEmailSupplier(Request $request)
     {
         $request->validate([
@@ -917,6 +912,7 @@ class CetakPembelianKencanaController extends Controller
             // =====================================================
             $emails[] =
                 'admin@kencanarajasa.co.id';
+                // 'christoromeo2@gmail.com';
 
             \Log::info(
                 'SPPB EMAIL - MULAI MAIL',
@@ -926,11 +922,22 @@ class CetakPembelianKencanaController extends Controller
             // =====================================================
             // KIRIM EMAIL
             // =====================================================
+
+            $logoPath = public_path('images/logo_kencana2.png');
+
+            // Pastikan file logo tersedia
+            if (!file_exists($logoPath)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File logo_kencana2.png tidak ditemukan.'
+                ]);
+            }
             Log::info('CETAK PEMBELIAN - SEBELUM MAIL', [
                 'KdDiv'  => $kdDiv,
                 'NoSPPB' => $noSPPB,
                 'emails' => $emails,
             ]);
+
             Mail::mailer('gmail')->send(
                 [],
                 [],
@@ -938,38 +945,76 @@ class CetakPembelianKencanaController extends Controller
                     $emails,
                     $noSPPB,
                     $pdf,
-                    $dokumentasiFiles
+                    $dokumentasiFiles,
+                    $supplier,
+                    $logoPath
                 ) {
+
+                    $logoKcn = $message->embed($logoPath);
 
                     $message->from(
                         env('GMAIL_USERNAME'),
-                        env(
-                            'MAIL_FROM_NAME',
-                            'Kencana Rajasa Raya'
-                        )
+                        env('MAIL_FROM_NAME', 'Kencana Rajasa Raya')
                     );
 
-                    $message->to($emails)
-                        ->subject(
-                            "SPPB Kencana Rajasa Raya {$noSPPB}"
-                        )
-                        ->html(
-                            "Berikut adalah SPPB dengan nomor "
-                            . "<b>{$noSPPB}</b>."
-                            . "<br><br>"
-                            . "Silakan cek SPPB pada file PDF "
-                            . "yang terlampir."
-                        )
+                    $htmlBody = '
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                    </head>
 
-                        // =================================================
-                        // ATTACH PDF SPPB
-                        // =================================================
+                    <body style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                        <p>
+                            Dear Supplier <strong>' . e($supplier->NM_SUP ?? '') . '</strong>,
+                        </p>
+
+                        <p>
+                            Berikut kami lampirkan Surat Permintaan Pembelian Barang (SPPB)
+                            PT. Kencana Rajasa Raya dengan nomor
+                            <strong>' . e($noSPPB) . '</strong>,
+                            untuk detail SPPB dapat dilihat melalui attachment
+                            pada email ini.
+                        </p>
+
+                        <p>
+                            Terimakasih
+                        </p>
+
+                        <br>
+
+                        <p>
+                            <em>Email ini terkirim otomatis menggunakan sistem perusahaan kami</em>
+                        </p>
+
+                        <br>
+
+                        <div style="line-height: 1.6;">
+                            <strong>PT. KENCANA RAJASA RAYA</strong><br>
+                            Jl. Raya Tropodo No.1, Kepuh, Tropodo, Kec. Waru,
+                            Kabupaten Sidoarjo, Jawa Timur 61256<br>
+                            Phone Office: (031) 8669595<br>
+                            Email Office: admin@kencanarajasa.co.id
+                        </div>
+
+                        <br>
+
+                        <img
+                            src="' . $logoKcn . '"
+                            alt="Logo PT. Kerta Rajasa Raya"
+                            style="display: block; max-width: 180px; height: auto;"
+                        >
+                    </body>
+                    </html>
+                    ';
+
+                    $message->to($emails)
+                        ->subject("Purchase Order Kencana Rajasa Raya {$noSPPB}")
+                        ->html($htmlBody)
                         ->attachData(
                             $pdf->output(),
                             "{$noSPPB}.pdf",
-                            [
-                                'mime' => 'application/pdf'
-                            ]
+                            ['mime' => 'application/pdf']
                         );
 
                     // =====================================================
@@ -995,6 +1040,7 @@ class CetakPembelianKencanaController extends Controller
                     }
                 }
             );
+
 
             Log::info('CETAK PEMBELIAN - MAIL BERHASIL', [
                 'KdDiv'  => $kdDiv,
