@@ -8,6 +8,7 @@ jQuery(function ($) {
     let shiftJahit = document.getElementById("shiftJahit");
     let std_waktu = document.getElementById("std_waktu");
     let hasil = document.getElementById("hasil");
+    let no_label = document.getElementById("no_label");
     let keterangan_kegiatan = document.getElementById("keterangan_kegiatan");
     let total_hasil = document.getElementById("total_hasil");
     let jumlah_operator = document.getElementById("jumlah_operator");
@@ -246,6 +247,25 @@ jQuery(function ($) {
     }
 
     //#region Enter
+    no_label.addEventListener("keydown", function (event) {
+        if (event.key === " ") {
+            event.preventDefault();
+
+            let start = this.selectionStart;
+            let end = this.selectionEnd;
+
+            let before = this.value.substring(0, start);
+            let after = this.value.substring(end);
+
+            // Hindari koma berulang
+            if (before.trim() !== "" && !before.endsWith(", ")) {
+                this.value = before.trimEnd() + ", " + after;
+
+                let newPosition = before.trimEnd().length + 2;
+                this.setSelectionRange(newPosition, newPosition);
+            }
+        }
+    });
 
     shiftJahit.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
@@ -280,16 +300,16 @@ jQuery(function ($) {
     hasil.addEventListener("keypress", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
-            keterangan_kegiatan.select();
+            no_label.select();
         }
     });
 
-    // keterangan_kegiatan.addEventListener("keypress", function (e) {
-    //     if (e.key == "Enter") {
-    //         e.preventDefault();
-    //         button_modalProses.select();
-    //     }
-    // });
+    no_label.addEventListener("keypress", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            keterangan_kegiatan.select();
+        }
+    });
 
     //#region Datatable Log
 
@@ -554,7 +574,8 @@ jQuery(function ($) {
 
         std_waktu.value = data[6] ?? "";
         hasil.value = data[7] ?? "";
-        keterangan_kegiatan.value = data[8] ?? "";
+        no_label.value = data[8] ?? "";
+        keterangan_kegiatan.value = data[9] ?? "";
     });
 
     btn_add.addEventListener("click", async function (event) {
@@ -606,6 +627,7 @@ jQuery(function ($) {
                 kodeBarang: kodebarang_tableHit.val(),
                 std_waktu: std_waktu.value,
                 hasil: hasil.value,
+                no_label: no_label.value,
                 keterangan_kegiatan: keterangan_kegiatan.value,
             };
         } else {
@@ -622,6 +644,7 @@ jQuery(function ($) {
                 kodeBarang: kodebarang_tableHit.val(),
                 std_waktu: std_waktu.value,
                 hasil: hasil.value,
+                no_label: no_label.value,
                 keterangan_kegiatan: keterangan_kegiatan.value,
             };
         }
@@ -642,6 +665,7 @@ jQuery(function ($) {
                     newRow.kodeBarang,
                     newRow.std_waktu,
                     newRow.hasil,
+                    newRow.no_label,
                     newRow.keterangan_kegiatan,
                 ])
                 .draw();
@@ -683,6 +707,7 @@ jQuery(function ($) {
             kodebarang_tableHit.val(),
             std_waktu.value,
             hasil.value,
+            no_label.value,
             keterangan_kegiatan.value,
         ];
 
@@ -695,7 +720,8 @@ jQuery(function ($) {
             kodeBarang: updatedRow[5],
             std_waktu: updatedRow[6],
             hasil: updatedRow[7],
-            keterangan_kegiatan: updatedRow[8],
+            no_label: updatedRow[8],
+            keterangan_kegiatan: updatedRow[9],
         };
 
         // Cari index data di tableData
@@ -714,7 +740,8 @@ jQuery(function ($) {
                 String(item.kodeBarang ?? "") === String(oldData[5] ?? "") &&
                 String(item.std_waktu ?? "") === String(oldData[6] ?? "") &&
                 String(item.hasil ?? "") === String(oldData[7] ?? "") &&
-                String(item.keterangan_kegiatan ?? "") === String(oldData[8] ?? "")
+                String(item.no_label ?? "") === String(oldData[8] ?? "") &&
+                String(item.keterangan_kegiatan ?? "") === String(oldData[9] ?? "")
             );
         }
 
@@ -785,7 +812,8 @@ jQuery(function ($) {
                     String(item.kodeBarang ?? "") === String(oldData[5] ?? "") &&
                     String(item.std_waktu ?? "") === String(oldData[6] ?? "") &&
                     String(item.hasil ?? "") === String(oldData[7] ?? "") &&
-                    String(item.keterangan_kegiatan ?? "") === String(oldData[8] ?? "")
+                    String(item.no_label ?? "") === String(oldData[8] ?? "") &&
+                    String(item.keterangan_kegiatan ?? "") === String(oldData[9] ?? "")
                 );
             }
 

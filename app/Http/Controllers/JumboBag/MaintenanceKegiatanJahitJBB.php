@@ -93,6 +93,7 @@ class MaintenanceKegiatanJahitJBB extends Controller
                                         @kodeBarang = ?,
                                         @std_waktu = ?,
                                         @hasil = ?,
+                                        @no_label = ?,
                                         @keterangan_kegiatan = ?',
                                     [
                                         4,
@@ -105,6 +106,7 @@ class MaintenanceKegiatanJahitJBB extends Controller
                                         $row[6],
                                         $row[7],
                                         $row[8],
+                                        $row[9],
                                     ]
                                 );
                         }
@@ -152,6 +154,7 @@ class MaintenanceKegiatanJahitJBB extends Controller
                                         @kodeBarang = ?,
                                         @std_waktu = ?,
                                         @hasil = ?,
+                                        @no_label = ?,
                                         @keterangan_kegiatan = ?',
                                     [
                                         4,
@@ -164,6 +167,7 @@ class MaintenanceKegiatanJahitJBB extends Controller
                                         $row[6],
                                         $row[7],
                                         $row[8],
+                                        $row[9],
                                     ]
                                 );
                         } else {
@@ -180,6 +184,7 @@ class MaintenanceKegiatanJahitJBB extends Controller
                                         @kodeBarang = ?,
                                         @std_waktu = ?,
                                         @hasil = ?,
+                                        @no_label = ?,
                                         @keterangan_kegiatan = ?',
                                     [
                                         9,
@@ -192,6 +197,7 @@ class MaintenanceKegiatanJahitJBB extends Controller
                                         $row[6],
                                         $row[7],
                                         $row[8],
+                                        $row[9],
                                     ]
                                 );
                         }

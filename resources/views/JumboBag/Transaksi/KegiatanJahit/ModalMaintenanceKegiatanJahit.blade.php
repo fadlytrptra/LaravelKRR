@@ -71,6 +71,7 @@
                                     <th>Type Barang</th>
                                     <th>STD Waktu</th>
                                     <th>Hasil</th>
+                                    <th>No Label</th>
                                     <th>Keterangan</th>
                                 </tr>
                             </thead>
@@ -124,6 +125,12 @@
                             <div class="input-group">
                                 <input type="number" name="hasil" id="hasil" class="form-control" min="0"
                                     enterkeyhint="enter">
+                            </div>
+                        </div>
+                        <div class="form-group" style="flex: 0.4">
+                            <label for="no_label">No Label</label>
+                            <div class="input-group">
+                                <textarea name="no_label" id="no_label" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group"style="flex: 0.7">
