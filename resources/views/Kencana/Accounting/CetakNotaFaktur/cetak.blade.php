@@ -25,13 +25,13 @@
 
     <body>
         <div style="height: 27cm; overflow: overflow;">
-            <div style="left:16.25cm; top: 1.5cm; position: absolute; text-align:right; font-size:16px;">
-                {{ $idPenagihan }}
+            <div style="left:16.25cm; top: 1.6cm; position: absolute; text-align:right; font-size:16px;">
+                {{ ltrim($idPenagihan, '0') }}
             </div>
             {{-- <div style="left: 11cm; top: 4cm; position: absolute; text-align:right; font-size:16px;">
                 No Seri Faktur Pajak: {{ $dataCetak[0]->NoSeri_FakturPajak }}
             </div> --}}
-            <div style="position:absolute; left:6cm; top:7cm; width:14cm;">
+            <div style="position:absolute; left:6cm; top:8cm; width:14cm;">
                 <div style="font-size:14px; font-weight:bold;">
                     {{ $dataCetak[0]->NamaNPWP }}
                 </div>
@@ -49,7 +49,7 @@
                     $top = 12 + $index * 0.6;
                     $total += (float) $item->Jml * (float) $item->HargaSatuan;
                 @endphp
-                <div style="position:absolute; top:{{ $top }}cm; left:0;">
+                <div style="position:absolute; top:{{ $top - 0.7 }}cm; left:0;">
                     <span style="position:absolute; font-size:14px;">{{ $index + 1 }}</span>
                     <span
                         style="position:absolute; left:1.5cm; font-size:14px;width: 8.5cm;">{{ $item->NamaType }}</span>
@@ -65,14 +65,14 @@
                     </span>
                 </div>
             @endforeach
-            <div style="position:absolute; top:{{ $top + 1.2 }}cm; left:0;">
+            <div style="position:absolute; top:{{ $top + 0.9 }}cm; left:0;">
                 <span style="position:absolute; left:1.5cm; font-size:14px;width: 8.5cm;">
-                    P O
+                    P O :
                     {{ $dataCetak[0]->NO_PO }}
                 </span>
             </div>
 
-            <div style="position:absolute; top:{{ $top + 4.5 }}cm; left:0.5cm;">
+            <div style="position:absolute; top:{{ $top + 4.2 }}cm; left:0.5cm;">
                 <span style="position:absolute; left:0.5cm; font-size:14px;width: 7cm;">
                     Pembayaran Harap Ditransfer ke :<br />
                     Bank BCA Cab. Ambengan, Surabaya<br />
@@ -168,62 +168,64 @@
                 );
             @endphp
 
-            <div style="left: 16.75cm;top: 20.45cm; position: absolute;font-size:12px;">
+            <div style="left: 16.75cm;top: 20.65cm; position: absolute;font-size:12px;">
                 {{ $dataCetak[0]->Symbol2 }}
             </div>
-            <div style="left: 17.35cm; top: 20.45cm; position: absolute; font-size: 12px; width: 2.3cm; text-align: right;">
+            <div style="left: 17.35cm; top: 20.65cm; position: absolute; font-size: 12px; width: 2.3cm; text-align: right;">
                 {{ number_format($nilaiBarisPertama, 2, '.', ',') }}
             </div>
-            <div style="left: 16.75cm;top: 21.05cm; position: absolute;font-size:12px;">
+            <div style="left: 16.75cm;top: 21.25cm; position: absolute;font-size:12px;">
                 {{ $dataCetak[0]->Symbol2 }}
             </div>
-            <div style="left: 17.35cm;top: 21.05cm; position: absolute;font-size:12px;width: 2.3cm;text-align: right;">
+            <div style="left: 17.35cm;top: 21.25cm; position: absolute;font-size:12px;width: 2.3cm;text-align: right;">
                 {{-- {{ number_format($nilaiUM, 2, '.', ',') }} --}}
                 0.00
             </div>
-            <div style="left: 16.75cm;top: 21.65cm; position: absolute;font-size:12px;">
+            <div style="left: 16.75cm;top: 21.85cm; position: absolute;font-size:12px;">
                 {{ $dataCetak[0]->Symbol2 }}
             </div>
-            <div style="left: 17.35cm; top: 21.65cm; position: absolute; font-size: 12px; width: 2.3cm; text-align: right;">
+            <div style="left: 17.35cm; top: 21.85cm; position: absolute; font-size: 12px; width: 2.3cm; text-align: right;">
                 {{ number_format($nilaiUMTampil, 2, '.', ',') }}
             </div>
-            <div style="left: 4.5cm;top: 22.25cm; position: absolute;font-size:12px;">
+            <div style="left: 4.5cm;top: 22.45cm; position: absolute;font-size:12px;">
                 Nilai Lain
             </div>
-            <div style="left: 16.75cm;top: 22.25cm; position: absolute;font-size:12px;">
+            <div style="left: 16.75cm;top: 22.45cm; position: absolute;font-size:12px;">
                 {{ $dataCetak[0]->Symbol2 }}
             </div>
-            <div style="left: 17.35cm;top: 22.25cm; position: absolute;font-size:12px;width: 2.3cm;text-align: right;">
+            <div style="left: 17.35cm;top: 22.45cm; position: absolute;font-size:12px;width: 2.3cm;text-align: right;">
                 {{ number_format($dpp, 2, '.', ',') }}
             </div>
-            <div style="left: 1.8cm;top: 23.05cm; position: absolute;font-size:12px;">12%</div>
-            <div style="left: 16.75cm;top: 22.85cm; position: absolute;font-size:12px;">
+            <div style="left: 1.8cm;top: 23.25cm; position: absolute;font-size:12px;">12%</div>
+            <div style="left: 16.75cm;top: 23.05cm; position: absolute;font-size:12px;">
                 {{ $dataCetak[0]->Symbol2 }}
             </div>
             <div
-                style="left: 17.35cm;top: 22.85cm; position: absolute;font-size:12px;text-align: right;width: 2.3cm;text-align: right;">
+                style="left: 17.35cm;top: 23.05cm; position: absolute;font-size:12px;text-align: right;width: 2.3cm;text-align: right;">
                 {{ number_format($pajak, 2, '.', ',') }}
             </div>
-            <div style="left: 2cm;top: 23.65cm; position: absolute;font-size:12px;width: 14.5cm;">
+            {{-- <div style="left: 2cm;top: 23.65cm; position: absolute;font-size:12px;width: 14.5cm;">
                 {{ $dataCetak[0]->Terbilang }}
-            </div>
-            <div style="left: 16.75cm;top: 23.45cm; position: absolute;font-size:12px;">
+            </div> --}}
+            <div style="left: 16.75cm;top: 23.65cm; position: absolute;font-size:12px;">
                 {{ $dataCetak[0]->Symbol2 }}
             </div>
             <div
-                style="left: 17.35cm;top: 23.45cm; position: absolute;font-size:12px;text-align: right;width: 2.3cm;text-align: right;">
+                style="left: 17.35cm;top: 23.65cm; position: absolute;font-size:12px;text-align: right;width: 2.3cm;text-align: right;">
                 {{ number_format($terbayar, 2, '.', ',') }}
             </div>
-            <div style="left: 13.4cm;top: 24.3cm; position: absolute;font-size:14px;">
+
+            <div style="left: 13.4cm;top: 24.5cm; position: absolute;font-size:14px;">
                 Sidoarjo
             </div>
-            <div style="left: 15.8cm;top: 24.3cm; position: absolute;font-size:14px;">
+            <div style="left: 15.8cm;top: 24.5cm; position: absolute;font-size:14px;">
                 {{-- {{ date('d F', $dataCetak[0]->Tgl_Penagihan) }} --}}
                 {{ \Carbon\Carbon::parse($dataCetak[0]->Tgl_Penagihan)->locale('id')->translatedFormat('j F') }}
             </div>
-            <div style="left: 19.25cm;top: 24.3cm; position: absolute;font-size:14px;">
+            <div style="left: 19.45cm;top: 24.5cm; position: absolute;font-size:14px;">
                 {{ date('y') }}
             </div>
+
             <div style="left: 15.2cm;top: 26.6cm; position: absolute;font-size:14px;">
                 {{ $ttd }}
             </div>
@@ -246,7 +248,7 @@
                 <tr>
                     <td>Surat Jalan</td>
                     <td>:</td>
-                    <td>{{ $dataCetak[0]->IDPengiriman }}</td>
+                    <td>{{ substr($dataCetak[0]->IDPengiriman, -6) }}</td>
                 </tr>
             </table>
             {{-- <div style="position:absolute; left:1cm; top:25.5cm; width:12cm;">
