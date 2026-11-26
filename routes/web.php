@@ -2667,6 +2667,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/Kencana/CetakBKMKencana', App\Http\Controllers\Kencana\Accounting\CetakBKMKencanaController::class);
     Route::resource('/Kencana/CetakNotaFakturKencana', App\Http\Controllers\Kencana\Accounting\CetakNotaFakturKencanaController::class);
 
+    Route::resource('/Kencana/CounterFakturPenagihanKencana', App\Http\Controllers\Kencana\Accounting\CounterFakturKencanaController::class);
+
     #region Kencana Inventory
     Route::resource('Kencana/TerimaBarangKencana', TerimaPurchasingKencanaController::class);
     Route::get('Kencana/TerimaBarangKencana/downloadPdf/{no_po}', [TerimaPurchasingKencanaController::class, 'downloadPdf'])->name('Kencana/TerimaBarangKencana.downloadPdf');
