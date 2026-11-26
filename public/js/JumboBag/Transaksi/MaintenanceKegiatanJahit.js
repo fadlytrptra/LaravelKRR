@@ -409,6 +409,7 @@ jQuery(function ($) {
                         kodeBarang: row.kodeBarang,
                         std_waktu: numeral(row.std_waktu).format('0'),
                         hasil: numeral(row.hasil).format('0.00'),
+                        no_label: row.no_label ?? '',
                         keterangan_kegiatan: row.keterangan_kegiatan ?? '',
                     };
 
@@ -423,6 +424,7 @@ jQuery(function ($) {
                         newRow.kodeBarang,
                         newRow.std_waktu,
                         newRow.hasil,
+                        newRow.no_label,
                         newRow.keterangan_kegiatan,
                     ]);
                 });
