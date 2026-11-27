@@ -63,6 +63,7 @@ const listOfMasterInputs = document.querySelectorAll("input:not(.card input)");
 
 let tableKonversi = "";
 let tableKomposisi = "";
+let komposisiFocusToken = 0;
 
 const listKonversi = [];
 /** ISI LIST KONVERSI
@@ -422,17 +423,27 @@ function debugDetailState(label = "detail state") {
 numPrimer.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        event.stopPropagation();
-        if (this.value.trim() === "") this.value = "0";
+        event.stopImmediatePropagation();
+
+        if (event.repeat) return;
+
+        if (this.value.trim() === "") {
+            this.value = "0";
+        }
 
         numSekunder.value =
-            numSekunder.value.trim() === "" ? "0" : numSekunder.value;
+            numSekunder.value.trim() === ""
+                ? "0"
+                : numSekunder.value;
+
         numSekunder.disabled = false;
+
         console.log("[DEBUG detail] numPrimer Enter", {
             primer: this.value,
             sekunderBeforeFocus: numSekunder.value,
             sekunderDisabled: numSekunder.disabled,
         });
+
         setTimeout(() => {
             numSekunder.focus();
             numSekunder.select();
@@ -443,17 +454,27 @@ numPrimer.addEventListener("keydown", function (event) {
 numSekunder.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        event.stopPropagation();
-        if (this.value.trim() === "") this.value = "0";
+        event.stopImmediatePropagation();
+
+        if (event.repeat) return;
+
+        if (this.value.trim() === "") {
+            this.value = "0";
+        }
 
         numTritier.value =
-            numTritier.value.trim() === "" ? "0" : numTritier.value;
+            numTritier.value.trim() === ""
+                ? "0"
+                : numTritier.value;
+
         numTritier.disabled = false;
+
         console.log("[DEBUG detail] numSekunder Enter", {
             sekunder: this.value,
             tritierBeforeFocus: numTritier.value,
             tritierDisabled: numTritier.disabled,
         });
+
         setTimeout(() => {
             numTritier.focus();
             numTritier.select();
@@ -464,11 +485,21 @@ numSekunder.addEventListener("keydown", function (event) {
 numTritier.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        event.stopPropagation();
-        if (this.value.trim() === "") this.value = "0";
+        event.stopImmediatePropagation();
 
-        if (txtJenis.value.trim() === "BB" || txtJenis.value.trim() === "BP") {
-            numSekunder.value = Math.round(parseFloat(numTritier.value) / 25);
+        if (event.repeat) return;
+
+        if (this.value.trim() === "") {
+            this.value = "0";
+        }
+
+        if (
+            txtJenis.value.trim() === "BB" ||
+            txtJenis.value.trim() === "BP"
+        ) {
+            numSekunder.value = Math.round(
+                parseFloat(numTritier.value) / 25
+            );
         }
 
         console.log("[DEBUG detail] numTritier Enter", {
@@ -1057,14 +1088,18 @@ document
 
             case "Enter":
                 event.preventDefault();
-                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                if (event.repeat) return;
+
                 pilKonversi = -1;
-                // Panggil loading data saat menekan Enter
+
                 loadSelectedKomposisi(
                     startIndex,
                     tableKomposisi.row(rows[startIndex]).data(),
                     true,
                 );
+
                 return;
 
             default:
@@ -1662,6 +1697,7 @@ function highlightOnlyKomposisi(index, rowData = null) {
 
 function loadSelectedKomposisi(index, rowData = null, focus = false) {
     const selection = resolveKomposisiSelection(index, rowData);
+
     if (!selection) {
         console.log(
             "[DEBUG detail] loadSelectedKomposisi skipped invalid row",
@@ -1674,30 +1710,43 @@ function loadSelectedKomposisi(index, rowData = null, focus = false) {
         return;
     }
 
+    // Token untuk mencegah callback lama mengubah fokus
+    const currentToken = ++komposisiFocusToken;
+
     const rows = getKomposisiRows();
+
     rows.forEach((row, i) => {
         if (i === selection.visibleIndex) {
             row.classList.add("selected");
         } else {
-            row.classList.remove("keyboard-selected", "table-primary");
+            row.classList.remove(
+                "selected",
+                "keyboard-selected",
+                "table-primary",
+            );
         }
     });
 
     pilKomposisi = selection.originalIndex;
+
     let data = selection.data;
 
-    const hasCurrentDetailInput = [numPrimer, numSekunder, numTritier].some(
-        (input) => {
-            const value = (input.value || "").trim();
-            return value !== "" && parseFloat(value) !== 0;
-        },
-    );
+    const hasCurrentDetailInput = [
+        numPrimer,
+        numSekunder,
+        numTritier,
+    ].some((input) => {
+        const value = (input.value || "").trim();
+        return value !== "" && parseFloat(value) !== 0;
+    });
 
     txtIdProd.value = data.IdType;
     txtNamaProd.value = data.NamaType;
+
     spnSatPrimer.textContent = data.SatuanPrimer || "NULL";
     spnSatSekunder.textContent = data.SatuanSekunder || "NULL";
     spnSatTritier.textContent = data.SatuanTritier || "NULL";
+
     txtJenis.value = data.StatusType;
 
     if (!hasCurrentDetailInput && !suppressSelectionReset) {
@@ -1721,11 +1770,18 @@ function loadSelectedKomposisi(index, rowData = null, focus = false) {
     });
 
     getSaldoFetch(data.IdType, () => {
+
+        // Abaikan callback dari pemilihan komposisi sebelumnya
+        if (currentToken !== komposisiFocusToken) {
+            return;
+        }
+
         if (
             data.StatusType.trim() === "BB" ||
             data.StatusType.trim() === "BP"
         ) {
             let stokTritier = parseFloat(numStokTritier.value) || 0;
+
             if (stokTritier <= 0) {
                 if (focus && !suppressSelectionReset) {
                     Swal.fire(
@@ -1733,9 +1789,11 @@ function loadSelectedKomposisi(index, rowData = null, focus = false) {
                         `${data.NamaType} tidak dapat digunakan karena stok telah habis.`,
                         "warning",
                     );
+
                     clearSelection_DataTable("table_komposisi");
                     clearDataDetail();
                 }
+
                 return;
             }
         }
@@ -1744,14 +1802,30 @@ function loadSelectedKomposisi(index, rowData = null, focus = false) {
             numPrimer.disabled = false;
             numSekunder.disabled = true;
             numTritier.disabled = true;
+
             btnTambahDetail.disabled = true;
             btnKoreksiDetail.disabled = true;
             btnHapusDetail.disabled = true;
 
             if (focus && !suppressSelectionReset && !hasCurrentDetailInput) {
                 setTimeout(() => {
-                    numPrimer.focus();
-                    numPrimer.select();
+
+                    // Pastikan tidak ada pemilihan baru
+                    if (currentToken !== komposisiFocusToken) {
+                        return;
+                    }
+
+                    if (
+                        document.activeElement !== numPrimer &&
+                        document.activeElement !== numSekunder &&
+                        document.activeElement !== numTritier &&
+                        document.activeElement !== btnTambahDetail &&
+                        document.activeElement !== btnKoreksiDetail
+                    ) {
+                        numPrimer.focus();
+                        numPrimer.select();
+                    }
+
                 }, 150);
             }
         }
