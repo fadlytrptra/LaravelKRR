@@ -247,23 +247,37 @@ jQuery(function ($) {
     }
 
     //#region Enter
+    function formatNoLabel(textarea) {
+        let start = textarea.selectionStart;
+        let end = textarea.selectionEnd;
+
+        let before = textarea.value.substring(0, start);
+        let after = textarea.value.substring(end);
+
+        if (before.trim() !== "" && !before.endsWith(", ")) {
+            let beforeTrim = before.trimEnd();
+
+            textarea.value = beforeTrim + ", " + after;
+
+            let newPosition = beforeTrim.length + 2;
+
+            textarea.setSelectionRange(newPosition, newPosition);
+        }
+    }
+
+    // Keyboard fisik
     no_label.addEventListener("keydown", function (event) {
         if (event.key === " ") {
             event.preventDefault();
+            formatNoLabel(this);
+        }
+    });
 
-            let start = this.selectionStart;
-            let end = this.selectionEnd;
-
-            let before = this.value.substring(0, start);
-            let after = this.value.substring(end);
-
-            // Hindari koma berulang
-            if (before.trim() !== "" && !before.endsWith(", ")) {
-                this.value = before.trimEnd() + ", " + after;
-
-                let newPosition = before.trimEnd().length + 2;
-                this.setSelectionRange(newPosition, newPosition);
-            }
+    // Keyboard virtual tablet
+    no_label.addEventListener("beforeinput", function (event) {
+        if (event.inputType === "insertText" && event.data === " ") {
+            event.preventDefault();
+            formatNoLabel(this);
         }
     });
 
