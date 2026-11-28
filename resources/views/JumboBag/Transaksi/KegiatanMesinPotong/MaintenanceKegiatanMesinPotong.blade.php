@@ -29,6 +29,20 @@
         height: calc(1.5em + 0.75rem + 2px);
     }
 
+    .action-buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    .action-buttons .btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
     #table_logMesin th {
         white-space: nowrap;
     }
@@ -58,6 +72,8 @@
                                 <th>Hasil LBR</th>
                                 <th>Hasil KG</th>
                                 <th>Mesin CL</th>
+                                <th>User Input</th>
+                                <th>Action</th>
                                 @if (
                                     $user == '4405' ||
                                         $user == '4221' ||
@@ -66,7 +82,6 @@
                                         $user == '4451' ||
                                         $user == '4384' ||
                                         $user == '4199')
-                                    <th>Action</th>
                                 @endif
                             </tr>
                         </thead>

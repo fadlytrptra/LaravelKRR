@@ -98,6 +98,16 @@ jQuery(function ($) {
     let div_alasanEditPotong = document.getElementById("div_alasanEditPotong");
     let alasanEdit = document.getElementById("alasanEdit");
     let button_modalProsesPotong = document.getElementById("button_modalProsesPotong"); //prettier-ignore
+    let userKhusus = [
+        "4384",
+        "4405",
+        "4451",
+        "4221",
+        "4259",
+        "8982",
+        "4199",
+    ];
+
     let columns = [
         {
             data: "Tgl_Log",
@@ -140,29 +150,35 @@ jQuery(function ($) {
             data: "Nomor_Mesin_CL",
             width: "9%",
         },
-    ];
-
-    // Only add the action column
-    if (
-        nomorUser == "4384" ||
-        nomorUser == "4405" ||
-        nomorUser == "4451" ||
-        nomorUser == "4221" ||
-        nomorUser == "4259" ||
-        nomorUser == "8982" ||
-        nomorUser == "4199"
-    ) {
-        columns.push({
+        {
+            data: "NomorUser",
+            width: "9%",
+        },
+        {
             data: "Id_Log",
-            render: function (data) {
-                return `
-                <button class="btn btn-primary btn-edit" data-id="${data}">Edit</button>
-                <button class="btn btn-danger btn-delete" data-id="${data}">Hapus</button>
-            `;
+            render: function (data, type, row) {
+                if (
+                    String(nomorUser) === String(row.NomorUser) ||
+                    userKhusus.includes(String(nomorUser))
+                ) {
+                    return `
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-edit" data-id="${data}">
+                                Edit
+                            </button>
+                            <button class="btn btn-danger btn-delete" data-id="${data}">
+                                Hapus
+                            </button>
+                        </div>
+                    `;
+                }
+
+                return "";
             },
-            width: "12.5%",
-        });
-    }
+            width: "150px",
+            className: "text-center",
+        }
+    ];
 
     let table_logMesin = $("#table_logMesin").DataTable({
         processing: true,
